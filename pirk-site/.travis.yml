@@ -1,0 +1,14 @@
+language: ruby
+rvm:
+  - 2.2
+branches:
+  only:
+    - gh-pages
+    - /^.*$/
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#accumulo"
+    use_notice: true
+cache: bundler
+script: ./_devtools/cibuild

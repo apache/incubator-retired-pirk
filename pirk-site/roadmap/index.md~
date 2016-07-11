@@ -1,0 +1,32 @@
+---
+title: Roadmap
+nav: nav_roadmap
+---
+
+The Pirk roadmap includes both implementation and algorithmic components. 
+
+## Implementation Roadmap
+
+Input Adaptors
+  * HBase
+  * Accumulo
+  * Kafka
+  * NiFi
+
+Streaming Wideskies implementations 
+  * Storm
+  * Heron
+  * Spark Streaming
+  * Flink
+
+Batch Wideskies Implementations
+  * Flink
+
+## Algorithmic Roadmap
+
+* Secure Multi Party Computation
+* Secure/Private PIR Analytics
+* Fully Homomorphic Encryption
+
+Improvements to Pirk’s documentation as well as it’s build and testing environments and optimizations to existing code/algorithms are also a component of the Pirk roadmap.
+
