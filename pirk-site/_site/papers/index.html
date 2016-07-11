@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/pirk/css/bootstrap.min.css" rel="stylesheet">
+<link href="/pirk/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/pirk/css/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/pirk/css/pirk.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<title>Related Links</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/pirk/js/bootstrap.min.js"></script>
+<script src="/pirk/js/jquery.dataTables.min.js"></script>
+<script src="/pirk/js/dataTables.bootstrap.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'pirk.incubator.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  
+  // decorate menu with currently navigated page
+  $(function() {
+    $("#nav_papers").addClass("active");
+  });
+  
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/pirk/"><img id="nav-logo" alt="Apache Pirk" class="img-responsive" src="/pirk/images/pirkImage.png" width="150"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/pirk/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_users"><a href="/pirk/for_users">For Users</a></li>
+          <li id="nav_developers"><a href="/pirk/for_developers">For Developers</a></li>
+          <li id="nav_papers"><a href="/pirk/papers">Papers</a></li>
+          <li class="nav_faq"><a href="/pirk/faq">FAQ</a></li>
+          <li class="divider"></li>
+           <li><a href="/pirk/javadocs">Javadocs</a></li>     
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolvedpirk"><a href="/pirk/get_involved_pirk">Get Involved</a></li>
+          <li id="nav_listspirk"><a href="/pirk/mailing_list_pirk">Mailing Lists</a></li>
+          <li id="nav_peoplepirk"><a href="/pirk/people_pirk">People</a></li>
+       	</ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_releasing"><a href="/pirk/releasing">Making Releases</a></li>
+          <li id="nav_nav_verify_release"><a href="/pirk/verifying_releases">Verifying Releases</a></li>
+          <hr>
+          <li><a href="https://issues.apache.org/jira/browse/PIRK ">Issue Tracker/JIRA <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/incubator-pirk"> Pirk Github Mirror <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+        <li class="nav-link"><a href="/pirk/roadmap">Roadmap</a></li>
+       <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+        </ul>
+        </ul>
+    </div> 
+  </div>  
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div id="content">
+          
+          <h1 class="title">Related Links</h1>
+          
+          <h2 id="papers-and-presentations">Papers and Presentations</h2>
+
+<ul>
+  <li><a href="/pirk/papers/wideskies_paper.pdf">Wideskies paper</a></li>
+</ul>
+
+<h2 id="conferences-and-meetups">Conferences and Meetups</h2>
+
+<p>Conference and Meetup schedule coming soon!</p>
+
+<h2 id="reference">Reference</h2>
+
+<ul>
+  <li><a href="/pirk/papers/1999_asiacrypt_paillier_paper.pdf">Paillier homomorphic encryption</a></li>
+</ul>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/pirk/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2016-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
