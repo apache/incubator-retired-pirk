@@ -20,7 +20,7 @@ limitations under the License.
 
 --
 
-Apache Pirk (incubating) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
+[Apache Pirk (incubating)](http://pirk.incubator.apache.org/) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
 
 ## Documentation
 
