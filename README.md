@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<img alt="Apache Pirk" class="img-responsive" src="contrib/pirkImage.png" width="250"/>
+<img alt="Apache Pirk" class="img-responsive" src="contrib/pirkImage.png" width="500" align="middle"/>
 --
 
 Apache Pirk (incubating) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
