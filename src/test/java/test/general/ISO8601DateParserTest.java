@@ -40,8 +40,8 @@ public class ISO8601DateParserTest
     logger.info("Starting testDateParsing: ");
 
     String date = "2016-02-20T23:29:05.000Z";
-    long longDate = Long.parseLong("1456028945000");
-
+    long longDate = Long.parseLong("1456010945000"); //date in UTC
+    
     assertEquals(longDate, ISO8601DateParser.getLongDate(date));
     assertEquals(date, ISO8601DateParser.fromLongDate(longDate));
 

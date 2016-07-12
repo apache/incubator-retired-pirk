@@ -21,6 +21,7 @@ package org.apache.pirk.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,7 @@ public class ISO8601DateParser
   private static void init()
   {
     format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    format.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 
   public static String parseDate(String date)
