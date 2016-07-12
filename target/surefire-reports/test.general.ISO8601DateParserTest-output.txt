@@ -1,0 +1,6 @@
+ INFO [main] 2016-07-12 12:11:49,183 (SystemConfiguration.java:89) - Loading default properties file 'pirk.properties'
+ INFO [main] 2016-07-12 12:11:49,202 (LoadDataSchemas.java:77) - Loading data schemas: 
+ INFO [main] 2016-07-12 12:11:49,204 (LoadQuerySchemas.java:75) - Loading query schemas: 
+Loading log4j properties file: 'logging/log4j.properties'
+ INFO [main] 2016-07-12 12:11:49,214 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
+ INFO [main] 2016-07-12 12:11:49,225 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing

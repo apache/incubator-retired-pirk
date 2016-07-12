@@ -1,0 +1,10 @@
+dontinline,*.*_all_jmhStub
+dontinline,*.*_avgt_jmhStub
+dontinline,*.*_sample_jmhStub
+dontinline,*.*_ss_jmhStub
+dontinline,*.*_thrpt_jmhStub
+inline,org/apache/pirk/benchmark/PaillierBenchmark$PaillierBenchmarkState.setUp
+inline,org/apache/pirk/benchmark/PaillierBenchmark.testWithGMP
+inline,org/apache/pirk/benchmark/PaillierBenchmark.testWithGMPConstantTime
+inline,org/apache/pirk/benchmark/PaillierBenchmark.testWithoutGMP
+inline,org/openjdk/jmh/infra/Blackhole.clearSinks
