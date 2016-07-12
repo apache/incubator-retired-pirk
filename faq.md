@@ -4,6 +4,5 @@ nav: nav_faq
 ---
 
 FAQ coming soon!
-(Testing)
 
 
