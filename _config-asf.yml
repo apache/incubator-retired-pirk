@@ -10,8 +10,8 @@ title: Apache Pirk (incubating)
 email: dev@pirk.incubator.apache.org
 description: > # this means to ignore newlines until "baseurl:"
   Pirk is a framework for scalable Private Information Retrieval (PIR).
-baseurl: "/pirk" # the subpath of your site, e.g. /blog
-url: "http://pirk.incubator.apache.org/" # the base hostname & protocol for your site
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://pirk.incubator.apache.org" # the base hostname & protocol for your site
 twitter_username: ApachePirk
 github_username:  apache/pirk
 repository: apache/incubator-pirk
