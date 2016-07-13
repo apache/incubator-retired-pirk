@@ -4,11 +4,11 @@
     <title>Apache Pirk (incubating)</title>
     <description>Pirk is a framework for scalable Private Information Retrieval (PIR).
 </description>
-    <link>http://pirk.incubator.apache.org//pirk/</link>
-    <atom:link href="http://pirk.incubator.apache.org//pirk/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 12 Jul 2016 15:47:44 -0400</pubDate>
-    <lastBuildDate>Tue, 12 Jul 2016 15:47:44 -0400</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <link>http://pirk.incubator.apache.org/</link>
+    <atom:link href="http://pirk.incubator.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 13 Jul 2016 09:31:29 -0400</pubDate>
+    <lastBuildDate>Wed, 13 Jul 2016 09:31:29 -0400</lastBuildDate>
+    <generator>Jekyll v3.0.5</generator>
     
   </channel>
 </rss>

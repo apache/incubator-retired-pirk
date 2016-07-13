@@ -20,18 +20,18 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="/pirk/css/bootstrap.min.css" rel="stylesheet">
-<link href="/pirk/css/bootstrap-theme.min.css" rel="stylesheet">
-<link href="/pirk/css/dataTables.bootstrap.css" rel="stylesheet">
-<link href="/pirk/css/pirk.css" rel="stylesheet" type="text/css">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/pirk.css" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 <title>For Users</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/pirk/js/bootstrap.min.js"></script>
-<script src="/pirk/js/jquery.dataTables.min.js"></script>
-<script src="/pirk/js/dataTables.bootstrap.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
 <script>
   // show location of canonical site if not currently on the canonical site
   $(function() {
@@ -84,43 +84,43 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/pirk/"><img id="nav-logo" alt="Apache Pirk" class="img-responsive" src="/pirk/images/pirkImage.png" width="150"/></a>
+      <a href="/"><img id="nav-logo" alt="Apache Pirk" class="img-responsive" src="/images/pirkImage.png" width="150"/></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-items">
       <ul class="nav navbar-nav">
-        <li class="nav-link"><a href="/pirk/downloads">Download</a></li>
+        <li class="nav-link"><a href="/downloads">Download</a></li>
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li id="nav_users"><a href="/pirk/for_users">For Users</a></li>
-          <li id="nav_developers"><a href="/pirk/for_developers">For Developers</a></li>
-          <li id="nav_papers"><a href="/pirk/papers">Papers</a></li>
-          <li class="nav_faq"><a href="/pirk/faq">FAQ</a></li>
+          <li id="nav_users"><a href="/for_users">For Users</a></li>
+          <li id="nav_developers"><a href="/for_developers">For Developers</a></li>
+          <li id="nav_papers"><a href="/papers">Papers</a></li>
+          <li class="nav_faq"><a href="/faq">FAQ</a></li>
           <li class="divider"></li>
-           <li><a href="/pirk/javadocs">Javadocs</a></li>     
+           <li><a href="/javadocs">Javadocs</a></li>     
         </ul>
         </li>
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li id="nav_getinvolvedpirk"><a href="/pirk/get_involved_pirk">Get Involved</a></li>
-          <li id="nav_listspirk"><a href="/pirk/mailing_list_pirk">Mailing Lists</a></li>
-          <li id="nav_peoplepirk"><a href="/pirk/people_pirk">People</a></li>
+          <li id="nav_getinvolvedpirk"><a href="/get_involved_pirk">Get Involved</a></li>
+          <li id="nav_listspirk"><a href="/mailing_list_pirk">Mailing Lists</a></li>
+          <li id="nav_peoplepirk"><a href="/people_pirk">People</a></li>
        	</ul>
         </li>
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li id="nav_releasing"><a href="/pirk/releasing">Making Releases</a></li>
-          <li id="nav_nav_verify_release"><a href="/pirk/verifying_releases">Verifying Releases</a></li>
-          <li id="nav_update_website"><a href="/pirk/website_updates">Website Updates</a></li>
+          <li id="nav_releasing"><a href="/releasing">Making Releases</a></li>
+          <li id="nav_nav_verify_release"><a href="/verifying_releases">Verifying Releases</a></li>
+          <li id="nav_update_website"><a href="/website_updates">Website Updates</a></li>
           <hr>
           <li><a href="https://issues.apache.org/jira/browse/PIRK ">Issue Tracker/JIRA <i class="fa fa-external-link"></i></a></li>
           <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
           <li><a href="https://github.com/apache/incubator-pirk"> Pirk Github Mirror <i class="fa fa-external-link"></i></a></li>
         </ul>
         </li>
-        <li class="nav-link"><a href="/pirk/roadmap">Roadmap</a></li>
+        <li class="nav-link"><a href="/roadmap">Roadmap</a></li>
        <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
@@ -177,7 +177,7 @@
 
 <p>Data over which the encrypted query is to be preformed must be transformed into a map of &lt;key,value&gt; pairs; JSON, MapWritable, and Map&lt;String,Object&gt; representations are currently used in Pirk to format target data. For a given data input represented as a set of &lt;key,value&gt; pairs, the ‘key’ corresponds to the name of the element or field of the data and the ‘value’ is the value of that field in the data.</p>
 
-<p>If the Responder is reading the target data from HDFS, an input format extending Pirk’s <a href="/pirk/javadocs/org/apache/pirk/inputformat/hadoop/BaseInputFormat">org.apache.pirk.inputformat.hadoop.BaseInputFormat</a> must be used; BaseInputFormat extends the <a href="https://hadoop.apache.org/docs/r2.7.2/api/org/apache/hadoop/mapred/InputFormat.html">Hadoop InputFormat</a>&lt;<a href="https://hadoop.apache.org/docs/r2.6.2/api/org/apache/hadoop/io/Text.html">Text</a>,<a href="https://hadoop.apache.org/docs/r2.6.2/api/org/apache/hadoop/io/MapWritable.html">MapWritable</a>&gt;.</p>
+<p>If the Responder is reading the target data from HDFS, an input format extending Pirk’s <a href="/javadocs/org/apache/pirk/inputformat/hadoop/BaseInputFormat">org.apache.pirk.inputformat.hadoop.BaseInputFormat</a> must be used; BaseInputFormat extends the <a href="https://hadoop.apache.org/docs/r2.7.2/api/org/apache/hadoop/mapred/InputFormat.html">Hadoop InputFormat</a>&lt;<a href="https://hadoop.apache.org/docs/r2.6.2/api/org/apache/hadoop/io/Text.html">Text</a>,<a href="https://hadoop.apache.org/docs/r2.6.2/api/org/apache/hadoop/io/MapWritable.html">MapWritable</a>&gt;.</p>
 
 <h2 id="data-and-query-schemas">Data and Query Schemas</h2>
 
@@ -205,7 +205,7 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
 
 <p>The element type may be one of the Java primitive types given above or may be defined by a custom class.</p>
 
-<p>The Partitioner class contains the functionality for partitioning the given data element into ‘chunks’ which are used in computing the encrypted query. If no partitioner is specified for an element, it defaults to the <a href="/pirk/javadocs/org/apache/pirk/schema/data/partitioner/PrimitiveTypePartitioner">org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</a> and assumes that the element type is one of the allowed primitive Java types (an exception will be thrown if this is not the case). All custom partitioners must implement the <a href="/pirk/javadocs/org/apache/pirk/schema/data/partitioner/DataPartitioner">org.apache.pirk.schema.data.partitioner.DataPartitioner</a> interface. There are several implemented Partitioners available in the <a href="/pirk/javadocs/org/apache/pirk/schema/data/partitioner">org.apache.pirk.schema.data.partitioner</a> package.</p>
+<p>The Partitioner class contains the functionality for partitioning the given data element into ‘chunks’ which are used in computing the encrypted query. If no partitioner is specified for an element, it defaults to the <a href="/javadocs/org/apache/pirk/schema/data/partitioner/PrimitiveTypePartitioner">org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</a> and assumes that the element type is one of the allowed primitive Java types (an exception will be thrown if this is not the case). All custom partitioners must implement the <a href="/javadocs/org/apache/pirk/schema/data/partitioner/DataPartitioner">org.apache.pirk.schema.data.partitioner.DataPartitioner</a> interface. There are several implemented Partitioners available in the <a href="/javadocs/org/apache/pirk/schema/data/partitioner">org.apache.pirk.schema.data.partitioner</a> package.</p>
 
 <h3 id="query-schema">Query Schema</h3>
 
@@ -230,19 +230,19 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
 
 <p>The elements field specifies all elements (via &lt;name&gt;) within a given piece of data to return as part of the encrypted query.</p>
 
-<p>Optionally, the Responder can perform filtering on the input target data before performing the encrypted query. The filter class must implement the <a href="/pirk/javadocs/org/apache/pirk/schema/query/filter/DataFilter">org.apache.pirk.schema.query.filter.DataFilter</a> interface. Specific elements of a piece of input data on which the filter should be applied can be specified via &lt;filterNames&gt;; for example, for the <a href="/pirk/javadocs/org/apache/pirk/schema/query/filter/StopListFilter">org.apache.pirk.schema.query.filter.StopListFilter</a>, filterNames may include the qname if the target data is a set of DNS records.</p>
+<p>Optionally, the Responder can perform filtering on the input target data before performing the encrypted query. The filter class must implement the <a href="/javadocs/org/apache/pirk/schema/query/filter/DataFilter">org.apache.pirk.schema.query.filter.DataFilter</a> interface. Specific elements of a piece of input data on which the filter should be applied can be specified via &lt;filterNames&gt;; for example, for the <a href="/javadocs/org/apache/pirk/schema/query/filter/StopListFilter">org.apache.pirk.schema.query.filter.StopListFilter</a>, filterNames may include the qname if the target data is a set of DNS records.</p>
 
 <h2 id="querier">Querier</h2>
 
 <p>The Querier is currently written to operate in a standalone (non-distributed), multi-threaded mode.</p>
 
-<p>For Wideskies, the user will need to generate the encrypted query vector via the <a href="/pirk/javadocs/org/apache/pirk/querier/wideskies/QuerierDriver">QuerierDriver</a>.  Options available for query generation are given by:</p>
+<p>For Wideskies, the user will need to generate the encrypted query vector via the <a href="/javadocs/org/apache/pirk/querier/wideskies/QuerierDriver">QuerierDriver</a>.  Options available for query generation are given by:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>java -cp &lt;pirkJar&gt;  org.apache.pirk.querier.wideskies.QuerierDriver —help
 </code></pre>
 </div>
 
-<p>The QuerierDriver generates <a href="/pirk/javadocs/org/apache/pirk/query/wideskies/Query">Query</a> and <a href="/pirk/javadocs/org/apache/pirk/querier/wideskies/Querier">Querier</a> objects and serializes them, respectively, to two files.</p>
+<p>The QuerierDriver generates <a href="/javadocs/org/apache/pirk/query/wideskies/Query">Query</a> and <a href="/javadocs/org/apache/pirk/querier/wideskies/Querier">Querier</a> objects and serializes them, respectively, to two files.</p>
 
 <p>The Query object contains the encrypted query vectors and all information necessary for the Responder to perform the encrypted query. The file containing the Query object should be sent to the Responder platform; it is used as input for the Responder to execute the query.</p>
 
@@ -260,7 +260,7 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
   <li>Hadoop MapReduce batch, reading from HDFS or Elasticsearch</li>
 </ul>
 
-<p>The <a href="/pirk/roadmap">RoadMap</a> details plans for various streaming implementations.</p>
+<p>The <a href="/roadmap">RoadMap</a> details plans for various streaming implementations.</p>
 
 <p>Components of the Responder implementations may also be called independently in custom workflows.</p>
 
@@ -270,7 +270,7 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
 
 <h3 id="launching">Launching</h3>
 
-<p>The Responder can be launched via the <a href="/pirk/javadocs/org/apache/pirk/responder/wideskies/ResponderDriver">ResponderDriver</a>.  Options available via the ResponderDriver are given by:</p>
+<p>The Responder can be launched via the <a href="/javadocs/org/apache/pirk/responder/wideskies/ResponderDriver">ResponderDriver</a>.  Options available via the ResponderDriver are given by:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>java -cp &lt;pirkJar&gt; org.apache.pirk.responder.wideskies.ResponderDriver —help
 </code></pre>
@@ -290,7 +290,7 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
 
 <h3 id="responder-output">Responder Output</h3>
 
-<p>The Responder performs the encrypted query, stores the results in a <a href="/pirk/javadocs/org/apache/pirk/response/wideskies/Response">Response</a> object, and serializes this object to the output location specified in the &lt;responder options&gt;. For Responder implementations running in Hadoop MapReduce or Spark, this output file is stored in HDFS.</p>
+<p>The Responder performs the encrypted query, stores the results in a <a href="/javadocs/org/apache/pirk/response/wideskies/Response">Response</a> object, and serializes this object to the output location specified in the &lt;responder options&gt;. For Responder implementations running in Hadoop MapReduce or Spark, this output file is stored in HDFS.</p>
 
 <p>The file containing the serialized Response object should be returned to the Querier for decryption.</p>
 
@@ -300,7 +300,7 @@ Primitive Java types must be one of the following: "byte", "short", "int", "long
         
 <footer>
 
-  <p><a href="https://www.apache.org"><img src="/pirk/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
 
   <p>Copyright © 2016-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 
