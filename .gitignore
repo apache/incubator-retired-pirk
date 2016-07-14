@@ -20,3 +20,6 @@
 /.settings/
 /.project
 /.classpath
+
+# Project runtime ignores
+/logs/
