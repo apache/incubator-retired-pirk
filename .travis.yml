@@ -1,0 +1,17 @@
+language: java
+
+os:
+  - linux
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+
+# before_install is used to provide a workaround for buffer overflow issues with OpenJDK versions of java as per:
+#    https://github.com/travis-ci/travis-ci/issues/5227#issuecomment-165135711
+before_install:
+  - sudo hostname "$(hostname | cut -c1-63)"
+  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+
+script: mvn clean package -f pom.xml
