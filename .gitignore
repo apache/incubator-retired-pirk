@@ -20,3 +20,10 @@
 /.settings/
 /.project
 /.classpath
+.idea/
+*.class
+*.iml
+*.swp
+*.jar
+*.log
+.DS_Store
