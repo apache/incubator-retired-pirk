@@ -67,7 +67,7 @@ Pirk employs generic [data and query schemas]({{ site.baseurl }}/for_users#data-
 
 The Pirk framework is centered around the Querier and Responder; key supporting elements include generic query and data schemas, encryption/decryption, query/response, and in-memory and distributed testing components. 
 
-Pirk is seeded with the Wideskies PIR algorithm which employs [Paillier homomorphic encryption]({{ site.baseurl }}/papers/1999_asiacrypt_paillier_paper.pdf); the Wideskies white paper can be found [here]({{ site.baseurl }}/papers/wideskies_paper.pdf).
+Pirk is seeded with the Wideskies PIR algorithm which employs [Paillier homomorphic encryption]({{ site.baseurl }}/papers/1999_asiacrypt_paillier_paper.pdf); the Wideskies white paper can be found [here]({{ site.baseurl }}/papers/wideskies_paper.pdf). More information regarding the origin of Apache Pirk can be found [here]({{ site.baseurl }}/pirk_origin).
 
 ## Getting Started
 

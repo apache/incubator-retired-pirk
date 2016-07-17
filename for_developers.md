@@ -19,6 +19,7 @@ nav: nav_developers
 8. [Debugging](#debugging)
 9. [Paillier Benchmarking](#paillier-benchmarking)
 10. [Release Process](#release-process)
+11. [How To Contribute](#how-to-contribute)
 
 	
 ## General Info
@@ -77,7 +78,9 @@ Pirk may be built with a specific pom file via ‘mvn package -f <specificPom.xm
 
 ## Continuous Integration 
 
-Pirk uses [Jenkins](https://builds.apache.org/) for continuous integration. The build history is available [here].
+Pirk uses [Jenkins](https://builds.apache.org/) for continuous integration. The build history is available [here](https://builds.apache.org/job/pirk/).
+
+Pirk also uses [Travis CI](https://travis-ci.org/) for continuous integration for Github Pull Requests; you can find the build history [here](https://travis-ci.org/apache/incubator-pirk).
 
 ## Testing
 
@@ -119,3 +122,7 @@ FYI - Right now this spits out a lot of logging errors as the logger fails to wo
 ## Release Process
 
 Please see [Making Releases]({{ site.baseurl }}/making_releases) and [Verifying Releases]({{ site.baseurl }}/verifying_releases).
+
+## How to Contribute
+
+Please see the [How to Contribute]({{ site.baseurl }}/how_to_contribute) page.
