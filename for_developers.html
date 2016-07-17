@@ -111,12 +111,14 @@
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
         <ul class="dropdown-menu">
+          <li id="nav_releasing"><a href="/how_to_contribute">How to Contribute</a></li>
           <li id="nav_releasing"><a href="/releasing">Making Releases</a></li>
           <li id="nav_nav_verify_release"><a href="/verifying_releases">Verifying Releases</a></li>
           <li id="nav_update_website"><a href="/website_updates">Website Updates</a></li>
           <hr>
           <li><a href="https://issues.apache.org/jira/browse/PIRK ">Issue Tracker/JIRA <i class="fa fa-external-link"></i></a></li>
-          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/job/pirk/">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/incubator-pirk">Travis CI Builds <i class="fa fa-external-link"></i></a></li>
           <li><a href="https://github.com/apache/incubator-pirk"> Pirk Github Mirror <i class="fa fa-external-link"></i></a></li>
         </ul>
         </li>
@@ -170,6 +172,7 @@
   <li><a href="#debugging">Debugging</a></li>
   <li><a href="#paillier-benchmarking">Paillier Benchmarking</a></li>
   <li><a href="#release-process">Release Process</a></li>
+  <li><a href="#how-to-contribute">How To Contribute</a></li>
 </ol>
 
 <h2 id="general-info">General Info</h2>
@@ -238,7 +241,9 @@
 
 <h2 id="continuous-integration">Continuous Integration</h2>
 
-<p>Pirk uses <a href="https://builds.apache.org/">Jenkins</a> for continuous integration. The build history is available [here].</p>
+<p>Pirk uses <a href="https://builds.apache.org/">Jenkins</a> for continuous integration. The build history is available <a href="https://builds.apache.org/job/pirk/">here</a>.</p>
+
+<p>Pirk also uses <a href="https://travis-ci.org/">Travis CI</a> for continuous integration for Github Pull Requests; you can find the build history <a href="https://travis-ci.org/apache/incubator-pirk">here</a>.</p>
 
 <h2 id="testing">Testing</h2>
 
@@ -288,6 +293,10 @@ To run successfully, the ‘spark.home’ property must be set correctly in the 
 <h2 id="release-process">Release Process</h2>
 
 <p>Please see <a href="/making_releases">Making Releases</a> and <a href="/verifying_releases">Verifying Releases</a>.</p>
+
+<h2 id="how-to-contribute">How to Contribute</h2>
+
+<p>Please see the <a href="/how_to_contribute">How to Contribute</a> page.</p>
 
         </div>
 
