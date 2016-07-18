@@ -69,6 +69,20 @@ public class Paillier implements Serializable
   private static final long serialVersionUID = 1L;
 
   private static Logger logger = LogUtils.getLoggerForThisClass();
+  
+  private static final SecureRandom nativePRNGSecureRandom;
+  
+  static
+  {
+    try
+    {
+      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG");
+    } catch (Exception e)
+    {
+      logger.error("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+      throw new RuntimeException("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+    }
+  }
 
   BigInteger p = null; // large prime
   BigInteger q = null; // large prime
@@ -222,18 +236,6 @@ public class Paillier implements Serializable
 
   private void getKeys(int certainty)
   {
-    SecureRandom nativePRNGSecureRandom = null;
-    try
-    {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG", "SUN");
-    } catch (Exception e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object from the SUN provider with the NativePRNG algorithm!");
-      e.printStackTrace();
-      // If we can't generate good random using a method we are confident in, we shouldn't continue
-      System.exit(1);
-    }
-
     // Generate the primes
     BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, nativePRNGSecureRandom);
     p = pq[0];
@@ -258,19 +260,6 @@ public class Paillier implements Serializable
    */
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
-    BigInteger cipher = null;
-    SecureRandom nativePRNGSecureRandom = null;
-    try
-    {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG", "SUN");
-    } catch (Exception e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object from the SUN provider with the NativePRNG algorithm!");
-      e.printStackTrace();
-      // If we can't generate good random using a method we are confident in, we shouldn't continue
-      System.exit(1);
-    }
-
     // Generate a random value r in (Z/NZ)*
     BigInteger r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
     while (r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.equals(BigInteger.ZERO))
@@ -278,9 +267,7 @@ public class Paillier implements Serializable
       r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
     }
 
-    cipher = encrypt(m, r);
-
-    return cipher;
+    return encrypt(m, r);
   }
 
   /**
