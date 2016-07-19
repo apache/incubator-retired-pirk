@@ -259,6 +259,7 @@
 				<version>0.11</version>
 				<configuration>
 					<excludes>
+                        <exclude>.travis.yml</exclude>
 						<exclude>eclipse-pirk-codestyle.xml</exclude>
 						<exclude>logs/**</exclude>
 						<exclude>docs/package-list</exclude>
