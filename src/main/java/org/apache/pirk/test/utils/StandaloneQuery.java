@@ -73,23 +73,9 @@ public class StandaloneQuery
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    boolean embedSelector = false;
-    if (SystemConfiguration.getProperty("pirTest.embedSelector", "false").equals("true"))
-    {
-      embedSelector = true;
-    }
-
-    boolean useExpLookupTable = false;
-    if (SystemConfiguration.getProperty("pirTest.useExpLookupTable", "false").equals("true"))
-    {
-      useExpLookupTable = true;
-    }
-
-    boolean useHDFSExpLookupTable = false;
-    if (SystemConfiguration.getProperty("pirTest.useHDFSExpLookupTable", "false").equals("true"))
-    {
-      useHDFSExpLookupTable = true;
-    }
+    boolean embedSelector = SystemConfiguration.getProperty("pirTest.embedSelector", "false").equals("true");
+    boolean useExpLookupTable = SystemConfiguration.getProperty("pirTest.useExpLookupTable", "false").equals("true");
+    boolean useHDFSExpLookupTable = SystemConfiguration.getProperty("pirTest.useHDFSExpLookupTable", "false").equals("true");
 
     // Set the necessary objects
     QueryInfo queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
