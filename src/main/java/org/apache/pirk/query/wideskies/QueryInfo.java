@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,6 +19,8 @@
 package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
@@ -29,7 +31,7 @@ import org.apache.pirk.utils.LogUtils;
  * <p>
  * Note that the hash key is specific to the query. If we have hash collisions over our selector set, we will append integers to the key starting with 0 until
  * we no longer have collisions
- * 
+ *
  */
 public class QueryInfo implements Serializable
 {
@@ -63,9 +65,8 @@ public class QueryInfo implements Serializable
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
 
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
-      boolean useHDFSExpLookupTableInput)
+  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+      String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
   {
     queryNum = queryNumInput;
     queryType = queryTypeInput;
@@ -94,11 +95,28 @@ public class QueryInfo implements Serializable
     printQueryInfo();
   }
 
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn)
+  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+      String queryNameInput, int paillierBitSizeIn)
   {
     this(queryNumInput, numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, queryNameInput, paillierBitSizeIn, false,
         true, false);
+  }
+
+  public QueryInfo(Map queryInfoMap)
+  {
+    queryNum = (double) queryInfoMap.get("queryNum");
+    queryType = (String) queryInfoMap.get("queryType");
+    queryName = (String) queryInfoMap.get("queryName");
+    numSelectors = ((Long) queryInfoMap.get("numSelectors")).intValue();
+    paillierBitSize = ((Long) queryInfoMap.get("paillierBitSize")).intValue();
+    hashBitSize = ((Long) queryInfoMap.get("hashBitSize")).intValue();
+    hashKey = (String) queryInfoMap.get("hashKey");
+    numBitsPerDataElement = ((Long) queryInfoMap.get("numBitsPerDataElement")).intValue();
+    numPartitionsPerDataElement = ((Long) queryInfoMap.get("numPartitionsPerDataElement")).intValue();
+    dataPartitionBitSize = ((Long) queryInfoMap.get("dataPartitionsBitSize")).intValue();
+    useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
+    useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
+    embedSelector = (boolean) queryInfoMap.get("embedSelector");
   }
 
   public double getQueryNum()
@@ -166,12 +184,33 @@ public class QueryInfo implements Serializable
     return embedSelector;
   }
 
+  public Map toMap()
+  {
+    HashMap<String,Object> queryInfo = new HashMap<String,Object>();
+    queryInfo.put("queryNum", queryNum);
+    queryInfo.put("queryType", queryType);
+    queryInfo.put("queryName", queryName);
+    queryInfo.put("numSelectors", numSelectors);
+    queryInfo.put("paillierBitSize", paillierBitSize);
+    queryInfo.put("hashBitSize", hashBitSize);
+    queryInfo.put("hashKey", hashKey);
+    queryInfo.put("numBitsPerDataElement", numBitsPerDataElement);
+    queryInfo.put("numPartitionsPerDataElement", numPartitionsPerDataElement);
+    queryInfo.put("dataPartitionsBitSize", dataPartitionBitSize);
+    queryInfo.put("useExpLookupTable", useExpLookupTable);
+    queryInfo.put("useHDFSExpLookupTable", useHDFSExpLookupTable);
+    queryInfo.put("embedSelector", embedSelector);
+
+    return queryInfo;
+  }
+
   public void printQueryInfo()
   {
-    logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
-        + " dataPartitionBitSize = " + dataPartitionBitSize + " numBitsPerDataElement = " + numBitsPerDataElement + " numPartitionsPerDataElement = "
-        + numPartitionsPerDataElement + " queryType = " + queryType + " queryName = " + queryName + " paillierBitSize = " + paillierBitSize
-        + " useExpLookupTable = " + useExpLookupTable + " useHDFSExpLookupTable = " + useHDFSExpLookupTable + " embedSelector = " + embedSelector);
+    logger.info(
+        "queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey + " dataPartitionBitSize = "
+            + dataPartitionBitSize + " numBitsPerDataElement = " + numBitsPerDataElement + " numPartitionsPerDataElement = " + numPartitionsPerDataElement
+            + " queryType = " + queryType + " queryName = " + queryName + " paillierBitSize = " + paillierBitSize + " useExpLookupTable = " + useExpLookupTable
+            + " useHDFSExpLookupTable = " + useHDFSExpLookupTable + " embedSelector = " + embedSelector);
   }
 
   public QueryInfo copy()
