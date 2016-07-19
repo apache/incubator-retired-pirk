@@ -88,6 +88,12 @@ public class BaseTests
         numExpectedResults = 7; // all 7 for non distributed case; if testFalsePositive==true, then 6
       }
     }
+    checkDNSHostnameQueryResults(results, isDistributed, numExpectedResults, testFalsePositive, dataElements);
+    logger.info("Completed testDNSHostnameQuery(): ");
+  }
+
+  public static void checkDNSHostnameQueryResults(ArrayList <QueryResponseJSON> results, boolean isDistributed, int numExpectedResults, boolean testFalsePositive, ArrayList<JSONObject> dataElements)
+  {
     logger.info("results:");
     printResultList(results);
 
@@ -184,7 +190,6 @@ public class BaseTests
         }
       }
     }
-    logger.info("Completed testDNSHostnameQuery(): ");
   }
 
   public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, int numThreads) throws Exception
