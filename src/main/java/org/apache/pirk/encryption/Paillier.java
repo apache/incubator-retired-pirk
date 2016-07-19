@@ -20,6 +20,7 @@ package org.apache.pirk.encryption;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 
 import org.apache.log4j.Logger;
@@ -70,17 +71,27 @@ public class Paillier implements Serializable
 
   private static Logger logger = LogUtils.getLoggerForThisClass();
   
-  private static final SecureRandom nativePRNGSecureRandom;
+  private static final SecureRandom secureRandom;
   
   static
   {
     try
     {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG");
-    } catch (Exception e)
+      String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
+      if (alg == null)
+      {
+        secureRandom = new SecureRandom();
+      }
+      else
+      {
+        String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
+        secureRandom = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
+      }
+      logger.info("Using secure random from " + secureRandom.getProvider().getName() + ":" + secureRandom.getAlgorithm());
+    } catch (GeneralSecurityException e)
     {
-      logger.error("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
-      throw new RuntimeException("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+      logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
+      throw new RuntimeException("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
     }
   }
 
@@ -237,7 +248,7 @@ public class Paillier implements Serializable
   private void getKeys(int certainty)
   {
     // Generate the primes
-    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, nativePRNGSecureRandom);
+    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, secureRandom);
     p = pq[0];
     q = pq[1];
 
@@ -261,10 +272,10 @@ public class Paillier implements Serializable
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
     // Generate a random value r in (Z/NZ)*
-    BigInteger r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
+    BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
     while (r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.equals(BigInteger.ZERO))
     {
-      r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
+      r = (new BigInteger(bitLength, secureRandom)).mod(N);
     }
 
     return encrypt(m, r);
