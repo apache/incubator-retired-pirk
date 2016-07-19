@@ -213,7 +213,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
     if (type.equals(BYTE))
     {
       BigInteger bInt = parts.get(partsIndex);
-      element = new Byte(bInt.toString()).byteValue();
+      element = Byte.valueOf(bInt.toString());
     }
     else if (type.equals(SHORT))
     {

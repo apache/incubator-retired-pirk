@@ -104,22 +104,21 @@ public class Responder
     String inputData = SystemConfiguration.getProperty("pir.inputData");
     try
     {
-      FileReader fr = new FileReader(new File(inputData));
-      BufferedReader br = new BufferedReader(fr);
+      BufferedReader br = new BufferedReader(new FileReader(inputData));
 
       String line;
-      JSONObject jsonData;
       JSONParser jsonParser = new JSONParser();
       while ((line = br.readLine()) != null)
       {
         logger.info("line = " + line);
-        jsonData = (JSONObject) jsonParser.parse(line);
+        JSONObject jsonData = (JSONObject) jsonParser.parse(line);
 
         logger.info("jsonData = " + jsonData.toJSONString());
 
         String selector = QueryUtils.getSelectorByQueryTypeJSON(queryType, jsonData);
         addDataElement(selector, jsonData);
       }
+      br.close();
     } catch (Exception e)
     {
       e.printStackTrace();

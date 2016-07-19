@@ -20,6 +20,7 @@ package org.apache.pirk.encryption;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 
 import org.apache.log4j.Logger;
@@ -69,6 +70,30 @@ public class Paillier implements Serializable
   private static final long serialVersionUID = 1L;
 
   private static Logger logger = LogUtils.getLoggerForThisClass();
+  
+  private static final SecureRandom secureRandom;
+  
+  static
+  {
+    try
+    {
+      String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
+      if (alg == null)
+      {
+        secureRandom = new SecureRandom();
+      }
+      else
+      {
+        String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
+        secureRandom = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
+      }
+      logger.info("Using secure random from " + secureRandom.getProvider().getName() + ":" + secureRandom.getAlgorithm());
+    } catch (GeneralSecurityException e)
+    {
+      logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
+      throw new RuntimeException("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
+    }
+  }
 
   BigInteger p = null; // large prime
   BigInteger q = null; // large prime
@@ -222,20 +247,8 @@ public class Paillier implements Serializable
 
   private void getKeys(int certainty)
   {
-    SecureRandom nativePRNGSecureRandom = null;
-    try
-    {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG", "SUN");
-    } catch (Exception e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object from the SUN provider with the NativePRNG algorithm!");
-      e.printStackTrace();
-      // If we can't generate good random using a method we are confident in, we shouldn't continue
-      System.exit(1);
-    }
-
     // Generate the primes
-    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, nativePRNGSecureRandom);
+    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, secureRandom);
     p = pq[0];
     q = pq[1];
 
@@ -258,29 +271,14 @@ public class Paillier implements Serializable
    */
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
-    BigInteger cipher = null;
-    SecureRandom nativePRNGSecureRandom = null;
-    try
-    {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG", "SUN");
-    } catch (Exception e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object from the SUN provider with the NativePRNG algorithm!");
-      e.printStackTrace();
-      // If we can't generate good random using a method we are confident in, we shouldn't continue
-      System.exit(1);
-    }
-
     // Generate a random value r in (Z/NZ)*
-    BigInteger r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
+    BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
     while (r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.equals(BigInteger.ZERO))
     {
-      r = (new BigInteger(bitLength, nativePRNGSecureRandom)).mod(N);
+      r = (new BigInteger(bitLength, secureRandom)).mod(N);
     }
 
-    cipher = encrypt(m, r);
-
-    return cipher;
+    return encrypt(m, r);
   }
 
   /**
