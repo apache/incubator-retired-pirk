@@ -1,0 +1,4 @@
+package org.apache.pirk.benchmark.generated;
+public class PaillierBenchmark_PaillierBenchmarkState_jmhType extends PaillierBenchmark_PaillierBenchmarkState_jmhType_B3 {
+}
+
