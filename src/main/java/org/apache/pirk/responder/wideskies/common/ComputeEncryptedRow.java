@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -43,7 +43,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * Class to compute the encrypted row elements for a query from extracted data partitions
- * 
  */
 public class ComputeEncryptedRow
 {
@@ -54,8 +53,7 @@ public class ComputeEncryptedRow
   static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
       .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
       {
-        @Override
-        public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
+        @Override public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
         {
           logger.debug("cache miss");
           return ModPowAbstraction.modPow(info._1(), info._2(), info._3());
@@ -90,13 +88,12 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@code<BytesArrayWritable>}
-   * <p>
+   * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
-   * <p>
+   * <p/>
    * Optionally uses a static LRU cache for the modular exponentiation
-   * <p>
+   * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
-   * 
    */
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(Iterable<BytesArrayWritable> dataPartitionsIter, Query query, int rowIndex,
       boolean limitHitsPerSelector, int maxHitsPerSelector, boolean useCache) throws IOException
@@ -140,8 +137,9 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
-            + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
+        logger.debug(
+            "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
+                + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
         returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
@@ -154,15 +152,14 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@ArrayList<BigInteger>
-   * 
+   * <p/>
    * }
-   * <p>
+   * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
-   * <p>
+   * <p/>
    * Optionally uses a static LRU cache for the modular exponentiation
-   * <p>
+   * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
-   * 
    */
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRowBI(Iterable<ArrayList<BigInteger>> dataPartitionsIter, Query query, int rowIndex,
       boolean limitHitsPerSelector, int maxHitsPerSelector, boolean useCache) throws IOException
@@ -209,8 +206,9 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
-            + exp + " i = " + i);
+        logger.debug(
+            "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
+                + " i = " + i);
 
         returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
@@ -229,13 +227,12 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@<BytesArrayWritable>
-   * 
+   * <p/>
    * } given an input modular exponentiation table for the row
-   * <p>
+   * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
-   * <p>
+   * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
-   * 
    */
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<ArrayList<BigInteger>> dataPartitionsIter,
       HashMap<Integer,BigInteger> cache, int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
@@ -276,15 +273,14 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of BytesArrayWritable
-   * <p>
+   * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
-   * <p>
+   * <p/>
    * Uses a static LRU cache for the modular exponentiation
-   * <p>
+   * <p/>
    * Caller is responsible for keeping track of the colIndex and the the maxHitsPerSelector values
-   * <p>
+   * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
-   * 
    */
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(BytesArrayWritable dataPartitions, Query query, int rowIndex, int colIndex) throws IOException
   {
@@ -312,13 +308,91 @@ public class ComputeEncryptedRow
         e.printStackTrace();
       }
 
-      logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
-          + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
+      logger.debug(
+          "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
+              + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
       returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
       ++colCounter;
     }
+
+    return returnPairs;
+  }
+
+  /**
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of ArrayList<<BigInteger>>
+   * <p/>
+   * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
+   * <p/>
+   * Uses a static LRU cache for the modular exponentiation
+   * <p/>
+   * Caller is responsible for keeping track of the colIndex and the the maxHitsPerSelector values
+   * <p/>
+   * Emits {@code Tuple2<<colNum, colVal>>}
+   */
+  public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(ArrayList<BigInteger> dataPartitions, Query query, int rowIndex, int colIndex)
+      throws IOException
+  {
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+
+    // Pull the corresponding encrypted row query
+    BigInteger rowQuery = query.getQueryElement(rowIndex);
+
+    // Initialize the column counter
+    long colCounter = colIndex;
+
+    logger.debug("dataPartitions.size() = " + dataPartitions + " rowIndex = " + rowIndex + " colCounter = " + colCounter);
+
+    // Update the associated column values
+    for (int i = 0; i < dataPartitions.size(); ++i)
+    {
+      BigInteger part = dataPartitions.get(i);
+
+      BigInteger exp = null;
+      try
+      {
+        exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+      } catch (ExecutionException e)
+      {
+        e.printStackTrace();
+      }
+
+      logger.debug(
+          "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
+              + " i = " + i + " partition = " + dataPartitions.get(i) + " = " + dataPartitions.get(i).toString(2));
+
+      returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+
+      ++colCounter;
+    }
+
+    return returnPairs;
+  }
+
+  public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(BigInteger part, Query query, int rowIndex, int colIndex) throws IOException
+  {
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+
+    // Pull the corresponding encrypted row query
+    BigInteger rowQuery = query.getQueryElement(rowIndex);
+
+    // Initialize the column counter
+    long colCounter = colIndex;
+
+    // Update the associated column values
+    BigInteger exp = null;
+    try
+    {
+      exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+    } catch (ExecutionException e)
+    {
+      e.printStackTrace();
+    }
+
+    returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+
+    ++colCounter;
 
     return returnPairs;
   }
