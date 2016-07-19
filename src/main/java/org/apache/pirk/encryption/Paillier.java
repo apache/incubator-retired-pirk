@@ -20,12 +20,17 @@ package org.apache.pirk.encryption;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.security.Security;
 
 import org.apache.log4j.Logger;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
+
+import static org.apache.pirk.querier.wideskies.QuerierDriverCLI.SECURERANDOM;
 
 /**
  * Implementation of the Paillier cryptosystem
@@ -74,13 +79,34 @@ public class Paillier implements Serializable
   
   static
   {
-    try
-    {
-      nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG");
-    } catch (Exception e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
-      throw new RuntimeException("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+    // Check provider settings for the SecureRandom.
+    String providerName = SystemConfiguration.getProperty(SECURERANDOM);
+    if (!providerName.equals("none") && Security.getProvider(providerName) != null){
+      logger.info("Using SecureRandom provider " + providerName);
+      try
+      {
+        nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG", providerName);
+      } catch (NoSuchProviderException e)
+      {
+        logger.error("SecureRandom provider " + providerName + " returned by Security.getProvider but throws" +
+                " NoSuchProviderException.", e);
+        throw new RuntimeException("Unable to instantiate a SecureRandom object with provider " + providerName, e);
+      } catch (NoSuchAlgorithmException e)
+      {
+        logger.error("Unable to instantiate a SecureRandom object with the NativePRNG algorithm", e);
+        throw new RuntimeException("Unable to instantiate a SecureRandom object with the NativePRNG algorithm " +
+                "and provider " + providerName, e);
+      }
+    }
+    else{
+      try
+      {
+        nativePRNGSecureRandom = SecureRandom.getInstance("NativePRNG");
+      } catch (NoSuchAlgorithmException e)
+      {
+        logger.error("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+        throw new RuntimeException("Unable to instantiate a SecureRandom object with the NativePRNG algorithm.", e);
+      }
     }
   }
 

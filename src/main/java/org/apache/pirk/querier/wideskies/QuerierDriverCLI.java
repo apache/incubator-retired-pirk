@@ -54,6 +54,7 @@ public class QuerierDriverCLI
   public static String PAILLIERBITSIZE = "paillierBitSize";
   public static String BITSET = "bitSet";
   public static String CERTAINTY = "certainty";
+  public static String SECURERANDOM = "pirk.securerandom.provider";
   public static String QUERYNAME = "queryName";
   public static String QUERYSCHEMAS = "querySchemas";
   public static String DATASCHEMAS = "dataSchemas";
@@ -226,6 +227,14 @@ public class QuerierDriverCLI
       }
       SystemConfiguration.setProperty(CERTAINTY, getOptionValue(CERTAINTY));
 
+      if (hasOption(SECURERANDOM))
+      {
+        String providerName = getOptionValue(SECURERANDOM);
+        SystemConfiguration.setProperty(SECURERANDOM, providerName);
+        logger.info("CLI specified secure random provider " + providerName);
+        logger.info("Existence of provider will be checked at encryption.");
+      }
+
       if (!hasOption(QUERYNAME))
       {
         logger.info("Must have the option " + QUERYNAME);
@@ -364,6 +373,13 @@ public class QuerierDriverCLI
     optionTYPE.setArgName(TYPE);
     optionTYPE.setType(String.class);
     options.addOption(optionTYPE);
+
+    // SECURERANDOM
+    Option optionSECURERANDOM = new Option("sr", SECURERANDOM, true, "required for encryption -- Name of the query");
+    optionSECURERANDOM.setRequired(false);
+    optionSECURERANDOM.setArgName(SECURERANDOM);
+    optionSECURERANDOM.setType(String.class);
+    options.addOption(optionSECURERANDOM);
 
     // NAME
     Option optionNAME = new Option("qn", QUERYNAME, true, "required for encryption -- Name of the query");
