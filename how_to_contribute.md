@@ -103,13 +103,13 @@ Merging pull requests are equivalent to a "pull" of a contributor's branch; to m
 	
 You now can commit the request:
 
-	git commit --author <contributor_email> -a -m "PIRK-XXXX <description> - closes apache/incubator-pirk#ZZ"
+	git commit --author "contributor_name <contributor_email>" -a -m "PIRK-XXXX <description> - closes apache/incubator-pirk#ZZ"
 	
 PIRK-XXXX is in all caps and ZZ is the pull request number on apache/incubator-pirk. Including "closes apache/incubator-pirk#ZZ" will close the [pull request automatically](https://help.github.com/articles/closing-issues-via-commit-messages/).
 
 Next, push to the apache master branch:
 
-	push apache master
+	git push apache master
 	
 (this will require Apache handle credentials).
 
