@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>pirk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
-	<name>Apache Pirk (incubating) Project</name>
-	<description>Apache Pirk (incubating) is a framework for scalable Private Information Retrieval (PIR). </description>
+
+	<name>Apache Pirk (incubating) </name>
+	<description>Apache Pirk (incubating) is a framework for scalable
+		Private Information Retrieval (PIR). </description>
 	<url>http://pirk.incubator.apache.org/</url>
 
 	<!-- this is the year of inception at ASF -->
@@ -52,12 +52,18 @@
 			</snapshots>
 		</repository>
 
+		<repository>
+			<id>cloudera</id>
+			<url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+		</repository>
+
 	</repositories>
 
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<scala.version>2.10.4</scala.version>
+		<storm.version>1.0.1</storm.version>
 		<jmh.version>1.11.3</jmh.version>
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
 		<javac.target>1.7</javac.target>
@@ -96,26 +102,20 @@
 
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-common</artifactId>
-			<version>2.7.2</version>
+			<artifactId>hadoop-yarn-client</artifactId>
+			<version>2.6.0-cdh5.7.0</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-mapreduce-client-core</artifactId>
-			<version>2.7.2</version>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-client</artifactId>
-			<version>2.7.2</version>
-		</dependency>	
-		
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-core_2.11</artifactId>
-			<version>1.6.1</version>
+			<artifactId>spark-core_2.10</artifactId>
+			<version>1.6.0-cdh5.7.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -128,9 +128,13 @@
 					<groupId>commons-net</groupId>
 				</exclusion>
 				<exclusion>
-                  <groupId>org.apache.hive</groupId>
-                  <artifactId>hive-service</artifactId>
-              	</exclusion>
+					<groupId>org.apache.hive</groupId>
+					<artifactId>hive-service</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.hive</groupId>
+					<artifactId>hive-service</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
@@ -154,36 +158,111 @@
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-core</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-generator-annprocess</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-client</artifactId>
+			<version>2.10.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.zookeeper</groupId>
+					<artifactId>zookeeper</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>${storm.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-kafka</artifactId>
+			<version>${storm.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.9.0.1</version>
+			<exclusions>
+				<!--		<exclusion>
+                            <groupId>org.apache.zookeeper</groupId>
+                            <artifactId>zookeeper</artifactId>
+                        </exclusion> -->
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-test</artifactId>
+			<version>2.10.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.zookeeper</groupId>
+					<artifactId>zookeeper</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+		<!--		<dependency>
+                    <groupId>com.twitter.heron</groupId>
+                    <artifactId>heron-api</artifactId>
+                    <version>SNAPSHOT</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.twitter.heron</groupId>
+                    <artifactId>heron-storm</artifactId>
+                    <version>SNAPSHOT</version>
+                    <scope>compile</scope>
+                </dependency>
+        -->
 
 	</dependencies>
 
 	<build>
+
 		<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>2.18</version>
-			<configuration>
-			<redirectTestOutputToFile>true</redirectTestOutputToFile>
-			<argLine combine.children="append">-Xmx1G
-				-Djava.net.preferIPv4Stack=true</argLine>
-			</configuration>
-			<dependencies>
-				<dependency>
-				<!-- Force surefire to use JUnit -->
-				<groupId>org.apache.maven.surefire</groupId>
-				<artifactId>surefire-junit4</artifactId>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.18</version>
-				</dependency>
-			</dependencies>
-                </plugin>
+				<configuration>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<argLine combine.children="append">-Xmx1G
+						-Djava.net.preferIPv4Stack=true</argLine>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<!-- Force surefire to use JUnit -->
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>2.18</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -211,10 +290,10 @@
 							<shadedClassifierName>exe</shadedClassifierName>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 								</transformer>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 								</transformer>
 							</transformers>
 							<filters>
@@ -230,7 +309,7 @@
 						</configuration>
 					</execution>
 
-					<!-- in the version with benchmarks (pom-with-benchmarks.xml), this 
+					<!-- in the version with benchmarks (pom-with-benchmarks.xml), this
 						is where that <execution></execution> lives -->
 
 				</executions>
@@ -239,7 +318,7 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
