@@ -20,11 +20,9 @@ package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -192,7 +190,7 @@ public class EncryptQuery
       {
         logger.info("Caught exception for selector = " + selector);
         e.printStackTrace();
-        // TODO: Check should continue?
+        // TODO: Check: should continue?
       }
 
       embedSelectorMap.put(sNum, embeddedSelector);
@@ -205,7 +203,7 @@ public class EncryptQuery
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
     ArrayList<EncryptQueryRunnable> runnables = new ArrayList<EncryptQueryRunnable>(numThreads);
-    int numElements = (int) Math.pow(2, queryInfo.getHashBitSize());
+    int numElements = 1 << queryInfo.getHashBitSize();  // 2^hashBitSize
 
     // Split the work across the requested number of threads
     int elementsPerThread = numElements / numThreads;
