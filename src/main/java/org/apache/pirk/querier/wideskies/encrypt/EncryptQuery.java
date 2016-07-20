@@ -125,25 +125,7 @@ public class EncryptQuery
     HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
 
     // Form the embedSelectorMap
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
-    String type = dSchema.getElementType(qSchema.getSelectorName());
-    int sNum = 0;
-    for (String selector : selectors)
-    {
-      String embeddedSelector = null;
-      try
-      {
-        embeddedSelector = QueryUtils.getEmbeddedSelector(selector, type, dSchema.getPartitionerForElement(qSchema.getSelectorName()));
-      } catch (Exception e)
-      {
-        logger.info("Caught exception for selector = " + selector);
-        e.printStackTrace();
-      }
-
-      embedSelectorMap.put(sNum, embeddedSelector);
-      ++sNum;
-    }
+    populateEmbeddedSelectorMap();
 
     parallelEncrypt(numThreads, selectorQueryVecMapping);
 
@@ -192,6 +174,30 @@ public class EncryptQuery
       }
     }
     return selectorQueryVecMapping;
+  }
+
+  private void populateEmbeddedSelectorMap()
+  {
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    String type = dSchema.getElementType(qSchema.getSelectorName());
+    int sNum = 0;
+    for (String selector : selectors)
+    {
+      String embeddedSelector = null;
+      try
+      {
+        embeddedSelector = QueryUtils.getEmbeddedSelector(selector, type, dSchema.getPartitionerForElement(qSchema.getSelectorName()));
+      } catch (Exception e)
+      {
+        logger.info("Caught exception for selector = " + selector);
+        e.printStackTrace();
+        // TODO: Check should continue?
+      }
+
+      embedSelectorMap.put(sNum, embeddedSelector);
+      ++sNum;
+    }
   }
 
   private void parallelEncrypt(int numThreads, HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
