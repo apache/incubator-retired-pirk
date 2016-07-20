@@ -1,2 +1,10 @@
+test/schema/query/LoadQuerySchemaTest.class
+test/general/KeyedHashTest.class
+test/schema/data/LoadDataSchemaTest.class
 META-INF/BenchmarkList
+test/wideskies/standalone/StandaloneTest.class
+test/general/QueryParserUtilsTest.class
 META-INF/CompilerHints
+test/general/PaillierTest.class
+test/general/ISO8601DateParserTest.class
+test/general/PartitionUtilsTest.class

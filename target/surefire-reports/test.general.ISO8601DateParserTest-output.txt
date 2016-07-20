@@ -1,6 +1,6 @@
- INFO [main] 2016-07-19 08:22:04,231 (SystemConfiguration.java:89) - Loading default properties file 'pirk.properties'
- INFO [main] 2016-07-19 08:22:04,244 (LoadDataSchemas.java:77) - Loading data schemas: 
- INFO [main] 2016-07-19 08:22:04,246 (LoadQuerySchemas.java:75) - Loading query schemas: 
+log4j:WARN No appenders could be found for logger (org.apache.pirk.utils.SystemConfiguration).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
 Loading log4j properties file: 'logging/log4j.properties'
- INFO [main] 2016-07-19 08:22:04,252 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
- INFO [main] 2016-07-19 08:22:04,264 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing
+ INFO [main] 2016-07-20 18:59:52,246 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
+ INFO [main] 2016-07-20 18:59:52,268 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing

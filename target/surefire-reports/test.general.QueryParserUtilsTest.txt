@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: test.general.QueryParserUtilsTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.454 sec - in test.general.QueryParserUtilsTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.911 sec - in test.general.QueryParserUtilsTest

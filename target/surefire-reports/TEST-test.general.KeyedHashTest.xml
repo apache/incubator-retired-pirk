@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.general.KeyedHashTest" time="0.082" tests="2" errors="0" skipped="0" failures="0">
+<testsuite name="test.general.KeyedHashTest" time="0.126" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/jre/lib"/>
@@ -61,6 +61,6 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="testKeyedHash" classname="test.general.KeyedHashTest" time="0.001"/>
-  <testcase name="testKeyedHashWithType" classname="test.general.KeyedHashTest" time="0.081"/>
+  <testcase name="testKeyedHash" classname="test.general.KeyedHashTest" time="0"/>
+  <testcase name="testKeyedHashWithType" classname="test.general.KeyedHashTest" time="0.126"/>
 </testsuite>
