@@ -219,7 +219,7 @@ public class EncryptQuery
       {
         selectorQueryVecMappingCopy = new HashMap<Integer,Integer>(selectorQueryVecMapping);
       }
-      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(dataPartitionBitSize, hashBitSize, paillier.copy(), selectorQueryVecMappingCopy, start, stop);
+      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(dataPartitionBitSize, hashBitSize, paillier.clone(), selectorQueryVecMappingCopy, start, stop);
       runnables.add(runEnc);
       es.execute(runEnc);
     }
