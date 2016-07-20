@@ -65,7 +65,7 @@ import org.apache.pirk.utils.SystemConfiguration;
  * <p>
  * Ref: Paillier, Pascal. "Public-Key Cryptosystems Based on Composite Degree Residuosity Classes." EUROCRYPT'99.
  */
-public class Paillier implements Serializable
+public class Paillier implements Cloneable, Serializable
 {
   private static final long serialVersionUID = 1L;
 
@@ -176,21 +176,6 @@ public class Paillier implements Serializable
     logger.info("Parameters = " + parametersToString());
   }
 
-  /**
-   * Copy Constructior
-   * 
-   */
-  public Paillier(BigInteger p, BigInteger q, int bitLength, BigInteger N, BigInteger NSquared, BigInteger lambdaN, BigInteger w)
-  {
-    this.p = p;
-    this.q = q;
-    this.bitLength = bitLength;
-    this.N = N;
-    this.NSquared = NSquared;
-    this.lambdaN = lambdaN;
-    this.w = w;
-  }
-
   public BigInteger getP()
   {
     return p;
@@ -273,7 +258,7 @@ public class Paillier implements Serializable
   {
     // Generate a random value r in (Z/NZ)*
     BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
-    while (r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.equals(BigInteger.ZERO))
+    while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO))
     {
       r = (new BigInteger(bitLength, secureRandom)).mod(N);
     }
@@ -287,8 +272,6 @@ public class Paillier implements Serializable
    */
   public BigInteger encrypt(BigInteger m, BigInteger r) throws PIRException
   {
-    BigInteger cipher = null;
-
     if (m.compareTo(N) >= 0)
     {
       throw new PIRException("m  = " + m.toString(2) + " is greater than or equal to N = " + N.toString(2));
@@ -298,9 +281,7 @@ public class Paillier implements Serializable
     BigInteger term1 = (m.multiply(N).add(BigInteger.ONE)).mod(NSquared);
     BigInteger term2 = ModPowAbstraction.modPow(r, N, NSquared);
 
-    cipher = (term1.multiply(term2)).mod(NSquared);
-
-    return cipher;
+    return (term1.multiply(term2)).mod(NSquared);
   }
 
   /**
@@ -308,31 +289,28 @@ public class Paillier implements Serializable
    */
   public BigInteger decrypt(BigInteger c)
   {
-    BigInteger d = null;
-
     // w = lambda(N)^-1 mod N; x = c^(lambda(N)) mod N^2; y = (x-1)/N; d = yw mod N
     BigInteger x = ModPowAbstraction.modPow(c, lambdaN, NSquared);
     BigInteger y = (x.subtract(BigInteger.ONE)).divide(N);
 
-    d = (y.multiply(w)).mod(N);
-
-    return d;
+    return (y.multiply(w)).mod(N);
   }
 
   private String parametersToString()
   {
-    String paramsString = null;
-
-    paramsString = "p = " + p.intValue() + " q = " + q.intValue() + " N = " + N.intValue() + " NSquared = " + NSquared.intValue() + " lambdaN = "
-        + lambdaN.intValue() + " bitLength = " + bitLength;
-
-    return paramsString;
+    return "p = " + p.intValue() + " q = " + q.intValue() + " N = " + N.intValue() + " NSquared = " + NSquared.intValue() + " lambdaN = " + lambdaN.intValue()
+        + " bitLength = " + bitLength;
   }
 
-  public Paillier copy()
+  public Paillier clone()
   {
-    Paillier paillierCopy = new Paillier(p, q, bitLength, N, NSquared, lambdaN, w);
-
-    return paillierCopy;
+    try
+    {
+      return (Paillier) super.clone();
+    } catch (CloneNotSupportedException e)
+    {
+      // We inherit from Object.
+      throw new RuntimeException(e);
+    }
   }
 }
