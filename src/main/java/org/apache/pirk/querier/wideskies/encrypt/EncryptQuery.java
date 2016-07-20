@@ -122,54 +122,11 @@ public class EncryptQuery
     query = new Query(queryInfo, paillier.getN());
 
     int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
-
-    String hashKey = queryInfo.getHashKey();
     int hashBitSize = queryInfo.getHashBitSize();
-    int keyCounter = 0;
 
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
-    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<Integer,Integer>();
-    HashSet<Integer> hashes = new HashSet<Integer>();
-    while (true)
-    {
-      int j = 0;
-      boolean uniqueHashes = true; // All keyed hashes of the selectors must be unique
-      while (j < selectors.size())
-      {
-        String selector = selectors.get(j);
-        logger.debug("j = " + j + " Encrypting selector = " + selector);
-
-        int hash = KeyedHash.hash(hashKey, hashBitSize, selector);
-        if (hashes.contains(hash))
-        {
-          uniqueHashes = false;
-          break;
-        }
-        else
-        {
-          hashes.add(hash);
-          selectorQueryVecMapping.put(hash, j);
-
-          logger.debug("j = " + j + " hash = " + hash);
-        }
-        ++j;
-      }
-
-      if (uniqueHashes)
-      {
-        break; // if all of our hashes are unique, we are done
-      }
-      else
-      // Iterate with a new key until we have unique keyed hashes among the selectors
-      {
-        hashes.clear();
-        selectorQueryVecMapping.clear();
-
-        ++keyCounter;
-        hashKey += keyCounter;
-      }
-    }
-
+    HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMapping();
+ 
     // Form the embedSelectorMap
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
@@ -260,6 +217,39 @@ public class EncryptQuery
 
     // Set the Querier object
     querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
+  }
+
+  private HashMap<Integer,Integer> computeSelectorQueryVecMapping()
+  {
+    String hashKey = queryInfo.getHashKey();
+    int keyCounter = 0;
+    int numSelectors = selectors.size();
+    HashSet<Integer> hashes = new HashSet<Integer>(numSelectors);
+    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<Integer,Integer>(numSelectors);
+
+    for (int index = 0; index < numSelectors; index++)
+    {
+      String selector = selectors.get(index);
+      int hash = KeyedHash.hash(hashKey, queryInfo.getHashBitSize(), selector);
+
+      // All keyed hashes of the selectors must be unique
+      if (hashes.add(hash))
+      {
+        // The hash is unique
+        selectorQueryVecMapping.put(hash, index);
+        logger.debug("index = " + index + "selector = " + selector + " hash = " + hash);
+      }
+      else
+      {
+        // Hash collision
+        hashes.clear();
+        selectorQueryVecMapping.clear();
+        hashKey = queryInfo.getHashKey() + ++keyCounter;
+        logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
+        index = 0;
+      }
+    }
+    return selectorQueryVecMapping;
   }
 
   /**
