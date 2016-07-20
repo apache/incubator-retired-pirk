@@ -125,7 +125,7 @@ public class EncryptQuery
     int hashBitSize = queryInfo.getHashBitSize();
 
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
-    HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMapping();
+    HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
  
     // Form the embedSelectorMap
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
@@ -176,7 +176,7 @@ public class EncryptQuery
       {
         selectorQueryVecMappingCopy = new HashMap<Integer,Integer>(selectorQueryVecMapping);
       }
-      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(dataPartitionBitSize, hashBitSize, paillier.copy(), selectorQueryVecMappingCopy, start, stop);
+      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(dataPartitionBitSize, paillier.copy(), selectorQueryVecMappingCopy, start, stop);
       runnables.add(runEnc);
       es.execute(runEnc);
     }
@@ -219,7 +219,7 @@ public class EncryptQuery
     querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
   }
 
-  private HashMap<Integer,Integer> computeSelectorQueryVecMapping()
+  private HashMap<Integer,Integer> computeSelectorQueryVecMap()
   {
     String hashKey = queryInfo.getHashKey();
     int keyCounter = 0;
