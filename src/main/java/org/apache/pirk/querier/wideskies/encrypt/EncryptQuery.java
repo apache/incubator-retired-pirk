@@ -20,11 +20,9 @@ package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -121,56 +119,63 @@ public class EncryptQuery
   {
     query = new Query(queryInfo, paillier.getN());
 
-    int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
-
-    String hashKey = queryInfo.getHashKey();
-    int hashBitSize = queryInfo.getHashBitSize();
-    int keyCounter = 0;
-
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
-    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<Integer,Integer>();
-    HashSet<Integer> hashes = new HashSet<Integer>();
-    while (true)
-    {
-      int j = 0;
-      boolean uniqueHashes = true; // All keyed hashes of the selectors must be unique
-      while (j < selectors.size())
-      {
-        String selector = selectors.get(j);
-        logger.debug("j = " + j + " Encrypting selector = " + selector);
-
-        int hash = KeyedHash.hash(hashKey, hashBitSize, selector);
-        if (hashes.contains(hash))
-        {
-          uniqueHashes = false;
-          break;
-        }
-        else
-        {
-          hashes.add(hash);
-          selectorQueryVecMapping.put(hash, j);
-
-          logger.debug("j = " + j + " hash = " + hash);
-        }
-        ++j;
-      }
-
-      if (uniqueHashes)
-      {
-        break; // if all of our hashes are unique, we are done
-      }
-      else
-      // Iterate with a new key until we have unique keyed hashes among the selectors
-      {
-        hashes.clear();
-        selectorQueryVecMapping.clear();
-
-        ++keyCounter;
-        hashKey += keyCounter;
-      }
-    }
+    HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
 
     // Form the embedSelectorMap
+    populateEmbeddedSelectorMap();
+
+    parallelEncrypt(numThreads, selectorQueryVecMapping);
+
+    // Generate the expTable in Query, if we are using it and if
+    // useHDFSExpLookupTable is false -- if we are generating it as standalone and not on the cluster
+    if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable())
+    {
+      logger.info("Starting expTable generation");
+
+      // This has to be reasonably multithreaded or it takes forever...
+      query.generateExpTable(Math.max(8, numThreads));
+    }
+
+    // Set the Querier object
+    querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
+  }
+
+  private HashMap<Integer,Integer> computeSelectorQueryVecMap()
+  {
+    String hashKey = queryInfo.getHashKey();
+    int keyCounter = 0;
+    int numSelectors = selectors.size();
+    HashSet<Integer> hashes = new HashSet<Integer>(numSelectors);
+    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<Integer,Integer>(numSelectors);
+
+    for (int index = 0; index < numSelectors; index++)
+    {
+      String selector = selectors.get(index);
+      int hash = KeyedHash.hash(hashKey, queryInfo.getHashBitSize(), selector);
+
+      // All keyed hashes of the selectors must be unique
+      if (hashes.add(hash))
+      {
+        // The hash is unique
+        selectorQueryVecMapping.put(hash, index);
+        logger.debug("index = " + index + "selector = " + selector + " hash = " + hash);
+      }
+      else
+      {
+        // Hash collision
+        hashes.clear();
+        selectorQueryVecMapping.clear();
+        hashKey = queryInfo.getHashKey() + ++keyCounter;
+        logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
+        index = 0;
+      }
+    }
+    return selectorQueryVecMapping;
+  }
+
+  private void populateEmbeddedSelectorMap()
+  {
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
     String type = dSchema.getElementType(qSchema.getSelectorName());
@@ -185,19 +190,23 @@ public class EncryptQuery
       {
         logger.info("Caught exception for selector = " + selector);
         e.printStackTrace();
+        // TODO: Check: should continue?
       }
 
       embedSelectorMap.put(sNum, embeddedSelector);
       ++sNum;
     }
+  }
 
+  private void parallelEncrypt(int numThreads, HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  {
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
+    ArrayList<EncryptQueryRunnable> runnables = new ArrayList<EncryptQueryRunnable>(numThreads);
+    int numElements = 1 << queryInfo.getHashBitSize();  // 2^hashBitSize
 
-    int elementsPerThread = (int) (Math.floor(Math.pow(2, hashBitSize) / numThreads));
-
-    ArrayList<EncryptQueryRunnable> runnables = new ArrayList<EncryptQueryRunnable>();
-
+    // Split the work across the requested number of threads
+    int elementsPerThread = numElements / numThreads;
     for (int i = 0; i < numThreads; ++i)
     {
       // Grab the range of the thread
@@ -205,10 +214,9 @@ public class EncryptQuery
       int stop = start + elementsPerThread - 1;
       if (i == (numThreads - 1))
       {
-        stop = (int) (Math.pow(2, hashBitSize) - 1);
+        stop = numElements - 1;
       }
 
-      // Create the runnable and execute
       // Copy selectorQueryVecMapping (if numThreads > 1) so we don't have to synchronize - only has size = selectors.size()
       HashMap<Integer,Integer> selectorQueryVecMappingCopy = null;
       if (numThreads == 1)
@@ -219,14 +227,24 @@ public class EncryptQuery
       {
         selectorQueryVecMappingCopy = new HashMap<Integer,Integer>(selectorQueryVecMapping);
       }
-      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(dataPartitionBitSize, hashBitSize, paillier.copy(), selectorQueryVecMappingCopy, start, stop);
+
+      // Create the runnable and execute
+      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier.copy(), selectorQueryVecMappingCopy, start, stop);
       runnables.add(runEnc);
       es.execute(runEnc);
     }
 
     // Allow threads to complete
     es.shutdown(); // previously submitted tasks are executed, but no new tasks will be accepted
-    boolean finished = es.awaitTermination(1, TimeUnit.DAYS); // waits until all tasks complete or until the specified timeout
+    boolean finished = false;
+    try
+    {
+      // waits until all tasks complete or until the specified timeout
+      finished = es.awaitTermination(1, TimeUnit.DAYS);
+    } catch (InterruptedException e)
+    {
+      Thread.interrupted();
+    }
 
     if (!finished)
     {
@@ -236,30 +254,9 @@ public class EncryptQuery
     // Pull all encrypted elements and add to Query
     for (EncryptQueryRunnable runner : runnables)
     {
-      TreeMap<Integer,BigInteger> encValues = runner.getEncryptedValues();
-      query.addQueryElements(encValues);
+      query.addQueryElements(runner.getEncryptedValues());
     }
     logger.info("Completed creation of encrypted query vectors");
-
-    // Generate the expTable in Query, if we are using it and if
-    // useHDFSExpLookupTable is false -- if we are generating it as standalone and not on the cluster
-    if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable())
-    {
-      logger.info("Starting expTable generation");
-
-      // This has to be reasonably multithreaded or it takes forever...
-      if (numThreads < 8)
-      {
-        query.generateExpTable(8);
-      }
-      else
-      {
-        query.generateExpTable(numThreads);
-      }
-    }
-
-    // Set the Querier object
-    querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
   }
 
   /**
