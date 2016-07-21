@@ -62,8 +62,8 @@ public class QuerierDriverCLI
   public static String USEMEMLOOKUPTABLE = "memLookupTable";
   public static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
   public static String SR_ALGORITHM = "secureRandomAlg";
-  public static String SR_PROVIDER = "secureRandomProvider"; 
-  
+  public static String SR_PROVIDER = "secureRandomProvider";
+
   // Decryption variables
   public static String QUERIERFILE = "querierFile";
 
@@ -269,7 +269,7 @@ public class QuerierDriverCLI
       {
         SystemConfiguration.setProperty(USEHDFSLOOKUPTABLE, getOptionValue(USEHDFSLOOKUPTABLE));
       }
-      
+
       if (!hasOption(SR_ALGORITHM))
       {
         SystemConfiguration.setProperty("pallier.secureRandom.algorithm", "NativePRNG");
@@ -278,7 +278,7 @@ public class QuerierDriverCLI
       {
         SystemConfiguration.setProperty("pallier.secureRandom.algorithm", getOptionValue(SR_ALGORITHM));
       }
-      
+
       if (!hasOption(SR_PROVIDER))
       {
         SystemConfiguration.setProperty("pallier.secureRandom.provider", "SUN");
@@ -469,21 +469,21 @@ public class QuerierDriverCLI
     optionQUERIERFILE.setArgName(QUERIERFILE);
     optionQUERIERFILE.setType(String.class);
     options.addOption(optionQUERIERFILE);
-    
-    //SR_ALGORITHM
+
+    // SR_ALGORITHM
     Option optionSR_ALGORITHM = new Option("srAlg", SR_ALGORITHM, true, "optional - specify the SecureRandom algorithm, defaults to NativePRNG");
     optionSR_ALGORITHM.setRequired(false);
     optionSR_ALGORITHM.setArgName(SR_ALGORITHM);
     optionSR_ALGORITHM.setType(String.class);
     options.addOption(optionSR_ALGORITHM);
-    
-    //SR_PROVIDERS
+
+    // SR_PROVIDERS
     Option optionSR_PROVIDER = new Option("srProvider", SR_PROVIDER, true, "optional - specify the SecureRandom provider, defaults to SUN");
     optionSR_PROVIDER.setRequired(false);
     optionSR_PROVIDER.setArgName(SR_PROVIDER);
     optionSR_PROVIDER.setType(String.class);
     options.addOption(optionSR_PROVIDER);
-    
+
     return options;
   }
 

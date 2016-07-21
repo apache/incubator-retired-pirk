@@ -155,6 +155,7 @@ public class ComputeEncryptedRow
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@ArrayList<BigInteger>
    * 
+   * 
    * }
    * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
@@ -229,6 +230,7 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@<BytesArrayWritable>
+   * 
    * 
    * } given an input modular exponentiation table for the row
    * <p>

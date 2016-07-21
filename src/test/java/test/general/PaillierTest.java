@@ -146,14 +146,14 @@ public class PaillierTest
       fail("Paillier encryption did not throw PIRException for message m > N");
     } catch (PIRException e)
     {}
-    
+
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength);
       fail("Paillier constructor did not throw PIRException for ensureBitSet = bitLength");
     } catch (PIRException e)
     {}
-    
+
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength + 1);
@@ -288,4 +288,4 @@ public class PaillierTest
 
     assertEquals(multDecrypt, m1_plus_m2);
   }
- }
+}
