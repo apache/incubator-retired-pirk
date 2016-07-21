@@ -36,7 +36,6 @@ public class EncryptQueryRunnable implements Runnable
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
   int dataPartitionBitSize = 0;
-  int hashBitSize = 0;
   int start = 0; // start of computing range for the runnable
   int stop = 0; // stop, inclusive, of the computing range for the runnable
 
@@ -45,11 +44,10 @@ public class EncryptQueryRunnable implements Runnable
 
   TreeMap<Integer,BigInteger> encryptedValues = null; // holds the ordered encrypted values to pull after thread computation is complete
 
-  public EncryptQueryRunnable(int dataPartitionBitSizeInput, int hashBitSizeInput, Paillier paillierInput,
-      HashMap<Integer,Integer> selectorQueryVecMappingInput, int startInput, int stopInput)
+  public EncryptQueryRunnable(int dataPartitionBitSizeInput, Paillier paillierInput, HashMap<Integer,Integer> selectorQueryVecMappingInput, int startInput,
+      int stopInput)
   {
     dataPartitionBitSize = dataPartitionBitSizeInput;
-    hashBitSize = hashBitSizeInput;
 
     paillier = paillierInput;
     selectorQueryVecMapping = selectorQueryVecMappingInput;
@@ -73,42 +71,20 @@ public class EncryptQueryRunnable implements Runnable
   @Override
   public void run()
   {
-    int i = start;
-    while (i <= stop)
+    for (int i = start; i <= stop; i++)
     {
-      if (selectorQueryVecMapping.containsKey(i))
+      Integer selectorNum = selectorQueryVecMapping.get(i);
+      BigInteger valToEnc = (selectorNum == null) ? BigInteger.ZERO : (BigInteger.valueOf(2)).pow(selectorNum * dataPartitionBitSize);
+      BigInteger encVal;
+      try
       {
-        int selectorNum = selectorQueryVecMapping.get(i);
-        BigInteger valToEnc = (BigInteger.valueOf(2)).pow(selectorNum * dataPartitionBitSize);
-
-        BigInteger encVal;
-        try
-        {
-          encVal = paillier.encrypt(valToEnc);
-        } catch (PIRException e)
-        {
-          e.printStackTrace();
-          throw new RuntimeException(e.toString());
-        }
-        encryptedValues.put(i, encVal);
-
-        logger.debug("selectorNum = " + selectorNum + " valToEnc = " + valToEnc + " envVal = " + encVal);
-      }
-      else
+        encVal = paillier.encrypt(valToEnc);
+      } catch (PIRException e)
       {
-        BigInteger encZero;
-        try
-        {
-          encZero = paillier.encrypt(BigInteger.ZERO);
-        } catch (PIRException e)
-        {
-          e.printStackTrace();
-          throw new RuntimeException(e.toString());
-        }
-        encryptedValues.put(i, encZero);
+        throw new RuntimeException(e);
       }
-      ++i;
+      encryptedValues.put(i, encVal);
+      logger.debug("selectorNum = " + selectorNum + " valToEnc = " + valToEnc + " envVal = " + encVal);
     }
   }
-
 }
