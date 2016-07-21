@@ -179,7 +179,15 @@ public class LoadDataSchemas
         // Pull out the attributes
         String name = eElement.getElementsByTagName("name").item(0).getTextContent().trim().toLowerCase();
         String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
-        String isArray = eElement.getElementsByTagName("isArray").item(0).getTextContent().trim().toLowerCase();
+
+        // An absent isArray means false, and an empty isArray means true, otherwise take the value. 
+        String isArray = "false";
+        Node isArrayNode = eElement.getElementsByTagName("isArray").item(0);
+        if (isArrayNode != null)
+        {
+          String isArrayValue = isArrayNode.getTextContent().trim().toLowerCase();
+          isArray = isArrayValue.isEmpty() ? "true" : isArrayValue;
+        }
 
         // Pull and check the partitioner class -- if the partitioner tag doesn't exist, then
         // it defaults to the PrimitiveTypePartitioner

@@ -29,7 +29,7 @@
                             <xs:element name="name" type="xs:string" />
                             <xs:element name="type" type="xs:string" />
                             <xs:element name="isArray" type="xs:boolean"
-                                default="false" />
+                                default="true" minOccurs="0" />
                             <xs:element name="partitioner"
                                 type="xs:string" minOccurs="0" />
                         </xs:sequence>

@@ -111,9 +111,10 @@ public class TestUtils
     type.appendChild(doc.createTextNode(typeIn));
     element.appendChild(type);
 
-    Element isArray = doc.createElement("isArray");
-    isArray.appendChild(doc.createTextNode(isArrayIn));
-    element.appendChild(isArray);
+    if (isArrayIn.equals("true"))
+    {
+      element.appendChild(doc.createElement("isArray"));
+    }
 
     if (partitionerIn != null)
     {
