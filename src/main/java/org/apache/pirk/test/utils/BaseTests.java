@@ -92,7 +92,8 @@ public class BaseTests
     logger.info("Completed testDNSHostnameQuery(): ");
   }
 
-  public static void checkDNSHostnameQueryResults(ArrayList <QueryResponseJSON> results, boolean isDistributed, int numExpectedResults, boolean testFalsePositive, ArrayList<JSONObject> dataElements)
+  public static void checkDNSHostnameQueryResults(ArrayList<QueryResponseJSON> results, boolean isDistributed, int numExpectedResults,
+      boolean testFalsePositive, ArrayList<JSONObject> dataElements)
   {
     logger.info("results:");
     printResultList(results);

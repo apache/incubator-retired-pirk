@@ -78,8 +78,7 @@ public class PirkTopology
   } // main
 
   /***
-   * Creates Pirk topology: KafkaSpout -> HashBolt -> EncRowCalcBolt -> EncColMultBolt -> OutputBolt
-   * Requires KafkaConfig to initialize KafkaSpout.
+   * Creates Pirk topology: KafkaSpout -> HashBolt -> EncRowCalcBolt -> EncColMultBolt -> OutputBolt Requires KafkaConfig to initialize KafkaSpout.
    *
    * @param kafkaConfig
    * @return
@@ -88,51 +87,43 @@ public class PirkTopology
   {
     // Create spout and bolts
     KafkaSpout spout = new KafkaSpout(kafkaConfig);
-    HashBolt hashbolt = new HashBolt();
+    HashSelectorsAndPartitionDataBolt hashbolt = new HashSelectorsAndPartitionDataBolt();
     EncRowCalcBolt ercbolt = new EncRowCalcBolt();
     EncColMultBolt ecmbolt = new EncColMultBolt();
     OutputBolt outputBolt = new OutputBolt();
 
     /***
-     * Salting the columns separates out multiplications done on the same column to be performed on different bolt
-     * instances.  The rowDivisions parameter determines the extent to which the column is separated.  This seems
-     * to give better performance and will probably be permanently enabled in the release.
+     * Salting the columns separates out multiplications done on the same column to be performed on different bolt instances. The rowDivisions parameter
+     * determines the extent to which the column is separated. This seems to improve the performance.
      */
     Fields ecmFields;
     if (saltColumns)
-      ecmFields = new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD, "salt");
+      ecmFields = new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD, StormConstants.SALT);
     else
       ecmFields = new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD);
 
     // Build Storm topology
     TopologyBuilder builder = new TopologyBuilder();
-    builder.setSpout(org.apache.pirk.responder.wideskies.storm.StormConstants.SPOUT_ID, spout, spoutParallelism);
-    BoltDeclarer b1 = builder.setBolt(org.apache.pirk.responder.wideskies.storm.StormConstants.HASHBOLT_ID, hashbolt, hashboltParallelism)
-        .shuffleGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.SPOUT_ID);
-    //b1.setMemoryLoad(2048);
-    //b1.setCPULoad(50.0);
+    builder.setSpout(StormConstants.SPOUT_ID, spout, spoutParallelism);
+    BoltDeclarer b1 = builder.setBolt(StormConstants.HASHBOLT_ID, hashbolt, hashboltParallelism).shuffleGrouping(StormConstants.SPOUT_ID);
+    // b1.setMemoryLoad(2048);
+    // b1.setCPULoad(50.0);
 
-    BoltDeclarer b2 = builder.setBolt(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCROWCALCBOLT_ID, ercbolt, encrowcalcboltParallelism)
-        .fieldsGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.HASHBOLT_ID,
-            new Fields(org.apache.pirk.responder.wideskies.storm.StormConstants.HASH_FIELD))
-        .allGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCCOLMULTBOLT_ID,
-            org.apache.pirk.responder.wideskies.storm.StormConstants.ENCCOLMULTBOLT_SESSION_END)
+    BoltDeclarer b2 = builder.setBolt(StormConstants.ENCROWCALCBOLT_ID, ercbolt, encrowcalcboltParallelism)
+        .fieldsGrouping(StormConstants.HASHBOLT_ID, new Fields(StormConstants.HASH_FIELD))
+        .allGrouping(StormConstants.ENCCOLMULTBOLT_ID, StormConstants.ENCCOLMULTBOLT_SESSION_END)
         .addConfiguration(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS, Integer.parseInt(SystemConfiguration.getProperty("storm.encrowcalcbolt.ticktuple")));
 
-    //b2.setMemoryLoad(5000);
-    //b2.setCPULoad(150.0);
+    // b2.setMemoryLoad(5000);
+    // b2.setCPULoad(150.0);
 
-    BoltDeclarer b3 = builder.setBolt(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCCOLMULTBOLT_ID, ecmbolt, enccolmultboltParallelism)
-        .fieldsGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCROWCALCBOLT_ID,
-            org.apache.pirk.responder.wideskies.storm.StormConstants.ENCROWCALCBOLT_ID, ecmFields)
-        .allGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCROWCALCBOLT_ID,
-            org.apache.pirk.responder.wideskies.storm.StormConstants.ENCROWCALCBOLT_FLUSH_SIG);
-    //b3.setMemoryLoad(5000);
-    //b3.setCPULoad(500.0);
+    BoltDeclarer b3 = builder.setBolt(StormConstants.ENCCOLMULTBOLT_ID, ecmbolt, enccolmultboltParallelism)
+        .fieldsGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCCOLMULTBOLT_DATASTREAM_ID, ecmFields)
+        .allGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCROWCALCBOLT_FLUSH_SIG);
+    // b3.setMemoryLoad(5000);
+    // b3.setCPULoad(500.0);
 
-    builder.setBolt(org.apache.pirk.responder.wideskies.storm.StormConstants.OUTPUTBOLT_ID, outputBolt, 1)
-        .globalGrouping(org.apache.pirk.responder.wideskies.storm.StormConstants.ENCCOLMULTBOLT_ID,
-            org.apache.pirk.responder.wideskies.storm.StormConstants.ENCCOLMULTBOLT_ID);
+    builder.setBolt(StormConstants.OUTPUTBOLT_ID, outputBolt, 1).globalGrouping(StormConstants.ENCCOLMULTBOLT_ID, StormConstants.ENCCOLMULTBOLT_ID);
 
     return builder.createTopology();
   }
@@ -151,17 +142,17 @@ public class PirkTopology
     conf.setNumAckers(Integer.parseInt(SystemConfiguration.getProperty("storm.numAckers", numWorkers.toString())));
     conf.setMaxSpoutPending(Integer.parseInt(SystemConfiguration.getProperty("storm.maxSpoutPending", "300")));
     conf.setNumWorkers(numWorkers);
-    //conf.setNumEventLoggers(2);
+    // conf.setNumEventLoggers(2);
 
     conf.put(conf.TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE, Integer.parseInt(SystemConfiguration.getProperty("storm.executor.receiveBufferSize", "1024")));
     conf.put(conf.TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE, Integer.parseInt(SystemConfiguration.getProperty("storm.executor.sendBufferSize", "1024")));
     conf.put(conf.TOPOLOGY_TRANSFER_BUFFER_SIZE, Integer.parseInt(SystemConfiguration.getProperty("storm.transferBufferSize", "32")));
     conf.put(conf.WORKER_HEAP_MEMORY_MB, Integer.parseInt(SystemConfiguration.getProperty("storm.worker.heapMemory", "750")));
     conf.put(conf.TOPOLOGY_COMPONENT_RESOURCES_ONHEAP_MEMORY_MB, Double.parseDouble(SystemConfiguration.getProperty("storm.componentOnheapMem", "128")));
-    //conf.put(conf.WORKER_PROFILER_ENABLED, true);
-    //conf.put(conf.WORKER_CHILDOPTS, SystemConfiguration.getProperty("storm.worker.childOpts", ""));
-    //conf.put(conf.TOPOLOGY_WORKER_CHILDOPTS, SystemConfiguration.getProperty("storm.worker.childOpts", ""));
-    //conf.put(conf.TOPOLOGY_BACKPRESSURE_ENABLE, Boolean.parseBoolean(SystemConfiguration.getProperty("storm.backpressure", "true")));
+    // conf.put(conf.WORKER_PROFILER_ENABLED, true);
+    // conf.put(conf.WORKER_CHILDOPTS, SystemConfiguration.getProperty("storm.worker.childOpts", ""));
+    // conf.put(conf.TOPOLOGY_WORKER_CHILDOPTS, SystemConfiguration.getProperty("storm.worker.childOpts", ""));
+    // conf.put(conf.TOPOLOGY_BACKPRESSURE_ENABLE, Boolean.parseBoolean(SystemConfiguration.getProperty("storm.backpressure", "true")));
 
     // Parameters to send to bolts
     conf.put(StormConstants.QSCHEMA_KEY, SystemConfiguration.getProperty("query.schemas"));
@@ -172,7 +163,7 @@ public class PirkTopology
     conf.put(StormConstants.OUTPUT_FILE_KEY, outputPath);
     conf.put(StormConstants.LIMIT_HITS_PER_SEL_KEY, limitHitsPerSelector);
     conf.put(StormConstants.MAX_HITS_PER_SEL_KEY, maxHitsPerSelector);
-    //conf.put(StormConstants.TIME_TO_FLUSH_KEY, timeToFlush);
+    // conf.put(StormConstants.TIME_TO_FLUSH_KEY, timeToFlush);
     conf.put(StormConstants.SALT_COLUMNS_KEY, saltColumns);
     conf.put(StormConstants.ROW_DIVISIONS_KEY, rowDivisions);
     conf.put(StormConstants.SPLIT_PARTITIONS_KEY, splitPartitions);

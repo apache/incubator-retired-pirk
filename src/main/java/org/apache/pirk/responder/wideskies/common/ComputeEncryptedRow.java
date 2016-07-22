@@ -53,7 +53,8 @@ public class ComputeEncryptedRow
   static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
       .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
       {
-        @Override public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
+        @Override
+        public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
         {
           logger.debug("cache miss");
           return ModPowAbstraction.modPow(info._1(), info._2(), info._3());
@@ -137,9 +138,8 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug(
-            "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
-                + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
+        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+            + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
         returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
@@ -152,8 +152,8 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@ArrayList<BigInteger>
-   * <p/>
-   * }
+   *  <p/>
+   * * }
    * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p/>
@@ -206,9 +206,8 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug(
-            "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
-                + " i = " + i);
+        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+            + exp + " i = " + i);
 
         returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
@@ -227,8 +226,8 @@ public class ComputeEncryptedRow
 
   /**
    * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@<BytesArrayWritable>
-   * <p/>
-   * } given an input modular exponentiation table for the row
+   *  <p/>
+   * * } given an input modular exponentiation table for the row
    * <p/>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p/>
@@ -308,9 +307,8 @@ public class ComputeEncryptedRow
         e.printStackTrace();
       }
 
-      logger.debug(
-          "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
-              + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
+      logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+          + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
       returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
@@ -358,9 +356,8 @@ public class ComputeEncryptedRow
         e.printStackTrace();
       }
 
-      logger.debug(
-          "rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = " + exp
-              + " i = " + i + " partition = " + dataPartitions.get(i) + " = " + dataPartitions.get(i).toString(2));
+      logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+          + exp + " i = " + i + " partition = " + dataPartitions.get(i) + " = " + dataPartitions.get(i).toString(2));
 
       returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 

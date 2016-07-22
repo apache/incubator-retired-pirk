@@ -70,7 +70,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
-@Category(IntegrationTest.class) public class KafkaStormIntegrationTest
+@Category(IntegrationTest.class)
+public class KafkaStormIntegrationTest
 {
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
@@ -86,7 +87,8 @@ import java.util.Properties;
   private static File fileFinalResults;
   private static String localStopListFile;
 
-  @Test public void testKafkaStormIntegration() throws Exception
+  @Test
+  public void testKafkaStormIntegration() throws Exception
   {
     SystemConfiguration.setProperty("storm.splitPartitions", "true");
     SystemConfiguration.setProperty("storm.saltColumns", "true");
@@ -107,8 +109,8 @@ import java.util.Properties;
     // Create encrypted file
     localStopListFile = Inputs.createPIRStopList(null, false);
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
-    //SystemConfiguration.setProperty("data.schemas", Inputs.DATA_SCHEMA_FILE_LOCALFS);
-    //SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
+    // SystemConfiguration.setProperty("data.schemas", Inputs.DATA_SCHEMA_FILE_LOCALFS);
+    // SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
     Inputs.createSchemaFiles(StopListFilter.class.getName());
 
     performEncryption();
@@ -140,12 +142,12 @@ import java.util.Properties;
     SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "16");
     SystemConfiguration.setProperty("hdfs.use", "false");
     Config conf = PirkTopology.createStormConf();
-    //conf.setDebug(true);
+    // conf.setDebug(true);
     mkClusterParam.setDaemonConf(conf);
 
     TestJob testJob = createPirkTestJob(conf);
     Testing.withLocalCluster(mkClusterParam, testJob);
-    //Testing.withSimulatedTimeLocalCluster(mkClusterParam, testJob);
+    // Testing.withSimulatedTimeLocalCluster(mkClusterParam, testJob);
   }
 
   private TestJob createPirkTestJob(final Config config)
@@ -155,7 +157,8 @@ import java.util.Properties;
     {
       StormTopology topology = PirkTopology.getPirkTopology(kafkaConfig);
 
-      @Override public void run(ILocalCluster iLocalCluster) throws Exception
+      @Override
+      public void run(ILocalCluster iLocalCluster) throws Exception
       {
         iLocalCluster.submitTopology("pirk_integration_test", config, topology);
         logger.info("Pausing for setup.");
@@ -164,7 +167,7 @@ import java.util.Properties;
         loadTestData(producer);
         Thread.sleep(12000);
 
-        //EncRowCalcBolt.latch.await();
+        // EncRowCalcBolt.latch.await();
         OutputBolt.latch.await();
         Thread.sleep(4000);
         logger.info("Finished...");
@@ -199,7 +202,7 @@ import java.util.Properties;
     props.setProperty("zookeeper.session.timeout.ms", "100000");
     props.put("advertised.host.name", "localhost");
     props.put("port", 11111);
-    //props.put("broker.id", "0");
+    // props.put("broker.id", "0");
     props.put("log.dir", kafkaTmpDir);
     props.put("enable.zookeeper", "true");
     props.put("zookeeper.connect", zookeeperLocalCluster.getConnectString());
@@ -213,7 +216,8 @@ import java.util.Properties;
     zkClient.close();
   }
 
-  @AfterClass public static void tearDown() throws Exception
+  @AfterClass
+  public static void tearDown() throws Exception
   {
     kafkaLocalBroker.shutdown();
     zookeeperLocalCluster.stop();

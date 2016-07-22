@@ -41,8 +41,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Bolt to compute and output the final Response object for a query
+ * <p>
+ * Receives {@code <colIndex, colProduct>} tuples, computes the final column product for each colIndex, records the results in the final Response object, and
+ * outputs the final Response object for the query.
+ * <p>
+ * Flush signals are sent to the OuputBolt from the EncColMultBolts via a tuple of the form {@code <-1, 0>}. Once a flush signal has been received from each
+ * EncColMultBolt (or a timeout is reached), the final column product is computed and the final Response is formed and emitted.
+ * <p>
+ * Currently, the Responses are written to HDFS to location specified by the outputFile with the timestamp appended.
+ * <p>
+ * TODO: -- Enable other Response output locations
+ * 
+ */
 public class OutputBolt extends BaseRichBolt
 {
+  private static final long serialVersionUID = 1L;
+
+  private static Logger logger = LogUtils.getLoggerForThisClass();
+
   private OutputCollector outputCollector;
   private QueryInfo queryInfo;
   private Response response;
@@ -56,18 +74,16 @@ public class OutputBolt extends BaseRichBolt
   // This latch just serves as a hook for testing.
   public static CountDownLatch latch = new CountDownLatch(1);
 
-  // This is the main object here.  It holds column Id -> product
+  // This is the main object here. It holds column Id -> product
   private HashMap<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
 
   BigInteger colVal;
-  BigInteger colVal2;
   BigInteger colMult;
 
   private BigInteger nSquared;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
-
-  @Override public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector)
+  @Override
+  public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector)
   {
     outputCollector = collector;
 
@@ -79,15 +95,13 @@ public class OutputBolt extends BaseRichBolt
     nSquared = new BigInteger((String) map.get(StormConstants.N_SQUARED_KEY));
     queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
     response = new Response(queryInfo);
+
     logger.info("Intitialized OutputBolt.");
   }
 
-  @Override public void execute(Tuple tuple)
+  @Override
+  public void execute(Tuple tuple)
   {
-
-    // Receives (colIndex, colProduct) pairs and writes them to HDFS whenever enough flush signals have been received
-    // or a timeout.
-
     Long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ECM_FIELD);
     colVal = (BigInteger) tuple.getValueByField(StormConstants.COLUMN_PRODUCT_FIELD);
 
@@ -107,13 +121,14 @@ public class OutputBolt extends BaseRichBolt
           {
             response.addElement((int) cv, resultsMap.get(cv));
           }
+
           if (hdfs)
           {
             FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
             response.writeToHDFSFile(new Path(outputFile + "_" + timestamp), fs);
           }
           else
-          {   // In order to accomodate testing, this does not currently include timestamp.
+          { // In order to accommodate testing, this does not currently include timestamp.
             // Should probably be fixed, but this will not likely be used outside of testing.
             response.writeToFile(new File(outputFile));
             for (long cv : resultsMap.keySet())
@@ -122,11 +137,12 @@ public class OutputBolt extends BaseRichBolt
               logger.debug("column = " + cv + ", value = " + resultsMap.get(cv).toString());
             }
           }
-
         } catch (IOException e)
         {
           logger.warn("Unable to write output file.");
         }
+
+        // Reset
         resultsMap.clear();
         flushCounter = 0;
         latch.countDown();
@@ -138,8 +154,7 @@ public class OutputBolt extends BaseRichBolt
     {
       if (resultsMap.containsKey(colIndex))
       {
-        colVal2 = resultsMap.get(colIndex);
-        colMult = colVal.multiply(colVal2).mod(nSquared);
+        colMult = colVal.multiply(resultsMap.get(colIndex)).mod(nSquared);
         resultsMap.put(colIndex, colMult);
       }
       else
@@ -149,10 +164,9 @@ public class OutputBolt extends BaseRichBolt
       logger.debug("column = " + colIndex + ", value = " + resultsMap.get(colIndex).toString());
     }
     outputCollector.ack(tuple);
-
   }
 
-  @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
-  {
-  }
+  @Override
+  public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+  {}
 }

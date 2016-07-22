@@ -35,8 +35,8 @@ import org.json.simple.JSONObject;
 import scala.Tuple2;
 
 /**
- * Given a MapWritable dataElement, this class gives the common functionality to extract the selector by queryType from each dataElement, perform a keyed hash
- * of the selector, extract the partitions of the dataElement, and outputs {@code <hash(selector), dataPartitions>}
+ * Given a MapWritable or JSON formatted dataElement, this class gives the common functionality to extract the selector by queryType from each dataElement,
+ * perform a keyed hash of the selector, extract the partitions of the dataElement, and outputs {@code <hash(selector), dataPartitions>}
  */
 public class HashSelectorAndPartitionData
 {

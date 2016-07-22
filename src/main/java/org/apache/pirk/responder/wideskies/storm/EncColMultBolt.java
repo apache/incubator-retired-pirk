@@ -32,23 +32,41 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Bolt class to perform encrypted column multiplication
+ * <p>
+ * Takes {@code <columnIndex, columnValue>} tuples as input and aggregates (multiplies) the columnValues for a given columnIndex as they are received.
+ * <p>
+ * EncRowCalcBolts send flush signals to the EncColMultBolts indicating that they have finished sending all tuples for a session. Whenever a flush signal is
+ * received from a EncRowCalcBolt, the num of received flush signals is tallied until each encrypted row has emitted a flush signal (there are 2^hashBitSize
+ * rows).
+ * <p>
+ * Once a flush signal has been received from each row, all {@code <columnIndex, aggregate colVal product>} tuples are sent to the OutputBolt and a session_end
+ * signal is sent back to each EncRowMultBolt.
+ * <p>
+ * The EncRowMultBolts buffer their output from the time that they send a flush signal to the EncColMultBolts until the time that they receive a session_end
+ * signal from the EncColMultBolts.
+ * 
+ */
 public class EncColMultBolt extends BaseRichBolt
 {
+  private static final long serialVersionUID = 1L;
+
+  private static Logger logger = LogUtils.getLoggerForThisClass();
+
   private OutputCollector outputCollector;
 
   private BigInteger nSquared;
   private long numFlushSignals;
   private Long totalFlushSignals;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
-
-  // This is the main object here.  It holds column Id -> aggregated product
+  // This is the main object here. It holds column Id -> aggregated product
   private HashMap<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
   private BigInteger colVal1;
-  private BigInteger colVal2;
   private BigInteger colMult;
 
-  @Override public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector)
+  @Override
+  public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector)
   {
     outputCollector = collector;
     String nSquare = (String) map.get(StormConstants.N_SQUARED_KEY);
@@ -58,12 +76,9 @@ public class EncColMultBolt extends BaseRichBolt
     logger.info("Initialized EncColMultBolt. ");
   }
 
-  @Override public void execute(Tuple tuple)
+  @Override
+  public void execute(Tuple tuple)
   {
-    // Receives (columnIndex, columnValue) pairs.  Keeps aggregated product values for each individual column.
-    // Whenever a flush signal is received, all (colIndex, aggregate product) pairs are sent to the OutputBolt, followed
-    // by a flush signal.
-
     if (tuple.getSourceStreamId().equals(StormConstants.ENCROWCALCBOLT_FLUSH_SIG))
     {
       numFlushSignals += 1;
@@ -73,6 +88,7 @@ public class EncColMultBolt extends BaseRichBolt
       {
         logger.debug("Received signal to flush in EncColMultBolt. Outputting " + resultsMap.keySet().size() + " results.");
         for (Long key : resultsMap.keySet())
+          // key = column Id
           outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(key, resultsMap.get(key)));
         resultsMap.clear();
 
@@ -90,17 +106,8 @@ public class EncColMultBolt extends BaseRichBolt
 
       if (resultsMap.containsKey(colIndex))
       {
-        if (!colVal1.equals(BigInteger.ONE))
-        {
-          colVal2 = resultsMap.get(colIndex);
-          if (colVal2.equals(BigInteger.ONE))
-            resultsMap.put(colIndex, colVal1);
-          else
-          {
-            colMult = colVal1.multiply(colVal2);
-            resultsMap.put(colIndex, colMult.mod(nSquared));
-          }
-        }
+        colMult = (colVal1.multiply(resultsMap.get(colIndex))).mod(nSquared);
+        resultsMap.put(colIndex, colMult);
       }
       else
       {
@@ -110,7 +117,8 @@ public class EncColMultBolt extends BaseRichBolt
     outputCollector.ack(tuple);
   }
 
-  @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+  @Override
+  public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
     outputFieldsDeclarer
         .declareStream(StormConstants.ENCCOLMULTBOLT_ID, new Fields(StormConstants.COLUMN_INDEX_ECM_FIELD, StormConstants.COLUMN_PRODUCT_FIELD));

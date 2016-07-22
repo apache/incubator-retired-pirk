@@ -29,6 +29,7 @@ public class StormConstants
 
   // Extra Streams
   public static final String DEFAULT = "default";
+  public static final String ENCCOLMULTBOLT_DATASTREAM_ID = "enccolmultbolt_datastream_id";
   public static final String ENCROWCALCBOLT_FLUSH_SIG = "encrowcalcbolt_flush";
   public static final String ENCCOLMULTBOLT_SESSION_END = "enccolmultbolt_sess_end";
 
@@ -60,5 +61,8 @@ public class StormConstants
   public static final String N_SQUARED_KEY = "nSquared";
   public static final String ENCROWCALCBOLT_PARALLELISM_KEY = "encrowcalcboltPar";
   public static final String ENCCOLMULTBOLT_PARALLELISM_KEY = "enccolmultboltPar";
+
+  public static final String SALT = "salt";
+  public static final String FLUSH = "flush";
 
 }

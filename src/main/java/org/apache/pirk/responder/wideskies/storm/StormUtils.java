@@ -34,13 +34,23 @@ import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * Utils class for the Storm implementation of Wideskies
+ */
 public class StormUtils
 {
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
+  /**
+   * Method to read in serialized Query object from the given queryFile
+   * 
+   * @param useHdfs
+   * @param hdfsUri
+   * @param queryFile
+   * @return
+   */
   public static Query getQuery(boolean useHdfs, String hdfsUri, String queryFile)
   {
-
     Query query = null;
 
     try
@@ -64,6 +74,12 @@ public class StormUtils
     return query;
   }
 
+  /**
+   * Method to read in and return a serialized Query object from the given file and initialize/load the query.schemas and data.schemas
+   * 
+   * @param map
+   * @return
+   */
   public static Query prepareQuery(Map map)
   {
     Query query = null;
@@ -84,6 +100,12 @@ public class StormUtils
     return query;
   }
 
+  /**
+   * Loads the QuerySchema and DataSchema objects
+   * 
+   * @param map
+   * @throws Exception
+   */
   public static void initializeSchemas(Map map) throws Exception
   {
     SystemConfiguration.setProperty("data.schemas", (String) map.get(StormConstants.DSCHEMA_KEY));

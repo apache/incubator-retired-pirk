@@ -38,21 +38,30 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class HashBolt extends BaseBasicBolt
+/**
+ * Bolt to extract the selector by queryType from each input data record, perform a keyed hash of the selector, extract the partitions of the data record, and
+ * output {@code <hash(selector), dataPartitions>}
+ * <p>
+ * Currently receives a JSON record as input
+ * <p>
+ * TODO: --Support other formats of input
+ * 
+ */
+public class HashSelectorsAndPartitionDataBolt extends BaseBasicBolt
 {
-  private QueryInfo queryInfo;
-
   private static Logger logger = LogUtils.getLoggerForThisClass();
+
+  private static final long serialVersionUID = 1L;
+
+  private QueryInfo queryInfo;
 
   private JSONParser parser;
   private JSONObject json = new JSONObject();
-  private Tuple2<Integer,ArrayList<BigInteger>> hashPartitionPairs;
+  private Tuple2<Integer,ArrayList<BigInteger>> hashPartitionPairs; // <hash, data partitions>
 
-  private boolean splitPartitions;
-
-  @Override public void prepare(Map map, TopologyContext context)
+  @Override
+  public void prepare(Map map, TopologyContext context)
   {
-    splitPartitions = (boolean) map.get(StormConstants.SPLIT_PARTITIONS_KEY);
     try
     {
       StormUtils.initializeSchemas(map);
@@ -66,13 +75,10 @@ public class HashBolt extends BaseBasicBolt
     logger.info("Initialized HashBolt.");
   }
 
-  @Override public void execute(Tuple tuple, BasicOutputCollector outputCollector)
+  @Override
+  public void execute(Tuple tuple, BasicOutputCollector outputCollector)
   {
-
-    // Receives JSON record from KafkaSpout. Outputs hash of the selector along with partitioned ArrayList of partitioned data.
-
     String record = tuple.getString(0);
-
     try
     {
       json = (JSONObject) parser.parse(record);
@@ -81,35 +87,20 @@ public class HashBolt extends BaseBasicBolt
       logger.warn("Unable to parse record.\n" + record);
     }
 
-    /***
-     * Two options here: output all partitioned data from the record as a single array, or output each partition
-     * element individually.  This is configurable via the splitPartitions parameter.  The latter approach seems
-     * to give better throughput, but still some uncertainty about possible ordering issues
-     */
     try
     {
       hashPartitionPairs = HashSelectorAndPartitionData.hashSelectorAndFormPartitions(json, queryInfo);
       logger.debug("Hashbolt processing " + json.toString() + " outputting results - " + hashPartitionPairs._2().size());
 
-      if (splitPartitions)
-      {
-        for (BigInteger bigInt : hashPartitionPairs._2())
-        {
-          outputCollector.emit(new Values(hashPartitionPairs._1(), bigInt));
-        }
-      }
-      else
-      {
-        outputCollector.emit(new Values(hashPartitionPairs._1(), hashPartitionPairs._2()));
-      }
-
+      outputCollector.emit(new Values(hashPartitionPairs._1(), hashPartitionPairs._2()));
     } catch (Exception e)
     {
       logger.warn("Failed to partition data for record -- " + json + "\n", e);
     }
   }
 
-  @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+  @Override
+  public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
     outputFieldsDeclarer.declare(new Fields(StormConstants.HASH_FIELD, StormConstants.PARTIONED_DATA_FIELD));
   }

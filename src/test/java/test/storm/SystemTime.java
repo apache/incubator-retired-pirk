@@ -23,17 +23,20 @@ import kafka.utils.Time;
 public class SystemTime implements Time
 {
 
-  @Override public long milliseconds()
+  @Override
+  public long milliseconds()
   {
     return System.currentTimeMillis();
   }
 
-  @Override public long nanoseconds()
+  @Override
+  public long nanoseconds()
   {
     return System.nanoTime();
   }
 
-  @Override public void sleep(long arg0)
+  @Override
+  public void sleep(long arg0)
   {
     try
     {
@@ -45,5 +48,3 @@ public class SystemTime implements Time
   }
 
 }
-
-
