@@ -31,6 +31,11 @@ import org.apache.storm.topology.BoltDeclarer;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
+/**
+ * Storm topology class for wideskies Pirk implementation
+ * <p>
+ * 
+ */
 public class PirkTopology
 {
   private static Logger logger = LogUtils.getLoggerForThisClass();
@@ -45,11 +50,14 @@ public class PirkTopology
   public static final Integer spoutParallelism = Integer.parseInt(SystemConfiguration.getProperty("storm.spout.parallelism", "1"));
 
   public static final Integer hashboltParallelism = Integer.parseInt(SystemConfiguration.getProperty("storm.hashbolt.parallelism", "1"));
+  public static final Integer partitionDataBoltParallelism = Integer.parseInt(SystemConfiguration.getProperty("storm.partitiondata.parallelism", "1"));
   public static final Integer encrowcalcboltParallelism = Integer.parseInt(SystemConfiguration.getProperty("storm.encrowcalcbolt.parallelism", "1"));
   public static final Integer enccolmultboltParallelism = Integer.parseInt(SystemConfiguration.getProperty("storm.enccolmultbolt.parallelism", "1"));
 
   private static final Boolean saltColumns = Boolean.parseBoolean(SystemConfiguration.getProperty("storm.saltColumns", "false"));
-
+  
+  private static final Boolean splitPartitions = Boolean.parseBoolean(SystemConfiguration.getProperty("storm.splitPartitions", "false"));
+  
   public static final String queryFile = SystemConfiguration.getProperty("pir.queryInput");
   public static final String outputPath = SystemConfiguration.getProperty("pir.outputFile");
 
@@ -87,7 +95,6 @@ public class PirkTopology
   {
     // Create spout and bolts
     KafkaSpout spout = new KafkaSpout(kafkaConfig);
-    HashSelectorsAndPartitionDataBolt hashbolt = new HashSelectorsAndPartitionDataBolt();
     EncRowCalcBolt ercbolt = new EncRowCalcBolt();
     EncColMultBolt ecmbolt = new EncColMultBolt();
     OutputBolt outputBolt = new OutputBolt();
@@ -105,12 +112,30 @@ public class PirkTopology
     // Build Storm topology
     TopologyBuilder builder = new TopologyBuilder();
     builder.setSpout(StormConstants.SPOUT_ID, spout, spoutParallelism);
-    BoltDeclarer b1 = builder.setBolt(StormConstants.HASHBOLT_ID, hashbolt, hashboltParallelism).shuffleGrouping(StormConstants.SPOUT_ID);
-    // b1.setMemoryLoad(2048);
-    // b1.setCPULoad(50.0);
-
+    
+    if(splitPartitions)
+    {
+      HashSelectorsBolt hashSelectorsBolt = new HashSelectorsBolt();
+      PartitionDataBolt partitionDataBolt = new PartitionDataBolt();
+      
+      //Split the hash selector and partition data functionalities to enable a higher level of parallelism 
+      //for data extraction and partitioning -- hashing is fast (less parallelism needed) and
+      //data extraction is more expensive (more parallelism needed)
+      builder.setBolt(StormConstants.HASH_SELECTORS_BOLT_ID, hashSelectorsBolt, hashboltParallelism).shuffleGrouping(StormConstants.SPOUT_ID);
+      
+      builder.setBolt(StormConstants.PARTITION_DATA_BOLT_ID, partitionDataBolt, partitionDataBoltParallelism)
+      .shuffleGrouping(StormConstants.HASH_SELECTORS_BOLT_ID);
+    }
+    else //TODO: handle b1 appropriately, if it is to have continued use
+    {
+      HashAndPartitionBolt hashbolt = new HashAndPartitionBolt();
+      BoltDeclarer b1 = builder.setBolt(StormConstants.PARTITION_DATA_BOLT_ID, hashbolt, hashboltParallelism).shuffleGrouping(StormConstants.SPOUT_ID);
+      // b1.setMemoryLoad(2048);
+      // b1.setCPULoad(50.0);
+    }
+  
     BoltDeclarer b2 = builder.setBolt(StormConstants.ENCROWCALCBOLT_ID, ercbolt, encrowcalcboltParallelism)
-        .fieldsGrouping(StormConstants.HASHBOLT_ID, new Fields(StormConstants.HASH_FIELD))
+        .fieldsGrouping(StormConstants.PARTITION_DATA_BOLT_ID, new Fields(StormConstants.HASH_FIELD))
         .allGrouping(StormConstants.ENCCOLMULTBOLT_ID, StormConstants.ENCCOLMULTBOLT_SESSION_END)
         .addConfiguration(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS, Integer.parseInt(SystemConfiguration.getProperty("storm.encrowcalcbolt.ticktuple")));
 
@@ -133,7 +158,6 @@ public class PirkTopology
 
     Boolean limitHitsPerSelector = Boolean.parseBoolean(SystemConfiguration.getProperty("pir.limitHitsPerSelector"));
     Integer maxHitsPerSelector = Integer.parseInt(SystemConfiguration.getProperty("pir.maxHitsPerSelector"));
-    Boolean splitPartitions = Boolean.parseBoolean(SystemConfiguration.getProperty("storm.splitPartitions", "false"));
     Integer rowDivisions = Integer.parseInt(SystemConfiguration.getProperty("storm.rowDivs", "1"));
     Boolean useHdfs = Boolean.parseBoolean(SystemConfiguration.getProperty("hdfs.use", "true"));
     String hdfsUri = SystemConfiguration.getProperty("hdfs.uri", "localhost");
@@ -166,7 +190,6 @@ public class PirkTopology
     // conf.put(StormConstants.TIME_TO_FLUSH_KEY, timeToFlush);
     conf.put(StormConstants.SALT_COLUMNS_KEY, saltColumns);
     conf.put(StormConstants.ROW_DIVISIONS_KEY, rowDivisions);
-    conf.put(StormConstants.SPLIT_PARTITIONS_KEY, splitPartitions);
     conf.put(StormConstants.ENCROWCALCBOLT_PARALLELISM_KEY, encrowcalcboltParallelism);
     conf.put(StormConstants.ENCCOLMULTBOLT_PARALLELISM_KEY, enccolmultboltParallelism);
 

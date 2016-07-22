@@ -22,7 +22,8 @@ public class StormConstants
 {
   // Topology Components
   public static final String SPOUT_ID = "kafkaspout";
-  public static final String HASHBOLT_ID = "hashbolt";
+  public static final String HASH_SELECTORS_BOLT_ID = "hashSelectorsBolt";
+  public static final String PARTITION_DATA_BOLT_ID = "partitionDataBolt";
   public static final String ENCROWCALCBOLT_ID = "encrowcalcbolt";
   public static final String ENCCOLMULTBOLT_ID = "enccolmultbolt";
   public static final String OUTPUTBOLT_ID = "outputbolt";
@@ -34,9 +35,10 @@ public class StormConstants
   public static final String ENCCOLMULTBOLT_SESSION_END = "enccolmultbolt_sess_end";
 
   // Tuple Fields
-  // From HashBolt
+  // From HashBolt (and variants)
   public static final String HASH_FIELD = "hash";
   public static final String PARTIONED_DATA_FIELD = "parData";
+  public static final String JSON_DATA_FIELD = "data";
   // From EncRowCalcBolt
   public static final String COLUMN_INDEX_ERC_FIELD = "colIndexErc";
   public static final String ENCRYPTED_VALUE_FIELD = "encRowValue";

@@ -47,7 +47,7 @@ import java.util.Map;
  * TODO: --Support other formats of input
  * 
  */
-public class HashSelectorsAndPartitionDataBolt extends BaseBasicBolt
+public class HashAndPartitionBolt extends BaseBasicBolt
 {
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
@@ -72,7 +72,7 @@ public class HashSelectorsAndPartitionDataBolt extends BaseBasicBolt
     queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
     parser = new JSONParser();
 
-    logger.info("Initialized HashBolt.");
+    logger.info("Initialized HashSelectorsAndPartitionDataBolt.");
   }
 
   @Override
@@ -90,7 +90,7 @@ public class HashSelectorsAndPartitionDataBolt extends BaseBasicBolt
     try
     {
       hashPartitionPairs = HashSelectorAndPartitionData.hashSelectorAndFormPartitions(json, queryInfo);
-      logger.debug("Hashbolt processing " + json.toString() + " outputting results - " + hashPartitionPairs._2().size());
+      logger.debug("HashSelectorsAndPartitionDataBolt processing " + json.toString() + " outputting results - " + hashPartitionPairs._2().size());
 
       outputCollector.emit(new Values(hashPartitionPairs._1(), hashPartitionPairs._2()));
     } catch (Exception e)
