@@ -37,6 +37,7 @@ import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -65,6 +66,7 @@ public class StandaloneQuery
     ArrayList<QueryResponseJSON> results = null;
 
     // Create the necessary files
+    LocalFileSystemStore storage = new LocalFileSystemStore();
     File fileQuerier = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERIER_FILETAG, ".txt");
     File fileQuery = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERY_FILETAG, ".txt");
     File fileResponse = File.createTempFile(responseFile, ".txt");
@@ -100,11 +102,12 @@ public class StandaloneQuery
     }
 
     // Write necessary output files
-    encryptQuery.writeOutputFiles(fileQuerier, fileQuery);
+    storage.store(fileQuerier, encryptQuery.getQuerier());
+    storage.store(fileQuery, encryptQuery.getQuery());
 
     // Perform the PIR query and build the response elements
     logger.info("Performing the PIR Query and constructing the response elements:");
-    Query query = Query.readFromFile(fileQuery);
+    Query query = storage.recall(fileQuery, Query.class);
     Responder pirResponder = new Responder(query);
     logger.info("Query and Responder elements constructed");
     for (JSONObject jsonData : dataElements)
@@ -125,14 +128,14 @@ public class StandaloneQuery
     logger.info("Forming response from response elements; writing to a file");
     pirResponder.setResponseElements();
     Response responseOut = pirResponder.getResponse();
-    responseOut.writeToFile(fileResponse);
+    storage.store(fileResponse, responseOut);
     logger.info("Completed forming response from response elements and writing to a file");
 
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
-    Response responseIn = Response.readFromFile(fileResponse);
-    Querier querier = Querier.readFromFile(fileQuerier);
+    Response responseIn = storage.recall(fileResponse, Response.class);
+    Querier querier = storage.recall(fileQuerier, Querier.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(responseIn, querier);

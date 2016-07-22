@@ -38,6 +38,7 @@ import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -82,7 +83,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
 
     fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
     queryInfo = query.getQueryInfo();
 
     try

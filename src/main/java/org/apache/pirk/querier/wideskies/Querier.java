@@ -18,13 +18,6 @@
  *******************************************************************************/
 package org.apache.pirk.querier.wideskies;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,13 +26,14 @@ import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
+import org.apache.pirk.serialization.Storable;
 import org.apache.pirk.utils.LogUtils;
 
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
  * 
  */
-public class Querier implements Serializable
+public class Querier implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
@@ -95,90 +89,5 @@ public class Querier implements Serializable
   public HashMap<Integer,String> getEmbedSelectorMap()
   {
     return embedSelectorMap;
-  }
-
-  /**
-   * Method to serialize the Querier object to a file
-   */
-  public void writeToFile(String filename) throws IOException
-  {
-    writeToFile(new File(filename));
-  }
-
-  /**
-   * Method to serialize the Querier object to a file
-   */
-  public void writeToFile(File file) throws IOException
-  {
-    ObjectOutputStream oos = null;
-    FileOutputStream fout = null;
-    try
-    {
-      fout = new FileOutputStream(file, true);
-      oos = new ObjectOutputStream(fout);
-      oos.writeObject(this);
-    } catch (Exception ex)
-    {
-      ex.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        oos.close();
-      }
-      if (fout != null)
-      {
-        fout.close();
-      }
-    }
-  }
-
-  /**
-   * Reconstruct the Querier object from its file serialization
-   */
-  public static Querier readFromFile(String filename) throws IOException
-  {
-    Querier querier = readFromFile(new File(filename));
-
-    return querier;
-  }
-
-  /**
-   * Reconstruct the Querier object from its file serialization
-   */
-  public static Querier readFromFile(File file) throws IOException
-  {
-    Querier querier = null;
-
-    FileInputStream fIn = null;
-    ObjectInputStream oIn = null;
-    try
-    {
-      fIn = new FileInputStream(file);
-      oIn = new ObjectInputStream(fIn);
-      querier = (Querier) oIn.readObject();
-    } catch (FileNotFoundException e)
-    {
-      e.printStackTrace();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (fIn != null)
-      {
-        try
-        {
-          fIn.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-    return querier;
   }
 }

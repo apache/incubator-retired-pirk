@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.LogUtils;
 
 /**
@@ -47,6 +48,7 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   Response response = null;
   String outputFile = null;
   FileSystem fs = null;
+  HadoopFileSystemStore storage = null;
   QueryInfo queryInfo = null;
 
   @Override
@@ -58,8 +60,9 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
     mos = new MultipleOutputs<LongWritable,Text>(ctx);
 
     fs = FileSystem.newInstance(ctx.getConfiguration());
+    storage = new HadoopFileSystemStore(fs);
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    Query query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    Query query = storage.recall(queryDir, Query.class);
     queryInfo = query.getQueryInfo();
 
     outputFile = ctx.getConfiguration().get("pirMR.outputFile");
@@ -85,7 +88,7 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   @Override
   public void cleanup(Context ctx) throws IOException, InterruptedException
   {
-    response.writeToHDFSFile(new Path(outputFile), fs);
+    storage.store(outputFile, response);
     mos.close();
   }
 }

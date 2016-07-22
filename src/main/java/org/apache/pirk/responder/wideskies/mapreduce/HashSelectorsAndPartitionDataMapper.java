@@ -37,6 +37,7 @@ import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -77,7 +78,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
 
     // Can make this so that it reads multiple queries at one time...
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
     queryInfo = query.getQueryInfo();
 
     try

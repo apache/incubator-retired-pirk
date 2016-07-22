@@ -258,38 +258,4 @@ public class EncryptQuery
     }
     logger.info("Completed creation of encrypted query vectors");
   }
-
-  /**
-   * Creates two output files - two files written:
-   * <p>
-   * (1) Querier object to <filePrefix>-QuerierConst.QUERIER_FILETAG
-   * <p>
-   * (2) Query object to <filePrefix>-QuerierConst.QUERY_FILETAG
-   */
-  public void writeOutputFiles(String filePrefix) throws IOException
-  {
-    // Write the Querier object
-    querier.writeToFile(filePrefix + "-" + QuerierConst.QUERIER_FILETAG);
-
-    // Write the Query object
-    query.writeToFile(filePrefix + "-" + QuerierConst.QUERY_FILETAG);
-  }
-
-  /**
-   * Creates two output files - two files written:
-   * <p>
-   * (1) Querier object to <filePrefix>-QuerierConst.QUERIER_FILETAG
-   * <p>
-   * (2) Query object to <filePrefix>-QuerierConst.QUERY_FILETAG
-   * <p>
-   * This method is used for functional testing
-   */
-  public void writeOutputFiles(File fileQuerier, File fileQuery) throws IOException
-  {
-    // Write the Querier object
-    querier.writeToFile(fileQuerier);
-
-    // Write the Query object
-    query.writeToFile(fileQuery);
-  }
 }

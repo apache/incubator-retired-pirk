@@ -29,6 +29,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -101,7 +102,13 @@ public class ComputeExpLookupTable
       // Place exp table in query object and in the BroadcastVars
       Map<Integer,String> queryHashFileNameMap = hashToPartition.collectAsMap();
       query.setExpFileBasedLookup(new HashMap<Integer,String>(queryHashFileNameMap));
-      query.writeToHDFSFile(new Path(queryInputFile), fs);
+      try
+      {
+        new HadoopFileSystemStore(fs).store(queryInputFile, query);
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
       bVars.setQuery(query);
     }
 

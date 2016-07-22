@@ -29,6 +29,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.LogUtils;
 
@@ -55,7 +56,7 @@ public class ColumnMultReducer extends Reducer<LongWritable,Text,LongWritable,Te
 
     FileSystem fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
   }
 
   @Override
