@@ -20,10 +20,10 @@ package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.Accumulator;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Accumulators for the Responder
@@ -33,13 +33,13 @@ public class Accumulators implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(Accumulators.class);
 
-  Accumulator<Integer> numRecordsReceived = null;
-  Accumulator<Integer> numRecordsFiltered = null;
-  Accumulator<Integer> numRecordsAfterFilter = null;
-  Accumulator<Integer> numHashes = null;
-  Accumulator<Integer> numColumns = null;
+  private Accumulator<Integer> numRecordsReceived = null;
+  private Accumulator<Integer> numRecordsFiltered = null;
+  private Accumulator<Integer> numRecordsAfterFilter = null;
+  private Accumulator<Integer> numHashes = null;
+  private Accumulator<Integer> numColumns = null;
 
   public Accumulators(JavaSparkContext sc)
   {

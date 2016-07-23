@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.utils;
 
 import java.util.ArrayList;
@@ -27,12 +27,13 @@ import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pirk-specific string utilities
@@ -40,7 +41,7 @@ import org.json.simple.parser.ParseException;
  */
 public class StringUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
   /**
    * Method to convert a MapWritable into a JSON string
@@ -176,7 +177,7 @@ public class StringUtils
    */
   public static Map<String,Object> jsonStringToMap(String jsonString, DataSchema dataSchema)
   {
-    Map<String,Object> value = new HashMap<String,Object>();
+    Map<String,Object> value = new HashMap<>();
     JSONParser jsonParser = new JSONParser();
 
     try
@@ -255,7 +256,7 @@ public class StringUtils
     modString = modString.replaceAll("\"", "");
     String[] elements = modString.split("\\s*,\\s*");
 
-    return new ArrayList<String>(Arrays.asList(elements));
+    return new ArrayList<>(Arrays.asList(elements));
   }
 
   /**
@@ -266,8 +267,6 @@ public class StringUtils
     String modString = jsonString.replaceFirst("\\[", "");
     modString = modString.replaceFirst("\\]", "");
     modString = modString.replaceAll("\"", "");
-    String[] elements = modString.split("\\s*,\\s*");
-
-    return elements;
+    return modString.split("\\s*,\\s*");
   }
 }

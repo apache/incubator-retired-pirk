@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,14 +15,13 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
@@ -30,9 +29,9 @@ import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -43,39 +42,33 @@ public class EncRowCalcPrecomputedCache implements
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(EncRowCalcPrecomputedCache.class);
 
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  private Accumulators accum = null;
 
   Query query = null;
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
-  DataSchema dSchema = null;
 
-  boolean useLocalCache = false;
-  boolean limitHitsPerSelector = false;
-  int maxHitsPerSelector = 0;
-  HashMap<Integer,BigInteger> expTable = null;
+  private boolean limitHitsPerSelector = false;
+  private int maxHitsPerSelector = 0;
+  private HashMap<Integer,BigInteger> expTable = null;
 
   public EncRowCalcPrecomputedCache(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
   {
     accum = pirWLAccum;
-    bbVars = pirWLBBVars;
 
-    query = bbVars.getQuery();
-    queryInfo = bbVars.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    query = pirWLBBVars.getQuery();
+    QueryInfo queryInfo = pirWLBBVars.getQueryInfo();
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
-    if (bbVars.getUseLocalCache().equals("true"))
+    if (pirWLBBVars.getUseLocalCache().equals("true"))
     {
-      useLocalCache = true;
+      boolean useLocalCache = true;
     }
-    limitHitsPerSelector = bbVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bbVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = pirWLBBVars.getLimitHitsPerSelector();
+    maxHitsPerSelector = pirWLBBVars.getMaxHitsPerSelector();
 
-    expTable = new HashMap<Integer,BigInteger>();
+    expTable = new HashMap<>();
 
     logger.info("Initialized EncRowCalcPrecomputedCache - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);
   }
@@ -84,7 +77,7 @@ public class EncRowCalcPrecomputedCache implements
   public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<ArrayList<BigInteger>>>> hashDocTuple)
       throws Exception
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);

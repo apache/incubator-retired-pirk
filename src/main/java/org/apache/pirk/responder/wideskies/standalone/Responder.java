@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,18 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.standalone;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -34,10 +32,11 @@ import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform stand alone responder functionalities
@@ -52,18 +51,18 @@ import org.json.simple.parser.JSONParser;
  */
 public class Responder
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(Responder.class);
 
-  Query query = null;
-  QueryInfo queryInfo = null;
+  private Query query = null;
+  private QueryInfo queryInfo = null;
 
-  String queryType = null;
+  private String queryType = null;
 
-  Response response = null;
+  private Response response = null;
 
-  TreeMap<Integer,BigInteger> columns = null; // the column values for the PIR calculations
+  private TreeMap<Integer,BigInteger> columns = null; // the column values for the PIR calculations
 
-  ArrayList<Integer> rowColumnCounters; // keeps track of how many hit partitions have been recorded for each row/selector
+  private ArrayList<Integer> rowColumnCounters; // keeps track of how many hit partitions have been recorded for each row/selector
 
   public Responder(Query queryInput)
   {
@@ -74,10 +73,10 @@ public class Responder
     response = new Response(queryInfo);
 
     // Columns are allocated as needed, initialized to 1
-    columns = new TreeMap<Integer,BigInteger>();
+    columns = new TreeMap<>();
 
     // Initialize row counters
-    rowColumnCounters = new ArrayList<Integer>();
+    rowColumnCounters = new ArrayList<>();
     for (int i = 0; i < Math.pow(2, queryInfo.getHashBitSize()); ++i)
     {
       rowColumnCounters.add(0);
@@ -179,7 +178,7 @@ public class Responder
       BigInteger column = columns.get(i + rowCounter); // the next 'free' column relative to the selector
       logger.debug("Before: columns.get(" + (i + rowCounter) + ") = " + columns.get(i + rowCounter));
 
-      BigInteger exp = null;
+      BigInteger exp;
       if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable()) // using the standalone
       // lookup table
       {

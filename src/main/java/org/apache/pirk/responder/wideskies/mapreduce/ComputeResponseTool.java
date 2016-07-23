@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.BufferedReader;
@@ -41,7 +41,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.BaseInputFormat;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
@@ -53,9 +52,10 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.HDFS;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.elasticsearch.hadoop.mr.EsInputFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tool for computing the PIR response in MapReduce
@@ -63,14 +63,14 @@ import org.elasticsearch.hadoop.mr.EsInputFormat;
  * Each query run consists of three MR jobs:
  * <p>
  * (1) Map: Initialization mapper reads data using an extension of the BaseInputFormat or elasticsearch and, according to the QueryInfo object, extracts the
- * selector from each dataElement according to the QueryType, hashes selector, and outputs {@code<hash(selector), dataElement>}
+ * selector from each dataElement according to the QueryType, hashes selector, and outputs {@link <hash(selector), dataElement>}
  * <p>
  * Reduce: Calculates the encrypted row values for each selector and corresponding data element, striping across columns,and outputs each row entry by column
- * position: {@code<colNum, colVal>}
+ * position: {@link <colNum, colVal>}
  * <p>
  * (2) Map: Pass through mapper to aggregate by column number
  * <p>
- * Reduce: Input: {@code<colnum, <colVals>>}; multiplies all colVals according to the encryption algorithm and outputs {@code<colNum, colVal>} for each colNum
+ * Reduce: Input: {@link <colnum, <colVals>>}; multiplies all colVals according to the encryption algorithm and outputs {@link <colNum, colVal>} for each colNum
  * <p>
  * (3) Map: Pass through mapper to move all final columns to one reducer
  * <p>
@@ -90,32 +90,32 @@ import org.elasticsearch.hadoop.mr.EsInputFormat;
  */
 public class ComputeResponseTool extends Configured implements Tool
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ComputeResponseTool.class);
 
-  String dataInputFormat = null;
-  String inputFile = null;
-  String outputFile = null;
-  String outputDirExp = null;
-  String outputDirInit = null;
-  String outputDirColumnMult = null;
-  String outputDirFinal = null;
-  String queryInputDir = null;
-  String stopListFile = null;
-  int numReduceTasks = 1;
+  private String dataInputFormat = null;
+  private String inputFile = null;
+  private String outputFile = null;
+  private String outputDirExp = null;
+  private String outputDirInit = null;
+  private String outputDirColumnMult = null;
+  private String outputDirFinal = null;
+  private String queryInputDir = null;
+  private String stopListFile = null;
+  private int numReduceTasks = 1;
 
-  boolean useHDFSLookupTable = false;
+  private boolean useHDFSLookupTable = false;
 
-  String esQuery = "none";
-  String esResource = "none";
+  private String esQuery = "none";
+  private String esResource = "none";
 
   String dataSchema = "none";
 
-  Configuration conf = null;
-  FileSystem fs = null;
+  private Configuration conf = null;
+  private FileSystem fs = null;
 
-  Query query = null;
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
+  private Query query = null;
+  private QueryInfo queryInfo = null;
+  private QuerySchema qSchema = null;
 
   public ComputeResponseTool() throws Exception
   {
@@ -224,7 +224,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
   private boolean computeExpTable() throws IOException, ClassNotFoundException, InterruptedException
   {
-    boolean success = false;
+    boolean success;
 
     logger.info("Creating expTable");
 
@@ -236,7 +236,7 @@ public class ComputeResponseTool extends Configured implements Tool
     }
     // Write the query hashes to the split files
     TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
-    ArrayList<Integer> keys = new ArrayList<Integer>(queryElements.keySet());
+    ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = Integer.parseInt(SystemConfiguration.getProperty("pir.expCreationSplits", "100"));
     int elementsPerSplit = (int) Math.floor(queryElements.size() / numSplits);
@@ -303,13 +303,13 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Assemble the exp table from the output
     // element_index -> fileName
-    HashMap<Integer,String> expFileTable = new HashMap<Integer,String>();
+    HashMap<Integer,String> expFileTable = new HashMap<>();
     FileStatus[] status = fs.listStatus(outPathExp);
     for (FileStatus fstat : status)
     {
-      if (fstat.getPath().getName().toString().startsWith(FileConst.PIR))
+      if (fstat.getPath().getName().startsWith(FileConst.PIR))
       {
-        logger.info("fstat.getPath().getName().toString() = " + fstat.getPath().getName().toString());
+        logger.info("fstat.getPath().getName().toString() = " + fstat.getPath().getName());
         try
         {
           InputStreamReader isr = new InputStreamReader(fs.open(fstat.getPath()));
@@ -341,7 +341,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
   private boolean readDataEncRows(Path outPathInit) throws Exception
   {
-    boolean success = false;
+    boolean success;
 
     Job job = new Job(conf, "pirMR");
     job.setSpeculativeExecution(false);
@@ -433,7 +433,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
   private boolean multiplyColumns(Path outPathInit, Path outPathColumnMult) throws IOException, ClassNotFoundException, InterruptedException
   {
-    boolean success = false;
+    boolean success;
 
     Job columnMultJob = new Job(conf, "pir_columnMult");
     columnMultJob.setSpeculativeExecution(false);
@@ -461,7 +461,7 @@ public class ComputeResponseTool extends Configured implements Tool
     FileStatus[] status = fs.listStatus(outPathInit);
     for (FileStatus fstat : status)
     {
-      if (fstat.getPath().getName().toString().startsWith(FileConst.PIR))
+      if (fstat.getPath().getName().startsWith(FileConst.PIR))
       {
         logger.info("fstat.getPath() = " + fstat.getPath().toString());
         FileInputFormat.addInputPath(columnMultJob, fstat.getPath());
@@ -493,7 +493,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
   private boolean computeFinalResponse(Path outPathFinal) throws ClassNotFoundException, IOException, InterruptedException
   {
-    boolean success = false;
+    boolean success;
 
     Job finalResponseJob = new Job(conf, "pir_finalResponse");
     finalResponseJob.setSpeculativeExecution(false);
@@ -523,7 +523,7 @@ public class ComputeResponseTool extends Configured implements Tool
     FileStatus[] status = fs.listStatus(new Path(outputDirColumnMult));
     for (FileStatus fstat : status)
     {
-      if (fstat.getPath().getName().toString().startsWith(FileConst.PIR_COLS))
+      if (fstat.getPath().getName().startsWith(FileConst.PIR_COLS))
       {
         logger.info("fstat.getPath() = " + fstat.getPath().toString());
         FileInputFormat.addInputPath(finalResponseJob, fstat.getPath());

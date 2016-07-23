@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.query.filter;
 
 import java.util.Arrays;
@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StopListUtils;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Filter class to filter data elements based upon a stoplist applied to specified field elements
@@ -37,10 +37,10 @@ public class StopListFilter implements DataFilter
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(StopListFilter.class);
 
-  HashSet<String> filterSet = null;
-  HashSet<String> stopList = null;
+  private HashSet<String> filterSet = null;
+  private HashSet<String> stopList = null;
 
   public StopListFilter(HashSet<String> filterSetIn, HashSet<String> stopListIn)
   {

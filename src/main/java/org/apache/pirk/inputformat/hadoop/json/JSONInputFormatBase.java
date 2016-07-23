@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.inputformat.hadoop.json;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ import org.apache.pirk.inputformat.hadoop.BaseInputFormat;
  */
 public class JSONInputFormatBase extends BaseInputFormat<Text,MapWritable>
 {
-  JSONInputFormat jsonInputFormat = new JSONInputFormat();
+  private JSONInputFormat jsonInputFormat = new JSONInputFormat();
 
   @Override
   public RecordReader<Text,MapWritable> createRecordReader(InputSplit arg0, TaskAttemptContext arg1) throws IOException, InterruptedException

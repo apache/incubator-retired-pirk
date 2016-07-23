@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -27,7 +27,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -38,32 +37,32 @@ import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
  * Initialization mapper for PIR
  * <p>
  * Reads in data, extracts the selector by queryType from each dataElement, performs a keyed hash of the selector, extracts the partitions of the dataElement,
- * and emits {@<hash(selector), dataPartitions>}
+ * and emits {@link <hash(selector), dataPartitions>}
  *
  */
 public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable,IntWritable,BytesArrayWritable>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(HashSelectorsAndPartitionDataMapper.class);
 
-  IntWritable keyOut = null;
+  private IntWritable keyOut = null;
 
   HashSet<String> stopList = null;
 
-  Query query = null;
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
-  DataSchema dSchema = null;
-  Object filter = null;
+  private Query query = null;
+  private QueryInfo queryInfo = null;
+  private QuerySchema qSchema = null;
+  private DataSchema dSchema = null;
+  private Object filter = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException

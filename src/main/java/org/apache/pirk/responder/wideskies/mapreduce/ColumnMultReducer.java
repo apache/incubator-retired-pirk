@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -27,11 +27,11 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reducer to perform encrypted column multiplication
@@ -39,12 +39,12 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class ColumnMultReducer extends Reducer<LongWritable,Text,LongWritable,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ColumnMultReducer.class);
 
-  Text outputValue = null;
+  private Text outputValue = null;
   private MultipleOutputs<LongWritable,Text> mos = null;
 
-  Query query = null;
+  private Query query = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
@@ -52,7 +52,7 @@ public class ColumnMultReducer extends Reducer<LongWritable,Text,LongWritable,Te
     super.setup(ctx);
 
     outputValue = new Text();
-    mos = new MultipleOutputs<LongWritable,Text>(ctx);
+    mos = new MultipleOutputs<>(ctx);
 
     FileSystem fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");

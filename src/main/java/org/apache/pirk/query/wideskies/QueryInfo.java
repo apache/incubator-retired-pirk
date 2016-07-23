@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,14 +15,14 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold all of the basic information regarding a query
@@ -35,30 +35,30 @@ public class QueryInfo implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);
 
-  double queryNum = 0.0; // the identifier num of the query
-  int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
+  private double queryNum = 0.0; // the identifier num of the query
+  private int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
 
-  String queryType = null; // QueryType string const
+  private String queryType = null; // QueryType string const
 
-  String queryName = null; // Name of query
+  private String queryName = null; // Name of query
 
-  int paillierBitSize = 0; // Paillier modulus size
+  private int paillierBitSize = 0; // Paillier modulus size
 
-  int hashBitSize = 0; // Bit size of the keyed hash function
-  String hashKey = null; // Key for the keyed hash function
+  private int hashBitSize = 0; // Bit size of the keyed hash function
+  private String hashKey = null; // Key for the keyed hash function
 
-  int numBitsPerDataElement = 0; // total num bits per returned data value - defined relative to query type
-  int dataPartitionBitSize = 0; // num of bits for each partition of an incoming data element, must be < 32 right now
-  int numPartitionsPerDataElement = 0; // num partitions of size dataPartitionBitSize per data element
+  private int numBitsPerDataElement = 0; // total num bits per returned data value - defined relative to query type
+  private int dataPartitionBitSize = 0; // num of bits for each partition of an incoming data element, must be < 32 right now
+  private int numPartitionsPerDataElement = 0; // num partitions of size dataPartitionBitSize per data element
 
-  boolean useExpLookupTable = false; // whether or not to generate and use the expLookupTable for encryption, it is very expensive to compute
+  private boolean useExpLookupTable = false; // whether or not to generate and use the expLookupTable for encryption, it is very expensive to compute
 
-  boolean useHDFSExpLookupTable = false; // whether or not to use the expLookupTable stored in HDFS
+  private boolean useHDFSExpLookupTable = false; // whether or not to use the expLookupTable stored in HDFS
   // if it doesn't yet exist, it will be created within the cluster and stored in HDFS
 
-  boolean embedSelector = true; // whether or not to embed the selector in the results - results in a very low
+  private boolean embedSelector = true; // whether or not to embed the selector in the results - results in a very low
 
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
@@ -176,9 +176,7 @@ public class QueryInfo implements Serializable
 
   public QueryInfo copy()
   {
-    QueryInfo queryInfo = new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType,
+    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType,
         this.queryName, this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
-
-    return queryInfo;
   }
 }

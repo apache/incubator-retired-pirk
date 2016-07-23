@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.IOException;
@@ -28,7 +28,6 @@ import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.BaseInputFormat;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.query.wideskies.Query;
@@ -38,7 +37,6 @@ import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.SparkConf;
@@ -46,6 +44,8 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.elasticsearch.hadoop.mr.EsInputFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
@@ -63,36 +63,35 @@ import scala.Tuple2;
  */
 public class ComputeResponse
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ComputeResponse.class);
 
-  String dataInputFormat = null;
-  String inputData = null;
-  String outputFile = null;
-  String outputDirExp = null;
+  private String dataInputFormat = null;
+  private String inputData = null;
+  private String outputFile = null;
+  private String outputDirExp = null;
 
-  String queryInput = null;
-  String stopListFile = null;
+  private String queryInput = null;
 
-  String esQuery = "none";
-  String esResource = "none";
+  private String esQuery = "none";
+  private String esResource = "none";
 
-  boolean useHDFSLookupTable = false;
-  boolean useModExpJoin = false;
+  private boolean useHDFSLookupTable = false;
+  private boolean useModExpJoin = false;
 
-  FileSystem fs = null;
-  HadoopFileSystemStore storage = null;
-  JavaSparkContext sc = null;
+  private FileSystem fs = null;
+  private HadoopFileSystemStore storage = null;
+  private JavaSparkContext sc = null;
 
-  Accumulators accum = null;
-  BroadcastVars bVars = null;
+  private Accumulators accum = null;
+  private BroadcastVars bVars = null;
 
-  QueryInfo queryInfo = null;
+  private QueryInfo queryInfo = null;
   Query query = null;
 
-  int numDataPartitions = 0;
-  int numColMultPartitions = 0;
+  private int numDataPartitions = 0;
+  private int numColMultPartitions = 0;
 
-  boolean colMultReduceByKey = false;
+  private boolean colMultReduceByKey = false;
 
   public ComputeResponse(FileSystem fileSys) throws Exception
   {
@@ -132,7 +131,7 @@ public class ComputeResponse
     outputDirExp = outputFile + "_exp";
 
     queryInput = SystemConfiguration.getProperty("pir.queryInput");
-    stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
+    String stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
     useModExpJoin = SystemConfiguration.getProperty("pir.useModExpJoin", "false").equals("true");
 
     logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery
@@ -202,7 +201,7 @@ public class ComputeResponse
   /**
    * Method to read in data from an allowed input source/format and perform the query
    */
-  public void performQuery() throws ClassNotFoundException, Exception
+  public void performQuery() throws Exception
   {
     logger.info("Performing query: ");
 
@@ -226,7 +225,7 @@ public class ComputeResponse
   {
     logger.info("Reading data ");
 
-    JavaRDD<MapWritable> dataRDD = null;
+    JavaRDD<MapWritable> dataRDD;
 
     Job job = new Job();
     String baseQuery = SystemConfiguration.getProperty("pir.baseQuery");
@@ -274,7 +273,7 @@ public class ComputeResponse
   {
     logger.info("Reading data ");
 
-    JavaRDD<MapWritable> dataRDD = null;
+    JavaRDD<MapWritable> dataRDD;
 
     Job job = new Job();
     String jobName = "pirSpark_ES_" + esQuery + "_" + System.currentTimeMillis();
@@ -317,7 +316,7 @@ public class ComputeResponse
     JavaPairRDD<Integer,Iterable<ArrayList<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();
 
     // Calculate the encrypted row values for each row, emit <colNum, colVal> for each row
-    JavaPairRDD<Long,BigInteger> encRowRDD = null;
+    JavaPairRDD<Long,BigInteger> encRowRDD;
     if (useModExpJoin)
     {
       // If we are pre-computing the modular exponentiation table and then joining the data partitions
@@ -350,7 +349,7 @@ public class ComputeResponse
   private void encryptedColumnCalc(JavaPairRDD<Long,BigInteger> encRowRDD) throws PIRException
   {
     // Multiply the column values by colNum: emit <colNum, finalColVal>
-    JavaPairRDD<Long,BigInteger> encColRDD = null;
+    JavaPairRDD<Long,BigInteger> encColRDD;
     if (colMultReduceByKey)
     {
       encColRDD = encRowRDD.reduceByKey(new EncColMultReducer(accum, bVars), numColMultPartitions);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,17 +15,17 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Runnable class for multithreaded PIR encryption
@@ -33,16 +33,16 @@ import org.apache.pirk.utils.PIRException;
  */
 public class EncryptQueryRunnable implements Runnable
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(EncryptQueryRunnable.class);
 
-  int dataPartitionBitSize = 0;
-  int start = 0; // start of computing range for the runnable
-  int stop = 0; // stop, inclusive, of the computing range for the runnable
+  private int dataPartitionBitSize = 0;
+  private int start = 0; // start of computing range for the runnable
+  private int stop = 0; // stop, inclusive, of the computing range for the runnable
 
-  Paillier paillier = null;
-  HashMap<Integer,Integer> selectorQueryVecMapping = null;
+  private Paillier paillier = null;
+  private HashMap<Integer,Integer> selectorQueryVecMapping = null;
 
-  TreeMap<Integer,BigInteger> encryptedValues = null; // holds the ordered encrypted values to pull after thread computation is complete
+  private TreeMap<Integer,BigInteger> encryptedValues = null; // holds the ordered encrypted values to pull after thread computation is complete
 
   public EncryptQueryRunnable(int dataPartitionBitSizeInput, Paillier paillierInput, HashMap<Integer,Integer> selectorQueryVecMappingInput, int startInput,
       int stopInput)

@@ -18,15 +18,15 @@
  */
 package org.apache.pirk.schema.data.partitioner;
 
-import org.apache.http.util.ByteArrayBuffer;
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
-import org.apache.pirk.utils.SystemConfiguration;
-
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for partitioning objects with primitive Java types
@@ -36,7 +36,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
 {
   private static final long serialVersionUID = 1L;
 
-  private Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(PrimitiveTypePartitioner.class);
 
   public static final String BYTE = "byte";
   public static final String SHORT = "short";
