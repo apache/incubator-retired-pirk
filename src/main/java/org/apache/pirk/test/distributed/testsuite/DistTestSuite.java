@@ -36,6 +36,7 @@ import org.apache.pirk.responder.wideskies.ResponderCLI;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
@@ -342,7 +343,7 @@ public class DistTestSuite
 
     // Write the Querier object to a file
     Path queryInputDirPath = new Path(queryInputDir);
-    query.writeToHDFSFile(queryInputDirPath, fs);
+    new HadoopFileSystemStore(fs).store(queryInputDirPath, query);
     fs.deleteOnExit(queryInputDirPath);
 
     // Grab the original data and query schema properties to reset upon completion
@@ -413,7 +414,7 @@ public class DistTestSuite
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
-    Response response = Response.readFromHDFSFile(new Path(outputFile), fs);
+    Response response = new HadoopFileSystemStore(fs).recall(outputFile, Response.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);

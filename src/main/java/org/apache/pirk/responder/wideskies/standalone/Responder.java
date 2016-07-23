@@ -30,6 +30,7 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
@@ -126,7 +127,7 @@ public class Responder
     // Set the response object, extract, write to file
     String outputFile = SystemConfiguration.getProperty("pir.outputFile");
     setResponseElements();
-    response.writeToFile(outputFile);
+    new LocalFileSystemStore().store(outputFile, response);
   }
 
   /**

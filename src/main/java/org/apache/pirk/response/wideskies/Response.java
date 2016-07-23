@@ -18,19 +18,12 @@
  */
 package org.apache.pirk.response.wideskies;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.TreeMap;
 
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.pirk.query.wideskies.QueryInfo;
+import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * Serialized and returned to the querier for decryption
  * 
  */
-public class Response implements Serializable
+public class Response implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
@@ -75,128 +68,5 @@ public class Response implements Serializable
   public void addElement(int position, BigInteger element)
   {
     responseElements.put(position, element);
-  }
-
-  public void writeToFile(String filename) throws IOException
-  {
-    writeToFile(new File(filename));
-  }
-
-  public void writeToFile(File file) throws IOException
-  {
-    ObjectOutputStream oos = null;
-    FileOutputStream fout = null;
-    try
-    {
-      fout = new FileOutputStream(file, true);
-      oos = new ObjectOutputStream(fout);
-      oos.writeObject(this);
-    } catch (Exception ex)
-    {
-      ex.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        oos.close();
-      }
-      if (fout != null)
-      {
-        fout.close();
-      }
-    }
-  }
-
-  public void writeToHDFSFile(Path fileName, FileSystem fs)
-  {
-
-    ObjectOutputStream oos = null;
-    try
-    {
-      oos = new ObjectOutputStream(fs.create(fileName));
-      oos.writeObject(this);
-      oos.close();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        try
-        {
-          oos.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
-  public static Response readFromFile(String filename) throws IOException
-  {
-    return readFromFile(new File(filename));
-  }
-
-  public static Response readFromFile(File file) throws IOException
-  {
-    Response response = null;
-
-    ObjectInputStream objectinputstream = null;
-    FileInputStream streamIn = null;
-    try
-    {
-      streamIn = new FileInputStream(file);
-      objectinputstream = new ObjectInputStream(streamIn);
-      response = (Response) objectinputstream.readObject();
-
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (objectinputstream != null)
-      {
-        objectinputstream.close();
-      }
-      if (streamIn != null)
-      {
-        streamIn.close();
-      }
-    }
-
-    return response;
-  }
-
-  // Used for testing
-  public static Response readFromHDFSFile(Path file, FileSystem fs) throws IOException
-  {
-    Response response = null;
-
-    ObjectInputStream ois = null;
-    try
-    {
-      ois = new ObjectInputStream(fs.open(file));
-      response = (Response) ois.readObject();
-      ois.close();
-
-    } catch (IOException | ClassNotFoundException e1)
-    {
-      e1.printStackTrace();
-    } finally
-    {
-      if (ois != null)
-      {
-        try
-        {
-          ois.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-    return response;
   }
 }

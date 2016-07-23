@@ -29,6 +29,7 @@ import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.FileIOUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -82,6 +83,7 @@ public class QuerierDriver implements Serializable
     String outputFile;
     String queryType = null;
     int numThreads;
+    LocalFileSystemStore storage = new LocalFileSystemStore();
 
     // Encryption variables
     int hashBitSize = 0;
@@ -182,14 +184,15 @@ public class QuerierDriver implements Serializable
       // Write necessary output files - two files written -
       // (1) Querier object to <outputFile>-QuerierConst.QUERIER_FILETAG
       // (2) Query object to <outputFile>-QuerierConst.QUERY_FILETAG
-      encryptQuery.writeOutputFiles(outputFile);
+      storage.store(outputFile + "-" + QuerierConst.QUERIER_FILETAG, encryptQuery.getQuerier());
+      storage.store(outputFile + "-" + QuerierConst.QUERY_FILETAG, encryptQuery.getQuery());
     }
     else
     // Decryption
     {
       // Reconstruct the necessary objects from the files
-      Response response = Response.readFromFile(inputFile);
-      Querier querier = Querier.readFromFile(querierFile);
+      Response response = storage.recall(inputFile, Response.class);
+      Querier querier = storage.recall(querierFile, Querier.class);
 
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);

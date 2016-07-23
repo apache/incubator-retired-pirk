@@ -18,12 +18,12 @@
  */
 package org.apache.pirk.responder.wideskies.spark;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -36,6 +36,7 @@ import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.SparkConf;
@@ -45,6 +46,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.elasticsearch.hadoop.mr.EsInputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**
@@ -77,6 +79,7 @@ public class ComputeResponse
   private boolean useModExpJoin = false;
 
   private FileSystem fs = null;
+  private HadoopFileSystemStore storage = null;
   private JavaSparkContext sc = null;
 
   private Accumulators accum = null;
@@ -93,6 +96,7 @@ public class ComputeResponse
   public ComputeResponse(FileSystem fileSys) throws Exception
   {
     fs = fileSys;
+    storage = new HadoopFileSystemStore(fs);
 
     dataInputFormat = SystemConfiguration.getProperty("pir.dataInputFormat");
     if (!InputFormatConst.ALLOWED_FORMATS.contains(dataInputFormat))
@@ -162,7 +166,7 @@ public class ComputeResponse
     bVars = new BroadcastVars(sc);
 
     // Set the Query and QueryInfo broadcast variables
-    query = Query.readFromHDFSFile(new Path(queryInput), fs);
+    query = storage.recall(queryInput, Query.class);
     queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
@@ -366,7 +370,13 @@ public class ComputeResponse
       logger.debug("colNum = " + colVal + " column = " + encColResults.get(colVal).toString());
     }
 
-    response.writeToHDFSFile(new Path(outputFile), fs);
+    try
+    {
+      storage.store(outputFile, response);
+    } catch (IOException e)
+    {
+      throw new RuntimeException(e);
+    }
     accum.printAll();
   }
 }

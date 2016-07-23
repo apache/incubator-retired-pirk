@@ -18,12 +18,6 @@
  */
 package org.apache.pirk.query.wideskies;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -33,10 +27,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.querier.wideskies.encrypt.ExpTableRunnable;
+import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * Class to hold the PIR query vectors
  *
  */
-public class Query implements Serializable
+public class Query implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
@@ -224,142 +217,5 @@ public class Query implements Serializable
   public BigInteger getExp(BigInteger value, int power)
   {
     return expTable.get(value).get(power);
-  }
-
-  public void writeToFile(String filename) throws IOException
-  {
-    writeToFile(new File(filename));
-  }
-
-  public void writeToFile(File file) throws IOException
-  {
-    ObjectOutputStream oos = null;
-    FileOutputStream fout = null;
-    try
-    {
-      fout = new FileOutputStream(file, true);
-      oos = new ObjectOutputStream(fout);
-      oos.writeObject(this);
-    } catch (Exception ex)
-    {
-      ex.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        oos.close();
-      }
-      if (fout != null)
-      {
-        fout.close();
-      }
-    }
-  }
-
-  /**
-   * Reconstruct the Query object from its file serialization
-   */
-  public static Query readFromFile(String filename) throws IOException
-  {
-
-    return readFromFile(new File(filename));
-  }
-
-  /**
-   * Reconstruct the Query object from its file serialization
-   */
-  public static Query readFromFile(File file) throws IOException
-  {
-    Query query = null;
-
-    FileInputStream fIn = null;
-    ObjectInputStream oIn;
-    try
-    {
-      fIn = new FileInputStream(file);
-      oIn = new ObjectInputStream(fIn);
-      query = (Query) oIn.readObject();
-    } catch (IOException | ClassNotFoundException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (fIn != null)
-      {
-        try
-        {
-          fIn.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-    return query;
-  }
-
-  /**
-   * Method to write the Query object to a file in HDFS
-   *
-   */
-  public void writeToHDFSFile(Path fileName, FileSystem fs)
-  {
-
-    ObjectOutputStream oos = null;
-    try
-    {
-      oos = new ObjectOutputStream(fs.create(fileName));
-      oos.writeObject(this);
-      oos.close();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        try
-        {
-          oos.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
-  /**
-   * Method to reconstruct the Query object from its file serialization in HDFS
-   */
-  public static Query readFromHDFSFile(Path filename, FileSystem fs)
-  {
-    Query pirWLQuery = null;
-
-    ObjectInputStream ois = null;
-    try
-    {
-      ois = new ObjectInputStream(fs.open(filename));
-      pirWLQuery = (Query) ois.readObject();
-      ois.close();
-
-    } catch (IOException | ClassNotFoundException e1)
-    {
-      e1.printStackTrace();
-    } finally
-    {
-      if (ois != null)
-      {
-        try
-        {
-          ois.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return pirWLQuery;
   }
 }

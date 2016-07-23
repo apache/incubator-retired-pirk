@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -30,6 +29,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +46,8 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   private Response response = null;
   private String outputFile = null;
   private FileSystem fs = null;
+  private HadoopFileSystemStore storage = null;
+  private QueryInfo queryInfo = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
@@ -56,8 +58,9 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
     mos = new MultipleOutputs<>(ctx);
 
     fs = FileSystem.newInstance(ctx.getConfiguration());
+    storage = new HadoopFileSystemStore(fs);
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    Query query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    Query query = storage.recall(queryDir, Query.class);
     QueryInfo queryInfo = query.getQueryInfo();
 
     outputFile = ctx.getConfiguration().get("pirMR.outputFile");
@@ -83,7 +86,7 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   @Override
   public void cleanup(Context ctx) throws IOException, InterruptedException
   {
-    response.writeToHDFSFile(new Path(outputFile), fs);
+    storage.store(outputFile, response);
     mos.close();
   }
 }

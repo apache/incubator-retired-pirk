@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +52,8 @@ public class ExpTableMapper extends Mapper<LongWritable,Text,Text,Text>
 
     valueOut = new Text();
 
-    FileSystem fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    query = new HadoopFileSystemStore(FileSystem.newInstance(ctx.getConfiguration())).recall(queryDir, Query.class);
 
     int dataPartitionBitSize = query.getQueryInfo().getDataPartitionBitSize();
     maxValue = (int) Math.pow(2, dataPartitionBitSize) - 1;

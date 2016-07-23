@@ -49,6 +49,7 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.HDFS;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -127,7 +128,7 @@ public class ComputeResponseTool extends Configured implements Tool
     LoadDataSchemas.initialize(true, fs);
     LoadQuerySchemas.initialize(true, fs);
 
-    query = Query.readFromHDFSFile(new Path(queryInputDir), fs);
+    query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);
     queryInfo = query.getQueryInfo();
     qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
 
@@ -331,7 +332,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Place exp table in query object
     query.setExpFileBasedLookup(expFileTable);
-    query.writeToHDFSFile(new Path(queryInputDir), fs);
+    new HadoopFileSystemStore(fs).store(queryInputDir, query);
 
     logger.info("Completed creation of expTable");
 
