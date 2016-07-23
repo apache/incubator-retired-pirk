@@ -41,13 +41,14 @@ The format of the data schema XML file is as follows:
 	  <element>
 	     <name> element name </name>
 	      <type> class name or type name (if Java primitive type) of the element </type>
-	     <isArray> true or false -- whether or not the schema element is an array within the data </isArray>
+	     <isArray> (optional) whether or not the schema element is an array within the data; defaults to false </isArray>
 	     <partitioner> optional - Partitioner class for the element; defaults to primitive java type partitioner </partitioner> 
 	  </element>
 	 </schema>
 	
 	Primitive Java types must be one of the following: "byte", "short", "int", "long", "float", "double", "char", "string", "boolean"
 
+A corresponding XSD file may be found [here](https://github.com/apache/incubator-pirk/blob/master/src/main/resources/data-schema.xsd).
 
 Each element of the data is defined by its name, type, whether or not it is an array of objects of the given type, and an optional partitioner class. 
 
@@ -72,6 +73,7 @@ The format of the query schema XML file is as follows:
 	  </filterNames>
 	</schema>
 
+A corresponding XSD file may be found [here](https://github.com/apache/incubator-pirk/blob/master/src/main/resources/query-schema.xsd).
 
 The selectorName is the name of the element in the corresponding data schema that is to be used as the primary selector or indicator for the query (see Wideskies paper [link]). 
 
