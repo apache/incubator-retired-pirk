@@ -2,13 +2,13 @@
 *****************************************************
 Summary
 -------
-Generated at: 2016-07-20T18:59:43-04:00
+Generated at: 2016-07-21T15:12:57-04:00
 Notes: 3
 Binaries: 5
 Archives: 0
-Standards: 427
+Standards: 429
 
-Apache Licensed: 97
+Apache Licensed: 99
 Generated Documents: 0
 
 JavaDocs are generated and so license header is optional
@@ -455,8 +455,10 @@ Archives:
   AL    src/main/java/org/apache/pirk/utils/StopListUtils.java
   AL    src/main/java/org/apache/pirk/utils/StringUtils.java
   AL    src/main/java/org/apache/pirk/utils/SystemConfiguration.java
+  AL    src/main/resources/data-schema.xsd
   AL    src/main/resources/logging/log4j.properties
   AL    src/main/resources/pirk.properties
+  AL    src/main/resources/query-schema.xsd
   AL    src/test/java/test/general/ISO8601DateParserTest.java
   AL    src/test/java/test/general/KeyedHashTest.java
   AL    src/test/java/test/general/PaillierTest.java

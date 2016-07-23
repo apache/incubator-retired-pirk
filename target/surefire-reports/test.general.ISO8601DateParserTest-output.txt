@@ -2,5 +2,5 @@ log4j:WARN No appenders could be found for logger (org.apache.pirk.utils.SystemC
 log4j:WARN Please initialize the log4j system properly.
 log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
 Loading log4j properties file: 'logging/log4j.properties'
- INFO [main] 2016-07-20 18:59:52,246 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
- INFO [main] 2016-07-20 18:59:52,268 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing
+ INFO [main] 2016-07-21 15:13:05,523 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
+ INFO [main] 2016-07-21 15:13:05,560 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing
