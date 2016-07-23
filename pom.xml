@@ -174,12 +174,14 @@
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-core</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-generator-annprocess</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Sl4j modules -->
@@ -227,6 +229,18 @@
 					<target>${javac.target}</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>org/apache/pirk/benchmark/**</exclude>
+						<exclude>org/openjdk/jmh/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
