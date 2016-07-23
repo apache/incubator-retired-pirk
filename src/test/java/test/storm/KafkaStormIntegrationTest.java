@@ -90,7 +90,8 @@ public class KafkaStormIntegrationTest
   @Test
   public void testKafkaStormIntegration() throws Exception
   {
-    SystemConfiguration.setProperty("storm.splitPartitions", "true");
+    //SystemConfiguration.setProperty("storm.splitPartitions", "true");
+    SystemConfiguration.setProperty("storm.splitPartitions", "false");
     SystemConfiguration.setProperty("storm.saltColumns", "true");
     SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "true");
