@@ -18,7 +18,9 @@
  *******************************************************************************/
 package org.apache.pirk.serialization;
 
-// Marker interface
+/**
+ * Marker interface for objects that can be stored in a storage service.
+ */
 public interface Storable
 {
 

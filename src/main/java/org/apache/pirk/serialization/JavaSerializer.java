@@ -27,12 +27,32 @@ import java.io.OutputStream;
 public class JavaSerializer extends SerializationService
 {
 
+  /**
+   * Stores the given object on the given stream using Java serialization.
+   * 
+   * @param stream
+   *          The stream on which to store the object.
+   * @param obj
+   *          The object to be stored.
+   * @throws IOException
+   *           If a problem occurs storing the object on the given stream.
+   */
   public void write(OutputStream stream, Storable obj) throws IOException
   {
     ObjectOutputStream oos = new ObjectOutputStream(stream);
     oos.writeObject(obj);
   }
 
+  /**
+   * Read an object from the given stream of the given type.
+   * 
+   * @param stream
+   *          The stream from which to read the object.
+   * @param type
+   *          The type of object being retrieved.
+   * @throws IOException
+   *           If a problem occurs reading the object from the stream.
+   */
   @SuppressWarnings("unchecked")
   public <T> T read(InputStream stream, Class<T> type) throws IOException
   {
