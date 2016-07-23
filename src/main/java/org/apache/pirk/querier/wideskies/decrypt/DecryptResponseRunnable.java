@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies.decrypt;
 
 import java.math.BigInteger;
@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Runnable class for multithreaded PIR decryption
@@ -39,15 +39,15 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class DecryptResponseRunnable implements Runnable
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DecryptResponseRunnable.class);
 
-  HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
+  private HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
 
-  ArrayList<BigInteger> rElements = null;
-  TreeMap<Integer,String> selectors = null;
-  HashMap<String,BigInteger> selectorMaskMap = null;
-  QueryInfo queryInfo = null;
-  HashMap<Integer,String> embedSelectorMap = null;
+  private ArrayList<BigInteger> rElements = null;
+  private TreeMap<Integer,String> selectors = null;
+  private HashMap<String,BigInteger> selectorMaskMap = null;
+  private QueryInfo queryInfo = null;
+  private HashMap<Integer,String> embedSelectorMap = null;
 
   public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,
       QueryInfo queryInfoInput, HashMap<Integer,String> embedSelectorMapInput)
@@ -58,7 +58,7 @@ public class DecryptResponseRunnable implements Runnable
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
 
-    resultMap = new HashMap<String,ArrayList<QueryResponseJSON>>();
+    resultMap = new HashMap<>();
   }
 
   public HashMap<String,ArrayList<QueryResponseJSON>> getResultMap()
@@ -96,7 +96,7 @@ public class DecryptResponseRunnable implements Runnable
         String selector = selectors.get(selectorIndex);
         logger.debug("selector = " + selector);
 
-        ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+        ArrayList<BigInteger> parts = new ArrayList<>();
         int partNum = 0;
         boolean zeroElement = true;
         while (partNum < numPartitionsPerDataElement)

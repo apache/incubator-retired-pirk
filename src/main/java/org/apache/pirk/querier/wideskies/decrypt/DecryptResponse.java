@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies.decrypt;
 
 import java.io.BufferedWriter;
@@ -31,14 +31,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform PIR decryption
@@ -46,20 +46,20 @@ import org.apache.pirk.utils.PIRException;
  */
 public class DecryptResponse
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DecryptResponse.class);
 
-  Response response = null;
+  private Response response = null;
 
-  Querier querier = null;
+  private Querier querier = null;
 
-  HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
+  private HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
 
   public DecryptResponse(Response responseInput, Querier querierInput)
   {
     response = responseInput;
     querier = querierInput;
 
-    resultMap = new HashMap<String,ArrayList<QueryResponseJSON>>();
+    resultMap = new HashMap<>();
   }
 
   /**
@@ -98,7 +98,7 @@ public class DecryptResponse
     int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
 
     // Initialize the result map and masks-- removes initialization checks from code below
-    HashMap<String,BigInteger> selectorMaskMap = new HashMap<String,BigInteger>();
+    HashMap<String,BigInteger> selectorMaskMap = new HashMap<>();
     int selectorNum = 0;
     BigInteger twoBI = BigInteger.valueOf(2);
     for (String selector : selectors)
@@ -121,7 +121,7 @@ public class DecryptResponse
     }
     int elementsPerThread = (int) (Math.floor(selectors.size() / numThreads));
 
-    ArrayList<DecryptResponseRunnable> runnables = new ArrayList<DecryptResponseRunnable>();
+    ArrayList<DecryptResponseRunnable> runnables = new ArrayList<>();
     for (int i = 0; i < numThreads; ++i)
     {
       // Grab the range of the thread and create the corresponding partition of selectors
@@ -131,7 +131,7 @@ public class DecryptResponse
       {
         stop = selectors.size() - 1;
       }
-      TreeMap<Integer,String> selectorsPartition = new TreeMap<Integer,String>();
+      TreeMap<Integer,String> selectorsPartition = new TreeMap<>();
       for (int j = start; j <= stop; ++j)
       {
         selectorsPartition.put(j, selectors.get(j));
@@ -165,7 +165,7 @@ public class DecryptResponse
   // extract and reconstruct the data elements
   private ArrayList<BigInteger> decryptElements(TreeMap<Integer,BigInteger> elements, Paillier paillier)
   {
-    ArrayList<BigInteger> decryptedElements = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> decryptedElements = new ArrayList<>();
 
     for (BigInteger encElement : elements.values())
     {

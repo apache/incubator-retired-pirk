@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -27,11 +27,11 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reducer class to construct the final Response object
@@ -39,28 +39,26 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(FinalResponseReducer.class);
 
-  Text outputValue = null;
   private MultipleOutputs<LongWritable,Text> mos = null;
 
-  Response response = null;
-  String outputFile = null;
-  FileSystem fs = null;
-  QueryInfo queryInfo = null;
+  private Response response = null;
+  private String outputFile = null;
+  private FileSystem fs = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
   {
     super.setup(ctx);
 
-    outputValue = new Text();
-    mos = new MultipleOutputs<LongWritable,Text>(ctx);
+    Text outputValue = new Text();
+    mos = new MultipleOutputs<>(ctx);
 
     fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
     Query query = Query.readFromHDFSFile(new Path(queryDir), fs);
-    queryInfo = query.getQueryInfo();
+    QueryInfo queryInfo = query.getQueryInfo();
 
     outputFile = ctx.getConfiguration().get("pirMR.outputFile");
 

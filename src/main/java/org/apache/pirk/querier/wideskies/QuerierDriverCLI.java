@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies;
 
 import org.apache.commons.cli.CommandLine;
@@ -24,22 +24,21 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
-import org.apache.pirk.querier.wideskies.QuerierConst;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for parsing the command line options for the QuerierDriver
  */
 public class QuerierDriverCLI
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QuerierDriverCLI.class);
 
-  Options cliOptions = null;
-  CommandLine commandLine = null;
+  private Options cliOptions = null;
+  private CommandLine commandLine = null;
 
   // General variables
   public static String ACTION = "action";

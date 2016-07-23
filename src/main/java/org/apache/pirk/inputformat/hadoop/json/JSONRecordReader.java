@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.inputformat.hadoop.json;
 
 import java.io.IOException;
@@ -28,17 +28,17 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.TextArrayWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Record reader to parse files of JSON string representations, one per line
@@ -46,14 +46,14 @@ import org.json.simple.parser.ParseException;
  */
 public class JSONRecordReader extends RecordReader<Text,MapWritable>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(JSONRecordReader.class);
 
-  LineRecordReader lineReader = null;
-  Text key = null;
-  MapWritable value = null;
-  JSONParser jsonParser = null;
-  String queryString = null;
-  DataSchema dataSchema = null;
+  private LineRecordReader lineReader = null;
+  private Text key = null;
+  private MapWritable value = null;
+  private JSONParser jsonParser = null;
+  private String queryString = null;
+  private DataSchema dataSchema = null;
 
   @Override
   public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException
@@ -154,8 +154,7 @@ public class JSONRecordReader extends RecordReader<Text,MapWritable>
       toMapWritable(line);
 
       // Check to see if the record satisfies the query
-      boolean satisfiesQuery = QueryParserUtils.checkRecord(queryString, value, dataSchema);
-      return satisfiesQuery;
+      return QueryParserUtils.checkRecord(queryString, value, dataSchema);
 
     } catch (ParseException e)
     {

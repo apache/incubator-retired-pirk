@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.inputformat.hadoop;
 
 import java.util.ArrayList;
@@ -30,5 +30,5 @@ public class InputFormatConst
 
   public static String ES = "elasticsearch";
 
-  public static ArrayList<String> ALLOWED_FORMATS = new ArrayList<String>(Arrays.asList(BASE_FORMAT, ES));
+  public static ArrayList<String> ALLOWED_FORMATS = new ArrayList<>(Arrays.asList(BASE_FORMAT, ES));
 }

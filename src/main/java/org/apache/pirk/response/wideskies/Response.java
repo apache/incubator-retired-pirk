@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.response.wideskies;
 
 import java.io.File;
@@ -30,9 +30,9 @@ import java.util.TreeMap;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the encrypted response elements for the PIR query
@@ -44,17 +44,17 @@ public class Response implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(Response.class);
 
-  QueryInfo queryInfo = null; // holds all query info
+  private QueryInfo queryInfo = null; // holds all query info
 
-  TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
+  private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
   public Response(QueryInfo queryInfoInput)
   {
     queryInfo = queryInfoInput;
 
-    responseElements = new TreeMap<Integer,BigInteger>();
+    responseElements = new TreeMap<>();
   }
 
   public TreeMap<Integer,BigInteger> getResponseElements()

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.data;
 
 import java.io.Serializable;
@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold a data schema
@@ -35,21 +35,21 @@ public class DataSchema implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DataSchema.class);
 
-  String schemaName = null;
+  private String schemaName = null;
 
-  String primitiveTypePartitionerName = null;
+  private String primitiveTypePartitionerName = null;
 
-  transient HashMap<String,Text> textRep = null; // string element name -> Text representation
+  private transient HashMap<String,Text> textRep = null; // string element name -> Text representation
 
-  transient HashMap<String,Object> partitionerInstances = null; // partitioner class name -> Text representation
+  private transient HashMap<String,Object> partitionerInstances = null; // partitioner class name -> Text representation
 
-  HashMap<String,String> typeMap = null; // string element name -> java type
+  private HashMap<String,String> typeMap = null; // string element name -> java type
 
-  HashMap<String,String> partitionerMap = null; // string element name -> partitioner class name
+  private HashMap<String,String> partitionerMap = null; // string element name -> partitioner class name
 
-  HashSet<String> listRep = null; // elements that are list/array types
+  private HashSet<String> listRep = null; // elements that are list/array types
 
   public DataSchema(String schemaNameInput, HashMap<String,Text> textRepInput, HashSet<String> listRepInput, HashMap<String,String> typeMapInput,
       HashMap<String,String> partitionerMapInput)
@@ -78,7 +78,7 @@ public class DataSchema implements Serializable
 
   private void constructTextRep()
   {
-    textRep = new HashMap<String,Text>();
+    textRep = new HashMap<>();
     for (String name : typeMap.keySet())
     {
       textRep.put(name, new Text(name));
@@ -101,7 +101,7 @@ public class DataSchema implements Serializable
 
   private void constructPartitionerInstances() throws Exception
   {
-    partitionerInstances = new HashMap<String,Object>();
+    partitionerInstances = new HashMap<>();
     for (String partitionerName : partitionerMap.values())
     {
       if (!partitionerInstances.containsKey(partitionerName))
@@ -202,7 +202,7 @@ public class DataSchema implements Serializable
 
   public HashSet<String> getNonListRep()
   {
-    HashSet<String> elements = new HashSet<String>();
+    HashSet<String> elements = new HashSet<>();
     elements.addAll(textRep.keySet());
     elements.removeAll(listRep);
     return elements;

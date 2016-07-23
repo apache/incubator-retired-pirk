@@ -80,6 +80,7 @@
 		<jmh.version>1.11.3</jmh.version>
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
 		<javac.target>1.7</javac.target>
+		<slf4j.version>1.7.21</slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -179,6 +180,19 @@
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-generator-annprocess</artifactId>
 			<version>${jmh.version}</version>
+		</dependency>
+
+		<!-- Sl4j modules -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.6.2</version>
 		</dependency>
 
 	</dependencies>

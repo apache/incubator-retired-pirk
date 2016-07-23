@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,12 +15,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.schema.data;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,30 +28,33 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test suite for LoadDataSchema and DataSchema
  */
 public class LoadDataSchemaTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
 
-  String dataSchemaName = "fakeDataSchema";
+  private String dataSchemaName = "fakeDataSchema";
 
-  String element1 = "elementName1";
-  String element2 = "elementName2";
-  String element3 = "elementName3";
+  private String element1 = "elementName1";
+  private String element2 = "elementName2";
+  private String element3 = "elementName3";
 
   @Test
   public void testGeneralSchemaLoad() throws Exception
@@ -137,7 +136,7 @@ public class LoadDataSchemaTest
       // Force the schema to load
       LoadDataSchemas.initialize();
       fail("LoadDataSchemas did not throw exception for incorrect javaType");
-    } catch (Exception e)
+    } catch (Exception ignore)
     {}
 
     // Reset original data.schemas property
@@ -168,7 +167,7 @@ public class LoadDataSchemaTest
       // Force the schema to load
       LoadDataSchemas.initialize();
       fail("LoadDataSchemas did not throw exception for unknown partitioner");
-    } catch (Exception e)
+    } catch (Exception ignore)
     {}
 
     // Reset original data.schemas property
