@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.response;
 
 import java.io.Serializable;
@@ -25,15 +25,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.utils.LogUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JSON helper class for query results
@@ -44,13 +44,13 @@ public class QueryResponseJSON implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryResponseJSON.class);
 
-  JSONObject jsonObj = null;
+  private JSONObject jsonObj = null;
 
-  DataSchema dSchema = null;
+  private DataSchema dSchema = null;
 
-  QueryInfo queryInfo = null;
+  private QueryInfo queryInfo = null;
 
   public static final String EVENT_TYPE = "event_type"; // notification type the matched the record
   public static final Text EVENT_TYPE_TEXT = new Text(EVENT_TYPE);
@@ -131,7 +131,7 @@ public class QueryResponseJSON implements Serializable
     HashSet<String> schemaListRep = dSchema.getListRep();
     for (String key : schemaListRep)
     {
-      jsonObj.put(key, new ArrayList<Object>());
+      jsonObj.put(key, new ArrayList<>());
     }
   }
 
@@ -152,10 +152,10 @@ public class QueryResponseJSON implements Serializable
       {
         if (!(val instanceof ArrayList))
         {
-          ArrayList<Object> list = null;
+          ArrayList<Object> list;
           if (!jsonObj.containsKey(key))
           {
-            list = new ArrayList<Object>();
+            list = new ArrayList<>();
             jsonObj.put(key, list);
           }
           list = (ArrayList<Object>) jsonObj.get(key);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ import java.io.IOException;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.log4j.Logger;
 import org.apache.pirk.utils.CSVOutputUtils;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pass through mapper for encrypted column multiplication
@@ -33,10 +33,10 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class ColumnMultMapper extends Mapper<LongWritable,Text,LongWritable,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ColumnMultMapper.class);
 
-  LongWritable keyOut = null;
-  Text valueOut = null;
+  private LongWritable keyOut = null;
+  private Text valueOut = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException

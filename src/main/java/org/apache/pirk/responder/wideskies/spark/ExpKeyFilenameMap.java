@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.BufferedWriter;
@@ -27,11 +27,10 @@ import java.util.Iterator;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -41,15 +40,13 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ExpKeyFilenameMap.class);
 
-  BroadcastVars bbVars = null;
-  String expOutDir = null;
+  private String expOutDir = null;
 
   public ExpKeyFilenameMap(BroadcastVars bbVarsIn)
   {
-    bbVars = bbVarsIn;
-    expOutDir = bbVars.getExpDir();
+    expOutDir = bbVarsIn.getExpDir();
   }
 
   @Override

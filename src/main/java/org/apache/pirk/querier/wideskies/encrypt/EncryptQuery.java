@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.io.File;
@@ -27,7 +27,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierConst;
@@ -39,8 +38,9 @@ import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform PIR encryption
@@ -48,22 +48,22 @@ import org.apache.pirk.utils.PIRException;
  */
 public class EncryptQuery
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(EncryptQuery.class);
 
-  QueryInfo queryInfo = null; // contains basic query information and functionality
+  private QueryInfo queryInfo = null; // contains basic query information and functionality
 
-  Query query = null; // contains the query vectors
+  private Query query = null; // contains the query vectors
 
-  Querier querier = null; // contains the query vectors and encryption object
+  private Querier querier = null; // contains the query vectors and encryption object
 
-  Paillier paillier = null; // Paillier encryption functionality
+  private Paillier paillier = null; // Paillier encryption functionality
 
-  ArrayList<String> selectors = null; // selectors for the query
+  private ArrayList<String> selectors = null; // selectors for the query
 
   // Map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
-  HashMap<Integer,String> embedSelectorMap = null;
+  private HashMap<Integer,String> embedSelectorMap = null;
 
   public EncryptQuery(QueryInfo queryInfoInput, ArrayList<String> selectorsInput, Paillier paillierInput)
   {
@@ -73,7 +73,7 @@ public class EncryptQuery
 
     paillier = paillierInput;
 
-    embedSelectorMap = new HashMap<Integer,String>();
+    embedSelectorMap = new HashMap<>();
   }
 
   public Paillier getPaillier()
@@ -146,8 +146,8 @@ public class EncryptQuery
     String hashKey = queryInfo.getHashKey();
     int keyCounter = 0;
     int numSelectors = selectors.size();
-    HashSet<Integer> hashes = new HashSet<Integer>(numSelectors);
-    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<Integer,Integer>(numSelectors);
+    HashSet<Integer> hashes = new HashSet<>(numSelectors);
+    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
     for (int index = 0; index < numSelectors; index++)
     {
@@ -202,7 +202,7 @@ public class EncryptQuery
   {
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
-    ArrayList<EncryptQueryRunnable> runnables = new ArrayList<EncryptQueryRunnable>(numThreads);
+    ArrayList<EncryptQueryRunnable> runnables = new ArrayList<>(numThreads);
     int numElements = 1 << queryInfo.getHashBitSize();  // 2^hashBitSize
 
     // Split the work across the requested number of threads
@@ -218,14 +218,14 @@ public class EncryptQuery
       }
 
       // Copy selectorQueryVecMapping (if numThreads > 1) so we don't have to synchronize - only has size = selectors.size()
-      HashMap<Integer,Integer> selectorQueryVecMappingCopy = null;
+      HashMap<Integer,Integer> selectorQueryVecMappingCopy;
       if (numThreads == 1)
       {
         selectorQueryVecMappingCopy = selectorQueryVecMapping;
       }
       else
       {
-        selectorQueryVecMappingCopy = new HashMap<Integer,Integer>(selectorQueryVecMapping);
+        selectorQueryVecMappingCopy = new HashMap<>(selectorQueryVecMapping);
       }
 
       // Create the runnable and execute

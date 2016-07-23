@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.utils;
 
 import java.io.File;
@@ -24,9 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages system properties. At first loading of this class, it will:
@@ -38,19 +39,19 @@ import org.apache.pirk.schema.query.LoadQuerySchemas;
  */
 public class SystemConfiguration
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(SystemConfiguration.class);
 
   private static final Properties props;
 
   /**
    * By default, if the pirk.properties file is found on the root of the classpath, it is loaded first.
    */
-  public static final String DEFAULT_PROPERTY_FILE = "pirk.properties";
+  private static final String DEFAULT_PROPERTY_FILE = "pirk.properties";
 
   /**
    * By default, if the local.pirk.properties file is found on the root of the classpath, it is loaded after pirk.properites.
    */
-  public static final String LOCAL_PROPERTY_FILE = "local.pirk.properties";
+  private static final String LOCAL_PROPERTY_FILE = "local.pirk.properties";
 
   static
   {
@@ -104,19 +105,11 @@ public class SystemConfiguration
     File localFile = new File(getProperty(LOCAL_PROPERTY_FILE));
     if (localFile.exists())
     {
-      try
+      try(InputStream stream = new FileInputStream(localFile);)
       {
-        InputStream stream = new FileInputStream(localFile);
-        if (stream != null)
-        {
-          logger.info("Loading local properties file '" + localFile.getAbsolutePath() + "'");
-          props.load(stream);
-          stream.close();
-        }
-        else
-        {
-          logger.info("No local configuration file found '" + localFile.getAbsolutePath() + "'");
-        }
+        logger.info("Loading local properties file '" + localFile.getAbsolutePath() + "'");
+        props.load(stream);
+        stream.close();
       } catch (IOException e)
       {
         logger.error("Problem loading local properties file '" + localFile.getAbsolutePath() + "'");

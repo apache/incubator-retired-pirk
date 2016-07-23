@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,38 +15,37 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.general;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.test.utils.Inputs;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.json.simple.JSONObject;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Class for testing the QueryParser methods
  */
 public class QueryParserUtilsTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryParserUtilsTest.class);
 
-  MapWritable doc = null; // MapWritable with arrays in json string representation
-  MapWritable docWAW = null; // MapWritable with arrays as WritableArrayWritable objects
-  Map<String,Object> docMap = null; // arrays as ArrayList<String>
+  private MapWritable doc = null; // MapWritable with arrays in json string representation
+  private MapWritable docWAW = null; // MapWritable with arrays as WritableArrayWritable objects
+  private Map<String,Object> docMap = null; // arrays as ArrayList<String>
 
-  DataSchema dSchema = null;
+  private DataSchema dSchema = null;
 
   public QueryParserUtilsTest() throws Exception
   {

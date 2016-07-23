@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.utils;
 
 import java.io.BufferedReader;
@@ -38,10 +38,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  */
 public class TestUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
   /**
    * Method to delete an ES index
@@ -81,7 +81,7 @@ public class TestUtils
 
     // Read the output from the command
     logger.info("Standard output of the command:\n");
-    String s = null;
+    String s;
     while ((s = stdInput.readLine()) != null)
     {
       logger.info(s);
@@ -142,7 +142,7 @@ public class TestUtils
     logger.info("createQuerySchema: querySchemaName = " + querySchemaName);
 
     // Create a temporary file for the test schema, set in the properties
-    String fileName = null;
+    String fileName;
     File file = null;
     OutputStreamWriter osw = null;
     if (hdfs)
@@ -237,7 +237,7 @@ public class TestUtils
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       DOMSource source = new DOMSource(doc);
-      StreamResult result = null;
+      StreamResult result;
       if (hdfs)
       {
         result = new StreamResult(osw);
@@ -269,7 +269,7 @@ public class TestUtils
    */
   public static ArrayList<QueryResponseJSON> readResultsFile(File file)
   {
-    ArrayList<QueryResponseJSON> results = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> results = new ArrayList<>();
     try
     {
       FileReader fr = new FileReader(file);
@@ -295,7 +295,7 @@ public class TestUtils
    */
   public static String writeToTmpFile(ArrayList<String> list, String fileName, String suffix) throws IOException
   {
-    String filename = null;
+    String filename;
 
     File file = File.createTempFile(fileName, suffix);
     file.deleteOnExit();

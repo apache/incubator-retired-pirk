@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.query;
 
 import java.io.File;
@@ -29,12 +29,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -66,15 +66,15 @@ import org.w3c.dom.NodeList;
  */
 public class LoadQuerySchemas
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(LoadQuerySchemas.class);
 
-  public static HashMap<String,QuerySchema> schemaMap;
+  private static HashMap<String,QuerySchema> schemaMap;
 
   static
   {
     logger.info("Loading query schemas: ");
 
-    schemaMap = new HashMap<String,QuerySchema>();
+    schemaMap = new HashMap<>();
     try
     {
       initialize();
@@ -124,13 +124,13 @@ public class LoadQuerySchemas
 
   private static QuerySchema loadQuerySchemaFile(String schemaFile, boolean hdfs, FileSystem fs) throws Exception
   {
-    QuerySchema querySchema = null;
+    QuerySchema querySchema;
 
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
     // Read in and parse the schema file
-    Document doc = null;
+    Document doc;
     if (hdfs)
     {
       Path filePath = new Path(schemaFile);
@@ -176,7 +176,7 @@ public class LoadQuerySchemas
     }
     Element elements = (Element) elementsList.item(0);
 
-    TreeSet<String> elementNames = new TreeSet<String>();
+    TreeSet<String> elementNames = new TreeSet<>();
     int dataElementSize = 0;
     NodeList nList = elements.getElementsByTagName("name");
     for (int i = 0; i < nList.getLength(); i++)
@@ -193,7 +193,7 @@ public class LoadQuerySchemas
         // Compute the number of bits for this element
         logger.info("name = " + name);
         logger.info("partitionerName = " + dataSchema.getPartitionerName(name));
-        if (((DataPartitioner) dataSchema.getPartitionerForElement(name)) == null)
+        if ((dataSchema.getPartitionerForElement(name)) == null)
         {
           logger.info("partitioner is null");
         }
@@ -218,7 +218,7 @@ public class LoadQuerySchemas
     }
 
     // Extract the filterNames, if they exist
-    HashSet<String> filterNamesSet = new HashSet<String>();
+    HashSet<String> filterNamesSet = new HashSet<>();
     if (doc.getElementsByTagName("filterNames").item(0) != null)
     {
       NodeList filterNamesList = doc.getElementsByTagName("filterNames");
@@ -256,7 +256,7 @@ public class LoadQuerySchemas
    */
   private static String extractValue(Document doc, String valueName) throws Exception
   {
-    String value = null;
+    String value;
 
     NodeList itemList = doc.getElementsByTagName(valueName);
     if (itemList.getLength() > 1)

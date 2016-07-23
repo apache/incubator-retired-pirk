@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,23 +15,22 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.HashSelectorAndPartitionData;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -43,21 +42,15 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(HashSelectorsAndPartitionData.class);
 
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
-
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
-  DataSchema dSchema = null;
+  private QueryInfo queryInfo = null;
+  private QuerySchema qSchema = null;
+  private DataSchema dSchema = null;
 
   public HashSelectorsAndPartitionData(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
   {
-    accum = pirWLAccum;
-    bbVars = pirWLBBVars;
-
-    queryInfo = bbVars.getQueryInfo();
+    queryInfo = pirWLBBVars.getQueryInfo();
     qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
@@ -67,7 +60,7 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
   @Override
   public Tuple2<Integer,ArrayList<BigInteger>> call(MapWritable doc) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple = null;
+    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
 
     // Extract the selector, compute the hash, and partition the data element according to query type
     returnTuple = HashSelectorAndPartitionData.hashSelectorAndFormPartitionsBigInteger(doc, qSchema, dSchema, queryInfo);

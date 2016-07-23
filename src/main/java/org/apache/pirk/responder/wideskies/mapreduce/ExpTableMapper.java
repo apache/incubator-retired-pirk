@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -26,10 +26,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to generate the expTable given the input query vectors
@@ -37,15 +37,13 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class ExpTableMapper extends Mapper<LongWritable,Text,Text,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ExpTableMapper.class);
 
-  Text keyOut = null;
-  Text valueOut = null;
+  private Text valueOut = null;
 
-  int dataPartitionBitSize = 0;
-  int maxValue = 0;
-  BigInteger NSquared = null;
-  Query query = null;
+  private int maxValue = 0;
+  private BigInteger NSquared = null;
+  private Query query = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
@@ -58,7 +56,7 @@ public class ExpTableMapper extends Mapper<LongWritable,Text,Text,Text>
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
     query = Query.readFromHDFSFile(new Path(queryDir), fs);
 
-    dataPartitionBitSize = query.getQueryInfo().getDataPartitionBitSize();
+    int dataPartitionBitSize = query.getQueryInfo().getDataPartitionBitSize();
     maxValue = (int) Math.pow(2, dataPartitionBitSize) - 1;
 
     NSquared = query.getNSquared();

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.inputformat.hadoop;
 
 import java.io.ByteArrayOutputStream;
@@ -26,8 +26,8 @@ import java.util.Arrays;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.BytesWritable;
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ArrayWritable class with ByteWritable entries
@@ -35,7 +35,7 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class BytesArrayWritable extends ArrayWritable
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(BytesArrayWritable.class);
 
   public BytesArrayWritable()
   {
@@ -147,16 +147,11 @@ public class BytesArrayWritable extends ArrayWritable
   // assumes big endian ordering -- will not change value
   private byte[] pad(byte[] bytes) throws IOException
   {
-    byte[] paddedBytes = null;
-
     byte[] zeroByte = new byte[] {0};
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     outputStream.write(zeroByte);
     outputStream.write(bytes);
-
-    paddedBytes = outputStream.toByteArray();
-
-    return paddedBytes;
+    return outputStream.toByteArray();
   }
 }
