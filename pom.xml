@@ -72,16 +72,19 @@
 
 	</repositories>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<scala.version>2.10.4</scala.version>
-		<jmh.version>1.11.3</jmh.version>
-		<benchmarkjar.name>benchmarks</benchmarkjar.name>
-		<javac.target>1.7</javac.target>
-		<slf4j.version>1.7.21</slf4j.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <scala.version>2.10.4</scala.version>
+        <jmh.version>1.11.3</jmh.version>
+        <benchmarkjar.name>benchmarks</benchmarkjar.name>
+        <javac.target>1.7</javac.target>
+        <slf4j.version>1.7.21</slf4j.version>
+        <log4j2.version>2.6.2</log4j2.version>
+        <junit.version>4.12</junit.version>
+        <log4j.configuration>log4j2.properties</log4j.configuration>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -209,6 +212,9 @@
 			<redirectTestOutputToFile>true</redirectTestOutputToFile>
 			<argLine combine.children="append">-Xmx1G
 				-Djava.net.preferIPv4Stack=true</argLine>
+			<systemPropertyVariables>
+				<log4j.configuration>${log4j.configuration}</log4j.configuration>
+			</systemPropertyVariables>
 			</configuration>
 			<dependencies>
 				<dependency>
@@ -277,14 +283,15 @@
 						</configuration>
 					</execution>
 
-					<!-- in the version with benchmarks (pom-with-benchmarks.xml), this
-						is where that <execution></execution> lives -->
+                    <!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+                        is where that <execution></execution> lives -->
 
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
+                <version>0.11</version>
                 <configuration>
                     <excludes>
                         <exclude>nb-configuration.xml</exclude> <!-- courtesy excludes for netbeans users -->
