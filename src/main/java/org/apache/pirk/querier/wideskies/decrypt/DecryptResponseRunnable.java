@@ -30,6 +30,7 @@ import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.utils.SystemConfiguration;
 
 /**
  * Runnable class for multithreaded PIR decryption
@@ -47,6 +48,7 @@ public class DecryptResponseRunnable implements Runnable
   TreeMap<Integer,String> selectors = null;
   HashMap<String,BigInteger> selectorMaskMap = null;
   QueryInfo queryInfo = null;
+  QuerySchema qSchema = null;
   HashMap<Integer,String> embedSelectorMap = null;
 
   public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,
@@ -57,6 +59,14 @@ public class DecryptResponseRunnable implements Runnable
     selectorMaskMap = selectorMaskMapInput;
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
+
+    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      if ((qSchema = queryInfo.getQuerySchema()) == null)
+      {
+        qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+      }
+    }
 
     resultMap = new HashMap<String,ArrayList<QueryResponseJSON>>();
   }
@@ -132,7 +142,7 @@ public class DecryptResponseRunnable implements Runnable
           QueryResponseJSON qrJOSN = null;
           try
           {
-            qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, parts);
+            qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, qSchema, parts);
           } catch (Exception e)
           {
             e.printStackTrace();

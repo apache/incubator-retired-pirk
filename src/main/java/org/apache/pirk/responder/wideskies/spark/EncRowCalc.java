@@ -29,8 +29,6 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
@@ -52,7 +50,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
   Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  BroadcastVars bVars = null;
 
   Query query = null;
   QueryInfo queryInfo = null;
@@ -63,22 +61,22 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   boolean limitHitsPerSelector = false;
   int maxHitsPerSelector = 0;
 
-  public EncRowCalc(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
+  public EncRowCalc(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = pirWLAccum;
-    bbVars = pirWLBBVars;
+    accum = accumIn;
+    bVars = bvIn;
 
-    query = bbVars.getQuery();
-    queryInfo = bbVars.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    query = bVars.getQuery();
+    queryInfo = bVars.getQueryInfo();
+    qSchema = bVars.getQuerySchema();
+    dSchema = bVars.getDataSchema();
 
-    if (bbVars.getUseLocalCache().equals("true"))
+    if (bVars.getUseLocalCache().equals("true"))
     {
       useLocalCache = true;
     }
-    limitHitsPerSelector = bbVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bbVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
+    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
 
     logger.info("Initialized EncRowCalc - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);
   }

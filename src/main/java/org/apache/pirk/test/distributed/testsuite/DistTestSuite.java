@@ -66,6 +66,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "100");
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up base configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.BASE_FORMAT);
@@ -129,6 +132,20 @@ public class DistTestSuite
 
     // Reset property
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
+    
+    //Test embedded QuerySchema
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    
 
     logger.info("Completed testJSONInputMR");
   }
@@ -142,6 +159,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
@@ -182,6 +202,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.numColMultPartitions", "20");
     SystemConfiguration.setProperty("pir.colMultReduceByKey", "false");
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up JSON configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.BASE_FORMAT);
@@ -199,7 +222,21 @@ public class DistTestSuite
     BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2);
 
     BaseTests.testSRCIPQueryNoFilter(dataElements, fs, true, true, 2);
-
+    
+    //Test embedded QuerySchema
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    
     // Test pad columns
     SystemConfiguration.setProperty("pir.padEmptyColumns", "true");
     BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
@@ -253,6 +290,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
+    
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);

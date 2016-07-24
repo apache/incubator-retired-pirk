@@ -99,7 +99,14 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
       e.printStackTrace();
     }
 
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    if (ctx.getConfiguration().get("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if(qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    }
     dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     if (ctx.getConfiguration().get("pirWL.useLocalCache").equals("true"))

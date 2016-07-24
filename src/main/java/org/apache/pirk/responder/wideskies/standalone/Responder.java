@@ -19,7 +19,6 @@
 package org.apache.pirk.responder.wideskies.standalone;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -32,6 +31,9 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -55,6 +57,7 @@ public class Responder
 
   Query query = null;
   QueryInfo queryInfo = null;
+  QuerySchema qSchema = null;
 
   String queryType = null;
 
@@ -69,6 +72,15 @@ public class Responder
     query = queryInput;
     queryInfo = query.getQueryInfo();
     queryType = queryInfo.getQueryType();
+
+    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if(qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryType);
+    }
 
     response = new Response(queryInfo);
 
@@ -115,7 +127,7 @@ public class Responder
 
         logger.info("jsonData = " + jsonData.toJSONString());
 
-        String selector = QueryUtils.getSelectorByQueryTypeJSON(queryType, jsonData);
+        String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, jsonData);
         addDataElement(selector, jsonData);
       }
       br.close();
@@ -158,7 +170,7 @@ public class Responder
   {
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(queryType, jsonData, queryInfo.getEmbedSelector());
+    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, jsonData, queryInfo.getEmbedSelector());
 
     // Pull the necessary elements
     int rowIndex = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);

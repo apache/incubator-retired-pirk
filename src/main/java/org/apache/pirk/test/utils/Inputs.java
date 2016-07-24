@@ -98,9 +98,10 @@ public class Inputs
   public static final String TEST_DATA_SCHEMA_NAME = "testDataSchema";
   public static final String DATA_SCHEMA_FILE_LOCALFS = "testDataSchemaFile";
   public static final String DATA_SCHEMA_FILE_HDFS = "/tmp/testDataSchemaFile.xml";
+  
 
   /**
-   * Delete the Elastic Search indices that was used for functional testing
+   * Delete the ElasticSearch indices that was used for functional testing
    */
   public static void deleteESInput()
   {

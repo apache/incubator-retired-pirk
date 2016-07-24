@@ -32,7 +32,6 @@ import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.KeyedHash;
@@ -52,12 +51,10 @@ public class QueryUtils
   /**
    * Method to convert the given BigInteger raw data element partitions to a QueryResponseJSON object based upon the given queryType
    */
-  public static QueryResponseJSON extractQueryResponseJSON(QueryInfo queryInfo, ArrayList<BigInteger> parts) throws Exception
+  public static QueryResponseJSON extractQueryResponseJSON(QueryInfo queryInfo, QuerySchema qSchema, ArrayList<BigInteger> parts) throws Exception
   {
     QueryResponseJSON qrJSON = new QueryResponseJSON(queryInfo);
 
-    String queryType = queryInfo.getQueryType();
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
@@ -106,13 +103,10 @@ public class QueryUtils
   /**
    * Method to convert the given data element given by the JSONObject data element into the extracted BigInteger partitions based upon the given queryType
    */
-  public static ArrayList<BigInteger> partitionDataElement(String queryType, JSONObject jsonData, boolean embedSelector) throws Exception
+  public static ArrayList<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws Exception
   {
     ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
 
-    logger.debug("queryType = " + queryType);
-
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     // Add the embedded selector to the parts
@@ -120,7 +114,7 @@ public class QueryUtils
     {
       String selectorFieldName = qSchema.getSelectorName();
       String type = dSchema.getElementType(selectorFieldName);
-      String selector = getSelectorByQueryTypeJSON(queryType, jsonData);
+      String selector = getSelectorByQueryTypeJSON(qSchema, jsonData);
 
       parts.addAll(embeddedSelectorToPartitions(selector, type, (dSchema.getPartitionerForElement(selectorFieldName))));
 
@@ -337,11 +331,10 @@ public class QueryUtils
    * <p>
    * Pulls first element of array if element is an array type
    */
-  public static String getSelectorByQueryTypeJSON(String queryType, JSONObject dataMap)
+  public static String getSelectorByQueryTypeJSON(QuerySchema qSchema, JSONObject dataMap)
   {
     String selector = null;
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
     String fieldName = qSchema.getSelectorName();
 

@@ -81,18 +81,18 @@ public class HashSelectorAndPartitionData
     return returnTuple;
   }
 
-  public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitions(JSONObject json, QueryInfo queryInfo) throws Exception
+  public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitions(JSONObject json, QueryInfo queryInfo, QuerySchema qSchema) throws Exception
   {
     Tuple2<Integer,ArrayList<BigInteger>> returnTuple = null;
 
     // Pull the selector based on the query type
-    String selector = QueryUtils.getSelectorByQueryTypeJSON(queryInfo.getQueryType(), json);
+    String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, json);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
     logger.debug("selector = " + selector + " hash = " + hash);
 
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(queryInfo.getQueryType(), json, queryInfo.getEmbedSelector());
+    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, json, queryInfo.getEmbedSelector());
 
     returnTuple = new Tuple2<Integer,ArrayList<BigInteger>>(hash, hitValPartitions);
 

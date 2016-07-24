@@ -93,7 +93,15 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     {
       e.printStackTrace();
     }
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    
+    if (ctx.getConfiguration().get("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if(qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    }
     dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     try

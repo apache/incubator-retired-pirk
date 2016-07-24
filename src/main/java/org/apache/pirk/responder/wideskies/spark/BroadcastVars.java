@@ -22,6 +22,8 @@ import java.io.Serializable;
 
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
+import org.apache.pirk.schema.data.DataSchema;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 
@@ -38,6 +40,10 @@ public class BroadcastVars implements Serializable
   Broadcast<Query> query = null;
 
   Broadcast<QueryInfo> queryInfo = null;
+
+  Broadcast<DataSchema> dataSchema = null;
+
+  Broadcast<QuerySchema> querySchema = null;
 
   Broadcast<String> useLocalCache = null;
 
@@ -70,6 +76,26 @@ public class BroadcastVars implements Serializable
   public void setQueryInfo(QueryInfo queryInfoIn)
   {
     queryInfo = jsc.broadcast(queryInfoIn);
+  }
+
+  public void setQuerySchema(QuerySchema qSchemaIn)
+  {
+    querySchema = jsc.broadcast(qSchemaIn);
+  }
+
+  public QuerySchema getQuerySchema()
+  {
+    return querySchema.getValue();
+  }
+
+  public void setDataSchema(DataSchema dSchemaIn)
+  {
+    dataSchema = jsc.broadcast(dSchemaIn);
+  }
+
+  public DataSchema getDataSchema()
+  {
+    return dataSchema.getValue();
   }
 
   public void setUseLocalCache(String useLocalCacheInput)

@@ -46,7 +46,7 @@ public class EncRowCalcPrecomputedCache implements
   private static Logger logger = LogUtils.getLoggerForThisClass();
 
   Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  BroadcastVars bVars = null;
 
   Query query = null;
   QueryInfo queryInfo = null;
@@ -58,22 +58,22 @@ public class EncRowCalcPrecomputedCache implements
   int maxHitsPerSelector = 0;
   HashMap<Integer,BigInteger> expTable = null;
 
-  public EncRowCalcPrecomputedCache(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
+  public EncRowCalcPrecomputedCache(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = pirWLAccum;
-    bbVars = pirWLBBVars;
+    accum = accumIn;
+    bVars = bvIn;
 
-    query = bbVars.getQuery();
-    queryInfo = bbVars.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    query = bVars.getQuery();
+    queryInfo = bVars.getQueryInfo();
+    qSchema = bVars.getQuerySchema();
+    dSchema = bVars.getDataSchema();
 
-    if (bbVars.getUseLocalCache().equals("true"))
+    if (bVars.getUseLocalCache().equals("true"))
     {
       useLocalCache = true;
     }
-    limitHitsPerSelector = bbVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bbVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
+    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
 
     expTable = new HashMap<Integer,BigInteger>();
 

@@ -34,6 +34,7 @@ import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
@@ -168,6 +169,19 @@ public class ComputeResponse
     queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
+
+    QuerySchema qSchema = null;
+    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if(qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    }
+    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    bVars.setQuerySchema(qSchema);
+    bVars.setDataSchema(dSchema);
 
     // Set the local cache flag
     bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));

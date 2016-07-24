@@ -22,6 +22,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.LogUtils;
 
 /**
@@ -59,9 +60,10 @@ public class QueryInfo implements Serializable
   // if it doesn't yet exist, it will be created within the cluster and stored in HDFS
 
   boolean embedSelector = true; // whether or not to embed the selector in the results - results in a very low
-
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
+
+  QuerySchema qSchema = null;
 
   public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
       String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
@@ -164,6 +166,16 @@ public class QueryInfo implements Serializable
   public boolean getEmbedSelector()
   {
     return embedSelector;
+  }
+
+  public void addQuerySchema(QuerySchema qSchemaIn)
+  {
+    qSchema = qSchemaIn;
+  }
+
+  public QuerySchema getQuerySchema()
+  {
+    return qSchema;
   }
 
   public void printQueryInfo()
