@@ -46,6 +46,7 @@ public class QuerierDriverCLI
   public static String OUTPUTFILE = "outputFile";
   public static String TYPE = "queryType";
   public static String NUMTHREADS = "numThreads";
+  public static String EMBEDQUERYSCHEMA = "embedQuerySchema";
 
   // Encryption variables
   public static String HASHBITSIZE = "hashBitSize";
@@ -182,6 +183,16 @@ public class QuerierDriverCLI
       return false;
     }
     SystemConfiguration.setProperty("data.schemas", getOptionValue(DATASCHEMAS));
+
+    // Parse general optional args
+    if (hasOption(EMBEDQUERYSCHEMA))
+    {
+      SystemConfiguration.setProperty("pir.embedQuerySchema", getOptionValue(EMBEDQUERYSCHEMA));
+    }
+    else
+    {
+      SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    }
 
     // Parse encryption args
     if (action.equals("encrypt"))
@@ -468,6 +479,14 @@ public class QuerierDriverCLI
     optionQUERIERFILE.setArgName(QUERIERFILE);
     optionQUERIERFILE.setType(String.class);
     options.addOption(optionQUERIERFILE);
+
+    // embedQuerySchema
+    Option optionEMBEDQUERYSCHEMA = new Option("embedQS", EMBEDQUERYSCHEMA, true,
+        "optional (defaults to false) -- Whether or not to embed the QuerySchema in the Query (via QueryInfo)");
+    optionEMBEDQUERYSCHEMA.setRequired(false);
+    optionEMBEDQUERYSCHEMA.setArgName(EMBEDQUERYSCHEMA);
+    optionEMBEDQUERYSCHEMA.setType(String.class);
+    options.addOption(optionEMBEDQUERYSCHEMA);
 
     // SR_ALGORITHM
     Option optionSR_ALGORITHM = new Option("srAlg", SR_ALGORITHM, true, "optional - specify the SecureRandom algorithm, defaults to NativePRNG");

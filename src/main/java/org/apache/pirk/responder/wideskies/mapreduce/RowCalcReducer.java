@@ -23,7 +23,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -33,7 +32,6 @@ import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
@@ -96,9 +94,6 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
     {
       e.printStackTrace();
     }
-
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     if (ctx.getConfiguration().get("pirWL.useLocalCache").equals("true"))
     {

@@ -33,6 +33,8 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
@@ -59,6 +61,7 @@ public class StandaloneQuery
     logger.info("Performing watchlisting: ");
 
     ArrayList<QueryResponseJSON> results = null;
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
 
     // Create the necessary files
     LocalFileSystemStore storage = new LocalFileSystemStore();
@@ -80,6 +83,11 @@ public class StandaloneQuery
     // Set the necessary objects
     QueryInfo queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
         queryType, queryType + "_" + BaseTests.queryNum, BaseTests.paillierBitSize, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
+
+    if (SystemConfiguration.getProperty("pir.embedQuerySchema", "false").equals("true"))
+    {
+      queryInfo.addQuerySchema(qSchema);
+    }
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);
 
@@ -110,7 +118,7 @@ public class StandaloneQuery
     logger.info("Query and Responder elements constructed");
     for (JSONObject jsonData : dataElements)
     {
-      String selector = QueryUtils.getSelectorByQueryTypeJSON(queryType, jsonData);
+      String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, jsonData);
       logger.info("selector = " + selector + " numDataElements = " + jsonData.size());
       try
       {

@@ -25,7 +25,6 @@ import java.io.IOException;
 
 public class LocalFileSystemStore extends StorageService
 {
-
   /**
    * Creates a new storage service on the local file system using default Java serialization.
    */

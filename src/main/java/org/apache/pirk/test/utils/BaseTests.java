@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.query.wideskies.QueryUtils;
+import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.test.distributed.testsuite.DistTestSuite;
 import org.apache.pirk.utils.StringUtils;
@@ -46,8 +48,7 @@ public class BaseTests
   public static int dataPartitionBitSize = 8;
 
   // Selectors for domain and IP queries, queryNum is the first entry for file generation
-  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else",
-      "x.y.net"));
+  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
   private static ArrayList<String> selectorsIP = new ArrayList<>(Arrays.asList("55.55.55.55", "5.6.7.8", "10.20.30.40", "13.14.15.16", "21.22.23.24"));
 
   // Encryption variables -- Paillier mechanisms are tested in the Paillier test code, so these are fixed...
@@ -72,6 +73,8 @@ public class BaseTests
       boolean testFalsePositive) throws Exception
   {
     logger.info("Running testDNSHostnameQuery(): ");
+
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_HOSTNAME_QUERY);
 
     int numExpectedResults = 6;
     ArrayList<QueryResponseJSON> results;
@@ -161,7 +164,7 @@ public class BaseTests
           wlJSON.setMapping(Inputs.QTYPE, parseShortArray(dataMap, Inputs.QTYPE));
           wlJSON.setMapping(Inputs.RCODE, dataMap.get(Inputs.RCODE));
           wlJSON.setMapping(Inputs.IPS, parseArray(dataMap, Inputs.IPS, true));
-          wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(Inputs.DNS_HOSTNAME_QUERY, dataMap));
+          wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(qSchema, dataMap));
           correctResults.add(wlJSON);
         }
         ++i;
@@ -196,7 +199,9 @@ public class BaseTests
   {
     logger.info("Running testDNSIPQuery(): ");
 
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_IP_QUERY);
     ArrayList<QueryResponseJSON> results;
+
     if (isDistributed)
     {
       results = DistTestSuite.performQuery(Inputs.DNS_IP_QUERY, selectorsIP, fs, isSpark, numThreads);
@@ -237,7 +242,7 @@ public class BaseTests
         wlJSON.setMapping(Inputs.SRCIP, dataMap.get(Inputs.SRCIP));
         wlJSON.setMapping(Inputs.DSTIP, dataMap.get(Inputs.DSTIP));
         wlJSON.setMapping(Inputs.IPS, parseArray(dataMap, Inputs.IPS, true));
-        wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(Inputs.DNS_IP_QUERY, dataMap));
+        wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(qSchema, dataMap));
         correctResults.add(wlJSON);
       }
       ++i;
@@ -269,7 +274,9 @@ public class BaseTests
   {
     logger.info("Running testDNSNXDOMAINQuery(): ");
 
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_NXDOMAIN_QUERY);
     ArrayList<QueryResponseJSON> results;
+
     if (isDistributed)
     {
       results = DistTestSuite.performQuery(Inputs.DNS_NXDOMAIN_QUERY, selectorsDomain, fs, isSpark, numThreads);
@@ -300,7 +307,7 @@ public class BaseTests
         wlJSON.setMapping(Inputs.QNAME, dataMap.get(Inputs.QNAME)); // this gets re-embedded as the original selector after decryption
         wlJSON.setMapping(Inputs.DSTIP, dataMap.get(Inputs.DSTIP));
         wlJSON.setMapping(Inputs.SRCIP, dataMap.get(Inputs.SRCIP));
-        wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(Inputs.DNS_NXDOMAIN_QUERY, dataMap));
+        wlJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(qSchema, dataMap));
         correctResults.add(wlJSON);
       }
       ++i;
@@ -331,7 +338,9 @@ public class BaseTests
   {
     logger.info("Running testSRCIPQuery(): ");
 
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY);
     ArrayList<QueryResponseJSON> results;
+
     int removeTailElements = 0;
     int numExpectedResults = 1;
     if (isDistributed)
@@ -373,7 +382,7 @@ public class BaseTests
         qrJSON.setMapping(Inputs.DSTIP, dataMap.get(Inputs.DSTIP));
         qrJSON.setMapping(Inputs.SRCIP, dataMap.get(Inputs.SRCIP));
         qrJSON.setMapping(Inputs.IPS, parseArray(dataMap, Inputs.IPS, true));
-        qrJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(Inputs.DNS_SRCIP_QUERY, dataMap));
+        qrJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(qSchema, dataMap));
         correctResults.add(qrJSON);
       }
       ++i;
@@ -403,7 +412,9 @@ public class BaseTests
   {
     logger.info("Running testSRCIPQueryNoFilter(): ");
 
+    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY_NO_FILTER);
     ArrayList<QueryResponseJSON> results;
+
     int numExpectedResults = 3;
     if (isDistributed)
     {
@@ -442,7 +453,7 @@ public class BaseTests
         qrJSON.setMapping(Inputs.DSTIP, dataMap.get(Inputs.DSTIP));
         qrJSON.setMapping(Inputs.SRCIP, dataMap.get(Inputs.SRCIP));
         qrJSON.setMapping(Inputs.IPS, parseArray(dataMap, Inputs.IPS, true));
-        qrJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(Inputs.DNS_SRCIP_QUERY_NO_FILTER, dataMap));
+        qrJSON.setMapping(QueryResponseJSON.SELECTOR, QueryUtils.getSelectorByQueryTypeJSON(qSchema, dataMap));
         correctResults.add(qrJSON);
       }
       ++i;

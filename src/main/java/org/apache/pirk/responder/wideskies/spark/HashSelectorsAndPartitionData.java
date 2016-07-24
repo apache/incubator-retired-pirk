@@ -25,8 +25,6 @@ import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.HashSelectorAndPartitionData;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
@@ -44,15 +42,21 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
 
   private static final Logger logger = LoggerFactory.getLogger(HashSelectorsAndPartitionData.class);
 
+  Accumulators accum = null;
+  BroadcastVars bVars = null;
+
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
   private DataSchema dSchema = null;
 
-  public HashSelectorsAndPartitionData(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
+  public HashSelectorsAndPartitionData(Accumulators accumIn, BroadcastVars bvIn)
   {
-    queryInfo = pirWLBBVars.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    accum = accumIn;
+    bVars = bvIn;
+
+    queryInfo = bVars.getQueryInfo();
+    qSchema = bVars.getQuerySchema();
+    dSchema = bVars.getDataSchema();
 
     logger.info("Initialized HashSelectorsAndPartitionData");
   }

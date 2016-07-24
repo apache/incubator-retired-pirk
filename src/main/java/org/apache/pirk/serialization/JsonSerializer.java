@@ -20,50 +20,22 @@ package org.apache.pirk.serialization;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-public class JavaSerializer extends SerializationService
+//TODO: Waiting for Jackson adoption
+public class JsonSerializer extends SerializationService
 {
 
-  /**
-   * Stores the given object on the given stream using Java serialization.
-   * 
-   * @param stream
-   *          The stream on which to store the object.
-   * @param obj
-   *          The object to be stored.
-   * @throws IOException
-   *           If a problem occurs storing the object on the given stream.
-   */
-
-  public void write(OutputStream stream, Storable obj) throws IOException
+  @Override
+  public void write(OutputStream w, Storable obj) throws IOException
   {
-    ObjectOutputStream oos = new ObjectOutputStream(stream);
-    oos.writeObject(obj);
+    throw new RuntimeException("Not yet implemented");
   }
 
-  /**
-   * Read an object from the given stream of the given type.
-   * 
-   * @param stream
-   *          The stream from which to read the object.
-   * @param type
-   *          The type of object being retrieved.
-   * @throws IOException
-   *           If a problem occurs reading the object from the stream.
-   */
-  @SuppressWarnings("unchecked")
+  @Override
   public <T> T read(InputStream stream, Class<T> type) throws IOException
   {
-    ObjectInputStream oin = new ObjectInputStream(stream);
-    try
-    {
-      return (T) oin.readObject();
-    } catch (ClassNotFoundException e)
-    {
-      throw new RuntimeException(e);
-    }
+    throw new RuntimeException("Not yet implemented");
   }
+
 }

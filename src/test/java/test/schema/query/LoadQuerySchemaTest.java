@@ -49,6 +49,8 @@ import test.schema.data.LoadDataSchemaTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import test.schema.data.LoadDataSchemaTest;
+
 /**
  * Test suite for LoadQuerySchema and QuerySchema
  */
