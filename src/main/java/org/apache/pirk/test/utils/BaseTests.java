@@ -18,6 +18,8 @@
  */
 package org.apache.pirk.test.utils;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -35,7 +37,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.fail;
 
 /**
  * Class to hold the base functional distributed tests
@@ -48,8 +49,7 @@ public class BaseTests
   public static int dataPartitionBitSize = 8;
 
   // Selectors for domain and IP queries, queryNum is the first entry for file generation
-  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else",
-      "x.y.net"));
+  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
   private static ArrayList<String> selectorsIP = new ArrayList<>(Arrays.asList("55.55.55.55", "5.6.7.8", "10.20.30.40", "13.14.15.16", "21.22.23.24"));
 
   // Encryption variables -- Paillier mechanisms are tested in the Paillier test code, so these are fixed...
@@ -199,7 +199,7 @@ public class BaseTests
   public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     logger.info("Running testDNSIPQuery(): ");
-    
+
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_IP_QUERY);
     ArrayList<QueryResponseJSON> results;
 

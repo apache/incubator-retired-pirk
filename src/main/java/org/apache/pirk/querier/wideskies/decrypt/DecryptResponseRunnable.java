@@ -32,7 +32,6 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Runnable class for multithreaded PIR decryption
  * <p>
@@ -51,7 +50,6 @@ public class DecryptResponseRunnable implements Runnable
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
   private HashMap<Integer,String> embedSelectorMap = null;
-
 
   public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,
       QueryInfo queryInfoInput, HashMap<Integer,String> embedSelectorMapInput)

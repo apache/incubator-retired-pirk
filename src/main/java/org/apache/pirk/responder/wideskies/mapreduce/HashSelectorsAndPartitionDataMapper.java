@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
@@ -41,6 +40,7 @@ import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**
@@ -93,12 +93,12 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     {
       e.printStackTrace();
     }
-    
+
     if (ctx.getConfiguration().get("pir.allowAdHocQuerySchemas", "false").equals("true"))
     {
       qSchema = queryInfo.getQuerySchema();
     }
-    if(qSchema == null)
+    if (qSchema == null)
     {
       qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     }

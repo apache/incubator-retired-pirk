@@ -105,7 +105,7 @@ public class SystemConfiguration
     File localFile = new File(getProperty(LOCAL_PROPERTY_FILE));
     if (localFile.exists())
     {
-      try(InputStream stream = new FileInputStream(localFile);)
+      try (InputStream stream = new FileInputStream(localFile);)
       {
         logger.info("Loading local properties file '" + localFile.getAbsolutePath() + "'");
         props.load(stream);

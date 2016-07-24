@@ -18,8 +18,6 @@
  */
 package org.apache.pirk.querier.wideskies.encrypt;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
-import org.apache.pirk.querier.wideskies.QuerierConst;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
@@ -203,7 +200,7 @@ public class EncryptQuery
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
     ArrayList<EncryptQueryRunnable> runnables = new ArrayList<>(numThreads);
-    int numElements = 1 << queryInfo.getHashBitSize();  // 2^hashBitSize
+    int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
 
     // Split the work across the requested number of threads
     int elementsPerThread = numElements / numThreads;

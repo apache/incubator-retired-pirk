@@ -180,7 +180,7 @@ public class LoadDataSchemas
         String name = eElement.getElementsByTagName("name").item(0).getTextContent().trim().toLowerCase();
         String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
 
-        // An absent isArray means false, and an empty isArray means true, otherwise take the value. 
+        // An absent isArray means false, and an empty isArray means true, otherwise take the value.
         String isArray = "false";
         Node isArrayNode = eElement.getElementsByTagName("isArray").item(0);
         if (isArrayNode != null)

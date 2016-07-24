@@ -26,9 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.pirk.encryption.ModPowAbstraction;
@@ -36,8 +33,13 @@ import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 import scala.Tuple3;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * Class to compute the encrypted row elements for a query from extracted data partitions
@@ -49,9 +51,8 @@ public class ComputeEncryptedRow
 
   // Input: base, exponent, NSquared
   // <<base,exponent,NSquared>, base^exponent mod N^2>
-  private static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache =
-      CacheBuilder.newBuilder().maximumSize(10000)
-          .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
+  private static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
+      .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
       {
         @Override
         public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
@@ -152,11 +153,7 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link ArrayList<BigInteger>
-   * 
-   * 
-   * 
-   * }
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link ArrayList<BigInteger> * * * * }
    * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p>
@@ -229,11 +226,8 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable>
-   * 
-   * 
-   * 
-   * } given an input modular exponentiation table for the row
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable> * * * * } given
+   * an input modular exponentiation table for the row
    * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p>

@@ -77,7 +77,7 @@ public class Responder
     {
       qSchema = queryInfo.getQuerySchema();
     }
-    if(qSchema == null)
+    if (qSchema == null)
     {
       qSchema = LoadQuerySchemas.getSchema(queryType);
     }
@@ -192,12 +192,12 @@ public class Responder
 
       BigInteger exp;
       if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable()) // using the standalone
-        // lookup table
+      // lookup table
       {
         exp = query.getExp(rowQuery, hitValPartitions.get(i).intValue());
       }
       else
-        // without lookup table
+      // without lookup table
       {
         logger.debug("i = " + i + " hitValPartitions.get(i).intValue() = " + hitValPartitions.get(i).intValue());
         exp = ModPowAbstraction.modPow(rowQuery, hitValPartitions.get(i), query.getNSquared());

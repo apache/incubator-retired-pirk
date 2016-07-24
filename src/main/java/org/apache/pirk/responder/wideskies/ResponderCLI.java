@@ -207,7 +207,7 @@ public class ResponderCLI
         return false;
       }
       SystemConfiguration.setProperty("pir.inputData", getOptionValue(INPUTDATA));
-      
+
       if (hasOption(BASEQUERY))
       {
         SystemConfiguration.setProperty("pir.baseQuery", getOptionValue(BASEQUERY));

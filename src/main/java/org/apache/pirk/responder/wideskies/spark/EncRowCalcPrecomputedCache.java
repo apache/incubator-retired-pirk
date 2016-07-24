@@ -23,15 +23,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**
@@ -43,7 +39,7 @@ public class EncRowCalcPrecomputedCache implements
   private static final long serialVersionUID = 1L;
 
   private static final Logger logger = LoggerFactory.getLogger(EncRowCalcPrecomputedCache.class);
-  
+
   private Accumulators accum = null;
   private BroadcastVars bVars = null;
 
@@ -51,7 +47,7 @@ public class EncRowCalcPrecomputedCache implements
 
   private boolean limitHitsPerSelector = false;
   private int maxHitsPerSelector = 0;
-  
+
   private HashMap<Integer,BigInteger> expTable = null;
 
   public EncRowCalcPrecomputedCache(Accumulators accumIn, BroadcastVars bvIn)
@@ -60,10 +56,10 @@ public class EncRowCalcPrecomputedCache implements
     bVars = bvIn;
 
     query = bVars.getQuery();
-    
+
     limitHitsPerSelector = bVars.getLimitHitsPerSelector();
     maxHitsPerSelector = bVars.getMaxHitsPerSelector();
-    
+
     expTable = new HashMap<>();
 
     logger.info("Initialized EncRowCalcPrecomputedCache - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);

@@ -134,7 +134,7 @@ public class ComputeResponseTool extends Configured implements Tool
     {
       qSchema = queryInfo.getQuerySchema();
     }
-    if(qSchema == null)
+    if (qSchema == null)
     {
       qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     }

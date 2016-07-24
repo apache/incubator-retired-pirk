@@ -65,7 +65,7 @@ public class StandaloneTest
   {
     ArrayList<JSONObject> dataElements = Inputs.createJSONDataElements();
     ArrayList<JSONObject> dataElementsRcode3 = Inputs.getRcode3JSONDataElements();
-    
+
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
@@ -75,21 +75,21 @@ public class StandaloneTest
     BaseTests.testSRCIPQuery(dataElements, 2);
     BaseTests.testDNSIPQuery(dataElements, 3); // numThreads % num elements to encrypt != 0
     BaseTests.testDNSNXDOMAINQuery(dataElementsRcode3, 4); // numThreads % num elements to encrypt = 0
-    
-    //Test embedded QuerySchema
+
+    // Test embedded QuerySchema
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
     BaseTests.testDNSHostnameQuery(dataElements, 1, false);
-    
+
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
     BaseTests.testDNSHostnameQuery(dataElements, 1, false);
-    
+
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
     BaseTests.testDNSHostnameQuery(dataElements, 1, false);
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
-    
+
     // Run tests without using the embedded selector
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");
     BaseTests.testDNSHostnameQuery(dataElements, 1, false);

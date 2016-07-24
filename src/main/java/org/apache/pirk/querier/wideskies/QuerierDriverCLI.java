@@ -487,7 +487,7 @@ public class QuerierDriverCLI
     optionEMBEDQUERYSCHEMA.setArgName(EMBEDQUERYSCHEMA);
     optionEMBEDQUERYSCHEMA.setType(String.class);
     options.addOption(optionEMBEDQUERYSCHEMA);
-    
+
     // SR_ALGORITHM
     Option optionSR_ALGORITHM = new Option("srAlg", SR_ALGORITHM, true, "optional - specify the SecureRandom algorithm, defaults to NativePRNG");
     optionSR_ALGORITHM.setRequired(false);

@@ -177,7 +177,7 @@ public class ComputeResponse
     {
       qSchema = queryInfo.getQuerySchema();
     }
-    if(qSchema == null)
+    if (qSchema == null)
     {
       qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     }

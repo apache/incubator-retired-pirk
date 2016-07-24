@@ -189,7 +189,7 @@ public class QueryInfo implements Serializable
 
   public QueryInfo copy()
   {
-    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType,
-        this.queryName, this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
+    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryName,
+        this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
   }
 }
