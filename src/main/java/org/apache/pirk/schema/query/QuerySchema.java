@@ -42,7 +42,7 @@ public class QuerySchema implements Serializable
   private String dataSchemaName = null; // name of the DataSchema for this query schema
 
   private TreeSet<String> elementNames = null; // names of elements in the data schema to
-                                       // include in the response, order matters for packing/unpacking
+  // include in the response, order matters for packing/unpacking
 
   private String filter = null; // name of filter class to use in data filtering
 

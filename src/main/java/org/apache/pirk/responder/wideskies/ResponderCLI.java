@@ -70,6 +70,7 @@ public class ResponderCLI
   public static String NUMCOLMULTPARTITIONS = "numColMultPartitions";
   public static String USEMODEXPJOIN = "useModExpJoin";
   public static String COLMULTREDUCEBYKEY = "colMultReduceByKey";
+  public static String ALLOWEMBEDDEDQUERYSCHEMAS = "allowAdHocQuerySchemas";
 
   /**
    * Create and parse allowable options
@@ -343,6 +344,15 @@ public class ResponderCLI
       SystemConfiguration.setProperty("pir.colMultReduceByKey", "false");
     }
 
+    if (hasOption(ALLOWEMBEDDEDQUERYSCHEMAS))
+    {
+      SystemConfiguration.setProperty("pir.allowEmbeddedQuerySchemas", getOptionValue(ALLOWEMBEDDEDQUERYSCHEMAS));
+    }
+    else
+    {
+      SystemConfiguration.setProperty("pir.allowEmbeddedQuerySchemas", "false");
+    }
+
     // Load the new local query and data schemas
     try
     {
@@ -552,18 +562,26 @@ public class ResponderCLI
     // numColMultPartitions
     Option optionNumColMultPartitions = new Option("numColMultParts", NUMCOLMULTPARTITIONS, true, "optional, Spark only -- Number of partitions to "
         + "use when performing column multiplication");
-    optionModExpJoin.setRequired(false);
-    optionModExpJoin.setArgName(NUMCOLMULTPARTITIONS);
-    optionModExpJoin.setType(String.class);
+    optionNumColMultPartitions.setRequired(false);
+    optionNumColMultPartitions.setArgName(NUMCOLMULTPARTITIONS);
+    optionNumColMultPartitions.setType(String.class);
     options.addOption(optionNumColMultPartitions);
 
     // colMultReduceByKey
     Option optionColMultReduceByKey = new Option("colMultRBK", COLMULTREDUCEBYKEY, true, "optional -- 'true' or 'false' -- Spark only -- "
         + "If true, uses reduceByKey in performing column multiplication; if false, uses groupByKey -> reduce");
-    optionModExpJoin.setRequired(false);
-    optionModExpJoin.setArgName(COLMULTREDUCEBYKEY);
-    optionModExpJoin.setType(String.class);
+    optionColMultReduceByKey.setRequired(false);
+    optionColMultReduceByKey.setArgName(COLMULTREDUCEBYKEY);
+    optionColMultReduceByKey.setType(String.class);
     options.addOption(optionColMultReduceByKey);
+
+    // colMultReduceByKey
+    Option optionAllowEmbeddedQS = new Option("allowEmbeddedQS", ALLOWEMBEDDEDQUERYSCHEMAS, true, "optional -- 'true' or 'false'  (defaults to 'false') -- "
+        + "If true, allows embedded QuerySchemas for a query.");
+    optionAllowEmbeddedQS.setRequired(false);
+    optionAllowEmbeddedQS.setArgName(ALLOWEMBEDDEDQUERYSCHEMAS);
+    optionAllowEmbeddedQS.setType(String.class);
+    options.addOption(optionAllowEmbeddedQS);
 
     return options;
   }

@@ -130,7 +130,14 @@ public class ComputeResponseTool extends Configured implements Tool
 
     query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);
     queryInfo = query.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if (qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    }
 
     logger.info("outputFile = " + outputFile + " outputDirInit = " + outputDirInit + " outputDirColumnMult = " + outputDirColumnMult + " queryInputDir = "
         + queryInputDir + " stopListFile = " + stopListFile + " numReduceTasks = " + numReduceTasks + " esQuery = " + esQuery + " esResource = " + esResource);
@@ -388,6 +395,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
       job.getConfiguration().set("baseQuery", baseQuery);
       job.getConfiguration().set("query", baseQuery);
+      job.getConfiguration().set("pir.allowAdHocQuerySchemas", SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false"));
 
       job.getConfiguration().setBoolean("mapreduce.input.fileinputformat.input.dir.recursive", true);
 

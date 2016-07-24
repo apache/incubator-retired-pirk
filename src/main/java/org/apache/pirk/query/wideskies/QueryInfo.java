@@ -21,6 +21,7 @@ package org.apache.pirk.query.wideskies;
 import java.io.Serializable;
 
 import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,8 @@ public class QueryInfo implements Serializable
 
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
+
+  QuerySchema qSchema = null;
 
   public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
       String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
@@ -166,6 +169,16 @@ public class QueryInfo implements Serializable
     return embedSelector;
   }
 
+  public void addQuerySchema(QuerySchema qSchemaIn)
+  {
+    qSchema = qSchemaIn;
+  }
+
+  public QuerySchema getQuerySchema()
+  {
+    return qSchema;
+  }
+
   public void printQueryInfo()
   {
     logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
@@ -176,7 +189,7 @@ public class QueryInfo implements Serializable
 
   public QueryInfo copy()
   {
-    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType,
-        this.queryName, this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
+    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryName,
+        this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
   }
 }

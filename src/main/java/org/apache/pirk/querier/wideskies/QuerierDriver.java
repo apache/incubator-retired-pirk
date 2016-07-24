@@ -164,6 +164,12 @@ public class QuerierDriver implements Serializable
       // Set the necessary QueryInfo and Paillier objects
       QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryName, paillierBitSize,
           useMemLookupTable, embedSelector, useHDFSLookupTable);
+
+      if (SystemConfiguration.getProperty("pir.embedQuerySchema").equals("true"))
+      {
+        queryInfo.addQuerySchema(LoadQuerySchemas.getSchema(queryType));
+      }
+
       Paillier paillier = new Paillier(paillierBitSize, certainty, bitSet); // throws PIRException if certainty conditions are not satisfied
 
       // Check the number of selectors to ensure that 2^{numSelector*dataPartitionBitSize} < N

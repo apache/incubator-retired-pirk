@@ -28,6 +28,7 @@ import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,8 @@ public class DecryptResponseRunnable implements Runnable
   private TreeMap<Integer,String> selectors = null;
   private HashMap<String,BigInteger> selectorMaskMap = null;
   private QueryInfo queryInfo = null;
+  private QuerySchema qSchema = null;
+
   private HashMap<Integer,String> embedSelectorMap = null;
 
   public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,
@@ -58,6 +61,13 @@ public class DecryptResponseRunnable implements Runnable
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
 
+    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      if ((qSchema = queryInfo.getQuerySchema()) == null)
+      {
+        qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+      }
+    }
     resultMap = new HashMap<>();
   }
 
@@ -132,7 +142,7 @@ public class DecryptResponseRunnable implements Runnable
           QueryResponseJSON qrJOSN = null;
           try
           {
-            qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, parts);
+            qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, qSchema, parts);
           } catch (Exception e)
           {
             e.printStackTrace();

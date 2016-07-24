@@ -101,7 +101,7 @@ public class Inputs
   public static final String DATA_SCHEMA_FILE_HDFS = "/tmp/testDataSchemaFile.xml";
 
   /**
-   * Delete the Elastic Search indices that was used for functional testing
+   * Delete the ElasticSearch indices that was used for functional testing
    */
   public static void deleteESInput()
   {

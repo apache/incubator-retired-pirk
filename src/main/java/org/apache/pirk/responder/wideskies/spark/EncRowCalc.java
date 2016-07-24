@@ -51,6 +51,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   private static final Logger logger = LoggerFactory.getLogger(EncRowCalc.class);
 
   private Accumulators accum = null;
+  private BroadcastVars bVars = null;
 
   private Query query = null;
   private QueryInfo queryInfo = null;
@@ -59,21 +60,19 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   private boolean limitHitsPerSelector = false;
   private int maxHitsPerSelector = 0;
 
-  public EncRowCalc(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
+  public EncRowCalc(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = pirWLAccum;
+    accum = accumIn;
+    bVars = bvIn;
 
-    query = pirWLBBVars.getQuery();
-    queryInfo = pirWLBBVars.getQueryInfo();
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
-
-    if (pirWLBBVars.getUseLocalCache().equals("true"))
+    query = bVars.getQuery();
+    queryInfo = bVars.getQueryInfo();
+    if (bVars.getUseLocalCache().equals("true"))
     {
       useLocalCache = true;
     }
-    limitHitsPerSelector = pirWLBBVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = pirWLBBVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
+    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
 
     logger.info("Initialized EncRowCalc - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);
   }

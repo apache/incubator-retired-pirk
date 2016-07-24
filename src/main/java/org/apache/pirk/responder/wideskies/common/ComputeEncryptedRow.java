@@ -49,9 +49,8 @@ public class ComputeEncryptedRow
 
   // Input: base, exponent, NSquared
   // <<base,exponent,NSquared>, base^exponent mod N^2>
-  private static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache =
-      CacheBuilder.newBuilder().maximumSize(10000)
-          .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
+  private static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
+      .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
       {
         @Override
         public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
@@ -152,10 +151,7 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link ArrayList<BigInteger>
-   * 
-   * 
-   * }
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link ArrayList<BigInteger> * * * * }
    * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p>
@@ -228,10 +224,8 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable>
-   * 
-   * 
-   * } given an input modular exponentiation table for the row
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable> * * * * } given
+   * an input modular exponentiation table for the row
    * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p>

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
@@ -93,7 +92,15 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     {
       e.printStackTrace();
     }
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+
+    if (ctx.getConfiguration().get("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    {
+      qSchema = queryInfo.getQuerySchema();
+    }
+    if (qSchema == null)
+    {
+      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    }
     dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     try

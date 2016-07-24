@@ -27,12 +27,14 @@ import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import org.slf4j.Logger;
+
 import org.apache.pirk.schema.data.DataSchema;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
