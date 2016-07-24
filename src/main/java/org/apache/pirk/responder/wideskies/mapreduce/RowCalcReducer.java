@@ -34,7 +34,6 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -113,7 +112,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
   public void reduce(IntWritable rowIndex, Iterable<BytesArrayWritable> dataElementPartitions, Context ctx) throws IOException, InterruptedException
   {
     logger.debug("Processing reducer for hash = " + rowIndex);
-    ctx.getCounter(MRStats.Stats.NUM_HASHES_REDUCER).increment(1);
+    ctx.getCounter(MRStats.NUM_HASHES_REDUCER).increment(1);
 
     if (queryInfo.getUseHDFSExpLookupTable())
     {

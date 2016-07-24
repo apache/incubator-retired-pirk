@@ -45,7 +45,6 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
 
   private Response response = null;
   private String outputFile = null;
-  private FileSystem fs = null;
   private HadoopFileSystemStore storage = null;
   private QueryInfo queryInfo = null;
 
@@ -57,7 +56,7 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
     Text outputValue = new Text();
     mos = new MultipleOutputs<>(ctx);
 
-    fs = FileSystem.newInstance(ctx.getConfiguration());
+    FileSystem fs = FileSystem.newInstance(ctx.getConfiguration());
     storage = new HadoopFileSystemStore(fs);
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
     Query query = storage.recall(queryDir, Query.class);
@@ -72,7 +71,7 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   public void reduce(LongWritable colNum, Iterable<Text> colVals, Context ctx) throws IOException, InterruptedException
   {
     logger.debug("Processing reducer for colNum = " + colNum.toString());
-    ctx.getCounter(MRStats.Stats.NUM_COLUMNS).increment(1);
+    ctx.getCounter(MRStats.NUM_COLUMNS).increment(1);
 
     BigInteger column = null;
     for (Text val : colVals) // there is only one column value

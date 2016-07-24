@@ -62,7 +62,7 @@ public class ColumnMultReducer extends Reducer<LongWritable,Text,LongWritable,Te
   public void reduce(LongWritable colNum, Iterable<Text> colVals, Context ctx) throws IOException, InterruptedException
   {
     logger.debug("Processing reducer for colNum = " + colNum.toString());
-    ctx.getCounter(MRStats.Stats.NUM_COLUMNS).increment(1);
+    ctx.getCounter(MRStats.NUM_COLUMNS).increment(1);
 
     BigInteger column = BigInteger.valueOf(1);
     for (Text val : colVals)
