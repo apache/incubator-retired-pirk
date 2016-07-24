@@ -117,7 +117,6 @@
 			<version>3.3</version>
 		</dependency>
 
-<!--
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
@@ -141,35 +140,7 @@
 			<artifactId>spark-core_2.11</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-
-  -->
   
-  <dependency>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>hadoop-common</artifactId>
-                        <version>2.7.2</version>
-                </dependency>
-
-                <dependency>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>hadoop-mapreduce-client-core</artifactId>
-                        <version>2.7.2</version>
-                </dependency>
-
-                <dependency>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>hadoop-client</artifactId>
-                        <version>2.7.2</version>
-                </dependency>
-
-                <dependency>
-                        <groupId>org.apache.spark</groupId>
-                        <artifactId>spark-core_2.11</artifactId>
-                        <version>1.6.1</version>
-                </dependency>
-                
-                
-                
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-hadoop</artifactId>
