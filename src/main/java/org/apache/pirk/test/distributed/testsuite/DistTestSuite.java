@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.distributed.testsuite;
 
 import java.io.File;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.inputformat.hadoop.json.JSONInputFormatBase;
@@ -37,14 +36,16 @@ import org.apache.pirk.responder.wideskies.ResponderCLI;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.launcher.SparkLauncher;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Distributed test class for PIR
@@ -52,7 +53,7 @@ import org.json.simple.JSONObject;
  */
 public class DistTestSuite
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DistTestSuite.class);
 
   // This method also tests all non-query specific configuration options/properties
   // for the MapReduce version of PIR
@@ -339,7 +340,7 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pir.numReduceTasks", "1");
     SystemConfiguration.setProperty("pir.stopListFile", SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE));
 
-    ArrayList<QueryResponseJSON> results = null;
+    ArrayList<QueryResponseJSON> results;
 
     // Create the temp result file
     File fileFinalResults = File.createTempFile("finalResultsFile", ".txt");
@@ -382,7 +383,7 @@ public class DistTestSuite
 
     // Write the Querier object to a file
     Path queryInputDirPath = new Path(queryInputDir);
-    query.writeToHDFSFile(queryInputDirPath, fs);
+    new HadoopFileSystemStore(fs).store(queryInputDirPath, query);
     fs.deleteOnExit(queryInputDirPath);
 
     // Grab the original data and query schema properties to reset upon completion
@@ -401,7 +402,7 @@ public class DistTestSuite
       // Build args
       String inputFormat = SystemConfiguration.getProperty("pir.dataInputFormat");
       logger.info("inputFormat = " + inputFormat);
-      ArrayList<String> args = new ArrayList<String>();
+      ArrayList<String> args = new ArrayList<>();
       args.add("-" + ResponderCLI.PLATFORM + "=spark");
       args.add("-" + ResponderCLI.DATAINPUTFORMAT + "=" + inputFormat);
       args.add("-" + ResponderCLI.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
@@ -453,7 +454,7 @@ public class DistTestSuite
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
-    Response response = Response.readFromHDFSFile(new Path(outputFile), fs);
+    Response response = new HadoopFileSystemStore(fs).recall(outputFile, Response.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);

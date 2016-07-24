@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,19 +15,19 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to filter data as per the provided Filter (via the QuerySchema)
@@ -36,19 +36,17 @@ public class FilterData implements Function<MapWritable,Boolean>
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(FilterData.class);
 
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
-  DataSchema dSchema = null;
-  Object filter = null;
+  private Accumulators accum = null;
+  private DataSchema dSchema = null;
+  private Object filter = null;
 
   public FilterData(Accumulators accumIn, BroadcastVars bbVarsIn) throws Exception
   {
     accum = accumIn;
-    bbVars = bbVarsIn;
 
-    QueryInfo queryInfo = bbVars.getQueryInfo();
+    QueryInfo queryInfo = bbVarsIn.getQueryInfo();
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 

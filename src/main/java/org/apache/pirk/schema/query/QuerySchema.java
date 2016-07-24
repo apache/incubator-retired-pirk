@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.query;
 
 import java.io.Serializable;
@@ -35,24 +35,24 @@ public class QuerySchema implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  public static final String NO_FILTER = "noFilter";
+  static final String NO_FILTER = "noFilter";
 
-  String schemaName = null;
+  private String schemaName = null;
 
-  String dataSchemaName = null; // name of the DataSchema for this query schema
+  private String dataSchemaName = null; // name of the DataSchema for this query schema
 
-  TreeSet<String> elementNames = null; // names of elements in the data schema to
+  private TreeSet<String> elementNames = null; // names of elements in the data schema to
                                        // include in the response, order matters for packing/unpacking
 
-  String filter = null; // name of filter class to use in data filtering
+  private String filter = null; // name of filter class to use in data filtering
 
-  Object filterObj = null; // instance of the filter
+  private Object filterObj = null; // instance of the filter
 
-  HashSet<String> filterElementNames = null; // set of element names to apply filtering in pre-processing
+  private HashSet<String> filterElementNames = null; // set of element names to apply filtering in pre-processing
 
-  String selectorName = null; // name of element in the dataSchema to be used as the selector
+  private String selectorName = null; // name of element in the dataSchema to be used as the selector
 
-  int dataElementSize = 0; // total number of bits to be returned for each data element hit
+  private int dataElementSize = 0; // total number of bits to be returned for each data element hit
 
   public QuerySchema(String schemaNameInput, String dataSchemaNameInput, TreeSet<String> elementNamesInput, String selectorNameInput, int dataElementSizeInput,
       HashSet<String> filterElementNamesInput, String filterIn) throws Exception

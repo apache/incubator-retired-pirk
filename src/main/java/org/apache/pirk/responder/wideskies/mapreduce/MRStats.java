@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,13 +15,13 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 public class MRStats
 {
-  public static enum Stats
+  public enum Stats
   {
-    NUM_RECORDS_INIT_MAPPER, NUM_RECORDS_PROCESSED_INIT_MAPPER, NUM_HASHES_REDUCER, NUM_COLUMNS;
+    NUM_RECORDS_INIT_MAPPER, NUM_RECORDS_PROCESSED_INIT_MAPPER, NUM_HASHES_REDUCER, NUM_COLUMNS
   }
 }

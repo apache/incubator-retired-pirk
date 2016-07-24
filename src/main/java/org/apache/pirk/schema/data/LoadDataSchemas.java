@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.data;
 
 import java.io.File;
@@ -30,11 +30,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -64,11 +64,11 @@ import org.w3c.dom.NodeList;
  */
 public class LoadDataSchemas
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(LoadDataSchemas.class);
 
-  public static HashMap<String,DataSchema> schemaMap;
+  private static HashMap<String,DataSchema> schemaMap;
 
-  public static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<String>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
+  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
       PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG, PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE,
       PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
 
@@ -76,7 +76,7 @@ public class LoadDataSchemas
   {
     logger.info("Loading data schemas: ");
 
-    schemaMap = new HashMap<String,DataSchema>();
+    schemaMap = new HashMap<>();
     try
     {
       initialize();
@@ -126,21 +126,21 @@ public class LoadDataSchemas
 
   private static DataSchema loadDataSchemaFile(String schemaFile, boolean hdfs, FileSystem fs) throws Exception
   {
-    DataSchema dataSchema = null;
+    DataSchema dataSchema;
 
     // Initialize the elements needed to create the DataSchema
-    String schemaName = null;
-    HashMap<String,Text> textRep = new HashMap<String,Text>();
-    HashSet<String> listRep = new HashSet<String>();
-    HashMap<String,String> typeMap = new HashMap<String,String>();
-    HashMap<String,String> partitionerMap = new HashMap<String,String>();
-    HashMap<String,Object> partitionerInstances = new HashMap<String,Object>();
+    String schemaName;
+    HashMap<String,Text> textRep = new HashMap<>();
+    HashSet<String> listRep = new HashSet<>();
+    HashMap<String,String> typeMap = new HashMap<>();
+    HashMap<String,String> partitionerMap = new HashMap<>();
+    HashMap<String,Object> partitionerInstances = new HashMap<>();
 
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
     // Read in and parse the schema file
-    Document doc = null;
+    Document doc;
     if (hdfs)
     {
       Path filePath = new Path(schemaFile);
@@ -179,7 +179,15 @@ public class LoadDataSchemas
         // Pull out the attributes
         String name = eElement.getElementsByTagName("name").item(0).getTextContent().trim().toLowerCase();
         String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
-        String isArray = eElement.getElementsByTagName("isArray").item(0).getTextContent().trim().toLowerCase();
+
+        // An absent isArray means false, and an empty isArray means true, otherwise take the value. 
+        String isArray = "false";
+        Node isArrayNode = eElement.getElementsByTagName("isArray").item(0);
+        if (isArrayNode != null)
+        {
+          String isArrayValue = isArrayNode.getTextContent().trim().toLowerCase();
+          isArray = isArrayValue.isEmpty() ? "true" : isArrayValue;
+        }
 
         // Pull and check the partitioner class -- if the partitioner tag doesn't exist, then
         // it defaults to the PrimitiveTypePartitioner

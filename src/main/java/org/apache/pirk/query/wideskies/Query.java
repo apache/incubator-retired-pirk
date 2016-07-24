@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,16 +15,9 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.query.wideskies;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -34,37 +27,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.querier.wideskies.encrypt.ExpTableRunnable;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.serialization.Storable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the PIR query vectors
  *
  */
-public class Query implements Serializable
+public class Query implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  QueryInfo qInfo = null; // holds all query info
+  private QueryInfo qInfo = null; // holds all query info
 
-  TreeMap<Integer,BigInteger> queryElements = null; // query elements - ordered on insertion
+  private TreeMap<Integer,BigInteger> queryElements = null; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  HashMap<BigInteger,HashMap<Integer,BigInteger>> expTable = null;
+  private HashMap<BigInteger,HashMap<Integer,BigInteger>> expTable = null;
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  HashMap<Integer,String> expFileBasedLookup = null;
+  private HashMap<Integer,String> expFileBasedLookup = null;
 
-  BigInteger N = null; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
-  BigInteger NSquared = null;
+  private BigInteger N = null; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
+  private BigInteger NSquared = null;
 
   public Query(QueryInfo queryInfoIn, BigInteger NInput)
   {
@@ -72,10 +64,10 @@ public class Query implements Serializable
     N = NInput;
     NSquared = N.pow(2);
 
-    queryElements = new TreeMap<Integer,BigInteger>();
-    expTable = new HashMap<BigInteger,HashMap<Integer,BigInteger>>();
+    queryElements = new TreeMap<>();
+    expTable = new HashMap<>();
 
-    expFileBasedLookup = new HashMap<Integer,String>();
+    expFileBasedLookup = new HashMap<>();
   }
 
   public QueryInfo getQueryInfo()
@@ -164,7 +156,7 @@ public class Query implements Serializable
       {
         logger.debug("element = " + element.toString(2) + " maxValue = " + maxValue + " dataPartitionBitSize = " + dataPartitionBitSize);
 
-        HashMap<Integer,BigInteger> powMap = new HashMap<Integer,BigInteger>(); // <power, element^power mod N^2>
+        HashMap<Integer,BigInteger> powMap = new HashMap<>(); // <power, element^power mod N^2>
         for (int i = 0; i <= maxValue; ++i)
         {
           BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
@@ -180,7 +172,7 @@ public class Query implements Serializable
       ExecutorService es = Executors.newCachedThreadPool();
       int elementsPerThread = (int) (Math.floor(queryElements.size() / numThreads));
 
-      ArrayList<ExpTableRunnable> runnables = new ArrayList<ExpTableRunnable>();
+      ArrayList<ExpTableRunnable> runnables = new ArrayList<>();
       for (int i = 0; i < numThreads; ++i)
       {
         // Grab the range of the thread and create the corresponding partition of selectors
@@ -190,7 +182,7 @@ public class Query implements Serializable
         {
           stop = queryElements.size() - 1;
         }
-        ArrayList<BigInteger> queryElementsPartition = new ArrayList<BigInteger>();
+        ArrayList<BigInteger> queryElementsPartition = new ArrayList<>();
         for (int j = start; j <= stop; ++j)
         {
           queryElementsPartition.add(queryElements.get(j));
@@ -225,149 +217,5 @@ public class Query implements Serializable
   public BigInteger getExp(BigInteger value, int power)
   {
     return expTable.get(value).get(power);
-  }
-
-  public void writeToFile(String filename) throws IOException
-  {
-    writeToFile(new File(filename));
-  }
-
-  public void writeToFile(File file) throws IOException
-  {
-    ObjectOutputStream oos = null;
-    FileOutputStream fout = null;
-    try
-    {
-      fout = new FileOutputStream(file, true);
-      oos = new ObjectOutputStream(fout);
-      oos.writeObject(this);
-    } catch (Exception ex)
-    {
-      ex.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        oos.close();
-      }
-      if (fout != null)
-      {
-        fout.close();
-      }
-    }
-  }
-
-  /**
-   * Reconstruct the Query object from its file serialization
-   */
-  public static Query readFromFile(String filename) throws IOException
-  {
-    Query query = readFromFile(new File(filename));
-
-    return query;
-  }
-
-  /**
-   * Reconstruct the Query object from its file serialization
-   */
-  public static Query readFromFile(File file) throws IOException
-  {
-    Query query = null;
-
-    FileInputStream fIn = null;
-    ObjectInputStream oIn = null;
-    try
-    {
-      fIn = new FileInputStream(file);
-      oIn = new ObjectInputStream(fIn);
-      query = (Query) oIn.readObject();
-    } catch (FileNotFoundException e)
-    {
-      e.printStackTrace();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (fIn != null)
-      {
-        try
-        {
-          fIn.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-    return query;
-  }
-
-  /**
-   * Method to write the Query object to a file in HDFS
-   *
-   */
-  public void writeToHDFSFile(Path fileName, FileSystem fs)
-  {
-
-    ObjectOutputStream oos = null;
-    try
-    {
-      oos = new ObjectOutputStream(fs.create(fileName));
-      oos.writeObject(this);
-      oos.close();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      if (oos != null)
-      {
-        try
-        {
-          oos.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
-  /**
-   * Method to reconstruct the Query object from its file serialization in HDFS
-   */
-  public static Query readFromHDFSFile(Path filename, FileSystem fs)
-  {
-    Query pirWLQuery = null;
-
-    ObjectInputStream ois = null;
-    try
-    {
-      ois = new ObjectInputStream(fs.open(filename));
-      pirWLQuery = (Query) ois.readObject();
-      ois.close();
-
-    } catch (IOException | ClassNotFoundException e1)
-    {
-      e1.printStackTrace();
-    } finally
-    {
-      if (ois != null)
-      {
-        try
-        {
-          ois.close();
-        } catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return pirWLQuery;
   }
 }

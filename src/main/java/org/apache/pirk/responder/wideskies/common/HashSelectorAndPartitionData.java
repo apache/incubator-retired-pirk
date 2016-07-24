@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,23 +15,22 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.common;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.LogUtils;
 import org.json.simple.JSONObject;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -40,12 +39,12 @@ import scala.Tuple2;
  */
 public class HashSelectorAndPartitionData
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(HashSelectorAndPartitionData.class);
 
   public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitionsBigInteger(MapWritable dataElement, QuerySchema qSchema, DataSchema dSchema,
       QueryInfo queryInfo) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple = null;
+    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
 
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryType(dataElement, qSchema, dSchema);
@@ -56,7 +55,7 @@ public class HashSelectorAndPartitionData
     // Partition by the given partitionSize
     ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
 
-    returnTuple = new Tuple2<Integer,ArrayList<BigInteger>>(hash, hitValPartitions);
+    returnTuple = new Tuple2<>(hash, hitValPartitions);
 
     return returnTuple;
   }
@@ -64,7 +63,7 @@ public class HashSelectorAndPartitionData
   public static Tuple2<Integer,BytesArrayWritable> hashSelectorAndFormPartitions(MapWritable dataElement, QuerySchema qSchema, DataSchema dSchema,
       QueryInfo queryInfo) throws Exception
   {
-    Tuple2<Integer,BytesArrayWritable> returnTuple = null;
+    Tuple2<Integer,BytesArrayWritable> returnTuple;
 
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryType(dataElement, qSchema, dSchema);
@@ -76,14 +75,14 @@ public class HashSelectorAndPartitionData
     ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
     BytesArrayWritable bAW = new BytesArrayWritable(hitValPartitions);
 
-    returnTuple = new Tuple2<Integer,BytesArrayWritable>(hash, bAW);
+    returnTuple = new Tuple2<>(hash, bAW);
 
     return returnTuple;
   }
 
   public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitions(JSONObject json, QueryInfo queryInfo, QuerySchema qSchema) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple = null;
+    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
 
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, json);
@@ -94,7 +93,7 @@ public class HashSelectorAndPartitionData
     // Partition by the given partitionSize
     ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, json, queryInfo.getEmbedSelector());
 
-    returnTuple = new Tuple2<Integer,ArrayList<BigInteger>>(hash, hitValPartitions);
+    returnTuple = new Tuple2<>(hash, hitValPartitions);
 
     return returnTuple;
   }

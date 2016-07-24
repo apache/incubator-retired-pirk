@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,10 +15,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.utils;
-
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,32 +24,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.test.distributed.testsuite.DistTestSuite;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.junit.Assert.fail;
 
 /**
  * Class to hold the base functional distributed tests
  */
 public class BaseTests
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(BaseTests.class);
 
   public static double queryNum = 1.0;
   public static int dataPartitionBitSize = 8;
 
   // Selectors for domain and IP queries, queryNum is the first entry for file generation
-  public static ArrayList<String> selectorsDomain = new ArrayList<String>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else",
+  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else",
       "x.y.net"));
-  public static ArrayList<String> selectorsIP = new ArrayList<String>(Arrays.asList("55.55.55.55", "5.6.7.8", "10.20.30.40", "13.14.15.16", "21.22.23.24"));
+  private static ArrayList<String> selectorsIP = new ArrayList<>(Arrays.asList("55.55.55.55", "5.6.7.8", "10.20.30.40", "13.14.15.16", "21.22.23.24"));
 
   // Encryption variables -- Paillier mechanisms are tested in the Paillier test code, so these are fixed...
   public static int hashBitSize = 12;
@@ -79,7 +78,7 @@ public class BaseTests
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_HOSTNAME_QUERY);
 
     int numExpectedResults = 6;
-    ArrayList<QueryResponseJSON> results = null;
+    ArrayList<QueryResponseJSON> results;
     if (isDistributed)
     {
       results = DistTestSuite.performQuery(Inputs.DNS_HOSTNAME_QUERY, selectorsDomain, fs, isSpark, numThreads);
@@ -104,12 +103,12 @@ public class BaseTests
       }
 
       // Check that each qname appears once in the result set
-      HashSet<String> correctQnames = new HashSet<String>();
+      HashSet<String> correctQnames = new HashSet<>();
       correctQnames.add("a.b.c.com");
       correctQnames.add("d.e.com");
       correctQnames.add("something.else");
 
-      HashSet<String> resultQnames = new HashSet<String>();
+      HashSet<String> resultQnames = new HashSet<>();
       for (QueryResponseJSON qrJSON : results)
       {
         resultQnames.add((String) qrJSON.getValue(Inputs.QNAME));
@@ -142,7 +141,7 @@ public class BaseTests
         removeTailElements = 3;
       }
 
-      ArrayList<QueryResponseJSON> correctResults = new ArrayList<QueryResponseJSON>();
+      ArrayList<QueryResponseJSON> correctResults = new ArrayList<>();
       int i = 0;
       while (i < (dataElements.size() - removeTailElements))
       {
@@ -200,10 +199,10 @@ public class BaseTests
   public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     logger.info("Running testDNSIPQuery(): ");
-
+    
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_IP_QUERY);
+    ArrayList<QueryResponseJSON> results;
 
-    ArrayList<QueryResponseJSON> results = null;
     if (isDistributed)
     {
       results = DistTestSuite.performQuery(Inputs.DNS_IP_QUERY, selectorsIP, fs, isSpark, numThreads);
@@ -224,7 +223,7 @@ public class BaseTests
     }
     printResultList(results);
 
-    ArrayList<QueryResponseJSON> correctResults = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> correctResults = new ArrayList<>();
     int i = 0;
     while (i < (dataElements.size() - 3)) // last three data elements not hit - one on stoplist, two don't match selectors
     {
@@ -277,8 +276,8 @@ public class BaseTests
     logger.info("Running testDNSNXDOMAINQuery(): ");
 
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_NXDOMAIN_QUERY);
+    ArrayList<QueryResponseJSON> results;
 
-    ArrayList<QueryResponseJSON> results = null;
     if (isDistributed)
     {
       results = DistTestSuite.performQuery(Inputs.DNS_NXDOMAIN_QUERY, selectorsDomain, fs, isSpark, numThreads);
@@ -294,7 +293,7 @@ public class BaseTests
       fail("results.size() = " + results.size() + " -- must equal 1");
     }
 
-    ArrayList<QueryResponseJSON> correctResults = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> correctResults = new ArrayList<>();
     int i = 0;
     while (i < dataElements.size())
     {
@@ -341,8 +340,8 @@ public class BaseTests
     logger.info("Running testSRCIPQuery(): ");
 
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY);
+    ArrayList<QueryResponseJSON> results;
 
-    ArrayList<QueryResponseJSON> results = null;
     int removeTailElements = 0;
     int numExpectedResults = 1;
     if (isDistributed)
@@ -362,7 +361,7 @@ public class BaseTests
       fail("results.size() = " + results.size() + " -- must equal " + numExpectedResults);
     }
 
-    ArrayList<QueryResponseJSON> correctResults = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> correctResults = new ArrayList<>();
     int i = 0;
     while (i < (dataElements.size() - removeTailElements))
     {
@@ -415,8 +414,8 @@ public class BaseTests
     logger.info("Running testSRCIPQueryNoFilter(): ");
 
     QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY_NO_FILTER);
+    ArrayList<QueryResponseJSON> results;
 
-    ArrayList<QueryResponseJSON> results = null;
     int numExpectedResults = 3;
     if (isDistributed)
     {
@@ -433,7 +432,7 @@ public class BaseTests
       fail("results.size() = " + results.size() + " -- must equal " + numExpectedResults);
     }
 
-    ArrayList<QueryResponseJSON> correctResults = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> correctResults = new ArrayList<>();
     int i = 0;
     while (i < dataElements.size())
     {
@@ -483,9 +482,9 @@ public class BaseTests
   // Method to convert a ArrayList<String> into the correct (padded) returned ArrayList
   private static ArrayList<String> parseArray(JSONObject dataMap, String fieldName, boolean isIP)
   {
-    ArrayList<String> retArray = new ArrayList<String>();
+    ArrayList<String> retArray = new ArrayList<>();
 
-    ArrayList<String> values = null;
+    ArrayList<String> values;
     if (dataMap.get(fieldName) instanceof ArrayList)
     {
       values = (ArrayList<String>) dataMap.get(fieldName);
@@ -518,7 +517,7 @@ public class BaseTests
   // Method to convert a ArrayList<Short> into the correct (padded) returned ArrayList
   private static ArrayList<Short> parseShortArray(JSONObject dataMap, String fieldName)
   {
-    ArrayList<Short> retArray = new ArrayList<Short>();
+    ArrayList<Short> retArray = new ArrayList<>();
 
     ArrayList<Short> values = (ArrayList<Short>) dataMap.get(fieldName);
 
@@ -541,7 +540,7 @@ public class BaseTests
   // Method to convert the String field value to the correct returned substring
   private static String parseString(JSONObject dataMap, String fieldName)
   {
-    String ret = null;
+    String ret;
 
     String element = (String) dataMap.get(fieldName);
     int numParts = Integer.parseInt(SystemConfiguration.getProperty("pir.stringBits")) / dataPartitionBitSize;
@@ -616,7 +615,7 @@ public class BaseTests
   // Method to pull the elements of a list (either an ArrayList or JSONArray) into a HashSet
   private static HashSet<String> getSetFromList(Object list)
   {
-    HashSet<String> set = new HashSet<String>();
+    HashSet<String> set = new HashSet<>();
 
     if (list instanceof ArrayList)
     {

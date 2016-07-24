@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.query.filter;
 
 import java.io.BufferedReader;
@@ -44,12 +44,12 @@ public class FilterFactory
       FileSystem fs = FileSystem.get(new Configuration());
 
       // Grab the stopList
-      HashSet<String> stopList = new HashSet<String>();
+      HashSet<String> stopList = new HashSet<>();
       String stopListFile = SystemConfiguration.getProperty("pir.stopListFile", "none");
 
       if (!stopListFile.equals("none"))
       {
-        BufferedReader br = null;
+        BufferedReader br;
         if (fs.exists(new Path(stopListFile)))
         {
           br = new BufferedReader(new InputStreamReader(fs.open(new Path(stopListFile))));
@@ -60,7 +60,7 @@ public class FilterFactory
           br = new BufferedReader(fr);
         }
 
-        String qLine = null;
+        String qLine;
         while ((qLine = br.readLine()) != null)
         {
           stopList.add(qLine);

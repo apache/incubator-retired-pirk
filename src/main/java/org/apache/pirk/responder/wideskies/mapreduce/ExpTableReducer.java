@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-import org.apache.log4j.Logger;
 import org.apache.pirk.utils.FileConst;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reducer class to complete the exp lookup table and add to the Query object
@@ -33,16 +33,16 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class ExpTableReducer extends Reducer<Text,Text,Text,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ExpTableReducer.class);
 
   private MultipleOutputs<Text,Text> mos = null;
-  String reducerID = null;
+  private String reducerID = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
   {
     super.setup(ctx);
-    mos = new MultipleOutputs<Text,Text>(ctx);
+    mos = new MultipleOutputs<>(ctx);
     reducerID = String.format("%05d", ctx.getTaskAttemptID().getTaskID().getId());
     logger.info("reducerID = " + reducerID);
   }

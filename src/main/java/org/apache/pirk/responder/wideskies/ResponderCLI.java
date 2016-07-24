@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies;
 
 import org.apache.commons.cli.CommandLine;
@@ -24,22 +24,22 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for parsing the command line options for the ResponderDriver
  */
 public class ResponderCLI
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ResponderCLI.class);
 
-  Options cliOptions = null;
-  CommandLine commandLine = null;
+  private Options cliOptions = null;
+  private CommandLine commandLine = null;
 
   // Required args
   public static String PLATFORM = "platform";
@@ -54,19 +54,19 @@ public class ResponderCLI
   // Optional args
   public static String BASEINPUTFORMAT = "baseInputFormat";
   public static String STOPLISTFILE = "stopListFile";
-  public static String NUMREDUCETASKS = "numReduceTasks";
+  private static String NUMREDUCETASKS = "numReduceTasks";
   public static String USELOCALCACHE = "useLocalCache";
   public static String LIMITHITSPERSELECTOR = "limitHitsPerSelector";
   public static String MAXHITSPERSELECTOR = "maxHitsPerSelector";
-  public static String MAPMEMORY = "mapreduceMapMemoryMb";
-  public static String REDUCEMEMORY = "mapreduceReduceMemoryMb";
-  public static String MAPJAVAOPTS = "mapreduceMapJavaOpts";
-  public static String REDUCEJAVAOPTS = "mapreduceReduceJavaOpts";
+  private static String MAPMEMORY = "mapreduceMapMemoryMb";
+  private static String REDUCEMEMORY = "mapreduceReduceMemoryMb";
+  private static String MAPJAVAOPTS = "mapreduceMapJavaOpts";
+  private static String REDUCEJAVAOPTS = "mapreduceReduceJavaOpts";
   public static String QUERYSCHEMAS = "querySchemas";
   public static String DATASCHEMAS = "dataSchemas";
   public static String NUMEXPLOOKUPPARTS = "numExpLookupPartitions";
-  public static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
-  public static String NUMDATAPARTITIONS = "numDataPartitions";
+  private static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
+  private static String NUMDATAPARTITIONS = "numDataPartitions";
   public static String NUMCOLMULTPARTITIONS = "numColMultPartitions";
   public static String USEMODEXPJOIN = "useModExpJoin";
   public static String COLMULTREDUCEBYKEY = "colMultReduceByKey";

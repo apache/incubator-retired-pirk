@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,17 +15,14 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.utils;
-
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierConst;
@@ -39,24 +36,23 @@ import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.junit.Assert.fail;
 
 public class StandaloneQuery
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(StandaloneQuery.class);
 
   static String queryFileDomain = "qfDomain";
   static String queryFileIP = "qfIP";
-  static String querySideOuputFilePrefix = "querySideOut"; // the file pre-fix for the query side output files
-  static String finalResultsFile = "finalResultFile"; // file to hold the final results
 
   String testDataSchemaName = "testDataSchema";
   String testQuerySchemaName = "testQuerySchema";
-
-  static String responseFile = "encryptedResponse"; // the PIR response file from the responder
 
   // Base method to perform the query
   public static ArrayList<QueryResponseJSON> performStandaloneQuery(ArrayList<JSONObject> dataElements, String queryType, ArrayList<String> selectors,
@@ -68,9 +64,13 @@ public class StandaloneQuery
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
 
     // Create the necessary files
+    LocalFileSystemStore storage = new LocalFileSystemStore();
+    String querySideOuputFilePrefix = "querySideOut";
     File fileQuerier = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERIER_FILETAG, ".txt");
     File fileQuery = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERY_FILETAG, ".txt");
+    String responseFile = "encryptedResponse";
     File fileResponse = File.createTempFile(responseFile, ".txt");
+    String finalResultsFile = "finalResultFile";
     File fileFinalResults = File.createTempFile(finalResultsFile, ".txt");
 
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
@@ -108,11 +108,12 @@ public class StandaloneQuery
     }
 
     // Write necessary output files
-    encryptQuery.writeOutputFiles(fileQuerier, fileQuery);
+    storage.store(fileQuerier, encryptQuery.getQuerier());
+    storage.store(fileQuery, encryptQuery.getQuery());
 
     // Perform the PIR query and build the response elements
     logger.info("Performing the PIR Query and constructing the response elements:");
-    Query query = Query.readFromFile(fileQuery);
+    Query query = storage.recall(fileQuery, Query.class);
     Responder pirResponder = new Responder(query);
     logger.info("Query and Responder elements constructed");
     for (JSONObject jsonData : dataElements)
@@ -133,14 +134,14 @@ public class StandaloneQuery
     logger.info("Forming response from response elements; writing to a file");
     pirResponder.setResponseElements();
     Response responseOut = pirResponder.getResponse();
-    responseOut.writeToFile(fileResponse);
+    storage.store(fileResponse, responseOut);
     logger.info("Completed forming response from response elements and writing to a file");
 
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
-    Response responseIn = Response.readFromFile(fileResponse);
-    Querier querier = Querier.readFromFile(fileQuerier);
+    Response responseIn = storage.recall(fileResponse, Response.class);
+    Querier querier = storage.recall(fileQuerier, Querier.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(responseIn, querier);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies;
 
 import org.apache.hadoop.conf.Configuration;
@@ -25,6 +25,7 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 
 /**
@@ -65,7 +66,7 @@ public class ResponderDriver
       System.out.println("Launching Standalone Responder:");
 
       String queryInput = SystemConfiguration.getProperty("pir.queryInput");
-      Query query = Query.readFromFile(queryInput);
+      Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
 
       Responder pirResponder = new Responder(query);
       pirResponder.computeStandaloneResponse();

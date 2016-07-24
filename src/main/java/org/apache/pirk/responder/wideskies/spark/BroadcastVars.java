@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.Serializable;
@@ -35,23 +35,23 @@ public class BroadcastVars implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  transient JavaSparkContext jsc = null;
+  private transient JavaSparkContext jsc = null;
 
   Broadcast<Query> query = null;
 
-  Broadcast<QueryInfo> queryInfo = null;
+  private Broadcast<QueryInfo> queryInfo = null;
 
-  Broadcast<DataSchema> dataSchema = null;
+  private Broadcast<DataSchema> dataSchema = null;
 
-  Broadcast<QuerySchema> querySchema = null;
+  private Broadcast<QuerySchema> querySchema = null;
 
-  Broadcast<String> useLocalCache = null;
+  private Broadcast<String> useLocalCache = null;
 
-  Broadcast<Boolean> limitHitsPerSelector = null;
+  private Broadcast<Boolean> limitHitsPerSelector = null;
 
-  Broadcast<Integer> maxHitsPerSelector = null;
+  private Broadcast<Integer> maxHitsPerSelector = null;
 
-  Broadcast<String> expDir = null;
+  private Broadcast<String> expDir = null;
 
   public BroadcastVars(JavaSparkContext sc)
   {

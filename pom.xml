@@ -20,12 +20,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	
+
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>pirk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
 	<name>Apache Pirk (incubating) Project</name>
 	<description>Apache Pirk (incubating) is a framework for scalable Private Information Retrieval (PIR). </description>
 	<url>http://pirk.incubator.apache.org/</url>
@@ -72,14 +72,19 @@
 
 	</repositories>
 
-	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<scala.version>2.10.4</scala.version>
-		<jmh.version>1.11.3</jmh.version>
-		<benchmarkjar.name>benchmarks</benchmarkjar.name>
-		<javac.target>1.7</javac.target>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <scala.version>2.10.4</scala.version>
+        <jmh.version>1.11.3</jmh.version>
+        <benchmarkjar.name>benchmarks</benchmarkjar.name>
+        <javac.target>1.7</javac.target>
+        <slf4j.version>1.7.21</slf4j.version>
+        <log4j2.version>2.6.2</log4j2.version>
+        <junit.version>4.12</junit.version>
+        <log4j.configuration>log4j2.properties</log4j.configuration>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -118,19 +123,19 @@
 			<artifactId>hadoop-common</artifactId>
 			<version>2.7.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-core</artifactId>
 			<version>2.7.2</version>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 			<version>2.7.2</version>
-		</dependency>	
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.11</artifactId>
@@ -201,12 +206,27 @@
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-core</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-generator-annprocess</artifactId>
 			<version>${jmh.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Sl4j modules -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.6.2</version>
 		</dependency>
 
 	</dependencies>
@@ -221,6 +241,9 @@
 			<redirectTestOutputToFile>true</redirectTestOutputToFile>
 			<argLine combine.children="append">-Xmx1G
 				-Djava.net.preferIPv4Stack=true</argLine>
+			<systemPropertyVariables>
+				<log4j.configuration>${log4j.configuration}</log4j.configuration>
+			</systemPropertyVariables>
 			</configuration>
 			<dependencies>
 				<dependency>
@@ -241,6 +264,18 @@
 					<target>${javac.target}</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>org/apache/pirk/benchmark/**</exclude>
+						<exclude>org/openjdk/jmh/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -277,37 +312,45 @@
 						</configuration>
 					</execution>
 
-					<!-- in the version with benchmarks (pom-with-benchmarks.xml), this 
-						is where that <execution></execution> lives -->
+                    <!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+                        is where that <execution></execution> lives -->
 
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.rat</groupId>
-				<artifactId>apache-rat-plugin</artifactId>
-				<version>0.11</version>
-				<configuration>
-					<excludes>
-						<exclude>.travis.yml</exclude>
-						<exclude>eclipse-pirk-codestyle.xml</exclude>
-						<exclude>logs/**</exclude>
-						<exclude>docs/package-list</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.11</version>
+                <configuration>
+                    <excludes>
+                        <exclude>nb-configuration.xml</exclude> <!-- courtesy excludes for netbeans users -->
+                        <exclude>nbactions.xml</exclude> <!-- courtesy excludes for netbeans users -->
+                        <exclude>DEPENDENCIES
+                        </exclude> <!-- auto generated file by apache's maven config while building sources.zip -->
+                        <exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
+                        <exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
+                    </excludes>
+                </configuration>
+                <dependencies>
+                    <!-- workaround for RAT-158 -->
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-core</artifactId>
+                        <version>1.6</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>xerces</groupId>
+                                <artifactId>xercesImpl</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -332,7 +375,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -351,7 +394,7 @@
 								        </goals>
 								    </pluginExecutionFilter>
 								    <action>
-								        <ignore></ignore>
+								        <ignore/>
 								    </action>
 								</pluginExecution>
 							</pluginExecutions>

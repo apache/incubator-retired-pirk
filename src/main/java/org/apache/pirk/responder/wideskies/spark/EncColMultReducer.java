@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,15 +15,15 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.Function2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Function to perform encrypted column multiplication
@@ -33,19 +33,14 @@ public class EncColMultReducer implements Function2<BigInteger,BigInteger,BigInt
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
-
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  private static final Logger logger = LoggerFactory.getLogger(EncColMultReducer.class);
 
   Query query = null;
 
   EncColMultReducer(Accumulators accumIn, BroadcastVars bbVarsIn)
   {
-    accum = accumIn;
-    bbVars = bbVarsIn;
 
-    query = bbVars.getQuery();
+    query = bbVarsIn.getQuery();
 
     logger.info("Initialized EncColMultReducer");
   }

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies;
 
 import org.apache.commons.cli.CommandLine;
@@ -24,21 +24,21 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for parsing the command line options for the QuerierDriver
  */
 public class QuerierDriverCLI
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QuerierDriverCLI.class);
 
-  Options cliOptions = null;
-  CommandLine commandLine = null;
+  private Options cliOptions = null;
+  private CommandLine commandLine = null;
 
   // General variables
   public static String ACTION = "action";
@@ -61,6 +61,8 @@ public class QuerierDriverCLI
   public static String EMBEDSELECTOR = "embedSelector";
   public static String USEMEMLOOKUPTABLE = "memLookupTable";
   public static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
+  public static String SR_ALGORITHM = "secureRandomAlg";
+  public static String SR_PROVIDER = "secureRandomProvider";
 
   // Decryption variables
   public static String QUERIERFILE = "querierFile";
@@ -277,6 +279,24 @@ public class QuerierDriverCLI
       {
         SystemConfiguration.setProperty(USEHDFSLOOKUPTABLE, getOptionValue(USEHDFSLOOKUPTABLE));
       }
+
+      if (!hasOption(SR_ALGORITHM))
+      {
+        SystemConfiguration.setProperty("pallier.secureRandom.algorithm", "NativePRNG");
+      }
+      else
+      {
+        SystemConfiguration.setProperty("pallier.secureRandom.algorithm", getOptionValue(SR_ALGORITHM));
+      }
+
+      if (!hasOption(SR_PROVIDER))
+      {
+        SystemConfiguration.setProperty("pallier.secureRandom.provider", "SUN");
+      }
+      else
+      {
+        SystemConfiguration.setProperty("pallier.secureRandom.provider", getOptionValue(SR_PROVIDER));
+      }
     }
 
     // Parse decryption args
@@ -467,6 +487,20 @@ public class QuerierDriverCLI
     optionEMBEDQUERYSCHEMA.setArgName(EMBEDQUERYSCHEMA);
     optionEMBEDQUERYSCHEMA.setType(String.class);
     options.addOption(optionEMBEDQUERYSCHEMA);
+    
+    // SR_ALGORITHM
+    Option optionSR_ALGORITHM = new Option("srAlg", SR_ALGORITHM, true, "optional - specify the SecureRandom algorithm, defaults to NativePRNG");
+    optionSR_ALGORITHM.setRequired(false);
+    optionSR_ALGORITHM.setArgName(SR_ALGORITHM);
+    optionSR_ALGORITHM.setType(String.class);
+    options.addOption(optionSR_ALGORITHM);
+
+    // SR_PROVIDERS
+    Option optionSR_PROVIDER = new Option("srProvider", SR_PROVIDER, true, "optional - specify the SecureRandom provider, defaults to SUN");
+    optionSR_PROVIDER.setRequired(false);
+    optionSR_PROVIDER.setArgName(SR_PROVIDER);
+    optionSR_PROVIDER.setType(String.class);
+    options.addOption(optionSR_PROVIDER);
 
     return options;
   }

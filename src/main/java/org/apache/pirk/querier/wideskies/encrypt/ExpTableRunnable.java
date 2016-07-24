@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,16 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Runnable class for modular exponential table creation
@@ -32,16 +32,16 @@ import org.apache.pirk.utils.LogUtils;
  */
 public class ExpTableRunnable implements Runnable
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ExpTableRunnable.class);
 
-  int dataPartitionBitSize = 0;
-  BigInteger NSquared = null;
-  ArrayList<BigInteger> queryElements = null;
+  private int dataPartitionBitSize = 0;
+  private BigInteger NSquared = null;
+  private ArrayList<BigInteger> queryElements = null;
 
   // lookup table for exponentiation of query vectors -
   // based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  HashMap<BigInteger,HashMap<Integer,BigInteger>> expTable = null;
+  private HashMap<BigInteger,HashMap<Integer,BigInteger>> expTable = null;
 
   public ExpTableRunnable(int dataPartitionBitSizeInput, BigInteger NSquaredInput, ArrayList<BigInteger> queryElementsInput)
   {
@@ -49,7 +49,7 @@ public class ExpTableRunnable implements Runnable
     NSquared = NSquaredInput;
     queryElements = queryElementsInput;
 
-    expTable = new HashMap<BigInteger,HashMap<Integer,BigInteger>>();
+    expTable = new HashMap<>();
   }
 
   @Override
@@ -60,7 +60,7 @@ public class ExpTableRunnable implements Runnable
     {
       logger.debug("element = " + element.toString(2) + " maxValue = " + maxValue + " dataPartitionBitSize = " + dataPartitionBitSize);
 
-      HashMap<Integer,BigInteger> powMap = new HashMap<Integer,BigInteger>(); // <power, element^power mod N^2>
+      HashMap<Integer,BigInteger> powMap = new HashMap<>(); // <power, element^power mod N^2>
       for (int i = 0; i <= maxValue; ++i)
       {
         BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,16 +15,15 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -35,19 +34,14 @@ public class EncColMultGroupedMapper implements PairFunction<Tuple2<Long,Iterabl
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
-
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  private static final Logger logger = LoggerFactory.getLogger(EncColMultGroupedMapper.class);
 
   Query query = null;
 
   EncColMultGroupedMapper(Accumulators accumIn, BroadcastVars bbVarsIn)
   {
-    accum = accumIn;
-    bbVars = bbVarsIn;
 
-    query = bbVars.getQuery();
+    query = bbVarsIn.getQuery();
 
     logger.info("Initialized EncColMultReducer");
   }
@@ -66,6 +60,6 @@ public class EncColMultGroupedMapper implements PairFunction<Tuple2<Long,Iterabl
     // long endTime = System.currentTimeMillis();
     // logger.debug("Completed column mult for col = " + colVals._1 + " duration = " + (endTime - startTime));
 
-    return new Tuple2<Long,BigInteger>(colVals._1, colVal);
+    return new Tuple2<>(colVals._1, colVal);
   }
 }

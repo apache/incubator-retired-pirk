@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.data.partitioner;
 
 import java.math.BigInteger;
@@ -33,7 +33,7 @@ public class ISO8601DatePartitioner implements DataPartitioner
 {
   private static final long serialVersionUID = 1L;
 
-  PrimitiveTypePartitioner ptp = null;
+  private PrimitiveTypePartitioner ptp = null;
 
   public ISO8601DatePartitioner()
   {

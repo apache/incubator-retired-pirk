@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,18 +15,11 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
-package org.apache.pirk.inputformat.hadoop;
+ *******************************************************************************/
+package org.apache.pirk.serialization;
 
-import org.apache.hadoop.mapreduce.InputFormat;
+// Marker interface
+public interface Storable
+{
 
-/**
- * All input formats used must extend this class
- * <p>
- * MapWritable{@code<K,V>} should be of the form MapWritable{@code<Text,Writable>}
- * <p>
- * If V is an array type, it must be of the form ArrayWritable
- *
- */
-public abstract class BaseInputFormat<Text,MapWritable> extends InputFormat<Text,MapWritable>
-{}
+}

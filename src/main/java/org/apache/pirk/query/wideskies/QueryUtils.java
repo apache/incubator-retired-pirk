@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,19 +15,19 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.query.wideskies;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.LoadDataSchemas;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
@@ -35,18 +35,19 @@ import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for helper methods to perform the encrypted query
  */
 public class QueryUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryUtils.class);
 
   /**
    * Method to convert the given BigInteger raw data element partitions to a QueryResponseJSON object based upon the given queryType
@@ -105,7 +106,7 @@ public class QueryUtils
    */
   public static ArrayList<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws Exception
   {
-    ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> parts = new ArrayList<>();
 
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
@@ -136,7 +137,7 @@ public class QueryUtils
         List<String> elementArray;
         if (dataElement == null)
         {
-          elementArray = Arrays.asList("0");
+          elementArray = Collections.singletonList("0");
         }
         else
         {
@@ -168,7 +169,7 @@ public class QueryUtils
   public static ArrayList<BigInteger> partitionDataElement(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema, boolean embedSelector)
       throws Exception
   {
-    ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> parts = new ArrayList<>();
 
     logger.debug("queryType = " + qSchema.getSchemaName());
 
@@ -199,7 +200,7 @@ public class QueryUtils
         List<String> elementArray = null;
         if (dataElement == null)
         {
-          elementArray = Arrays.asList("");
+          elementArray = Collections.singletonList("");
         }
         else if (dataElement instanceof WritableArrayWritable)
         {
@@ -235,7 +236,7 @@ public class QueryUtils
    */
   public static ArrayList<BigInteger> embeddedSelectorToPartitions(Object selector, String type, Object partitioner) throws Exception
   {
-    ArrayList<BigInteger> parts = null;
+    ArrayList<BigInteger> parts;
 
     int partitionBits = ((DataPartitioner) partitioner).getBits(type);
     if (partitionBits > 32) // hash and add 32-bit hash value to partitions
@@ -258,7 +259,7 @@ public class QueryUtils
    */
   public static String getEmbeddedSelector(Object selector, String type, Object partitioner) throws Exception
   {
-    String embeddedSelector = null;
+    String embeddedSelector;
 
     int partitionBits = ((DataPartitioner) partitioner).getBits(type);
     if (partitionBits > 32) // hash and add 32-bit hash value to partitions
@@ -279,7 +280,7 @@ public class QueryUtils
    */
   public static String getEmbeddedSelectorFromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type, Object partitioner) throws Exception
   {
-    String embeddedSelector = null;
+    String embeddedSelector;
 
     int partitionBits = ((DataPartitioner) partitioner).getBits(type);
     if (partitionBits > 32) // the embedded selector will be the 32-bit hash value of the hit selector
@@ -302,7 +303,7 @@ public class QueryUtils
    */
   public static String getSelectorByQueryType(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema)
   {
-    String selector = null;
+    String selector;
 
     String fieldName = qSchema.getSelectorName();
     if (dSchema.hasListRep(fieldName))
@@ -333,7 +334,7 @@ public class QueryUtils
    */
   public static String getSelectorByQueryTypeJSON(QuerySchema qSchema, JSONObject dataMap)
   {
-    String selector = null;
+    String selector;
 
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
     String fieldName = qSchema.getSelectorName();

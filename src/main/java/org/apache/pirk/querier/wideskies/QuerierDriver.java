@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies;
 
 import java.io.IOException;
@@ -23,17 +23,18 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.FileIOUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Driver class for encryption of a query or decryption of a response
@@ -72,16 +73,17 @@ import org.apache.pirk.utils.SystemConfiguration;
 public class QuerierDriver implements Serializable
 {
   private static final long serialVersionUID = 1L;
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QuerierDriver.class);
 
   public static void main(String... args) throws IOException, InterruptedException, PIRException
   {
     // General variables
-    String action = null;
-    String inputFile = null;
-    String outputFile = null;
+    String action;
+    String inputFile;
+    String outputFile;
     String queryType = null;
-    int numThreads = 1;
+    int numThreads;
+    LocalFileSystemStore storage = new LocalFileSystemStore();
 
     // Encryption variables
     int hashBitSize = 0;
@@ -188,14 +190,15 @@ public class QuerierDriver implements Serializable
       // Write necessary output files - two files written -
       // (1) Querier object to <outputFile>-QuerierConst.QUERIER_FILETAG
       // (2) Query object to <outputFile>-QuerierConst.QUERY_FILETAG
-      encryptQuery.writeOutputFiles(outputFile);
+      storage.store(outputFile + "-" + QuerierConst.QUERIER_FILETAG, encryptQuery.getQuerier());
+      storage.store(outputFile + "-" + QuerierConst.QUERY_FILETAG, encryptQuery.getQuery());
     }
     else
     // Decryption
     {
       // Reconstruct the necessary objects from the files
-      Response response = Response.readFromFile(inputFile);
-      Querier querier = Querier.readFromFile(querierFile);
+      Response response = storage.recall(inputFile, Response.class);
+      Querier querier = storage.recall(querierFile, Querier.class);
 
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);
