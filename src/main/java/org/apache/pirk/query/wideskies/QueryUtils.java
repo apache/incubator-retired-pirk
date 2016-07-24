@@ -107,7 +107,6 @@ public class QueryUtils
   public static ArrayList<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws Exception
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
-
     DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     // Add the embedded selector to the parts

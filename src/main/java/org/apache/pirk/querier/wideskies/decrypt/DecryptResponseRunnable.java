@@ -49,6 +49,7 @@ public class DecryptResponseRunnable implements Runnable
   private HashMap<String,BigInteger> selectorMaskMap = null;
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
+
   private HashMap<Integer,String> embedSelectorMap = null;
 
   public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,

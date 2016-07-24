@@ -57,7 +57,7 @@ public class Responder
 
   private Query query = null;
   private QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
+  private QuerySchema qSchema = null;
 
   private String queryType = null;
 

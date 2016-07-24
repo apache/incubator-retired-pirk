@@ -18,8 +18,6 @@
  */
 package org.apache.pirk.test.utils;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +42,7 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.junit.Assert.fail;
 
 public class StandaloneQuery
 {

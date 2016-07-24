@@ -31,7 +31,6 @@ import org.apache.pirk.utils.KeyedHash;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 /**

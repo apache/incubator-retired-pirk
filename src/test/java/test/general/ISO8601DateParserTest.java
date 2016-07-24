@@ -18,14 +18,13 @@
  */
 package test.general;
 
-import static org.junit.Assert.assertEquals;
-
 import java.text.ParseException;
 
 import org.apache.pirk.utils.ISO8601DateParser;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Class to test basic functionality of ISO8601DateParser class
