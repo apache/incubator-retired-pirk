@@ -25,7 +25,6 @@ import java.io.IOException;
 
 public class LocalFileSystemStore extends StorageService
 {
-
   /**
    * Creates a new storage service on the local file system using default Java serialization.
    */
@@ -34,49 +33,79 @@ public class LocalFileSystemStore extends StorageService
     super();
   }
 
+  /**
+   * Creates a new storage service on the local file system using the given serializer.
+   */
   public LocalFileSystemStore(SerializationService serial)
   {
     super(serial);
   }
 
+  /**
+   * Stores the given object at the given path. The object is serialized using the configured serializer.
+   * 
+   * @param path
+   *          The local file system path.
+   * @param obj
+   *          The object to store.
+   * @throws IOException
+   *           If a problem occurs storing the object.
+   */
   public void store(String path, Storable obj) throws IOException
   {
     store(new File(path), obj);
   }
 
+  /**
+   * Stores the given object at the given file location. The object is serialized using the configured serializer.
+   * 
+   * @param path
+   *          The local file system location to store the object.
+   * @param obj
+   *          The object to store.
+   * @throws IOException
+   *           If a problem occurs storing the object.
+   */
   public void store(File file, Storable obj) throws IOException
   {
-    FileOutputStream fos = new FileOutputStream(file);
-    try
+    try (FileOutputStream fos = new FileOutputStream(file))
     {
       serializer.write(fos, obj);
-    } finally
-    {
-      if (fos != null)
-      {
-        fos.close();
-      }
     }
   }
 
+  /**
+   * Returns the object stored in the local file system at the given path.
+   * 
+   * @param path
+   *          The local file system path.
+   * @param type
+   *          The type of object being retrieved.
+   * @return The object retrieved from the store.
+   * @throws IOException
+   *           If a problem occurs retrieving the object.
+   */
   public <T> T recall(String path, Class<T> type) throws IOException
   {
     return recall(new File(path), type);
   }
 
+  /**
+   * Returns the object stored in the local file system at the given file location.
+   * 
+   * @param file
+   *          The local file system location.
+   * @param type
+   *          The type of object being retrieved.
+   * @return The object retrieved from the store.
+   * @throws IOException
+   *           If a problem occurs retrieving the object.
+   */
   public <T> T recall(File file, Class<T> type) throws IOException
   {
-    FileInputStream fis = new FileInputStream(file);
-    try
+    try (FileInputStream fis = new FileInputStream(file))
     {
       return serializer.read(fis, type);
-    } finally
-    {
-      if (fis != null)
-      {
-        fis.close();
-      }
     }
   }
-
 }
