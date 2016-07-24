@@ -18,8 +18,7 @@
  */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
-
-public enum MRStats {
+public enum MRStats
+{
   NUM_RECORDS_INIT_MAPPER, NUM_RECORDS_PROCESSED_INIT_MAPPER, NUM_HASHES_REDUCER, NUM_COLUMNS
 }
-
