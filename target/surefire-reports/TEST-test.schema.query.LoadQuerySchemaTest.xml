@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.schema.query.LoadQuerySchemaTest" time="56.489" tests="4" errors="0" skipped="0" failures="0">
+<testsuite name="test.schema.query.LoadQuerySchemaTest" time="2.393" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/jre/lib"/>
@@ -61,8 +61,8 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="testDataSchemaDoesNotExist" classname="test.schema.query.LoadQuerySchemaTest" time="0.312"/>
-  <testcase name="testGeneralSchemaLoad" classname="test.schema.query.LoadQuerySchemaTest" time="55.421"/>
-  <testcase name="testSelectorDoesNotExistInDataSchema" classname="test.schema.query.LoadQuerySchemaTest" time="0.341"/>
-  <testcase name="testUnknownFilterClass" classname="test.schema.query.LoadQuerySchemaTest" time="0.415"/>
+  <testcase name="testDataSchemaDoesNotExist" classname="test.schema.query.LoadQuerySchemaTest" time="0.364"/>
+  <testcase name="testGeneralSchemaLoad" classname="test.schema.query.LoadQuerySchemaTest" time="1.346"/>
+  <testcase name="testSelectorDoesNotExistInDataSchema" classname="test.schema.query.LoadQuerySchemaTest" time="0.354"/>
+  <testcase name="testUnknownFilterClass" classname="test.schema.query.LoadQuerySchemaTest" time="0.329"/>
 </testsuite>

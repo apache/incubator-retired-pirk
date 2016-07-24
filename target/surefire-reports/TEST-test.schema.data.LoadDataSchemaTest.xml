@@ -62,6 +62,6 @@
     <property name="sun.cpu.isalist" value=""/>
   </properties>
   <testcase name="testUnknownPartitioner" classname="test.schema.data.LoadDataSchemaTest" time="0.009"/>
-  <testcase name="testGeneralSchemaLoad" classname="test.schema.data.LoadDataSchemaTest" time="0.009"/>
-  <testcase name="testIncorrectJavaType" classname="test.schema.data.LoadDataSchemaTest" time="0.009"/>
+  <testcase name="testGeneralSchemaLoad" classname="test.schema.data.LoadDataSchemaTest" time="0.012"/>
+  <testcase name="testIncorrectJavaType" classname="test.schema.data.LoadDataSchemaTest" time="0.006"/>
 </testsuite>

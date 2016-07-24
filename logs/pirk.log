@@ -1,0 +1,202 @@
+2016-07-24 09:05:01,381 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:01,381 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:01,382 INFO  utils.BaseTests       - results:
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:06.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:07.000Z","query_name":"dns-hostname-query_1.0","ip":["13.14.15.16","0.0.0.0"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:08.000Z","query_name":"dns-hostname-query_1.0","ip":["21.22.23.24","0.0.0.0"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:09.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:10.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","query_id":1.0,"date":"2016-02-20T23:29:05.000Z","query_name":"dns-hostname-query_1.0","ip":["10.20.30.40","10.20.30.60"]}
+2016-07-24 09:05:01,383 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.2","qname":"something.else","event_type":"dns-hostname-query","rcode":0,"src_ip":"1.1.1.1","qtype":[1,0],"match":"something.else","query_id":1.0,"date":"2016-02-20T23:29:11.000Z","query_name":"dns-hostname-query_1.0","ip":["3.3.3.3","0.0.0.0"]}
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - correctResults: 
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","date":"2016-02-20T23:29:05.000Z","query_id":1.0,"ip":["10.20.30.40","10.20.30.60"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:06.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:07.000Z","query_id":1.0,"ip":["13.14.15.16","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:08.000Z","query_id":1.0,"ip":["21.22.23.24","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,384 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:09.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,385 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:10.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,385 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.2","qname":"something.else","event_type":"dns-hostname-query","rcode":0,"src_ip":"1.1.1.1","qtype":[1,0],"match":"something.else","date":"2016-02-20T23:29:11.000Z","query_id":1.0,"ip":["3.3.3.3","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:01,387 INFO  utils.BaseTests       - Completed testDNSHostnameQuery(): 
+2016-07-24 09:05:01,387 INFO  utils.BaseTests       - Running testDNSHostnameQuery(): 
+2016-07-24 09:05:01,387 INFO  utils.StandaloneQuery     - Performing watchlisting: 
+2016-07-24 09:05:01,387 INFO  utils.StandaloneQuery     - fileQuerier = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-querier7958643956075210414.txt fileQuery  = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-query8761980308756102351.txt responseFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/encryptedResponse7991081760477865456.txt fileFinalResults = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/finalResultFile8046213037686585944.txt
+2016-07-24 09:05:01,387 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 32 queryType = dns-hostname-query queryName = dns-hostname-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:01,409 INFO  encryption.Paillier     - Parameters = p = -1965237389 q = -182560849 N = -1039656803 NSquared = -2144481207 lambdaN = 900518122 bitLength = 384
+2016-07-24 09:05:01,409 INFO  encryption.Paillier     - Parameters = p = -1965237389 q = -182560849 N = -1039656803 NSquared = -2144481207 lambdaN = 900518122 bitLength = 384
+2016-07-24 09:05:01,409 INFO  utils.StandaloneQuery     - Performing encryption of the selectors - forming encrypted query vectors:
+2016-07-24 09:05:02,184 INFO  encrypt.EncryptQuery     - Completed creation of encrypted query vectors
+2016-07-24 09:05:02,184 INFO  utils.StandaloneQuery     - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+2016-07-24 09:05:02,291 INFO  utils.StandaloneQuery     - Performing the PIR Query and constructing the response elements:
+2016-07-24 09:05:02,342 INFO  utils.StandaloneQuery     - Query and Responder elements constructed
+2016-07-24 09:05:02,342 INFO  utils.StandaloneQuery     - selector = a.b.c.com numDataElements = 7
+2016-07-24 09:05:02,344 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:02,346 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:02,348 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:02,350 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:02,352 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:02,356 INFO  utils.StandaloneQuery     - selector = something.else numDataElements = 7
+2016-07-24 09:05:02,358 INFO  utils.StandaloneQuery     - selector = something.else2 numDataElements = 7
+2016-07-24 09:05:02,360 INFO  utils.StandaloneQuery     - selector = something.else.on.stoplist numDataElements = 7
+2016-07-24 09:05:02,361 INFO  utils.StandaloneQuery     - Completed the PIR Query and construction of the response elements:
+2016-07-24 09:05:02,361 INFO  utils.StandaloneQuery     - Forming response from response elements; writing to a file
+2016-07-24 09:05:02,364 INFO  utils.StandaloneQuery     - Completed forming response from response elements and writing to a file
+2016-07-24 09:05:02,364 INFO  utils.StandaloneQuery     - Performing decryption; writing final results file
+2016-07-24 09:05:02,446 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 32 queryType = dns-hostname-query queryName = dns-hostname-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:02,450 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:02,450 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:02,452 INFO  utils.BaseTests       - results:
+2016-07-24 09:05:02,452 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:06.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:02,452 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:07.000Z","query_name":"dns-hostname-query_1.0","ip":["13.14.15.16","0.0.0.0"]}
+2016-07-24 09:05:02,452 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:08.000Z","query_name":"dns-hostname-query_1.0","ip":["21.22.23.24","0.0.0.0"]}
+2016-07-24 09:05:02,452 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:09.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:10.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","query_id":1.0,"date":"2016-02-20T23:29:05.000Z","query_name":"dns-hostname-query_1.0","ip":["10.20.30.40","10.20.30.60"]}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.2","qname":"something.else","event_type":"dns-hostname-query","rcode":0,"src_ip":"1.1.1.1","qtype":[1,0],"match":"something.else","query_id":1.0,"date":"2016-02-20T23:29:11.000Z","query_name":"dns-hostname-query_1.0","ip":["3.3.3.3","0.0.0.0"]}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - correctResults: 
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","date":"2016-02-20T23:29:05.000Z","query_id":1.0,"ip":["10.20.30.40","10.20.30.60"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:06.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,453 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:07.000Z","query_id":1.0,"ip":["13.14.15.16","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,454 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:08.000Z","query_id":1.0,"ip":["21.22.23.24","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,454 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:09.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,454 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:10.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,454 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.2","qname":"something.else","event_type":"dns-hostname-query","rcode":0,"src_ip":"1.1.1.1","qtype":[1,0],"match":"something.else","date":"2016-02-20T23:29:11.000Z","query_id":1.0,"ip":["3.3.3.3","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:02,455 INFO  utils.BaseTests       - Completed testDNSHostnameQuery(): 
+2016-07-24 09:05:02,455 INFO  utils.BaseTests       - Running testSRCIPQuery(): 
+2016-07-24 09:05:02,456 INFO  utils.StandaloneQuery     - Performing watchlisting: 
+2016-07-24 09:05:02,456 INFO  utils.StandaloneQuery     - fileQuerier = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-querier3308461502081322923.txt fileQuery  = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-query5672356027133370924.txt responseFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/encryptedResponse1037906607256323058.txt fileFinalResults = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/finalResultFile8510037832920570595.txt
+2016-07-24 09:05:02,456 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 160 numPartitionsPerDataElement = 20 queryType = dns-srcip-query queryName = dns-srcip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:02,461 INFO  encryption.Paillier     - Parameters = p = 384663265 q = -493273595 N = 1842804837 NSquared = 1004525529 lambdaN = 487853792 bitLength = 384
+2016-07-24 09:05:02,461 INFO  encryption.Paillier     - Parameters = p = 384663265 q = -493273595 N = 1842804837 NSquared = 1004525529 lambdaN = 487853792 bitLength = 384
+2016-07-24 09:05:02,461 INFO  utils.StandaloneQuery     - Performing encryption of the selectors - forming encrypted query vectors:
+2016-07-24 09:05:03,117 INFO  encrypt.EncryptQuery     - Completed creation of encrypted query vectors
+2016-07-24 09:05:03,117 INFO  utils.StandaloneQuery     - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+2016-07-24 09:05:03,223 INFO  utils.StandaloneQuery     - Performing the PIR Query and constructing the response elements:
+2016-07-24 09:05:03,275 INFO  utils.StandaloneQuery     - Query and Responder elements constructed
+2016-07-24 09:05:03,275 INFO  utils.StandaloneQuery     - selector = 55.55.55.55 numDataElements = 7
+2016-07-24 09:05:03,277 INFO  utils.StandaloneQuery     - selector = 127.128.129.130 numDataElements = 7
+2016-07-24 09:05:03,278 INFO  utils.StandaloneQuery     - selector = 131.132.133.134 numDataElements = 7
+2016-07-24 09:05:03,279 INFO  utils.StandaloneQuery     - selector = 135.136.137.138 numDataElements = 7
+2016-07-24 09:05:03,280 INFO  utils.StandaloneQuery     - selector = 139.140.141.142 numDataElements = 7
+2016-07-24 09:05:03,281 INFO  utils.StandaloneQuery     - selector = 143.144.145.146 numDataElements = 7
+2016-07-24 09:05:03,282 INFO  utils.StandaloneQuery     - selector = 1.1.1.1 numDataElements = 7
+2016-07-24 09:05:03,284 INFO  utils.StandaloneQuery     - selector = 5.6.7.8 numDataElements = 7
+2016-07-24 09:05:03,285 INFO  utils.StandaloneQuery     - selector = 55.55.55.55 numDataElements = 7
+2016-07-24 09:05:03,286 INFO  utils.StandaloneQuery     - Completed the PIR Query and construction of the response elements:
+2016-07-24 09:05:03,286 INFO  utils.StandaloneQuery     - Forming response from response elements; writing to a file
+2016-07-24 09:05:03,287 INFO  utils.StandaloneQuery     - Completed forming response from response elements and writing to a file
+2016-07-24 09:05:03,287 INFO  utils.StandaloneQuery     - Performing decryption; writing final results file
+2016-07-24 09:05:03,346 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 160 numPartitionsPerDataElement = 20 queryType = dns-srcip-query queryName = dns-srcip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:03,346 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 160 numPartitionsPerDataElement = 20 queryType = dns-srcip-query queryName = dns-srcip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:03,347 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:03,348 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.co","event_type":"dns-srcip-query","src_ip":"55.55.55.55","match":"55.55.55.55","query_id":1.0,"query_name":"dns-srcip-query_1.0","ip":["10.20.30.40","10.20.30.60"]}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.232","qname":"somethin","event_type":"dns-srcip-query","src_ip":"55.55.55.55","match":"55.55.55.55","query_id":1.0,"query_name":"dns-srcip-query_1.0","ip":["3.3.3.132","0.0.0.0"]}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.22","qname":"somethin","event_type":"dns-srcip-query","src_ip":"5.6.7.8","match":"5.6.7.8","query_id":1.0,"query_name":"dns-srcip-query_1.0","ip":["3.3.3.132","0.0.0.0"]}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - correctResults:
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.co","event_type":"dns-srcip-query","src_ip":"55.55.55.55","match":"55.55.55.55","query_id":1.0,"ip":["10.20.30.40","10.20.30.60"],"query_name":"dns-srcip-query_1.0"}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.22","qname":"somethin","event_type":"dns-srcip-query","src_ip":"5.6.7.8","match":"5.6.7.8","query_id":1.0,"ip":["3.3.3.132","0.0.0.0"],"query_name":"dns-srcip-query_1.0"}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - {"dest_ip":"2.2.2.232","qname":"somethin","event_type":"dns-srcip-query","src_ip":"55.55.55.55","match":"55.55.55.55","query_id":1.0,"ip":["3.3.3.132","0.0.0.0"],"query_name":"dns-srcip-query_1.0"}
+2016-07-24 09:05:03,349 INFO  utils.BaseTests       - Completed testSRCIPQuery(): 
+2016-07-24 09:05:03,350 INFO  utils.BaseTests       - Running testDNSIPQuery(): 
+2016-07-24 09:05:03,350 INFO  utils.StandaloneQuery     - Performing watchlisting: 
+2016-07-24 09:05:03,350 INFO  utils.StandaloneQuery     - fileQuerier = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-querier7930403625701241625.txt fileQuery  = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-query3142053446443847075.txt responseFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/encryptedResponse1775973128684568321.txt fileFinalResults = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/finalResultFile4069236011763639777.txt
+2016-07-24 09:05:03,350 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-ip-query queryName = dns-ip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:03,358 INFO  encryption.Paillier     - Parameters = p = -1446963417 q = 1607131463 N = -2018725167 NSquared = 868175521 lambdaN = 352679014 bitLength = 384
+2016-07-24 09:05:03,358 INFO  encryption.Paillier     - Parameters = p = -1446963417 q = 1607131463 N = -2018725167 NSquared = 868175521 lambdaN = 352679014 bitLength = 384
+2016-07-24 09:05:03,359 INFO  utils.StandaloneQuery     - Performing encryption of the selectors - forming encrypted query vectors:
+2016-07-24 09:05:03,880 INFO  encrypt.EncryptQuery     - Completed creation of encrypted query vectors
+2016-07-24 09:05:03,881 INFO  utils.StandaloneQuery     - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+2016-07-24 09:05:04,007 INFO  utils.StandaloneQuery     - Performing the PIR Query and constructing the response elements:
+2016-07-24 09:05:04,062 INFO  utils.StandaloneQuery     - Query and Responder elements constructed
+2016-07-24 09:05:04,062 INFO  utils.StandaloneQuery     - selector = 10.20.30.40 numDataElements = 7
+2016-07-24 09:05:04,063 INFO  utils.StandaloneQuery     - selector = 5.6.7.8 numDataElements = 7
+2016-07-24 09:05:04,064 INFO  utils.StandaloneQuery     - selector = 13.14.15.16 numDataElements = 7
+2016-07-24 09:05:04,066 INFO  utils.StandaloneQuery     - selector = 21.22.23.24 numDataElements = 7
+2016-07-24 09:05:04,067 INFO  utils.StandaloneQuery     - selector = 5.6.7.8 numDataElements = 7
+2016-07-24 09:05:04,068 INFO  utils.StandaloneQuery     - selector = 5.6.7.8 numDataElements = 7
+2016-07-24 09:05:04,069 INFO  utils.StandaloneQuery     - selector = 3.3.3.3 numDataElements = 7
+2016-07-24 09:05:04,070 INFO  utils.StandaloneQuery     - selector = 3.3.3.132 numDataElements = 7
+2016-07-24 09:05:04,071 INFO  utils.StandaloneQuery     - selector = 3.3.3.132 numDataElements = 7
+2016-07-24 09:05:04,072 INFO  utils.StandaloneQuery     - Completed the PIR Query and construction of the response elements:
+2016-07-24 09:05:04,072 INFO  utils.StandaloneQuery     - Forming response from response elements; writing to a file
+2016-07-24 09:05:04,073 INFO  utils.StandaloneQuery     - Completed forming response from response elements and writing to a file
+2016-07-24 09:05:04,073 INFO  utils.StandaloneQuery     - Performing decryption; writing final results file
+2016-07-24 09:05:04,136 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-ip-query queryName = dns-ip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,137 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-ip-query queryName = dns-ip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,137 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-ip-query queryName = dns-ip-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,139 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:04,139 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:04,140 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","event_type":"dns-ip-query","src_ip":"135.136.137.138","match":"21.22.23.24","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["21.22.23.24","0.0.0.0"]}
+2016-07-24 09:05:04,140 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","event_type":"dns-ip-query","src_ip":"131.132.133.134","match":"13.14.15.16","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["13.14.15.16","0.0.0.0"]}
+2016-07-24 09:05:04,141 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","event_type":"dns-ip-query","src_ip":"55.55.55.55","match":"10.20.30.40","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["10.20.30.40","10.20.30.60"]}
+2016-07-24 09:05:04,141 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","event_type":"dns-ip-query","src_ip":"127.128.129.130","match":"5.6.7.8","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:04,141 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","event_type":"dns-ip-query","src_ip":"139.140.141.142","match":"5.6.7.8","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:04,141 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","event_type":"dns-ip-query","src_ip":"143.144.145.146","match":"5.6.7.8","query_id":1.0,"query_name":"dns-ip-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:04,142 INFO  utils.BaseTests       - Completed testDNSIPQuery(): 
+2016-07-24 09:05:04,142 INFO  utils.BaseTests       - Running testDNSNXDOMAINQuery(): 
+2016-07-24 09:05:04,142 INFO  utils.StandaloneQuery     - Performing watchlisting: 
+2016-07-24 09:05:04,143 INFO  utils.StandaloneQuery     - fileQuerier = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-querier2342326253217323909.txt fileQuery  = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-query4259857427186084380.txt responseFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/encryptedResponse6818661021783610867.txt fileFinalResults = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/finalResultFile5054011625440971126.txt
+2016-07-24 09:05:04,143 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query queryName = dns-nxdomain-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,148 INFO  encryption.Paillier     - Parameters = p = -1905567019 q = 404737809 N = 996033317 NSquared = 1858626393 lambdaN = -519401968 bitLength = 384
+2016-07-24 09:05:04,148 INFO  encryption.Paillier     - Parameters = p = -1905567019 q = 404737809 N = 996033317 NSquared = 1858626393 lambdaN = -519401968 bitLength = 384
+2016-07-24 09:05:04,148 INFO  utils.StandaloneQuery     - Performing encryption of the selectors - forming encrypted query vectors:
+2016-07-24 09:05:04,640 INFO  encrypt.EncryptQuery     - Completed creation of encrypted query vectors
+2016-07-24 09:05:04,640 INFO  utils.StandaloneQuery     - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+2016-07-24 09:05:04,760 INFO  utils.StandaloneQuery     - Performing the PIR Query and constructing the response elements:
+2016-07-24 09:05:04,818 INFO  utils.StandaloneQuery     - Query and Responder elements constructed
+2016-07-24 09:05:04,818 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:04,819 INFO  utils.StandaloneQuery     - Completed the PIR Query and construction of the response elements:
+2016-07-24 09:05:04,819 INFO  utils.StandaloneQuery     - Forming response from response elements; writing to a file
+2016-07-24 09:05:04,820 INFO  utils.StandaloneQuery     - Completed forming response from response elements and writing to a file
+2016-07-24 09:05:04,820 INFO  utils.StandaloneQuery     - Performing decryption; writing final results file
+2016-07-24 09:05:04,873 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query queryName = dns-nxdomain-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,874 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query queryName = dns-nxdomain-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,874 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query queryName = dns-nxdomain-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,874 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query queryName = dns-nxdomain-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+2016-07-24 09:05:04,874 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:04,875 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:04,875 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-nxdomain-query","src_ip":"135.136.137.138","match":"d.e.com","query_id":1.0,"query_name":"dns-nxdomain-query_1.0"}
+2016-07-24 09:05:04,875 INFO  utils.BaseTests       - Completed testDNSNXDOMAINQuery(): 
+2016-07-24 09:05:04,876 INFO  utils.BaseTests       - Running testDNSHostnameQuery(): 
+2016-07-24 09:05:04,876 INFO  utils.StandaloneQuery     - Performing watchlisting: 
+2016-07-24 09:05:04,876 INFO  utils.StandaloneQuery     - fileQuerier = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-querier5548059835466577260.txt fileQuery  = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySideOut-query7256503720666463054.txt responseFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/encryptedResponse2999358304688254252.txt fileFinalResults = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/finalResultFile3596652477036687680.txt
+2016-07-24 09:05:04,876 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query queryName = dns-hostname-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+2016-07-24 09:05:04,881 INFO  encryption.Paillier     - Parameters = p = 1838403675 q = 1234474115 N = -290178415 NSquared = 88999457 lambdaN = -1681528102 bitLength = 384
+2016-07-24 09:05:04,881 INFO  encryption.Paillier     - Parameters = p = 1838403675 q = 1234474115 N = -290178415 NSquared = 88999457 lambdaN = -1681528102 bitLength = 384
+2016-07-24 09:05:04,881 INFO  utils.StandaloneQuery     - Performing encryption of the selectors - forming encrypted query vectors:
+2016-07-24 09:05:05,684 INFO  encrypt.EncryptQuery     - Completed creation of encrypted query vectors
+2016-07-24 09:05:05,684 INFO  utils.StandaloneQuery     - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+2016-07-24 09:05:05,684 INFO  utils.StandaloneQuery     - embedSelectorMap((embedSelectorMap.size()-2)) = 650527453 selector = something.else
+2016-07-24 09:05:05,786 INFO  utils.StandaloneQuery     - Performing the PIR Query and constructing the response elements:
+2016-07-24 09:05:05,835 INFO  utils.StandaloneQuery     - Query and Responder elements constructed
+2016-07-24 09:05:05,835 INFO  utils.StandaloneQuery     - selector = a.b.c.com numDataElements = 7
+2016-07-24 09:05:05,838 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:05,840 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:05,843 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:05,845 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:05,846 INFO  utils.StandaloneQuery     - selector = d.e.com numDataElements = 7
+2016-07-24 09:05:05,847 INFO  utils.StandaloneQuery     - selector = something.else numDataElements = 7
+2016-07-24 09:05:05,849 INFO  utils.StandaloneQuery     - selector = something.else2 numDataElements = 7
+2016-07-24 09:05:05,851 INFO  utils.StandaloneQuery     - selector = something.else.on.stoplist numDataElements = 7
+2016-07-24 09:05:05,853 INFO  utils.StandaloneQuery     - Completed the PIR Query and construction of the response elements:
+2016-07-24 09:05:05,853 INFO  utils.StandaloneQuery     - Forming response from response elements; writing to a file
+2016-07-24 09:05:05,856 INFO  utils.StandaloneQuery     - Completed forming response from response elements and writing to a file
+2016-07-24 09:05:05,856 INFO  utils.StandaloneQuery     - Performing decryption; writing final results file
+2016-07-24 09:05:05,941 INFO  wideskies.QueryInfo     - queryNum = 1.0 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query queryName = dns-hostname-query_1.0 paillierBitSize = 384 useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+2016-07-24 09:05:05,947 INFO  utils.StandaloneQuery     - Completed performing decryption and writing final results file
+2016-07-24 09:05:05,947 INFO  utils.StandaloneQuery     - Reading in and checking results
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - results:
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:06.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:07.000Z","query_name":"dns-hostname-query_1.0","ip":["13.14.15.16","0.0.0.0"]}
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:08.000Z","query_name":"dns-hostname-query_1.0","ip":["21.22.23.24","0.0.0.0"]}
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:09.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","query_id":1.0,"date":"2016-02-20T23:29:10.000Z","query_name":"dns-hostname-query_1.0","ip":["5.6.7.8","0.0.0.0"]}
+2016-07-24 09:05:05,949 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","query_id":1.0,"date":"2016-02-20T23:29:05.000Z","query_name":"dns-hostname-query_1.0","ip":["10.20.30.40","10.20.30.60"]}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - correctResults: 
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.6","qname":"a.b.c.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"55.55.55.55","qtype":[1,0],"match":"a.b.c.com","date":"2016-02-20T23:29:05.000Z","query_id":1.0,"ip":["10.20.30.40","10.20.30.60"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"1.2.3.4","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"127.128.129.130","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:06.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"9.10.11.12","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"131.132.133.134","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:07.000Z","query_id":1.0,"ip":["13.14.15.16","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"17.18.19.20","qname":"d.e.com","event_type":"dns-hostname-query","rcode":3,"src_ip":"135.136.137.138","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:08.000Z","query_id":1.0,"ip":["21.22.23.24","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"25.26.27.28","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"139.140.141.142","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:09.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,950 INFO  utils.BaseTests       - {"dest_ip":"33.34.35.36","qname":"d.e.com","event_type":"dns-hostname-query","rcode":0,"src_ip":"143.144.145.146","qtype":[1,0],"match":"d.e.com","date":"2016-02-20T23:29:10.000Z","query_id":1.0,"ip":["5.6.7.8","0.0.0.0"],"query_name":"dns-hostname-query_1.0"}
+2016-07-24 09:05:05,951 INFO  utils.BaseTests       - Completed testDNSHostnameQuery(): 

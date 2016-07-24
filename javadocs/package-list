@@ -17,6 +17,7 @@ org.apache.pirk.schema.data.partitioner
 org.apache.pirk.schema.query
 org.apache.pirk.schema.query.filter
 org.apache.pirk.schema.response
+org.apache.pirk.serialization
 org.apache.pirk.test.distributed
 org.apache.pirk.test.distributed.testsuite
 org.apache.pirk.test.utils
