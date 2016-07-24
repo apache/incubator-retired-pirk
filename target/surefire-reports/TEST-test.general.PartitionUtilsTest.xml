@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.general.PartitionUtilsTest" time="0.01" tests="3" errors="0" skipped="0" failures="0">
+<testsuite name="test.general.PartitionUtilsTest" time="0.009" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/jre/lib"/>
@@ -61,7 +61,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="testMask" classname="test.general.PartitionUtilsTest" time="0.001"/>
+  <testcase name="testMask" classname="test.general.PartitionUtilsTest" time="0"/>
   <testcase name="testPartitions" classname="test.general.PartitionUtilsTest" time="0.008"/>
   <testcase name="testPartitionBits" classname="test.general.PartitionUtilsTest" time="0.001"/>
 </testsuite>

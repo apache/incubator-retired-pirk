@@ -1,28 +1,28 @@
- INFO [main] 2016-07-24 09:00:46,450 (KeyedHashTest.java:38) - Starting testKeyedHash: 
- INFO [main] 2016-07-24 09:00:46,451 (KeyedHashTest.java:41) - hash1 = 3381 hash1 = 110100110101
- INFO [main] 2016-07-24 09:00:46,451 (KeyedHashTest.java:44) - hash2 = 507510069 hash2 = 11110001111111111110100110101
- INFO [main] 2016-07-24 09:00:46,451 (KeyedHashTest.java:47) - hash3 = 507510069 hash3 = 11110001111111111110100110101
- INFO [main] 2016-07-24 09:00:46,452 (KeyedHashTest.java:52) - Successfully completed testKeyedHash
- INFO [main] 2016-07-24 09:00:46,452 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: MD5
- INFO [main] 2016-07-24 09:00:46,499 (KeyedHashTest.java:69) - hash1 = 26 hash1 = 11010
- INFO [main] 2016-07-24 09:00:46,500 (KeyedHashTest.java:72) - hash2 = 2047168538 hash2 = 1111010000001010101000000011010
- INFO [main] 2016-07-24 09:00:46,500 (KeyedHashTest.java:75) - hash3 = 2047168538 hash3 = 1111010000001010101000000011010
- INFO [main] 2016-07-24 09:00:46,501 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: MD5
- INFO [main] 2016-07-24 09:00:46,501 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: SHA-1
- INFO [main] 2016-07-24 09:00:46,502 (KeyedHashTest.java:69) - hash1 = 1116 hash1 = 10001011100
- INFO [main] 2016-07-24 09:00:46,502 (KeyedHashTest.java:72) - hash2 = 1614103644 hash2 = 1100000001101010100010001011100
- INFO [main] 2016-07-24 09:00:46,502 (KeyedHashTest.java:75) - hash3 = 1614103644 hash3 = 1100000001101010100010001011100
- INFO [main] 2016-07-24 09:00:46,505 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: SHA-1
- INFO [main] 2016-07-24 09:00:46,505 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: SHA-256
- INFO [main] 2016-07-24 09:00:46,506 (KeyedHashTest.java:69) - hash1 = 2100 hash1 = 100000110100
- INFO [main] 2016-07-24 09:00:46,507 (KeyedHashTest.java:72) - hash2 = 1097439284 hash2 = 1000001011010011001100000110100
- INFO [main] 2016-07-24 09:00:46,507 (KeyedHashTest.java:75) - hash3 = 1097439284 hash3 = 1000001011010011001100000110100
- INFO [main] 2016-07-24 09:00:46,508 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: SHA-256
- INFO [main] 2016-07-24 09:00:46,508 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: FAKE-HASH-TYPE
- INFO [main] 2016-07-24 09:00:46,596 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
- INFO [main] 2016-07-24 09:00:46,596 (KeyedHashTest.java:69) - hash1 = 3381 hash1 = 110100110101
- INFO [main] 2016-07-24 09:00:46,596 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
- INFO [main] 2016-07-24 09:00:46,596 (KeyedHashTest.java:72) - hash2 = 507510069 hash2 = 11110001111111111110100110101
- INFO [main] 2016-07-24 09:00:46,597 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
- INFO [main] 2016-07-24 09:00:46,597 (KeyedHashTest.java:75) - hash3 = 507510069 hash3 = 11110001111111111110100110101
- INFO [main] 2016-07-24 09:00:46,597 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: FAKE-HASH-TYPE
+ INFO [main] 2016-07-24 11:38:16,179 (KeyedHashTest.java:38) - Starting testKeyedHash: 
+ INFO [main] 2016-07-24 11:38:16,180 (KeyedHashTest.java:41) - hash1 = 3381 hash1 = 110100110101
+ INFO [main] 2016-07-24 11:38:16,180 (KeyedHashTest.java:44) - hash2 = 507510069 hash2 = 11110001111111111110100110101
+ INFO [main] 2016-07-24 11:38:16,180 (KeyedHashTest.java:47) - hash3 = 507510069 hash3 = 11110001111111111110100110101
+ INFO [main] 2016-07-24 11:38:16,181 (KeyedHashTest.java:52) - Successfully completed testKeyedHash
+ INFO [main] 2016-07-24 11:38:16,181 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: MD5
+ INFO [main] 2016-07-24 11:38:16,203 (KeyedHashTest.java:69) - hash1 = 26 hash1 = 11010
+ INFO [main] 2016-07-24 11:38:16,203 (KeyedHashTest.java:72) - hash2 = 2047168538 hash2 = 1111010000001010101000000011010
+ INFO [main] 2016-07-24 11:38:16,203 (KeyedHashTest.java:75) - hash3 = 2047168538 hash3 = 1111010000001010101000000011010
+ INFO [main] 2016-07-24 11:38:16,204 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: MD5
+ INFO [main] 2016-07-24 11:38:16,204 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: SHA-1
+ INFO [main] 2016-07-24 11:38:16,204 (KeyedHashTest.java:69) - hash1 = 1116 hash1 = 10001011100
+ INFO [main] 2016-07-24 11:38:16,205 (KeyedHashTest.java:72) - hash2 = 1614103644 hash2 = 1100000001101010100010001011100
+ INFO [main] 2016-07-24 11:38:16,205 (KeyedHashTest.java:75) - hash3 = 1614103644 hash3 = 1100000001101010100010001011100
+ INFO [main] 2016-07-24 11:38:16,207 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: SHA-1
+ INFO [main] 2016-07-24 11:38:16,207 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: SHA-256
+ INFO [main] 2016-07-24 11:38:16,208 (KeyedHashTest.java:69) - hash1 = 2100 hash1 = 100000110100
+ INFO [main] 2016-07-24 11:38:16,208 (KeyedHashTest.java:72) - hash2 = 1097439284 hash2 = 1000001011010011001100000110100
+ INFO [main] 2016-07-24 11:38:16,209 (KeyedHashTest.java:75) - hash3 = 1097439284 hash3 = 1000001011010011001100000110100
+ INFO [main] 2016-07-24 11:38:16,209 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: SHA-256
+ INFO [main] 2016-07-24 11:38:16,209 (KeyedHashTest.java:66) - Starting testKeyedHashType with type: FAKE-HASH-TYPE
+ INFO [main] 2016-07-24 11:38:16,346 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
+ INFO [main] 2016-07-24 11:38:16,346 (KeyedHashTest.java:69) - hash1 = 3381 hash1 = 110100110101
+ INFO [main] 2016-07-24 11:38:16,346 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
+ INFO [main] 2016-07-24 11:38:16,347 (KeyedHashTest.java:72) - hash2 = 507510069 hash2 = 11110001111111111110100110101
+ INFO [main] 2016-07-24 11:38:16,347 (KeyedHash.java:81) - java.security.NoSuchAlgorithmException: FAKE-HASH-TYPE MessageDigest not available
+ INFO [main] 2016-07-24 11:38:16,347 (KeyedHashTest.java:75) - hash3 = 507510069 hash3 = 11110001111111111110100110101
+ INFO [main] 2016-07-24 11:38:16,347 (KeyedHashTest.java:80) - Successfully completed testKeyedHashType with type: FAKE-HASH-TYPE

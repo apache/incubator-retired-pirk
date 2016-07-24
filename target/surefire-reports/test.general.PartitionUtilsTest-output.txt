@@ -1,8 +1,8 @@
- INFO [main] 2016-07-24 09:04:49,057 (PartitionUtilsTest.java:50) - Starting testMask: 
- INFO [main] 2016-07-24 09:04:49,057 (PartitionUtilsTest.java:56) - Successfully completed testMask
- INFO [main] 2016-07-24 09:04:49,058 (PartitionUtilsTest.java:123) - Starting testToPartitions:
- INFO [main] 2016-07-24 09:04:49,064 (PartitionUtilsTest.java:229) - testString.getBytes().length = 10
- INFO [main] 2016-07-24 09:04:49,064 (PartitionUtilsTest.java:229) - testString.getBytes().length = 1
- INFO [main] 2016-07-24 09:04:49,065 (PartitionUtilsTest.java:218) - Sucessfully completed testToPartitions:
- INFO [main] 2016-07-24 09:04:49,066 (PartitionUtilsTest.java:62) - Starting testPartitionBits: 
- INFO [main] 2016-07-24 09:04:49,066 (PartitionUtilsTest.java:117) - Successfully completed testPartitionBits
+ INFO [main] 2016-07-24 11:43:08,112 (PartitionUtilsTest.java:50) - Starting testMask: 
+ INFO [main] 2016-07-24 11:43:08,112 (PartitionUtilsTest.java:56) - Successfully completed testMask
+ INFO [main] 2016-07-24 11:43:08,113 (PartitionUtilsTest.java:123) - Starting testToPartitions:
+ INFO [main] 2016-07-24 11:43:08,120 (PartitionUtilsTest.java:229) - testString.getBytes().length = 10
+ INFO [main] 2016-07-24 11:43:08,120 (PartitionUtilsTest.java:229) - testString.getBytes().length = 1
+ INFO [main] 2016-07-24 11:43:08,121 (PartitionUtilsTest.java:218) - Sucessfully completed testToPartitions:
+ INFO [main] 2016-07-24 11:43:08,121 (PartitionUtilsTest.java:62) - Starting testPartitionBits: 
+ INFO [main] 2016-07-24 11:43:08,122 (PartitionUtilsTest.java:117) - Successfully completed testPartitionBits

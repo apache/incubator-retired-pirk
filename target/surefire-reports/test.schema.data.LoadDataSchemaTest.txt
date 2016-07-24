@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: test.schema.data.LoadDataSchemaTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec - in test.schema.data.LoadDataSchemaTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 sec - in test.schema.data.LoadDataSchemaTest
