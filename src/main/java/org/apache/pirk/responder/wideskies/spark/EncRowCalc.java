@@ -28,7 +28,7 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.function.PairFlatMapFunction;

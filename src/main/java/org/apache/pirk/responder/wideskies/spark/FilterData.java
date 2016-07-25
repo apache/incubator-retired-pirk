@@ -21,7 +21,8 @@ package org.apache.pirk.responder.wideskies.spark;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
@@ -48,7 +49,7 @@ public class FilterData implements Function<MapWritable,Boolean>
 
     QueryInfo queryInfo = bbVarsIn.getQueryInfo();
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     filter = qSchema.getFilterInstance();
 

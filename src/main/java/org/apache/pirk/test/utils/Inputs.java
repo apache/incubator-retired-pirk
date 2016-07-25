@@ -35,7 +35,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
@@ -437,7 +437,7 @@ public class Inputs
     {
       createDataSchema(fs, true);
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create and load the query schemas
     // DNS_HOSTNAME_QUERY

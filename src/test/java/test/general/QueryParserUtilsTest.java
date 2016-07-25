@@ -23,7 +23,8 @@ import java.util.Map;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
@@ -54,7 +55,7 @@ public class QueryParserUtilsTest
 
     Inputs.createSchemaFiles(null, false, null);
 
-    dSchema = LoadDataSchemas.getSchema(Inputs.TEST_DATA_SCHEMA_NAME);
+    dSchema = DataSchemaRegistry.get(Inputs.TEST_DATA_SCHEMA_NAME);
 
     // ProcessBuilder pAdd1 = new ProcessBuilder("curl", "-XPUT", indexTypeNum1, "-d",
     // "{\"qname\":\"a.b.c.com\",\"date\":\"2016-02-20T23:29:05.000Z\",\"qtype\":[\"1\"]"

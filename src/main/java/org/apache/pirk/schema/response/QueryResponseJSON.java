@@ -27,7 +27,8 @@ import java.util.Set;
 import org.apache.hadoop.io.Text;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.json.simple.JSONObject;
@@ -77,7 +78,7 @@ public class QueryResponseJSON implements Serializable
     }
 
     QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     jsonObj = new JSONObject();
     setGeneralQueryResponseFields(queryInfo);
@@ -123,12 +124,12 @@ public class QueryResponseJSON implements Serializable
   @SuppressWarnings("unchecked")
   private void initialize()
   {
-    HashSet<String> schemaStringRep = dSchema.getNonListRep();
+    Set<String> schemaStringRep = dSchema.getNonArrayElements();
     for (String key : schemaStringRep)
     {
       jsonObj.put(key, "");
     }
-    HashSet<String> schemaListRep = dSchema.getListRep();
+    Set<String> schemaListRep = dSchema.getArrayElements();
     for (String key : schemaListRep)
     {
       jsonObj.put(key, new ArrayList<>());
@@ -148,7 +149,7 @@ public class QueryResponseJSON implements Serializable
     }
     else
     {
-      if (dSchema.getListRep().contains(key))
+      if (dSchema.getArrayElements().contains(key))
       {
         if (!(val instanceof ArrayList))
         {
@@ -171,7 +172,7 @@ public class QueryResponseJSON implements Serializable
           jsonObj.put(key, val);
         }
       }
-      else if (dSchema.getNonListRep().contains(key) || key.equals(SELECTOR))
+      else if (dSchema.getNonArrayElements().contains(key) || key.equals(SELECTOR))
       {
         jsonObj.put(key, val);
       }

@@ -30,7 +30,8 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
 import org.apache.pirk.inputformat.hadoop.TextArrayWritable;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -72,13 +73,13 @@ public class JSONRecordReader extends RecordReader<Text,MapWritable>
     try
     {
       SystemConfiguration.setProperty("data.schemas", context.getConfiguration().get("data.schemas"));
-      LoadDataSchemas.initialize(true, fs);
+      DataSchemaLoader.initialize(true, fs);
     } catch (Exception e)
     {
       e.printStackTrace();
     }
     String dataSchemaName = context.getConfiguration().get("dataSchemaName");
-    dataSchema = LoadDataSchemas.getSchema(dataSchemaName);
+    dataSchema = DataSchemaRegistry.get(dataSchemaName);
   }
 
   @Override
@@ -176,7 +177,7 @@ public class JSONRecordReader extends RecordReader<Text,MapWritable>
       Text mapValue = new Text();
       if (jsonObj.get(key) != null)
       {
-        if (dataSchema.hasListRep(key.toString()))
+        if (dataSchema.isArrayElement(key.toString()))
         {
           String[] elements = StringUtils.jsonArrayStringToList(jsonObj.get(key).toString());
           TextArrayWritable aw = new TextArrayWritable(elements);

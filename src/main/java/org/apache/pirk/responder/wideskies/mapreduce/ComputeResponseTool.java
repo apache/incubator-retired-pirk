@@ -46,7 +46,7 @@ import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
@@ -125,7 +125,7 @@ public class ComputeResponseTool extends Configured implements Tool
     fs = FileSystem.get(conf);
 
     // Load the schemas
-    LoadDataSchemas.initialize(true, fs);
+    DataSchemaLoader.initialize(true, fs);
     LoadQuerySchemas.initialize(true, fs);
 
     query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);

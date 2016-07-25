@@ -30,7 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -119,7 +119,7 @@ public class LoadQuerySchemas
 
   public static QuerySchema getSchema(String schemaName)
   {
-    return schemaMap.get(schemaName.toLowerCase());
+    return schemaMap.get(schemaName);
   }
 
   private static QuerySchema loadQuerySchemaFile(String schemaFile, boolean hdfs, FileSystem fs) throws Exception
@@ -154,7 +154,7 @@ public class LoadQuerySchemas
     String dataSchemaName = extractValue(doc, "dataSchemaName");
     logger.info("dataSchemaName = " + dataSchemaName);
 
-    DataSchema dataSchema = LoadDataSchemas.getSchema(dataSchemaName);
+    DataSchema dataSchema = DataSchemaRegistry.get(dataSchemaName);
     if (dataSchema == null)
     {
       throw new Exception("Loaded DataSchema does not exist for dataSchemaName = " + dataSchemaName);
@@ -187,12 +187,12 @@ public class LoadQuerySchemas
         Element eElement = (Element) nNode;
 
         // Pull the name and add to the TreeSet
-        String name = eElement.getFirstChild().getNodeValue().trim().toLowerCase();
+        String name = eElement.getFirstChild().getNodeValue().trim();
         elementNames.add(name);
 
         // Compute the number of bits for this element
         logger.info("name = " + name);
-        logger.info("partitionerName = " + dataSchema.getPartitionerName(name));
+        logger.info("partitionerName = " + dataSchema.getPartitionerTypeName(name));
         if ((dataSchema.getPartitionerForElement(name)) == null)
         {
           logger.info("partitioner is null");
@@ -200,7 +200,7 @@ public class LoadQuerySchemas
         int bits = ((DataPartitioner) dataSchema.getPartitionerForElement(name)).getBits(dataSchema.getElementType(name));
 
         // Multiply by the number of array elements allowed, if applicable
-        if (dataSchema.getListRep().contains(name))
+        if (dataSchema.getArrayElements().contains(name))
         {
           bits *= Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements"));
         }
@@ -237,7 +237,7 @@ public class LoadQuerySchemas
           Element eElement = (Element) nNode;
 
           // Pull the name and add to the TreeSet
-          String name = eElement.getFirstChild().getNodeValue().trim().toLowerCase();
+          String name = eElement.getFirstChild().getNodeValue().trim();
           filterNamesSet.add(name);
 
           logger.info("filterName = " + name);
@@ -263,7 +263,7 @@ public class LoadQuerySchemas
     {
       throw new Exception("itemList.getLength() = " + itemList.getLength() + " -- should be 1");
     }
-    value = itemList.item(0).getTextContent().trim().toLowerCase();
+    value = itemList.item(0).getTextContent().trim();
 
     return value;
   }

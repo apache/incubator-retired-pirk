@@ -687,7 +687,7 @@ public class QueryParserUtils
     logger.debug("query = " + query);
 
     // Special case for IPs
-    if (dataSchema.getPartitionerName(field).equals(IPDataPartitioner.class.getName())) // Doesn't handle arrays of IPs in the value right now...
+    if (dataSchema.getPartitionerTypeName(field).equals(IPDataPartitioner.class.getName())) // Doesn't handle arrays of IPs in the value right now...
     {
       logger.debug("Have IP Field");
 
