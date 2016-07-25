@@ -73,6 +73,7 @@ import org.slf4j.LoggerFactory;
 public class QuerierDriver implements Serializable
 {
   private static final long serialVersionUID = 1L;
+
   private static final Logger logger = LoggerFactory.getLogger(QuerierDriver.class);
 
   public static void main(String... args) throws IOException, InterruptedException, PIRException

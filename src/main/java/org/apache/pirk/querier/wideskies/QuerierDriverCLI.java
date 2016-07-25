@@ -313,6 +313,7 @@ public class QuerierDriverCLI
     // Load the new local query and data schemas
     logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
         + SystemConfiguration.getProperty("query.schemas"));
+
     try
     {
       LoadDataSchemas.initialize();

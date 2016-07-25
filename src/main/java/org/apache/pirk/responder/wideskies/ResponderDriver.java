@@ -27,6 +27,8 @@ import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Driver class for the responder
@@ -42,20 +44,22 @@ import org.apache.pirk.utils.SystemConfiguration;
  */
 public class ResponderDriver
 {
+  private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
+
   public static void main(String[] args) throws Exception
   {
     ResponderCLI responderCLI = new ResponderCLI(args);
 
     if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("mapreduce"))
     {
-      System.out.println("Launching MapReduce ResponderTool:");
+      logger.info("Launching MapReduce ResponderTool:");
 
       ComputeResponseTool pirWLTool = new ComputeResponseTool();
       ToolRunner.run(pirWLTool, new String[] {});
     }
     else if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("spark"))
     {
-      System.out.println("Launching Spark ComputeResponse:");
+      logger.info("Launching Spark ComputeResponse:");
 
       FileSystem fs = FileSystem.get(new Configuration());
       ComputeResponse computeResponse = new ComputeResponse(fs);
@@ -63,7 +67,7 @@ public class ResponderDriver
     }
     else if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("standalone"))
     {
-      System.out.println("Launching Standalone Responder:");
+      logger.info("Launching Standalone Responder:");
 
       String queryInput = SystemConfiguration.getProperty("pir.queryInput");
       Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
