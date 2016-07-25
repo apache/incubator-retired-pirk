@@ -30,7 +30,7 @@ public class StormConstants
 
   // Extra Streams
   public static final String DEFAULT = "default";
-  public static final String ENCCOLMULTBOLT_DATASTREAM_ID = "enccolmultbolt_datastream_id";
+  public static final String ENCROWCALCBOLT_DATASTREAM_ID = "encrowcalcbolt_datastream_id";
   public static final String ENCROWCALCBOLT_FLUSH_SIG = "encrowcalcbolt_flush";
   public static final String ENCCOLMULTBOLT_SESSION_END = "enccolmultbolt_sess_end";
 

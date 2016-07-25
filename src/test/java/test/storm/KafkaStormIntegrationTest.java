@@ -92,7 +92,7 @@ public class KafkaStormIntegrationTest
   {
     //SystemConfiguration.setProperty("storm.splitPartitions", "true");
     SystemConfiguration.setProperty("storm.splitPartitions", "false");
-    SystemConfiguration.setProperty("storm.saltColumns", "true");
+    SystemConfiguration.setProperty("storm.saltColumns", "false");
     SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "true");
     SystemConfiguration.getProperty("pir.maxHitsPerSelector", "10");
@@ -100,6 +100,8 @@ public class KafkaStormIntegrationTest
     SystemConfiguration.setProperty("storm.hashbolt.parallelism", "1");
     SystemConfiguration.setProperty("storm.encrowcalcbolt.parallelism", "2");
     SystemConfiguration.setProperty("storm.enccolmultbolt.parallelism", "2");
+    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "16");
+    SystemConfiguration.setProperty("hdfs.use", "false");
 
     startZookeeper();
     startKafka();
@@ -140,8 +142,6 @@ public class KafkaStormIntegrationTest
 
     // Need to do this another way that is not dependent on timing...
     // probably use "withSimulatedTimeLocalCluster", but I can't get it to work how I want it to.
-    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "16");
-    SystemConfiguration.setProperty("hdfs.use", "false");
     Config conf = PirkTopology.createStormConf();
     // conf.setDebug(true);
     mkClusterParam.setDaemonConf(conf);

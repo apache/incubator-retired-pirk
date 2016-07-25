@@ -45,7 +45,7 @@ import java.util.Map;
  * Currently receives a JSON record as input
  * <p>
  * TODO: --Support other formats of input
- * 
+ *
  */
 public class HashAndPartitionBolt extends BaseBasicBolt
 {
@@ -95,7 +95,7 @@ public class HashAndPartitionBolt extends BaseBasicBolt
       outputCollector.emit(new Values(hashPartitionPairs._1(), hashPartitionPairs._2()));
     } catch (Exception e)
     {
-      logger.warn("Failed to partition data for record -- " + json + "\n", e);
+      logger.warn("Failed to partition data for record -- \n" + json + "\n", e);
     }
   }
 

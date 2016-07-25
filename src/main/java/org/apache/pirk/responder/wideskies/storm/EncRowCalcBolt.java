@@ -39,14 +39,13 @@ import java.util.Random;
 
 /**
  * Bolt class to perform the encrypted row calculation
- * <p>
+ * <p/>
  * Receives a {@code <hash(selector), dataPartitions>} tuple as input.
- * <p>
+ * <p/>
  * Encrypts the row data and emits a (column index, encrypted row-value) tuple for each encrypted block.
- * <p>
+ * <p/>
  * Every FLUSH_FREQUENCY seconds, it sends a signal to EncColMultBolt to flush its output and resets all counters.At that point, all outgoing (column index,
  * encrypted row-value) tuples are buffered until a SESSION_END signal is received back from the EncColMultBolt.
- * 
  */
 public class EncRowCalcBolt extends BaseRichBolt
 {
@@ -64,6 +63,7 @@ public class EncRowCalcBolt extends BaseRichBolt
   private Long totalEndSigs;
   private int rowDivisions;
   private Boolean saltColumns;
+  private Boolean splitPartitions;
 
   private Random rand;
 
@@ -80,8 +80,7 @@ public class EncRowCalcBolt extends BaseRichBolt
   private boolean buffering = false;
   private ArrayList<Tuple2<Long,BigInteger>> bufferedValues = new ArrayList<Tuple2<Long,BigInteger>>();
 
-  @Override
-  public void prepare(Map map, TopologyContext topologyContext, OutputCollector coll)
+  @Override public void prepare(Map map, TopologyContext topologyContext, OutputCollector coll)
   {
     outputCollector = coll;
     setQuery(map);
@@ -90,6 +89,7 @@ public class EncRowCalcBolt extends BaseRichBolt
     maxHitsPerSelector = (Long) map.get(StormConstants.MAX_HITS_PER_SEL_KEY);
     limitHitsPerSelector = (Boolean) map.get(StormConstants.LIMIT_HITS_PER_SEL_KEY);
     totalEndSigs = (Long) map.get(StormConstants.ENCCOLMULTBOLT_PARALLELISM_KEY);
+    splitPartitions = (Boolean) map.get(StormConstants.SPLIT_PARTITIONS_KEY);
     saltColumns = (Boolean) map.get(StormConstants.SALT_COLUMNS_KEY);
     rowDivisions = ((Long) map.get(StormConstants.ROW_DIVISIONS_KEY)).intValue();
 
@@ -98,8 +98,7 @@ public class EncRowCalcBolt extends BaseRichBolt
     logger.info("Initialized EncRowCalcBolt.");
   }
 
-  @Override
-  public void execute(Tuple tuple)
+  @Override public void execute(Tuple tuple)
   {
     if (tuple.getSourceStreamId().equals(StormConstants.DEFAULT))
     {
@@ -142,11 +141,10 @@ public class EncRowCalcBolt extends BaseRichBolt
     outputCollector.ack(tuple);
   }
 
-  @Override
-  public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+  @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
-    outputFieldsDeclarer.declareStream(StormConstants.ENCCOLMULTBOLT_DATASTREAM_ID, new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD,
-        StormConstants.ENCRYPTED_VALUE_FIELD, StormConstants.SALT));
+    outputFieldsDeclarer.declareStream(StormConstants.ENCROWCALCBOLT_DATASTREAM_ID,
+        new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD, StormConstants.ENCRYPTED_VALUE_FIELD, StormConstants.SALT));
     outputFieldsDeclarer.declareStream(StormConstants.ENCROWCALCBOLT_FLUSH_SIG, new Fields(StormConstants.FLUSH));
   }
 
@@ -168,8 +166,16 @@ public class EncRowCalcBolt extends BaseRichBolt
       hitsByRow.put(rowIndex, 0);
     }
 
-    dataArray = (ArrayList<BigInteger>) tuple.getValueByField(StormConstants.PARTIONED_DATA_FIELD);
-    logger.debug("Retrieving " + dataArray.size() + " elements in EncRowCalcBolt.");
+    if (splitPartitions)
+    {
+      dataArray.clear();
+      dataArray.add((BigInteger) tuple.getValueByField(StormConstants.PARTIONED_DATA_FIELD));
+    }
+    else
+    {
+      dataArray = (ArrayList<BigInteger>) tuple.getValueByField(StormConstants.PARTIONED_DATA_FIELD);
+    }
+    logger.info("Retrieving " + dataArray.size() + " elements in EncRowCalcBolt.");
 
     try
     {
@@ -203,20 +209,18 @@ public class EncRowCalcBolt extends BaseRichBolt
       for (Tuple2<Long,BigInteger> sTuple : matrixElements)
       {
         salt = rand.nextInt(rowDivisions);
-        outputCollector.emit(StormConstants.ENCROWCALCBOLT_ID, new Values(sTuple._1(), sTuple._2(), salt));
+        outputCollector.emit(StormConstants.ENCROWCALCBOLT_DATASTREAM_ID, new Values(sTuple._1(), sTuple._2(), salt));
       }
     }
     else
-      emitTuplesOriginal(matrixElements);
-  }
-
-  private void emitTuplesOriginal(ArrayList<Tuple2<Long,BigInteger>> matrixElements)
-  {
-    for (Tuple2<Long,BigInteger> sTuple : matrixElements)
     {
-      outputCollector.emit(StormConstants.ENCROWCALCBOLT_ID, new Values(sTuple._1(), sTuple._2(), null));
+      for (Tuple2<Long,BigInteger> sTuple : matrixElements)
+      {
+        outputCollector.emit(StormConstants.ENCROWCALCBOLT_DATASTREAM_ID, new Values(sTuple._1(), sTuple._2(), null));
+      }
     }
   }
+
 
   private synchronized static void setQuery(Map map)
   {

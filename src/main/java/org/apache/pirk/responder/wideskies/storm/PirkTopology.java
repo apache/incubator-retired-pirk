@@ -124,7 +124,7 @@ public class PirkTopology
       builder.setBolt(StormConstants.HASH_SELECTORS_BOLT_ID, hashSelectorsBolt, hashboltParallelism).shuffleGrouping(StormConstants.SPOUT_ID);
       
       builder.setBolt(StormConstants.PARTITION_DATA_BOLT_ID, partitionDataBolt, partitionDataBoltParallelism)
-      .shuffleGrouping(StormConstants.HASH_SELECTORS_BOLT_ID);
+      .fieldsGrouping(StormConstants.HASH_SELECTORS_BOLT_ID, new Fields(StormConstants.HASH_FIELD));
     }
     else //TODO: handle b1 appropriately, if it is to have continued use
     {
@@ -143,7 +143,7 @@ public class PirkTopology
     // b2.setCPULoad(150.0);
 
     BoltDeclarer b3 = builder.setBolt(StormConstants.ENCCOLMULTBOLT_ID, ecmbolt, enccolmultboltParallelism)
-        .fieldsGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCCOLMULTBOLT_DATASTREAM_ID, ecmFields)
+        .fieldsGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCROWCALCBOLT_DATASTREAM_ID, ecmFields)
         .allGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCROWCALCBOLT_FLUSH_SIG);
     // b3.setMemoryLoad(5000);
     // b3.setCPULoad(500.0);
@@ -188,6 +188,7 @@ public class PirkTopology
     conf.put(StormConstants.LIMIT_HITS_PER_SEL_KEY, limitHitsPerSelector);
     conf.put(StormConstants.MAX_HITS_PER_SEL_KEY, maxHitsPerSelector);
     // conf.put(StormConstants.TIME_TO_FLUSH_KEY, timeToFlush);
+    conf.put(StormConstants.SPLIT_PARTITIONS_KEY, splitPartitions);
     conf.put(StormConstants.SALT_COLUMNS_KEY, saltColumns);
     conf.put(StormConstants.ROW_DIVISIONS_KEY, rowDivisions);
     conf.put(StormConstants.ENCROWCALCBOLT_PARALLELISM_KEY, encrowcalcboltParallelism);

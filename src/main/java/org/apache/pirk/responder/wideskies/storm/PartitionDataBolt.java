@@ -66,7 +66,10 @@ public class PartitionDataBolt extends BaseBasicBolt
 
       logger.debug("HashSelectorsAndPartitionDataBolt processing " + json.toString() + " outputting results - " + partitions.size());
 
-      outputCollector.emit(new Values(hash, partitions));
+      for(BigInteger partition: partitions)
+      {
+        outputCollector.emit(new Values(hash, partition));
+      }
     } catch (Exception e)
     {
       logger.warn("Failed to partition data for record -- " + json + "\n", e);
