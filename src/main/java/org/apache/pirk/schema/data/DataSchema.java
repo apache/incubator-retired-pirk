@@ -93,8 +93,8 @@ public class DataSchema implements Serializable
   /**
    * Returns the name of the Java type associated with the given element name.
    * <p>
-   * The Java type is either a primitive type name, as defined in the <code>PrimitiveTypePartitioner</code>, or a full canonical class name representing the
-   * element type.
+   * The Java type is either a primitive type name, as defined in the {@link PrimitiveTypePartitioner}, or a full canonical class name representing the element
+   * type.
    * 
    * @see PrimitiveTypePartitioner
    * @param elementName
@@ -174,8 +174,8 @@ public class DataSchema implements Serializable
   /**
    * Returns the partitioner type name for a given element name.
    * <p>
-   * The partitioner type name is either that of the primitive partitioner, where the element name is a primitive type, or it is a fully qualified Java class
-   * name for non-primitives.
+   * The partitioner type name is either that of the primitive partitioner, where the element name is a primitive type. For non-primitives it is the fully
+   * qualified name of a Java class that implements the {@link DataPartitioner} interface.
    * 
    * @param elementName
    *          The element name whose partitioner type is requested.
@@ -221,7 +221,7 @@ public class DataSchema implements Serializable
    * 
    * @param element
    *          The name of the element to test.
-   * @return True if the element is an array type, and false otherwise.
+   * @return <code>true</code> if the element is an array type, and <code>false</code> otherwise.
    */
   public boolean isArrayElement(String element)
   {
