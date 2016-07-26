@@ -105,26 +105,26 @@ public class QuerierDriver implements Serializable
     QuerierDriverCLI qdriverCLI = new QuerierDriverCLI(args);
 
     // Set the variables
-    action = qdriverCLI.getOptionValue(QuerierDriverCLI.ACTION);
-    inputFile = qdriverCLI.getOptionValue(QuerierDriverCLI.INPUTFILE);
-    outputFile = qdriverCLI.getOptionValue(QuerierDriverCLI.OUTPUTFILE);
-    numThreads = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.NUMTHREADS));
+    action = SystemConfiguration.getProperty(QuerierProps.ACTION);
+    inputFile = SystemConfiguration.getProperty(QuerierProps.INPUTFILE);
+    outputFile = SystemConfiguration.getProperty(QuerierProps.OUTPUTFILE);
+    numThreads = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.NUMTHREADS));
     if (action.equals("encrypt"))
     {
-      queryType = qdriverCLI.getOptionValue(QuerierDriverCLI.TYPE);
-      queryName = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYNAME);
-      hashBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE));
-      hashKey = qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE);
-      dataPartitionBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.DATAPARTITIONSIZE));
-      paillierBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.PAILLIERBITSIZE));
-      certainty = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.CERTAINTY));
-      embedSelector = SystemConfiguration.getProperty(QuerierDriverCLI.EMBEDSELECTOR, "true").equals("true");
-      useMemLookupTable = SystemConfiguration.getProperty(QuerierDriverCLI.USEMEMLOOKUPTABLE, "false").equals("true");
-      useHDFSLookupTable = SystemConfiguration.getProperty(QuerierDriverCLI.USEHDFSLOOKUPTABLE, "false").equals("true");
+      queryType = SystemConfiguration.getProperty(QuerierProps.TYPE);
+      queryName = SystemConfiguration.getProperty(QuerierProps.QUERYNAME);
+      hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
+      hashKey = SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE);
+      dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
+      paillierBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.PAILLIERBITSIZE));
+      certainty = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.CERTAINTY));
+      embedSelector = SystemConfiguration.getProperty(QuerierProps.EMBEDSELECTOR, "true").equals("true");
+      useMemLookupTable = SystemConfiguration.getProperty(QuerierProps.USEMEMLOOKUPTABLE, "false").equals("true");
+      useHDFSLookupTable = SystemConfiguration.getProperty(QuerierProps.USEHDFSLOOKUPTABLE, "false").equals("true");
 
-      if (qdriverCLI.hasOption(QuerierDriverCLI.BITSET))
+      if (SystemConfiguration.hasProperty(QuerierProps.BITSET))
       {
-        bitSet = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.BITSET));
+        bitSet = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.BITSET));
         logger.info("bitSet = " + bitSet);
       }
 
@@ -144,7 +144,7 @@ public class QuerierDriver implements Serializable
     }
     if (action.equals("decrypt"))
     {
-      querierFile = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERIERFILE);
+      querierFile = SystemConfiguration.getProperty(QuerierProps.QUERIERFILE);
     }
 
     // Perform the action
