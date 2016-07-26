@@ -37,8 +37,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
@@ -104,17 +105,17 @@ public class LoadQuerySchemaTest
       e.printStackTrace();
       fail(e.toString());
     }
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
 
     // Check the entries
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(querySchemaName);
+    QuerySchema qSchema = QuerySchemaRegistry.get(querySchemaName);
 
     assertEquals(querySchemaName, qSchema.getSchemaName());
     assertEquals(dataSchemaName, qSchema.getDataSchemaName());
     assertEquals(element4, qSchema.getSelectorName());
 
-    assertEquals(StopListFilter.class.getName(), qSchema.getFilter());
-    if (!(qSchema.getFilterInstance() instanceof StopListFilter))
+    assertEquals(StopListFilter.class.getName(), qSchema.getFilterTypeName());
+    if (!(qSchema.getFilter() instanceof StopListFilter))
     {
       fail("Filter class instance must be StopListFilter");
     }
@@ -124,11 +125,12 @@ public class LoadQuerySchemaTest
     {
       if (!(item.equals(element1) || item.equals(element2) || item.equals(element3)))
       {
-        fail("elementNames: item = " + item + " must equal one of: " + element1 + ", " + element2 + ", or " + element3);
+        fail("elementNames: item = " + item + " must equal one of: " + element1 + ", " + element2 + ", or "
+            + element3);
       }
     }
-    assertEquals(1, qSchema.getFilterElementNames().size());
-    for (String item : qSchema.getFilterElementNames())
+    assertEquals(1, qSchema.getFilteredElementNames().size());
+    for (String item : qSchema.getFilteredElementNames())
     {
       if (!item.equals(element2))
       {
@@ -155,7 +157,7 @@ public class LoadQuerySchemaTest
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testGeneralSchemaLoad: ");
@@ -191,8 +193,8 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for bogus filter class");
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for bogus filter class");
     } catch (Exception ignore)
     {}
 
@@ -208,7 +210,7 @@ public class LoadQuerySchemaTest
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testFunkyFilterScenarios");
@@ -234,8 +236,8 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for non-existent DataSchema");
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for non-existent DataSchema");
     } catch (Exception ignore)
     {}
 
@@ -243,7 +245,7 @@ public class LoadQuerySchemaTest
     SystemConfiguration.setProperty("query.schemas", querySchemasProp);
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testDataSchemaDoesNotExist ");
@@ -282,8 +284,8 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for non-existent selectorName");
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for non-existent selectorName");
     } catch (Exception ignore)
     {}
 
@@ -299,7 +301,7 @@ public class LoadQuerySchemaTest
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testSelectorDoesNotExistInDataSchema ");

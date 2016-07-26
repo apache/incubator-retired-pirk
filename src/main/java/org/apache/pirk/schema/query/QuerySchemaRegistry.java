@@ -16,59 +16,53 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.schema.data;
+package org.apache.pirk.schema.query;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * The data schema registry is a global location for data schema descriptors.
- *
- * @see DataSchema
- * @see DataSchemaLoader
- */
-public class DataSchemaRegistry
+public class QuerySchemaRegistry
 {
-  // The registry. Maps schema name to data schema.
-  private static final Map<String,DataSchema> registry = new HashMap<>();
+  // The registry. Maps schema name to query schema.
+  private static final Map<String,QuerySchema> registry = new HashMap<>();
 
   // Not designed to be instantiated.
-  DataSchemaRegistry()
+  QuerySchemaRegistry()
   {
 
   }
 
   /**
-   * Adds the given data schema to the registry.
+   * Adds the given query schema to the registry.
    * 
    * If there was an existing schema with the same name, it is replaced.
    * 
    * @param schema
-   *          The data schema to add.
+   *          The query schema to add.
    * @return the previous schema registered at the same name, or <code>null</code> if there were none.
    */
-  public static DataSchema put(DataSchema schema)
+  public static QuerySchema put(QuerySchema schema)
   {
     return registry.put(schema.getSchemaName(), schema);
   }
 
   /**
-   * Returns the data schema with the given name.
+   * Returns the query schema with the given name.
    * 
    * @param schemaName
-   *          The data schema name to be returned.
-   * @return The data schema, or <code>null</code> if no such schema.
+   *          The query schema name to be returned.
+   * @return The query schema, or <code>null</code> if no such schema.
    */
-  public static DataSchema get(String schemaName)
+  public static QuerySchema get(String schemaName)
   {
     return registry.get(schemaName);
   }
 
   /**
-   * Returns the set of data schema names held in the registry.
+   * Returns the set of query schema names held in the registry.
    * 
-   * @return The possibly empty set of data schema names.
+   * @return The possibly empty set of query schema names.
    */
   public static Set<String> getNames()
   {

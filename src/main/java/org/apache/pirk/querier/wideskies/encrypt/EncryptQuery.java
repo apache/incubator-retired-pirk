@@ -32,8 +32,8 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
@@ -173,7 +173,7 @@ public class EncryptQuery
 
   private void populateEmbeddedSelectorMap()
   {
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     String type = dSchema.getElementType(qSchema.getSelectorName());
     int sNum = 0;

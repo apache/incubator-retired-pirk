@@ -19,70 +19,97 @@
 package org.apache.pirk.schema.query;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.Set;
 
-import org.apache.pirk.schema.query.filter.FilterFactory;
+import org.apache.pirk.schema.query.filter.DataFilter;
 
 /**
  * Class to hold a query schema
- * <p>
- * TODO:
- * <p>
- * -Could easily add the ability for multiple filters (filter list capability) instead of just one
+ *
  */
 public class QuerySchema implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  static final String NO_FILTER = "noFilter";
+  // This schema's name.
+  private final String schemaName;
 
-  private String schemaName = null;
+  // Name of the data schema associated with this query schema.
+  private final String dataSchemaName;
 
-  private String dataSchemaName = null; // name of the DataSchema for this query schema
+  // Name of element in the dataSchema to be used as the selector.
+  private final String selectorName;
 
-  private TreeSet<String> elementNames = null; // names of elements in the data schema to
-  // include in the response, order matters for packing/unpacking
+  // Element names from the data schema to include in the response.
+  // Order matters for packing/unpacking.
+  private final List<String> elementNames = new ArrayList<String>();
 
-  private String filter = null; // name of filter class to use in data filtering
+  // Name of class to use in data filtering.
+  private final String filterTypeName;
 
-  private Object filterObj = null; // instance of the filter
+  // Instance of the filterTypeName.
+  private final DataFilter filter;
 
-  private HashSet<String> filterElementNames = null; // set of element names to apply filtering in pre-processing
+  // Set of data schema element names on which to apply filtering.
+  private final Set<String> filteredElementNames = new HashSet<>();
 
-  private String selectorName = null; // name of element in the dataSchema to be used as the selector
+  // Total number of bits to be returned for each data element hit.
+  private final int dataElementSize;
 
-  private int dataElementSize = 0; // total number of bits to be returned for each data element hit
-
-  public QuerySchema(String schemaNameInput, String dataSchemaNameInput, TreeSet<String> elementNamesInput, String selectorNameInput, int dataElementSizeInput,
-      HashSet<String> filterElementNamesInput, String filterIn) throws Exception
+  QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {
-    schemaName = schemaNameInput;
-    dataSchemaName = dataSchemaNameInput;
-    elementNames = elementNamesInput;
-    selectorName = selectorNameInput;
-    dataElementSize = dataElementSizeInput;
-    filterElementNames = filterElementNamesInput;
-    filter = filterIn;
-
-    instantiateFilter();
+    this.schemaName = schemaName;
+    this.dataSchemaName = dataSchemaName;
+    this.selectorName = selectorName;
+    this.filterTypeName = filterTypeName;
+    this.filter = filter;
+    this.dataElementSize = dataElementSize;
   }
 
+  /**
+   * Returns the name of this schema.
+   * 
+   * @return The schema name.
+   */
   public String getSchemaName()
   {
     return schemaName;
   }
 
+  /**
+   * Returns the name of the data schema.
+   * <p>
+   * This query is designed to be run over data described by this data schema.
+   *
+   * @return The data schema name.
+   */
   public String getDataSchemaName()
   {
     return dataSchemaName;
   }
 
-  public TreeSet<String> getElementNames()
+  /**
+   * Returns the element names to include in the response.
+   * <p>
+   * The element names are defined by the data schema associated with this query.
+   * 
+   * @return The ordered list of query element names.
+   */
+  public List<String> getElementNames()
   {
     return elementNames;
   }
 
+  /**
+   * Returns the element name used as the selector.
+   * <p>
+   * The element names are defined by the data schema associated with this query.
+   * 
+   * @return The element names being selected.
+   */
   public String getSelectorName()
   {
     return selectorName;
@@ -94,38 +121,36 @@ public class QuerySchema implements Serializable
   }
 
   /**
-   * Method to get the name of the filter class for this query
+   * Returns the name of the filter class for this query.
+   * 
+   * The filter class name is the fully qualified name of a Java class that implements the {@link DataFilter} interface.
+   * 
+   * @return The type name of the query filter, or <code>null</code> if there is no filter defined.
    */
-  public String getFilter()
+  public String getFilterTypeName()
   {
-    return filter;
-  }
-
-  public HashSet<String> getFilterElementNames()
-  {
-    return filterElementNames;
+    return filterTypeName;
   }
 
   /**
-   * Method to return the instance of the specified filter for this query
-   * <p>
-   * Will return null if no filter has been specified for the query
+   * Returns the set of element names on which to apply the filter.
+   * 
+   * @return The possibly empty set of data schema element names.
    */
-  public Object getFilterInstance() throws Exception
+  public Set<String> getFilteredElementNames()
   {
-    instantiateFilter();
-
-    return filterObj;
+    return filteredElementNames;
   }
 
-  private void instantiateFilter() throws Exception
+  /**
+   * Returns the data element filter for this query.
+   * <p>
+   * The data filter is applied to the {@link QuerySchema#getFilteredElementNames()} data elements.
+   * 
+   * @return The data filter, or <code>null</code> if no filter has been specified for this query.
+   */
+  public DataFilter getFilter()
   {
-    if (!filter.equals(NO_FILTER))
-    {
-      if (filterObj == null)
-      {
-        filterObj = FilterFactory.getFilter(filter, this);
-      }
-    }
+    return filter;
   }
 }

@@ -20,8 +20,8 @@ package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
 
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +83,7 @@ public class QueryInfo implements Serializable
     useHDFSExpLookupTable = useHDFSExpLookupTableInput;
     embedSelector = embedSelectorInput;
 
-    numBitsPerDataElement = LoadQuerySchemas.getSchema(queryType).getDataElementSize();
+    numBitsPerDataElement = QuerySchemaRegistry.get(queryType).getDataElementSize();
     dataPartitionBitSize = dataPartitionBitSizeInput;
     numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
 

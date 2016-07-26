@@ -26,7 +26,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,35 +42,35 @@ public class ResponderCLI
   private CommandLine commandLine = null;
 
   // Required args
-  public static String PLATFORM = "platform";
-  public static String QUERYINPUT = "queryInput";
-  public static String DATAINPUTFORMAT = "dataInputFormat";
-  public static String INPUTDATA = "inputData";
-  public static String BASEQUERY = "baseQuery";
-  public static String ESRESOURCE = "esResource";
-  public static String ESQUERY = "esQuery";
-  public static String OUTPUTFILE = "outputFile";
+  public static final String PLATFORM = "platform";
+  public static final String QUERYINPUT = "queryInput";
+  public static final String DATAINPUTFORMAT = "dataInputFormat";
+  public static final String INPUTDATA = "inputData";
+  public static final String BASEQUERY = "baseQuery";
+  public static final String ESRESOURCE = "esResource";
+  public static final String ESQUERY = "esQuery";
+  public static final String OUTPUTFILE = "outputFile";
 
   // Optional args
-  public static String BASEINPUTFORMAT = "baseInputFormat";
-  public static String STOPLISTFILE = "stopListFile";
-  private static String NUMREDUCETASKS = "numReduceTasks";
-  public static String USELOCALCACHE = "useLocalCache";
-  public static String LIMITHITSPERSELECTOR = "limitHitsPerSelector";
-  public static String MAXHITSPERSELECTOR = "maxHitsPerSelector";
-  private static String MAPMEMORY = "mapreduceMapMemoryMb";
-  private static String REDUCEMEMORY = "mapreduceReduceMemoryMb";
-  private static String MAPJAVAOPTS = "mapreduceMapJavaOpts";
-  private static String REDUCEJAVAOPTS = "mapreduceReduceJavaOpts";
-  public static String QUERYSCHEMAS = "querySchemas";
-  public static String DATASCHEMAS = "dataSchemas";
-  public static String NUMEXPLOOKUPPARTS = "numExpLookupPartitions";
-  private static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
-  private static String NUMDATAPARTITIONS = "numDataPartitions";
-  public static String NUMCOLMULTPARTITIONS = "numColMultPartitions";
-  public static String USEMODEXPJOIN = "useModExpJoin";
-  public static String COLMULTREDUCEBYKEY = "colMultReduceByKey";
-  public static String ALLOWEMBEDDEDQUERYSCHEMAS = "allowAdHocQuerySchemas";
+  public static final String BASEINPUTFORMAT = "baseInputFormat";
+  public static final String STOPLISTFILE = "stopListFile";
+  private static final String NUMREDUCETASKS = "numReduceTasks";
+  public static final String USELOCALCACHE = "useLocalCache";
+  public static final String LIMITHITSPERSELECTOR = "limitHitsPerSelector";
+  public static final String MAXHITSPERSELECTOR = "maxHitsPerSelector";
+  private static final String MAPMEMORY = "mapreduceMapMemoryMb";
+  private static final String REDUCEMEMORY = "mapreduceReduceMemoryMb";
+  private static final String MAPJAVAOPTS = "mapreduceMapJavaOpts";
+  private static final String REDUCEJAVAOPTS = "mapreduceReduceJavaOpts";
+  public static final String QUERYSCHEMAS = "querySchemas";
+  public static final String DATASCHEMAS = "dataSchemas";
+  public static final String NUMEXPLOOKUPPARTS = "numExpLookupPartitions";
+  private static final String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
+  private static final String NUMDATAPARTITIONS = "numDataPartitions";
+  public static final String NUMCOLMULTPARTITIONS = "numColMultPartitions";
+  public static final String USEMODEXPJOIN = "useModExpJoin";
+  public static final String COLMULTREDUCEBYKEY = "colMultReduceByKey";
+  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "allowAdHocQuerySchemas";
 
   /**
    * Create and parse allowable options
@@ -357,7 +357,7 @@ public class ResponderCLI
     try
     {
       DataSchemaLoader.initialize();
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
 
     } catch (Exception e)
     {

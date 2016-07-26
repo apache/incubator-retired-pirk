@@ -30,8 +30,8 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -79,7 +79,7 @@ public class Responder
     }
     if (qSchema == null)
     {
-      qSchema = LoadQuerySchemas.getSchema(queryType);
+      qSchema = QuerySchemaRegistry.get(queryType);
     }
 
     response = new Response(queryInfo);
