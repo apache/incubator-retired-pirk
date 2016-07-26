@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Properties constants for the Querier
+ * Properties constants and validation for the Querier
  */
 public class QuerierProps
 {
@@ -18,10 +18,9 @@ public class QuerierProps
   public static final String ACTION = "querier.action";
   public static final String INPUTFILE = "querier.inputFile";
   public static final String OUTPUTFILE = "querier.outputFile";
-  public static final String TYPE = "querier.queryType";
+  public static final String QUERYTYPE = "querier.queryType";
   public static final String NUMTHREADS = "querier.numThreads";
-  public static final String EMBEDQUERYSCHEMA = "querier.embedQuerySchema";
-
+  
   // Encryption properties
   public static final String HASHBITSIZE = "querier.hashBitSize";
   public static final String HASHKEY = "querier.hashKey";
@@ -35,13 +34,14 @@ public class QuerierProps
   public static final String EMBEDSELECTOR = "querier.embedSelector";
   public static final String USEMEMLOOKUPTABLE = "querier.memLookupTable";
   public static final String USEHDFSLOOKUPTABLE = "querier.useHDFSLookupTable";
-  public static final String SR_ALGORITHM = "querier.secureRandomAlg";
-  public static final String SR_PROVIDER = "querier.secureRandomProvider";
+  public static final String SR_ALGORITHM = "pallier.secureRandom.algorithm";
+  public static final String SR_PROVIDER = "pallier.secureRandom.provider";
+  public static final String EMBEDQUERYSCHEMA = "pir.embedQuerySchema";
 
   // Decryption properties
   public static final String QUERIERFILE = "querier.querierFile";
   
-  public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, TYPE, NUMTHREADS, 
+  public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, 
       EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY, DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, 
       CERTAINTY, QUERYNAME, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, 
       USEHDFSLOOKUPTABLE, SR_ALGORITHM, SR_PROVIDER);
@@ -54,91 +54,94 @@ public class QuerierProps
   {
     boolean valid = true;
     
-    // Parse general required options
+    // Parse general required properties
+    
     if (!SystemConfiguration.hasProperty(ACTION))
     {
       logger.info("Must have the option " + ACTION);
-      return false;
+      valid = false;
     }
     String action = SystemConfiguration.getProperty(ACTION).toLowerCase();
     if (!action.equals("encrypt") && !action.equals("decrypt"))
     {
       logger.info("Unsupported action: " + action);
+      valid = false;
     }
    
     if (!SystemConfiguration.hasProperty(INPUTFILE))
     {
       logger.info("Must have the option " + INPUTFILE);
-      return false;
+      valid = false;
     }
    
     if (!SystemConfiguration.hasProperty(OUTPUTFILE))
     {
       logger.info("Must have the option " + OUTPUTFILE);
-      return false;
+      valid = false;
     }
     
     if (!SystemConfiguration.hasProperty(NUMTHREADS))
     {
       logger.info("Must have the option " + NUMTHREADS);
-      return false;
+      valid = false;
     }
     
-    // Parse general optional args
+    // Parse general optional properties
     if (!SystemConfiguration.hasProperty(EMBEDQUERYSCHEMA))
     {
       SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
     }
 
-    // Parse encryption args
+    // Parse encryption properties
+    
     if (action.equals("encrypt"))
     {
-      if (!SystemConfiguration.hasProperty(TYPE))
+      if (!SystemConfiguration.hasProperty(QUERYTYPE))
       {
-        logger.info("Must have the option " + TYPE);
-        return false;
+        logger.info("Must have the option " + QUERYTYPE);
+        valid = false;
       }
      
       if (!SystemConfiguration.hasProperty(HASHBITSIZE))
       {
         logger.info("Must have the option " + HASHBITSIZE);
-        return false;
+        valid = false;
       }
       
       if (!SystemConfiguration.hasProperty(HASHKEY))
       {
         logger.info("Must have the option " + HASHKEY);
-        return false;
+        valid = false;
       }
       
       if (!SystemConfiguration.hasProperty(DATAPARTITIONSIZE))
       {
         logger.info("Must have the option " + DATAPARTITIONSIZE);
-        return false;
+        valid = false;
       }
       
       if (!SystemConfiguration.hasProperty(PAILLIERBITSIZE))
       {
         logger.info("Must have the option " + PAILLIERBITSIZE);
-        return false;
+        valid = false;
       }
       
       if (!SystemConfiguration.hasProperty(CERTAINTY))
       {
         logger.info("Must have the option " + CERTAINTY);
-        return false;
+        valid = false;
       }
      
       if (!SystemConfiguration.hasProperty(QUERYNAME))
       {
         logger.info("Must have the option " + QUERYNAME);
-        return false;
+        valid = false;
       }
       
       if (!SystemConfiguration.hasProperty(BITSET))
       {
         logger.info("Must have the option " + BITSET);
-        return false;
+        valid = false;
       }
      
       if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
@@ -173,7 +176,7 @@ public class QuerierProps
       if (!SystemConfiguration.hasProperty(QUERIERFILE))
       {
         logger.info("Must have the option " + QUERIERFILE);
-        return false;
+        valid = false;
       }
     }
     

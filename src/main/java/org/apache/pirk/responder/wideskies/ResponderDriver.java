@@ -50,14 +50,14 @@ public class ResponderDriver
   {
     ResponderCLI responderCLI = new ResponderCLI(args);
 
-    if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("mapreduce"))
+    if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("mapreduce"))
     {
       logger.info("Launching MapReduce ResponderTool:");
 
       ComputeResponseTool pirWLTool = new ComputeResponseTool();
       ToolRunner.run(pirWLTool, new String[] {});
     }
-    else if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("spark"))
+    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("spark"))
     {
       logger.info("Launching Spark ComputeResponse:");
 
@@ -65,7 +65,7 @@ public class ResponderDriver
       ComputeResponse computeResponse = new ComputeResponse(fs);
       computeResponse.performQuery();
     }
-    else if (responderCLI.getOptionValue(ResponderCLI.PLATFORM).equals("standalone"))
+    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("standalone"))
     {
       logger.info("Launching Standalone Responder:");
 

@@ -126,7 +126,7 @@ public class QuerierDriverCLI
           SystemConfiguration.setProperty(prop, getOptionValue(prop));
         }
       }
-  }
+    }
 
     //Validate properties
     valid = QuerierProps.validateQuerierProperties();
@@ -218,10 +218,10 @@ public class QuerierDriverCLI
     options.addOption(optionQuerySchemas);
 
     // TYPE
-    Option optionTYPE = new Option("qt", QuerierProps.TYPE, true, "required for encryption -- Type of the query as defined "
+    Option optionTYPE = new Option("qt", QuerierProps.QUERYTYPE, true, "required for encryption -- Type of the query as defined "
         + "in the 'schemaName' tag of the corresponding query schema file");
     optionTYPE.setRequired(false);
-    optionTYPE.setArgName(QuerierProps.TYPE);
+    optionTYPE.setArgName(QuerierProps.QUERYTYPE);
     optionTYPE.setType(String.class);
     options.addOption(optionTYPE);
 

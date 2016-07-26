@@ -111,7 +111,7 @@ public class QuerierDriver implements Serializable
     numThreads = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.NUMTHREADS));
     if (action.equals("encrypt"))
     {
-      queryType = SystemConfiguration.getProperty(QuerierProps.TYPE);
+      queryType = SystemConfiguration.getProperty(QuerierProps.QUERYTYPE);
       queryName = SystemConfiguration.getProperty(QuerierProps.QUERYNAME);
       hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
       hashKey = SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE);
