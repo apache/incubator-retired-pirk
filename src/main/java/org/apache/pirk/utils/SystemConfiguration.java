@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +61,10 @@ public class SystemConfiguration
     // Load any data schema files indicated in the properties
     try
     {
-      LoadDataSchemas.class.newInstance();
+      DataSchemaLoader.class.newInstance();
     } catch (Exception e)
     {
-      logger.error("Issue when invoking LoadDataSchemas");
+      logger.error("Issue when invoking DataSchemaLoader");
       e.printStackTrace();
     }
 
@@ -74,7 +74,7 @@ public class SystemConfiguration
       LoadQuerySchemas.class.newInstance();
     } catch (Exception e)
     {
-      logger.error("Issue when invoking LoadDataSchemas");
+      logger.error("Issue when invoking DataSchemaLoader");
       e.printStackTrace();
     }
   }

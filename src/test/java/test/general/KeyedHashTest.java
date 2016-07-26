@@ -18,11 +18,12 @@
  */
 package test.general;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.pirk.utils.KeyedHash;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Basic functional tests for KeyedHash

@@ -34,7 +34,8 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
@@ -159,7 +160,7 @@ public class ComputeResponse
   private void setup() throws Exception
   {
     // Load the schemas
-    LoadDataSchemas.initialize(true, fs);
+    DataSchemaLoader.initialize(true, fs);
     LoadQuerySchemas.initialize(true, fs);
 
     // Create the accumulators and broadcast variables
@@ -181,7 +182,7 @@ public class ComputeResponse
     {
       qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     }
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     bVars.setQuerySchema(qSchema);
     bVars.setDataSchema(dSchema);
 

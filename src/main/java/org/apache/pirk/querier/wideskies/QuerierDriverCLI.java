@@ -24,7 +24,7 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -315,7 +315,7 @@ public class QuerierDriverCLI
         + SystemConfiguration.getProperty("query.schemas"));
     try
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
       LoadQuerySchemas.initialize();
 
     } catch (Exception e)

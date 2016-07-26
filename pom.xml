@@ -301,6 +301,7 @@
                         </exclude> <!-- auto generated file by apache's maven config while building sources.zip -->
                         <exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
                         <exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
+                        <exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
                     </excludes>
                 </configuration>
                 <dependencies>

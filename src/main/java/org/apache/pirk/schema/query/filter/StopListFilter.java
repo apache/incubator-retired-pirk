@@ -56,16 +56,16 @@ public class StopListFilter implements DataFilter
     // If the data element contains a value on the stoplist (corresponding to a key in the filterSet), do not use
     for (String filterName : filterSet)
     {
-      if (dSchema.hasListRep(filterName))
+      if (dSchema.isArrayElement(filterName))
       {
         List<String> elementArray = null;
-        if (dataElement.get(dSchema.getTextElement(filterName)) instanceof WritableArrayWritable)
+        if (dataElement.get(dSchema.getTextName(filterName)) instanceof WritableArrayWritable)
         {
-          elementArray = Arrays.asList(((WritableArrayWritable) dataElement.get(dSchema.getTextElement(filterName))).toStrings());
+          elementArray = Arrays.asList(((WritableArrayWritable) dataElement.get(dSchema.getTextName(filterName))).toStrings());
         }
-        else if (dataElement.get(dSchema.getTextElement(filterName)) instanceof ArrayWritable)
+        else if (dataElement.get(dSchema.getTextName(filterName)) instanceof ArrayWritable)
         {
-          elementArray = Arrays.asList(((ArrayWritable) dataElement.get(dSchema.getTextElement(filterName))).toStrings());
+          elementArray = Arrays.asList(((ArrayWritable) dataElement.get(dSchema.getTextName(filterName))).toStrings());
         }
 
         for (String element : elementArray)
@@ -79,7 +79,7 @@ public class StopListFilter implements DataFilter
       }
       else
       {
-        String element = dataElement.get(dSchema.getTextElement(filterName)).toString();
+        String element = dataElement.get(dSchema.getTextName(filterName)).toString();
         passFilter = StopListUtils.checkElement(element, stopList);
       }
       if (!passFilter)

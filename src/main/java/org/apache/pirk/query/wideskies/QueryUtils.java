@@ -29,7 +29,7 @@ import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.schema.query.QuerySchema;
@@ -56,7 +56,7 @@ public class QueryUtils
   {
     QueryResponseJSON qrJSON = new QueryResponseJSON(queryInfo);
 
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
 
@@ -79,7 +79,7 @@ public class QueryUtils
     for (String fieldName : dataFieldsToExtract)
     {
       int numElements = 1;
-      if (dSchema.hasListRep(fieldName))
+      if (dSchema.isArrayElement(fieldName))
       {
         numElements = numArrayElementsToReturn;
       }
@@ -107,7 +107,7 @@ public class QueryUtils
   public static ArrayList<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws Exception
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     // Add the embedded selector to the parts
     if (embedSelector)
@@ -131,7 +131,7 @@ public class QueryUtils
         dataElement = jsonData.get(fieldName);
       }
 
-      if (dSchema.hasListRep(fieldName))
+      if (dSchema.isArrayElement(fieldName))
       {
         List<String> elementArray;
         if (dataElement == null)
@@ -189,12 +189,12 @@ public class QueryUtils
     for (String fieldName : dataFieldsToExtract)
     {
       Object dataElement = null;
-      if (dataMap.containsKey(dSchema.getTextElement(fieldName)))
+      if (dataMap.containsKey(dSchema.getTextName(fieldName)))
       {
-        dataElement = dataMap.get(dSchema.getTextElement(fieldName));
+        dataElement = dataMap.get(dSchema.getTextName(fieldName));
       }
 
-      if (dSchema.hasListRep(fieldName))
+      if (dSchema.isArrayElement(fieldName))
       {
         List<String> elementArray = null;
         if (dataElement == null)
@@ -305,22 +305,22 @@ public class QueryUtils
     String selector;
 
     String fieldName = qSchema.getSelectorName();
-    if (dSchema.hasListRep(fieldName))
+    if (dSchema.isArrayElement(fieldName))
     {
-      if (dataMap.get(dSchema.getTextElement(fieldName)) instanceof WritableArrayWritable)
+      if (dataMap.get(dSchema.getTextName(fieldName)) instanceof WritableArrayWritable)
       {
-        String[] selectorArray = ((WritableArrayWritable) dataMap.get(dSchema.getTextElement(fieldName))).toStrings();
+        String[] selectorArray = ((WritableArrayWritable) dataMap.get(dSchema.getTextName(fieldName))).toStrings();
         selector = selectorArray[0];
       }
       else
       {
-        String[] elementArray = ((ArrayWritable) (dataMap.get(dSchema.getTextElement(fieldName)))).toStrings();
+        String[] elementArray = ((ArrayWritable) (dataMap.get(dSchema.getTextName(fieldName)))).toStrings();
         selector = elementArray[0];
       }
     }
     else
     {
-      selector = dataMap.get(dSchema.getTextElement(fieldName)).toString();
+      selector = dataMap.get(dSchema.getTextName(fieldName)).toString();
     }
 
     return selector;
@@ -335,10 +335,10 @@ public class QueryUtils
   {
     String selector;
 
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     String fieldName = qSchema.getSelectorName();
 
-    if (dSchema.hasListRep(fieldName))
+    if (dSchema.isArrayElement(fieldName))
     {
       ArrayList<String> elementArray = StringUtils.jsonArrayStringToArrayList(dataMap.get(fieldName).toString());
       selector = elementArray.get(0);

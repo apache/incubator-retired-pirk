@@ -31,7 +31,8 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.HashSelectorAndPartitionData;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
@@ -40,6 +41,7 @@ import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**
@@ -85,7 +87,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
       SystemConfiguration.setProperty("query.schemas", ctx.getConfiguration().get("query.schemas"));
       SystemConfiguration.setProperty("pir.stopListFile", ctx.getConfiguration().get("pirMR.stopListFile"));
 
-      LoadDataSchemas.initialize(true, fs);
+      DataSchemaLoader.initialize(true, fs);
       LoadQuerySchemas.initialize(true, fs);
 
     } catch (Exception e)
@@ -101,7 +103,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     {
       qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
     }
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     try
     {

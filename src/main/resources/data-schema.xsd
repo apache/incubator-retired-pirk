@@ -22,16 +22,58 @@
     <xs:element name="schema">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="schemaName" type="xs:string" />
+
+                <xs:element name="schemaName" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>The name of the data schema.
+                            The name omits leading and trailing
+                            whitespace, and is case sensitive.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
                 <xs:element name="element" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="name" type="xs:string" />
-                            <xs:element name="type" type="xs:string" />
+
+                            <xs:element name="name" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>The name of the
+                                        data element.
+                                        The name omits
+                                        leading and trailing whitespace,
+                                        and is case sensitive.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
+                            <xs:element name="type" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>The type of the data element.
+                                        The type name is the fully qualified class name,
+                                        or the primitive Java type of the element.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
                             <xs:element name="isArray" type="xs:boolean"
-                                default="true" minOccurs="0" />
+                                default="true" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Whether or not the schema element is
+                                        an array within the data.  False if unspecified.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
                             <xs:element name="partitioner"
-                                type="xs:string" minOccurs="0" />
+                                type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Partitioner type for the element.
+                                        The type name is the fully qualified class name.
+                                        Uses the primitive Java type partitioner if unspecified.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
