@@ -179,7 +179,7 @@ public class DataSchemaLoader
 
   private void parseElementNode(Element eElement, DataSchema schema) throws PIRException
   {
-    // Pull out the name and type attributes.
+    // Pull out the element name and type attributes.
     String name = eElement.getElementsByTagName("name").item(0).getTextContent().trim();
     schema.getTextRep().put(name, new Text(name));
 

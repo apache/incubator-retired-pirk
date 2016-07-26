@@ -24,8 +24,8 @@ import java.util.Map;
 /**
  * The data schema registry is a global location for data schema descriptors.
  *
- *@see DataSchema
- *@see DataSchemaLoader
+ * @see DataSchema
+ * @see DataSchemaLoader
  */
 public class DataSchemaRegistry
 {
@@ -45,7 +45,7 @@ public class DataSchemaRegistry
    * 
    * @param schema
    *          The data schema to add.
-   * @return the previous schema the the same name, or null if there were none.
+   * @return the previous schema registered at the same name, or <code>null</code> if there were none.
    */
   public static DataSchema put(DataSchema schema)
   {
