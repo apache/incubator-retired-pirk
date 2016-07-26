@@ -11,6 +11,7 @@ org/apache/pirk/utils/FileConst.class
 org/apache/pirk/serialization/HadoopFileSystemStore.class
 org/apache/pirk/utils/FileIOUtils$Callable.class
 org/apache/pirk/encryption/PrimeGenerator.class
+org/apache/pirk/schema/data/DataSchemaRegistry.class
 org/apache/pirk/benchmark/PaillierBenchmark$PaillierBenchmarkState.class
 org/apache/pirk/responder/wideskies/spark/ComputeResponse.class
 org/apache/pirk/test/distributed/DistributedTestCLI.class
@@ -19,8 +20,8 @@ org/apache/pirk/serialization/JavaSerializer.class
 org/apache/pirk/utils/FileIOUtils$1.class
 org/apache/pirk/responder/wideskies/spark/EncColMultReducer.class
 org/apache/pirk/responder/wideskies/spark/HashSelectorsAndPartitionData.class
+org/apache/pirk/schema/data/DataSchemaLoader.class
 org/apache/pirk/utils/StopListUtils.class
-org/apache/pirk/schema/data/LoadDataSchemas.class
 org/apache/pirk/utils/CSVOutputUtils.class
 org/apache/pirk/utils/SystemConfiguration.class
 org/apache/pirk/querier/wideskies/decrypt/DecryptResponseRunnable.class

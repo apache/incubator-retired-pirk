@@ -24,6 +24,7 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/FileIOUtils.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/mapreduce/ExpTableMapper.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/SystemConfiguration.java
+/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/DataSchemaLoader.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/test/distributed/testsuite/DistTestSuite.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/EncColMultReducer.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/inputformat/hadoop/json/JSONInputFormat.java
@@ -46,7 +47,7 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/mapreduce/ColumnMultMapper.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/ResponderDriver.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/EncRowCalcPrecomputedCache.java
-/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/LoadDataSchemas.java
+/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/DataSchemaRegistry.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/DataSchema.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/KeyedHash.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/partitioner/IPDataPartitioner.java

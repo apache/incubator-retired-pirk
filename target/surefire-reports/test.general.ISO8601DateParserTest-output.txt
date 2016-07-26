@@ -4,5 +4,5 @@ SLF4J: Found binding in [jar:file:/Users/voyager/.m2/repository/ch/qos/logback/l
 SLF4J: Found binding in [jar:file:/Users/voyager/.m2/repository/org/apache/logging/log4j/log4j-slf4j-impl/2.6.2/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
 SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
- INFO [main] 2016-07-24 11:38:16,154 (ISO8601DateParserTest.java:39) - Starting testDateParsing: 
- INFO [main] 2016-07-24 11:38:16,176 (ISO8601DateParserTest.java:47) - Successfully completed testDateParsing
+ INFO [main] 2016-07-26 08:47:55,154 (ISO8601DateParserTest.java:39) - Starting testDateParsing: 
+ INFO [main] 2016-07-26 08:47:55,171 (ISO8601DateParserTest.java:47) - Successfully completed testDateParsing
