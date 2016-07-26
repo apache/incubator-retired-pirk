@@ -28,7 +28,7 @@ import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.FileIOUtils;
 import org.apache.pirk.utils.PIRException;
@@ -128,10 +128,13 @@ public class QuerierDriver implements Serializable
       }
 
       // Check to ensure we have a valid queryType
-      if (!LoadQuerySchemas.containsSchema(queryType))
+      if (QuerySchemaRegistry.get(queryType) == null)
       {
         logger.error("Invalid schema: " + queryType + "; The following schemas are loaded:");
-        LoadQuerySchemas.printSchemas();
+        for (String schema : QuerySchemaRegistry.getNames())
+        {
+          logger.info("schema = " + schema);
+        }
         System.exit(0);
       }
 
@@ -167,7 +170,7 @@ public class QuerierDriver implements Serializable
 
       if (SystemConfiguration.getProperty("pir.embedQuerySchema").equals("true"))
       {
-        queryInfo.addQuerySchema(LoadQuerySchemas.getSchema(queryType));
+        queryInfo.addQuerySchema(QuerySchemaRegistry.get(queryType));
       }
 
       Paillier paillier = new Paillier(paillierBitSize, certainty, bitSet); // throws PIRException if certainty conditions are not satisfied

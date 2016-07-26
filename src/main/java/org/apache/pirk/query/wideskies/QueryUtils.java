@@ -23,14 +23,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.schema.query.QuerySchema;
@@ -76,7 +74,7 @@ public class QueryUtils
       logger.debug("Extracted embedded selector = " + embeddedSelector + " parts.size() = " + parts.size());
     }
 
-    TreeSet<String> dataFieldsToExtract = qSchema.getElementNames();
+    List<String> dataFieldsToExtract = qSchema.getElementNames();
     for (String fieldName : dataFieldsToExtract)
     {
       int numElements = 1;
@@ -123,7 +121,7 @@ public class QueryUtils
     }
 
     // Add all appropriate data fields
-    TreeSet<String> dataFieldsToExtract = qSchema.getElementNames();
+    List<String> dataFieldsToExtract = qSchema.getElementNames();
     for (String fieldName : dataFieldsToExtract)
     {
       Object dataElement = null;
@@ -186,7 +184,7 @@ public class QueryUtils
     }
 
     // Add all appropriate data fields
-    TreeSet<String> dataFieldsToExtract = qSchema.getElementNames();
+    List<String> dataFieldsToExtract = qSchema.getElementNames();
     for (String fieldName : dataFieldsToExtract)
     {
       Object dataElement = null;

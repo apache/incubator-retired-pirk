@@ -33,7 +33,7 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
 import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -87,7 +87,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
       SystemConfiguration.setProperty("pir.stopListFile", ctx.getConfiguration().get("pirMR.stopListFile"));
 
       DataSchemaLoader.initialize(true, fs);
-      LoadQuerySchemas.initialize(true, fs);
+      QuerySchemaLoader.initialize(true, fs);
 
     } catch (Exception e)
     {

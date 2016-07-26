@@ -25,8 +25,8 @@ import java.util.TreeMap;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class DecryptResponseRunnable implements Runnable
     {
       if ((qSchema = queryInfo.getQuerySchema()) == null)
       {
-        qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+        qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
       }
     }
     resultMap = new HashMap<>();
@@ -83,7 +83,7 @@ public class DecryptResponseRunnable implements Runnable
     int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
     int numPartitionsPerDataElement = queryInfo.getNumPartitionsPerDataElement();
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     String selectorName = qSchema.getSelectorName();
 
     // Initialize - removes checks below

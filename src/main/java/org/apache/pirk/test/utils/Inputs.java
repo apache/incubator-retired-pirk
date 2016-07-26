@@ -39,7 +39,7 @@ import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.utils.HDFS;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -497,7 +497,7 @@ public class Inputs
           null, null, false, fs, hdfs);
     }
 
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
   }
 
   /**

@@ -21,6 +21,7 @@ package org.apache.pirk.schema.query.filter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
@@ -39,10 +40,10 @@ public class StopListFilter implements DataFilter
 
   private static final Logger logger = LoggerFactory.getLogger(StopListFilter.class);
 
-  private HashSet<String> filterSet = null;
-  private HashSet<String> stopList = null;
+  private Set<String> filterSet = null;
+  private Set<String> stopList = null;
 
-  public StopListFilter(HashSet<String> filterSetIn, HashSet<String> stopListIn)
+  public StopListFilter(Set<String> filterSetIn, Set<String> stopListIn)
   {
     filterSet = filterSetIn;
     stopList = stopListIn;
