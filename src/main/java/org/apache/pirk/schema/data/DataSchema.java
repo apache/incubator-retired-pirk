@@ -60,13 +60,10 @@ public class DataSchema implements Serializable
   // Lazily maps element name -> Hadoop Text representation.
   private transient Map<String,Text> textRep = new HashMap<>();
 
-  /**
+  /*
    * Creates an empty, named data schema.
-   * 
-   * @param schemaName
-   *          The new schema's name.
    */
-  public DataSchema(String schemaName)
+  DataSchema(String schemaName)
   {
     this.schemaName = schemaName;
   }
