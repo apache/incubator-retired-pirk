@@ -26,12 +26,10 @@ import java.util.regex.Pattern;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
-
 import org.apache.pirk.inputformat.hadoop.TextArrayWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
