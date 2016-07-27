@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public class SystemConfiguration
     // Load any query schema files indicated in the properties
     try
     {
-      LoadQuerySchemas.class.newInstance();
+      QuerySchemaLoader.class.newInstance();
     } catch (Exception e)
     {
       logger.error("Issue when invoking DataSchemaLoader");

@@ -19,10 +19,9 @@
 package org.apache.pirk.schema.query;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,6 +31,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
+import org.apache.pirk.schema.query.filter.DataFilter;
+import org.apache.pirk.schema.query.filter.FilterFactory;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,17 +65,16 @@ import org.w3c.dom.NodeList;
  * <p>
  * TODO: Allow the schema to specify how many array elements to return per element, if the element is an array type
  */
-public class LoadQuerySchemas
+public class QuerySchemaLoader
 {
-  private static final Logger logger = LoggerFactory.getLogger(LoadQuerySchemas.class);
+  private static final Logger logger = LoggerFactory.getLogger(QuerySchemaLoader.class);
 
-  private static HashMap<String,QuerySchema> schemaMap;
+  private static final String NO_FILTER = "noFilter";
 
   static
   {
     logger.info("Loading query schemas: ");
 
-    schemaMap = new HashMap<>();
     try
     {
       initialize();
@@ -102,24 +102,9 @@ public class LoadQuerySchemas
 
         // Parse and load the schema file into a QuerySchema object; place in the schemaMap
         QuerySchema querySchema = loadQuerySchemaFile(schemaFile, hdfs, fs);
-        schemaMap.put(querySchema.getSchemaName(), querySchema);
+        QuerySchemaRegistry.put(querySchema);
       }
     }
-  }
-
-  public static HashMap<String,QuerySchema> getSchemaMap()
-  {
-    return schemaMap;
-  }
-
-  public static Set<String> getSchemaNames()
-  {
-    return schemaMap.keySet();
-  }
-
-  public static QuerySchema getSchema(String schemaName)
-  {
-    return schemaMap.get(schemaName);
   }
 
   private static QuerySchema loadQuerySchemaFile(String schemaFile, boolean hdfs, FileSystem fs) throws Exception
@@ -176,7 +161,7 @@ public class LoadQuerySchemas
     }
     Element elements = (Element) elementsList.item(0);
 
-    TreeSet<String> elementNames = new TreeSet<>();
+    LinkedHashSet<String> elementNames = new LinkedHashSet<>();
     int dataElementSize = 0;
     NodeList nList = elements.getElementsByTagName("name");
     for (int i = 0; i < nList.getLength(); i++)
@@ -211,10 +196,10 @@ public class LoadQuerySchemas
     }
 
     // Extract the filter, if it exists
-    String filter = QuerySchema.NO_FILTER;
+    String filterTypeName = NO_FILTER;
     if (doc.getElementsByTagName("filter").item(0) != null)
     {
-      filter = doc.getElementsByTagName("filter").item(0).getTextContent().trim();
+      filterTypeName = doc.getElementsByTagName("filter").item(0).getTextContent().trim();
     }
 
     // Extract the filterNames, if they exist
@@ -246,8 +231,11 @@ public class LoadQuerySchemas
     }
 
     // Create the query schema object
-    querySchema = new QuerySchema(schemaName, dataSchemaName, elementNames, selectorName, dataElementSize, filterNamesSet, filter);
 
+    DataFilter filter = instantiateFilter(filterTypeName, filterNamesSet);
+    querySchema = new QuerySchema(schemaName, dataSchemaName, selectorName, filterTypeName, filter, dataElementSize);
+    querySchema.getElementNames().addAll(elementNames);
+    querySchema.getFilteredElementNames().addAll(filterNamesSet);
     return querySchema;
   }
 
@@ -256,41 +244,20 @@ public class LoadQuerySchemas
    */
   private static String extractValue(Document doc, String valueName) throws Exception
   {
-    String value;
-
     NodeList itemList = doc.getElementsByTagName(valueName);
     if (itemList.getLength() > 1)
     {
       throw new Exception("itemList.getLength() = " + itemList.getLength() + " -- should be 1");
     }
-    value = itemList.item(0).getTextContent().trim();
-
-    return value;
+    return itemList.item(0).getTextContent().trim();
   }
 
-  /**
-   * Checks whether or not (true/false) the given schema is loaded
-   */
-  public static boolean containsSchema(String schemaNameIn)
+  private static DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws Exception
   {
-    return schemaMap.containsKey(schemaNameIn);
-  }
-
-  public static void printSchemas()
-  {
-    for (String schema : schemaMap.keySet())
+    if (!filterTypeName.equals(NO_FILTER))
     {
-      logger.info("schema = " + schema);
+      return FilterFactory.getFilter(filterTypeName, filteredElementNames);
     }
-  }
-
-  public static String getSchemasString()
-  {
-    String schemasString = "";
-    for (String schema : schemaMap.keySet())
-    {
-      schemasString += " \n" + schema;
-    }
-    return schemasString;
+    return null;
   }
 }

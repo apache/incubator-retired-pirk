@@ -35,8 +35,8 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
@@ -62,7 +62,7 @@ public class StandaloneQuery
     logger.info("Performing watchlisting: ");
 
     ArrayList<QueryResponseJSON> results = null;
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryType);
 
     // Create the necessary files
     LocalFileSystemStore storage = new LocalFileSystemStore();

@@ -20,6 +20,7 @@ package org.apache.pirk.schema.data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The data schema registry is a global location for data schema descriptors.
@@ -62,5 +63,15 @@ public class DataSchemaRegistry
   public static DataSchema get(String schemaName)
   {
     return registry.get(schemaName);
+  }
+
+  /**
+   * Returns the set of data schema names held in the registry.
+   * 
+   * @return The possibly empty set of data schema names.
+   */
+  public static Set<String> getNames()
+  {
+    return registry.keySet();
   }
 }

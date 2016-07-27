@@ -27,8 +27,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public class QueryResponseJSON implements Serializable
       logger.info("queryInfo is null");
     }
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     jsonObj = new JSONObject();

@@ -18,7 +18,7 @@
  */
 package org.apache.pirk.utils;
 
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utilities for stop listing data items/elements
@@ -28,7 +28,7 @@ public class StopListUtils
   /**
    * Checks to see whether an element (or subdomain of the given element) is contained in the HashSet If it is not in the set, returns true (keep)
    */
-  public static boolean checkElement(String element, HashSet<String> filterSet)
+  public static boolean checkElement(String element, Set<String> filterSet)
   {
     boolean notInSet = true;
 

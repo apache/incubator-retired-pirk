@@ -120,7 +120,7 @@ public class DataSchemaLoader
 
         try
         {
-          DataSchema dataSchema = loader.loadSchemaFile(is);
+          DataSchema dataSchema = loader.loadSchema(is);
           DataSchemaRegistry.put(dataSchema);
         } finally
         {
@@ -136,7 +136,18 @@ public class DataSchemaLoader
   public DataSchemaLoader()
   {}
 
-  public DataSchema loadSchemaFile(InputStream stream) throws IOException, PIRException
+  /**
+   * Returns the data schema as defined in XML format on the given stream.
+   * 
+   * @param stream
+   *          The source of the XML data schema description.
+   * @return The data schema.
+   * @throws IOException
+   *           A problem occurred reading from the given stream.
+   * @throws PIRException
+   *           The schema description is invalid.
+   */
+  public DataSchema loadSchema(InputStream stream) throws IOException, PIRException
   {
     // Read in and parse the XML schema file
     Document doc;

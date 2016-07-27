@@ -33,8 +33,9 @@ import org.apache.pirk.responder.wideskies.common.HashSelectorAndPartitionData;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.DataFilter;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.StringUtils;
@@ -88,7 +89,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
       SystemConfiguration.setProperty("pir.stopListFile", ctx.getConfiguration().get("pirMR.stopListFile"));
 
       DataSchemaLoader.initialize(true, fs);
-      LoadQuerySchemas.initialize(true, fs);
+      QuerySchemaLoader.initialize(true, fs);
 
     } catch (Exception e)
     {
@@ -101,13 +102,13 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     }
     if (qSchema == null)
     {
-      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+      qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     }
     dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     try
     {
-      filter = qSchema.getFilterInstance();
+      filter = qSchema.getFilter();
     } catch (Exception e)
     {
       e.printStackTrace();

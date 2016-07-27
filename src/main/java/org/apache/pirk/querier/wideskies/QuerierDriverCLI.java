@@ -25,7 +25,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,28 +41,28 @@ public class QuerierDriverCLI
   private CommandLine commandLine = null;
 
   // General variables
-  public static String ACTION = "action";
-  public static String INPUTFILE = "inputFile";
-  public static String OUTPUTFILE = "outputFile";
-  public static String TYPE = "queryType";
-  public static String NUMTHREADS = "numThreads";
-  public static String EMBEDQUERYSCHEMA = "embedQuerySchema";
+  public static final String ACTION = "action";
+  public static final String INPUTFILE = "inputFile";
+  public static final String OUTPUTFILE = "outputFile";
+  public static final String TYPE = "queryType";
+  public static final String NUMTHREADS = "numThreads";
+  public static final String EMBEDQUERYSCHEMA = "embedQuerySchema";
 
   // Encryption variables
-  public static String HASHBITSIZE = "hashBitSize";
-  public static String HASHKEY = "hashKey";
-  public static String DATAPARTITIONSIZE = "dataPartitionBitSize";
-  public static String PAILLIERBITSIZE = "paillierBitSize";
-  public static String BITSET = "bitSet";
-  public static String CERTAINTY = "certainty";
-  public static String QUERYNAME = "queryName";
-  public static String QUERYSCHEMAS = "querySchemas";
-  public static String DATASCHEMAS = "dataSchemas";
-  public static String EMBEDSELECTOR = "embedSelector";
-  public static String USEMEMLOOKUPTABLE = "memLookupTable";
-  public static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
-  public static String SR_ALGORITHM = "secureRandomAlg";
-  public static String SR_PROVIDER = "secureRandomProvider";
+  public static final String HASHBITSIZE = "hashBitSize";
+  public static final String HASHKEY = "hashKey";
+  public static final String DATAPARTITIONSIZE = "dataPartitionBitSize";
+  public static final String PAILLIERBITSIZE = "paillierBitSize";
+  public static final String BITSET = "bitSet";
+  public static final String CERTAINTY = "certainty";
+  public static final String QUERYNAME = "queryName";
+  public static final String QUERYSCHEMAS = "querySchemas";
+  public static final String DATASCHEMAS = "dataSchemas";
+  public static final String EMBEDSELECTOR = "embedSelector";
+  public static final String USEMEMLOOKUPTABLE = "memLookupTable";
+  public static final String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
+  public static final String SR_ALGORITHM = "secureRandomAlg";
+  public static final String SR_PROVIDER = "secureRandomProvider";
 
   // Decryption variables
   public static String QUERIERFILE = "querierFile";
@@ -316,7 +316,7 @@ public class QuerierDriverCLI
     try
     {
       DataSchemaLoader.initialize();
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
 
     } catch (Exception e)
     {
