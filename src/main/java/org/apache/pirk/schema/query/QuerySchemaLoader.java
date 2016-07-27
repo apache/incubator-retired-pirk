@@ -18,13 +18,16 @@
  */
 package org.apache.pirk.schema.query;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -33,6 +36,7 @@ import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.query.filter.DataFilter;
 import org.apache.pirk.schema.query.filter.FilterFactory;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Class to load any query schemas specified in the properties file, 'query.schemas'
@@ -85,79 +90,102 @@ public class QuerySchemaLoader
     }
   }
 
+  /* Kept for compatibility */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
+  /* Kept for compatibility */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String querySchemas = SystemConfiguration.getProperty("query.schemas", "none");
-    if (!querySchemas.equals("none"))
+    if (querySchemas.equals("none"))
     {
-      String[] querySchemaFiles = querySchemas.split(",");
-      for (String schemaFile : querySchemaFiles)
-      {
-        logger.info("Loading schemaFile = " + schemaFile);
+      return;
+    }
+    String[] querySchemaFiles = querySchemas.split(",");
+    for (String schemaFile : querySchemaFiles)
+    {
+      logger.info("Loading schemaFile = " + schemaFile);
 
-        // Parse and load the schema file into a QuerySchema object; place in the schemaMap
-        QuerySchema querySchema = loadQuerySchemaFile(schemaFile, hdfs, fs);
+      // Parse and load the schema file into a QuerySchema object; place in the schemaMap
+      QuerySchemaLoader loader = new QuerySchemaLoader();
+      InputStream is;
+      if (hdfs)
+      {
+        is = fs.open(new Path(schemaFile));
+        logger.info("hdfs: filePath = " + schemaFile);
+      }
+      else
+      {
+        is = new FileInputStream(schemaFile);
+        logger.info("localFS: inputFile = " + schemaFile);
+      }
+
+      try
+      {
+        QuerySchema querySchema = loader.loadSchema(is);
         QuerySchemaRegistry.put(querySchema);
+      } finally
+      {
+        is.close();
       }
     }
   }
 
-  private static QuerySchema loadQuerySchemaFile(String schemaFile, boolean hdfs, FileSystem fs) throws Exception
+  /**
+   * Default constructor.
+   */
+  public QuerySchemaLoader()
   {
-    QuerySchema querySchema;
 
-    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+  }
 
-    // Read in and parse the schema file
-    Document doc;
-    if (hdfs)
-    {
-      Path filePath = new Path(schemaFile);
-      doc = dBuilder.parse(fs.open(filePath));
-      logger.info("hdfs: filePath = " + filePath.toString());
-    }
-    else
-    {
-      File inputFile = new File(schemaFile);
-      doc = dBuilder.parse(inputFile);
-      logger.info("localFS: inputFile = " + inputFile.toString());
-    }
-    doc.getDocumentElement().normalize();
-    logger.info("Root element: " + doc.getDocumentElement().getNodeName());
+  /**
+   * Returns the query schema as defined in XML format on the given stream.
+   * 
+   * @param stream
+   *          The source of the XML query schema description.
+   * @return The query schema.
+   * @throws IOException
+   *           A problem occurred reading from the given stream.
+   * @throws PIRException
+   *           The schema description is invalid.
+   */
+  public QuerySchema loadSchema(InputStream stream) throws IOException, PIRException
+  {
+    // Read in and parse the XML file.
+    Document doc = parseXMLDocument(stream);
 
-    // Extract the schemaName
+    // Extract the schemaName.
     String schemaName = extractValue(doc, "schemaName");
     logger.info("schemaName = " + schemaName);
 
-    // Extract the dataSchemaName
+    // Extract the dataSchemaName.
     String dataSchemaName = extractValue(doc, "dataSchemaName");
     logger.info("dataSchemaName = " + dataSchemaName);
 
+    // We must have a matching data schema for this query.
     DataSchema dataSchema = DataSchemaRegistry.get(dataSchemaName);
     if (dataSchema == null)
     {
-      throw new Exception("Loaded DataSchema does not exist for dataSchemaName = " + dataSchemaName);
+      throw new PIRException("Loaded DataSchema does not exist for dataSchemaName = " + dataSchemaName);
     }
 
-    // Extract the selectorName
+    // Extract the selectorName, and ensure it matches an element in the data schema.
     String selectorName = extractValue(doc, "selectorName");
     logger.info("selectorName = " + selectorName);
     if (!dataSchema.containsElement(selectorName))
     {
-      throw new Exception("dataSchema = " + dataSchemaName + " does not contain selectorName = " + selectorName);
+      throw new PIRException("dataSchema = " + dataSchemaName + " does not contain selectorName = " + selectorName);
     }
 
-    // Extract the elements
+    // Extract the query elements.
     NodeList elementsList = doc.getElementsByTagName("elements");
-    if (elementsList.getLength() > 1)
+    if (elementsList.getLength() != 1)
     {
-      throw new Exception("elementsList.getLength() = " + elementsList.getLength() + " -- should be 1");
+      throw new PIRException("elementsList.getLength() = " + elementsList.getLength() + " -- should be 1");
     }
     Element elements = (Element) elementsList.item(0);
 
@@ -169,29 +197,27 @@ public class QuerySchemaLoader
       Node nNode = nList.item(i);
       if (nNode.getNodeType() == Node.ELEMENT_NODE)
       {
-        Element eElement = (Element) nNode;
-
-        // Pull the name and add to the TreeSet
-        String name = eElement.getFirstChild().getNodeValue().trim();
-        elementNames.add(name);
-
-        // Compute the number of bits for this element
-        logger.info("name = " + name);
-        logger.info("partitionerName = " + dataSchema.getPartitionerTypeName(name));
-        if ((dataSchema.getPartitionerForElement(name)) == null)
+        // Pull the name
+        String queryElementName = ((Element) nNode).getFirstChild().getNodeValue().trim();
+        if (!dataSchema.containsElement(queryElementName))
         {
-          logger.info("partitioner is null");
+          throw new PIRException("dataSchema = " + dataSchemaName + " does not contain requested element name = " + queryElementName);
         }
-        int bits = ((DataPartitioner) dataSchema.getPartitionerForElement(name)).getBits(dataSchema.getElementType(name));
+        elementNames.add(queryElementName);
+        logger.info("name = " + queryElementName + " partitionerName = " + dataSchema.getPartitionerTypeName(queryElementName));
 
-        // Multiply by the number of array elements allowed, if applicable
-        if (dataSchema.getArrayElements().contains(name))
+        // Compute the number of bits for this element.
+        DataPartitioner partitioner = dataSchema.getPartitionerForElement(queryElementName);
+        int bits = partitioner.getBits(dataSchema.getElementType(queryElementName));
+
+        // Multiply by the number of array elements allowed, if applicable.
+        if (dataSchema.isArrayElement(queryElementName))
         {
           bits *= Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements"));
         }
         dataElementSize += bits;
 
-        logger.info("name = " + name + " bits = " + bits + " dataElementSize = " + dataElementSize);
+        logger.info("name = " + queryElementName + " bits = " + bits + " dataElementSize = " + dataElementSize);
       }
     }
 
@@ -202,62 +228,88 @@ public class QuerySchemaLoader
       filterTypeName = doc.getElementsByTagName("filter").item(0).getTextContent().trim();
     }
 
-    // Extract the filterNames, if they exist
-    HashSet<String> filterNamesSet = new HashSet<>();
-    if (doc.getElementsByTagName("filterNames").item(0) != null)
+    // Create a filter over the query elements.
+    Set<String> filteredNamesSet = extractFilteredElementNames(doc);
+    DataFilter filter = instantiateFilter(filterTypeName, filteredNamesSet);
+
+    // Create and return the query schema object.
+    QuerySchema querySchema = new QuerySchema(schemaName, dataSchemaName, selectorName, filterTypeName, filter, dataElementSize);
+    querySchema.getElementNames().addAll(elementNames);
+    querySchema.getFilteredElementNames().addAll(filteredNamesSet);
+    return querySchema;
+  }
+
+  /*
+   * Parses and normalizes the XML document available on the given stream.
+   */
+  private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
+  {
+    Document doc;
+    try
     {
-      NodeList filterNamesList = doc.getElementsByTagName("filterNames");
+      DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      doc = dBuilder.parse(stream);
+    } catch (ParserConfigurationException | SAXException e)
+    {
+      throw new PIRException("Schema parsing error", e);
+    }
+    doc.getDocumentElement().normalize();
+    logger.info("Root element: " + doc.getDocumentElement().getNodeName());
+
+    return doc;
+  }
+
+  /*
+   * Returns the possibly empty set of element names over which the filter is applied, maintaining document order.
+   */
+  private Set<String> extractFilteredElementNames(Document doc) throws PIRException
+  {
+    HashSet<String> filteredNamesSet = new HashSet<>();
+
+    NodeList filterNamesList = doc.getElementsByTagName("filterNames");
+    if (filterNamesList.getLength() != 0)
+    {
       if (filterNamesList.getLength() > 1)
       {
-        throw new Exception("filterNamesList.getLength() = " + filterNamesList.getLength() + " -- should be 1");
+        throw new PIRException("filterNamesList.getLength() = " + filterNamesList.getLength() + " -- should be 0 or 1");
       }
-      Element filterNames = (Element) filterNamesList.item(0);
 
-      NodeList filterNList = filterNames.getElementsByTagName("name");
+      // Extract element names from the list.
+      Element foo = (Element) filterNamesList.item(0);
+      NodeList filterNList = ((Element) filterNamesList.item(0)).getElementsByTagName("name");
       for (int i = 0; i < filterNList.getLength(); i++)
       {
         Node nNode = filterNList.item(i);
         if (nNode.getNodeType() == Node.ELEMENT_NODE)
         {
-          Element eElement = (Element) nNode;
-
-          // Pull the name and add to the TreeSet
-          String name = eElement.getFirstChild().getNodeValue().trim();
-          filterNamesSet.add(name);
+          // Pull the name and add to the set.
+          String name = ((Element) nNode).getFirstChild().getNodeValue().trim();
+          filteredNamesSet.add(name);
 
           logger.info("filterName = " + name);
         }
       }
     }
-
-    // Create the query schema object
-
-    DataFilter filter = instantiateFilter(filterTypeName, filterNamesSet);
-    querySchema = new QuerySchema(schemaName, dataSchemaName, selectorName, filterTypeName, filter, dataElementSize);
-    querySchema.getElementNames().addAll(elementNames);
-    querySchema.getFilteredElementNames().addAll(filterNamesSet);
-    return querySchema;
+    return filteredNamesSet;
   }
 
-  /**
-   * Extracts a top level, single value from the xml structure
+  /*
+   * Extracts a top level, single value from the XML structure.
+   * 
+   * Throws an exception if there is not exactly one tag with the given name.
    */
-  private static String extractValue(Document doc, String valueName) throws Exception
+  private String extractValue(Document doc, String tagName) throws PIRException
   {
-    NodeList itemList = doc.getElementsByTagName(valueName);
-    if (itemList.getLength() > 1)
+    NodeList itemList = doc.getElementsByTagName(tagName);
+    if (itemList.getLength() != 1)
     {
-      throw new Exception("itemList.getLength() = " + itemList.getLength() + " -- should be 1");
+      throw new PIRException("itemList.getLength() = " + itemList.getLength() + " -- should be 1");
     }
     return itemList.item(0).getTextContent().trim();
   }
 
-  private static DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws Exception
+  private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
   {
-    if (!filterTypeName.equals(NO_FILTER))
-    {
-      return FilterFactory.getFilter(filterTypeName, filteredElementNames);
-    }
-    return null;
+    return filterTypeName.equals(NO_FILTER) ? null : FilterFactory.getFilter(filterTypeName, filteredElementNames);
   }
 }

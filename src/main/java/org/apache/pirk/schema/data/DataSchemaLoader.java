@@ -30,7 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.utils.PIRException;
@@ -69,9 +68,9 @@ public class DataSchemaLoader
 {
   private static final Logger logger = LoggerFactory.getLogger(DataSchemaLoader.class);
 
-  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
-      PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG, PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE,
-      PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
+  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(
+      Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT, PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG,
+          PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE, PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
 
   static
   {
@@ -87,51 +86,53 @@ public class DataSchemaLoader
     }
   }
 
-  /** Kept for compatibility */
+  /* Kept for compatibility */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
-  /** Kept for compatibility */
+  /* Kept for compatibility */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
-    if (!dataSchemas.equals("none"))
+    if (dataSchemas.equals("none"))
     {
-      String[] dataSchemaFiles = dataSchemas.split(",");
-      for (String schemaFile : dataSchemaFiles)
+      return;
+    }
+
+    String[] dataSchemaFiles = dataSchemas.split(",");
+    for (String schemaFile : dataSchemaFiles)
+    {
+      logger.info("Loading schemaFile = " + schemaFile + " hdfs = " + hdfs);
+
+      // Parse and load the schema file into a DataSchema object; place in the schemaMap
+      DataSchemaLoader loader = new DataSchemaLoader();
+      InputStream is;
+      if (hdfs)
       {
-        logger.info("Loading schemaFile = " + schemaFile + " hdfs = " + hdfs);
+        is = fs.open(new Path(schemaFile));
+        logger.info("hdfs: filePath = " + schemaFile);
+      }
+      else
+      {
+        is = new FileInputStream(schemaFile);
+        logger.info("localFS: inputFile = " + schemaFile);
+      }
 
-        // Parse and load the schema file into a DataSchema object; place in the schemaMap
-        DataSchemaLoader loader = new DataSchemaLoader();
-        InputStream is;
-        if (hdfs)
-        {
-          is = fs.open(new Path(schemaFile));
-          logger.info("hdfs: filePath = " + schemaFile.toString());
-        }
-        else
-        {
-          is = new FileInputStream(schemaFile);
-          logger.info("localFS: inputFile = " + schemaFile.toString());
-        }
-
-        try
-        {
-          DataSchema dataSchema = loader.loadSchema(is);
-          DataSchemaRegistry.put(dataSchema);
-        } finally
-        {
-          is.close();
-        }
+      try
+      {
+        DataSchema dataSchema = loader.loadSchema(is);
+        DataSchemaRegistry.put(dataSchema);
+      } finally
+      {
+        is.close();
       }
     }
   }
 
-  /*
-   * Default constructor
+  /**
+   * Default constructor.
    */
   public DataSchemaLoader()
   {}
@@ -149,18 +150,8 @@ public class DataSchemaLoader
    */
   public DataSchema loadSchema(InputStream stream) throws IOException, PIRException
   {
-    // Read in and parse the XML schema file
-    Document doc;
-    try
-    {
-      DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-      doc = dBuilder.parse(stream);
-    } catch (ParserConfigurationException | SAXException e)
-    {
-      throw new PIRException("Data schema parsing error", e);
-    }
-    doc.getDocumentElement().normalize();
-    logger.info("Root element: " + doc.getDocumentElement().getNodeName());
+    // Read the XML schema file.
+    Document doc = parseXMLDocument(stream);
 
     // Extract the schemaName
     NodeList schemaNameList = doc.getElementsByTagName("schemaName");
@@ -181,19 +172,34 @@ public class DataSchemaLoader
       Node nNode = nList.item(i);
       if (nNode.getNodeType() == Node.ELEMENT_NODE)
       {
-        parseElementNode((Element) nNode, dataSchema);
+        extractElementNode((Element) nNode, dataSchema);
       }
     }
 
     return dataSchema;
   }
 
-  private void parseElementNode(Element eElement, DataSchema schema) throws PIRException
+  private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
+  {
+    Document doc;
+    try
+    {
+      DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      doc = dBuilder.parse(stream);
+    } catch (ParserConfigurationException | SAXException e)
+    {
+      throw new PIRException("Schema parsing error", e);
+    }
+    doc.getDocumentElement().normalize();
+    logger.info("Root element: " + doc.getDocumentElement().getNodeName());
+
+    return doc;
+  }
+
+  private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
   {
     // Pull out the element name and type attributes.
     String name = eElement.getElementsByTagName("name").item(0).getTextContent().trim();
-    schema.getTextRep().put(name, new Text(name));
-
     String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
     schema.getTypeMap().put(name, type);
 
@@ -249,6 +255,11 @@ public class DataSchemaLoader
     }
   }
 
+  /*
+   * Creates a new instance of a class with the given type name.
+   * 
+   * Throws an exception if the class cannot be instantiated, or it does not implement the required interface.
+   */
   DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
     Object obj;
@@ -259,7 +270,7 @@ public class DataSchemaLoader
       obj = c.newInstance();
     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e)
     {
-      throw new PIRException("partitioner = " + partitionerTypeName + " cannot be instantiated or does not implement DataParitioner.", e);
+      throw new PIRException("partitioner = " + partitionerTypeName + " cannot be instantiated or does not implement DataPartitioner.", e);
     }
 
     return (DataPartitioner) obj;
