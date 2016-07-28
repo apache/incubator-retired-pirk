@@ -36,6 +36,7 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +105,21 @@ public class EncryptQuery
   }
 
   /**
+   * Encrypt, building the Query object, calculating and setting the query vectors.
+   * <p>
+   * Uses the system configured number of threads to conduct the encryption, or a single thread if the configuration has not been set.
+   * 
+   * @throws InterruptedException
+   *           if the task was interrupted during encryption.
+   * @throws PIRException
+   */
+  public void encrypt() throws InterruptedException, PIRException
+  {
+    int numThreads = Integer.parseInt(SystemConfiguration.getProperty("numThreads", "1"));
+    encrypt(numThreads);
+  }
+
+  /**
    * Encrypt, building the Query object, calculating and setting the query vectors
    * <p>
    * If we have hash collisions over our selector set, we will append integers to the key starting with 0 until we no longer have collisions.
@@ -122,7 +138,14 @@ public class EncryptQuery
     // Form the embedSelectorMap
     populateEmbeddedSelectorMap();
 
-    parallelEncrypt(numThreads, selectorQueryVecMapping);
+    if (numThreads == 1)
+    {
+      serialEncrypt(selectorQueryVecMapping);
+    }
+    else
+    {
+      parallelEncrypt(Math.max(2, numThreads), selectorQueryVecMapping);
+    }
 
     // Generate the expTable in Query, if we are using it and if
     // useHDFSExpLookupTable is false -- if we are generating it as standalone and not on the cluster
@@ -195,6 +218,18 @@ public class EncryptQuery
     }
   }
 
+  private void serialEncrypt(HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  {
+    int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
+    
+    EncryptQueryRunnable runner = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, 0, numElements - 1);
+    runner.run();
+
+    query.addQueryElements(runner.getEncryptedValues());
+
+    logger.info("Completed serial creation of encrypted query vectors");
+  }
+
   private void parallelEncrypt(int numThreads, HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
   {
     // Encrypt and form the query vector
@@ -214,16 +249,8 @@ public class EncryptQuery
         stop = numElements - 1;
       }
 
-      // Copy selectorQueryVecMapping (if numThreads > 1) so we don't have to synchronize - only has size = selectors.size()
-      HashMap<Integer,Integer> selectorQueryVecMappingCopy;
-      if (numThreads == 1)
-      {
-        selectorQueryVecMappingCopy = selectorQueryVecMapping;
-      }
-      else
-      {
-        selectorQueryVecMappingCopy = new HashMap<>(selectorQueryVecMapping);
-      }
+      // Copy selectorQueryVecMapping so we don't have to synchronize - only has size = selectors.size()
+      HashMap<Integer,Integer> selectorQueryVecMappingCopy = new HashMap<>(selectorQueryVecMapping);
 
       // Create the runnable and execute
       EncryptQueryRunnable runEnc = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier.clone(), selectorQueryVecMappingCopy, start, stop);
@@ -253,6 +280,6 @@ public class EncryptQuery
     {
       query.addQueryElements(runner.getEncryptedValues());
     }
-    logger.info("Completed creation of encrypted query vectors");
+    logger.info("Completed parallel creation of encrypted query vectors");
   }
 }
