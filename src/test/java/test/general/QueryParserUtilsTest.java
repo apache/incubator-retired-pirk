@@ -18,13 +18,15 @@
  */
 package test.general;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
@@ -32,9 +34,6 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Class for testing the QueryParser methods

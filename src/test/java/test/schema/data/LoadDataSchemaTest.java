@@ -18,6 +18,10 @@
  */
 package test.schema.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -29,8 +33,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.test.utils.TestUtils;
@@ -40,9 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Test suite for LoadDataSchema and DataSchema
