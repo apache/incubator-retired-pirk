@@ -183,7 +183,7 @@ public class ComputeResponse
     {
       qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     }
-    
+
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     bVars.setQuerySchema(qSchema);
     bVars.setDataSchema(dSchema);

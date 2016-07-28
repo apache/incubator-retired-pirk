@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
