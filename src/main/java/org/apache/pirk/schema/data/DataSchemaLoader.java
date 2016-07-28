@@ -68,9 +68,9 @@ public class DataSchemaLoader
 {
   private static final Logger logger = LoggerFactory.getLogger(DataSchemaLoader.class);
 
-  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
-      PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG, PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE,
-      PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
+  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(
+      Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT, PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG,
+          PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE, PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
 
   static
   {
