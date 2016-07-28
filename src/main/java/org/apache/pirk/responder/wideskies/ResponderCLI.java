@@ -18,14 +18,14 @@
  */
 package org.apache.pirk.responder.wideskies;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class ResponderCLI
   private CommandLine commandLine = null;
 
   private static final String LOCALPROPFILE = "local.responder.properties";
-  
+
   /**
    * Create and parse allowable options
    * 
@@ -110,42 +110,26 @@ public class ResponderCLI
   private boolean parseOptions()
   {
     boolean valid = true;
-    
-    //If we have a local.querier.properties file specified, load it 
-    if(hasOption(LOCALPROPFILE))
+
+    // If we have a local.querier.properties file specified, load it
+    if (hasOption(LOCALPROPFILE))
     {
-      SystemConfiguration.loadPropsFromFile(getOptionValue(LOCALPROPFILE));
+      SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
     }
-    else  
+    else
     {
-      //Pull options, set as properties   
-      for(String prop: ResponderProps.PROPSLIST)
+      // Pull options, set as properties
+      for (String prop : ResponderProps.PROPSLIST)
       {
-        if(hasOption(prop))
+        if (hasOption(prop))
         {
           SystemConfiguration.setProperty(prop, getOptionValue(prop));
         }
       }
     }
 
-    //Validate properties
+    // Validate properties
     valid = ResponderProps.validateResponderProperties();
-
-    // Load the new local query and data schemas
-    if(valid)
-    {
-      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
-          + SystemConfiguration.getProperty("query.schemas"));
-      try
-      {
-        LoadDataSchemas.initialize();
-        LoadQuerySchemas.initialize();
-
-      } catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-    }
 
     return valid;
   }
@@ -180,14 +164,16 @@ public class ResponderCLI
     options.addOption(optionQueryInput);
 
     // dataInputFormat
-    Option optionDataInputFormat = new Option("d", ResponderProps.DATAINPUTFORMAT, true, "required -- 'base', 'elasticsearch', or 'standalone' : Specify the input format");
+    Option optionDataInputFormat = new Option("d", ResponderProps.DATAINPUTFORMAT, true,
+        "required -- 'base', 'elasticsearch', or 'standalone' : Specify the input format");
     optionDataInputFormat.setRequired(false);
     optionDataInputFormat.setArgName(ResponderProps.DATAINPUTFORMAT);
     optionDataInputFormat.setType(String.class);
     options.addOption(optionDataInputFormat);
 
     // inputData
-    Option optionInputData = new Option("i", ResponderProps.INPUTDATA, true, "required -- Fully qualified name of input file/directory in hdfs; used if inputFormat = 'base'");
+    Option optionInputData = new Option("i", ResponderProps.INPUTDATA, true,
+        "required -- Fully qualified name of input file/directory in hdfs; used if inputFormat = 'base'");
     optionInputData.setRequired(false);
     optionInputData.setArgName(ResponderProps.INPUTDATA);
     optionInputData.setType(String.class);
@@ -278,21 +264,24 @@ public class ResponderCLI
     options.addOption(optionMapMemory);
 
     // mapreduce.reduce.memory.mb
-    Option optionReduceMemory = new Option("rm", ResponderProps.REDUCEMEMORY, true, "optional -- Amount of memory (in MB) to allocate per reduce task; Default is 3000");
+    Option optionReduceMemory = new Option("rm", ResponderProps.REDUCEMEMORY, true,
+        "optional -- Amount of memory (in MB) to allocate per reduce task; Default is 3000");
     optionReduceMemory.setRequired(false);
     optionReduceMemory.setArgName(ResponderProps.REDUCEMEMORY);
     optionReduceMemory.setType(String.class);
     options.addOption(optionReduceMemory);
 
     // mapreduce.map.java.opts
-    Option optionMapOpts = new Option("mjo", ResponderProps.MAPJAVAOPTS, true, "optional -- Amount of heap (in MB) to allocate per map task; Default is -Xmx2800m");
+    Option optionMapOpts = new Option("mjo", ResponderProps.MAPJAVAOPTS, true,
+        "optional -- Amount of heap (in MB) to allocate per map task; Default is -Xmx2800m");
     optionMapOpts.setRequired(false);
     optionMapOpts.setArgName(ResponderProps.MAPJAVAOPTS);
     optionMapOpts.setType(String.class);
     options.addOption(optionMapOpts);
 
     // mapreduce.reduce.java.opts
-    Option optionReduceOpts = new Option("rjo", ResponderProps.REDUCEJAVAOPTS, true, "optional -- Amount of heap (in MB) to allocate per reduce task; Default is -Xmx2800m");
+    Option optionReduceOpts = new Option("rjo", ResponderProps.REDUCEJAVAOPTS, true,
+        "optional -- Amount of heap (in MB) to allocate per reduce task; Default is -Xmx2800m");
     optionReduceOpts.setRequired(false);
     optionReduceOpts.setArgName(ResponderProps.REDUCEJAVAOPTS);
     optionReduceOpts.setType(String.class);
@@ -335,16 +324,17 @@ public class ResponderCLI
     options.addOption(optionDataParts);
 
     // useModExpJoin
-    Option optionModExpJoin = new Option("useModExpJoin", ResponderProps.USEMODEXPJOIN, true, "optional -- 'true' or 'false' -- Spark only -- Whether or not to "
-        + "pre-compute the modular exponentiation table and join it to the data partitions when performing the encrypted row calculations");
+    Option optionModExpJoin = new Option("useModExpJoin", ResponderProps.USEMODEXPJOIN, true,
+        "optional -- 'true' or 'false' -- Spark only -- Whether or not to "
+            + "pre-compute the modular exponentiation table and join it to the data partitions when performing the encrypted row calculations");
     optionModExpJoin.setRequired(false);
     optionModExpJoin.setArgName(ResponderProps.USEMODEXPJOIN);
     optionModExpJoin.setType(String.class);
     options.addOption(optionModExpJoin);
 
     // numColMultPartitions
-    Option optionNumColMultPartitions = new Option("numColMultParts", ResponderProps.NUMCOLMULTPARTITIONS, true, "optional, Spark only -- Number of partitions to "
-        + "use when performing column multiplication");
+    Option optionNumColMultPartitions = new Option("numColMultParts", ResponderProps.NUMCOLMULTPARTITIONS, true,
+        "optional, Spark only -- Number of partitions to " + "use when performing column multiplication");
     optionNumColMultPartitions.setRequired(false);
     optionNumColMultPartitions.setArgName(ResponderProps.NUMCOLMULTPARTITIONS);
     optionNumColMultPartitions.setType(String.class);
@@ -359,8 +349,8 @@ public class ResponderCLI
     options.addOption(optionColMultReduceByKey);
 
     // colMultReduceByKey
-    Option optionAllowEmbeddedQS = new Option("allowEmbeddedQS", ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS, true, "optional -- 'true' or 'false'  (defaults to 'false') -- "
-        + "If true, allows embedded QuerySchemas for a query.");
+    Option optionAllowEmbeddedQS = new Option("allowEmbeddedQS", ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS, true,
+        "optional -- 'true' or 'false'  (defaults to 'false') -- " + "If true, allows embedded QuerySchemas for a query.");
     optionAllowEmbeddedQS.setRequired(false);
     optionAllowEmbeddedQS.setArgName(ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS);
     optionAllowEmbeddedQS.setType(String.class);

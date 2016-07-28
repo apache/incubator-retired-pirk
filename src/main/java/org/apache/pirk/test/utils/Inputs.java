@@ -408,7 +408,7 @@ public class Inputs
       logger.info("pirStopListFile file successfully created!");
     }
 
-    tmpFileName = TestUtils.writeToTmpFile(elements, SystemConfiguration.getProperty("pir.stopListFile"), null);
+    tmpFileName = TestUtils.writeToTmpFile(elements, SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE), null);
 
     return tmpFileName;
   }

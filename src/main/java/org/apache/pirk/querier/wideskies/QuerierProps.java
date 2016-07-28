@@ -3,6 +3,8 @@ package org.apache.pirk.querier.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +16,13 @@ public class QuerierProps
 {
   private static final Logger logger = LoggerFactory.getLogger(QuerierProps.class);
 
-  //General properties
+  // General properties
   public static final String ACTION = "querier.action";
   public static final String INPUTFILE = "querier.inputFile";
   public static final String OUTPUTFILE = "querier.outputFile";
   public static final String QUERYTYPE = "querier.queryType";
   public static final String NUMTHREADS = "querier.numThreads";
-  
+
   // Encryption properties
   public static final String HASHBITSIZE = "querier.hashBitSize";
   public static final String HASHKEY = "querier.hashKey";
@@ -40,12 +42,11 @@ public class QuerierProps
 
   // Decryption properties
   public static final String QUERIERFILE = "querier.querierFile";
-  
-  public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, 
-      EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY, DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, 
-      CERTAINTY, QUERYNAME, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, 
-      USEHDFSLOOKUPTABLE, SR_ALGORITHM, SR_PROVIDER);
-  
+
+  public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
+      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYNAME, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE,
+      SR_ALGORITHM, SR_PROVIDER);
+
   /**
    * Validates the querier properties
    * 
@@ -53,9 +54,9 @@ public class QuerierProps
   public static boolean validateQuerierProperties()
   {
     boolean valid = true;
-    
+
     // Parse general required properties
-    
+
     if (!SystemConfiguration.hasProperty(ACTION))
     {
       logger.info("Must have the option " + ACTION);
@@ -67,25 +68,25 @@ public class QuerierProps
       logger.info("Unsupported action: " + action);
       valid = false;
     }
-   
+
     if (!SystemConfiguration.hasProperty(INPUTFILE))
     {
       logger.info("Must have the option " + INPUTFILE);
       valid = false;
     }
-   
+
     if (!SystemConfiguration.hasProperty(OUTPUTFILE))
     {
       logger.info("Must have the option " + OUTPUTFILE);
       valid = false;
     }
-    
+
     if (!SystemConfiguration.hasProperty(NUMTHREADS))
     {
       logger.info("Must have the option " + NUMTHREADS);
       valid = false;
     }
-    
+
     // Parse general optional properties
     if (!SystemConfiguration.hasProperty(EMBEDQUERYSCHEMA))
     {
@@ -93,7 +94,7 @@ public class QuerierProps
     }
 
     // Parse encryption properties
-    
+
     if (action.equals("encrypt"))
     {
       if (!SystemConfiguration.hasProperty(QUERYTYPE))
@@ -101,69 +102,69 @@ public class QuerierProps
         logger.info("Must have the option " + QUERYTYPE);
         valid = false;
       }
-     
+
       if (!SystemConfiguration.hasProperty(HASHBITSIZE))
       {
         logger.info("Must have the option " + HASHBITSIZE);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(HASHKEY))
       {
         logger.info("Must have the option " + HASHKEY);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(DATAPARTITIONSIZE))
       {
         logger.info("Must have the option " + DATAPARTITIONSIZE);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(PAILLIERBITSIZE))
       {
         logger.info("Must have the option " + PAILLIERBITSIZE);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(CERTAINTY))
       {
         logger.info("Must have the option " + CERTAINTY);
         valid = false;
       }
-     
+
       if (!SystemConfiguration.hasProperty(QUERYNAME))
       {
         logger.info("Must have the option " + QUERYNAME);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(BITSET))
       {
         logger.info("Must have the option " + BITSET);
         valid = false;
       }
-     
+
       if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
       {
         SystemConfiguration.appendProperty("query.schemas", SystemConfiguration.getProperty(QUERYSCHEMAS));
       }
-      
+
       if (SystemConfiguration.hasProperty(DATASCHEMAS))
       {
         SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
       }
-      
+
       if (!SystemConfiguration.hasProperty(EMBEDSELECTOR))
       {
         SystemConfiguration.setProperty(EMBEDSELECTOR, "true");
       }
-      
+
       if (!SystemConfiguration.hasProperty(USEMEMLOOKUPTABLE))
       {
         SystemConfiguration.setProperty(USEMEMLOOKUPTABLE, "false");
       }
-     
+
       if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
       {
         SystemConfiguration.setProperty(USEHDFSLOOKUPTABLE, "false");
@@ -179,7 +180,23 @@ public class QuerierProps
         valid = false;
       }
     }
-    
+
+    // Load the new local query and data schemas
+    if (valid)
+    {
+      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
+          + SystemConfiguration.getProperty("query.schemas"));
+      try
+      {
+        LoadDataSchemas.initialize();
+        LoadQuerySchemas.initialize();
+
+      } catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+
     return valid;
   }
 }

@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,51 +44,29 @@ public class SystemConfiguration
   private static final Properties props;
 
   /**
-   * By default, if the pirk.properties file is found on the root of the classpath, it is loaded first.
+   * By default, these files should be found on the root of the classpath
    */
   private static final String DEFAULT_PROPERTY_FILE = "pirk.properties";
+  private static final String QUERIER_PROPERTIES_FILE = "querier.properties";
+  private static final String RESPONDER_PROPERTIES_FILE = "responder.properties";
 
   private static final String LOCAL_PROPERTIES_DIR = "local.pirk.properties.dir";
-  
-  private static final String QUERIER_PROPERTIES_FILE = "querier.properties";
-  
-  private static final String RESPONDER_PROPERTIES_FILE = "responder.properties";
 
   static
   {
     props = new Properties();
     initialize();
-
-    // Load any data schema files indicated in the properties
-    try
-    {
-      LoadDataSchemas.class.newInstance();
-    } catch (Exception e)
-    {
-      logger.error("Issue when invoking LoadDataSchemas");
-      e.printStackTrace();
-    }
-
-    // Load any query schema files indicated in the properties
-    try
-    {
-      LoadQuerySchemas.class.newInstance();
-    } catch (Exception e)
-    {
-      logger.error("Issue when invoking LoadDataSchemas");
-      e.printStackTrace();
-    }
   }
 
   public static void initialize()
   {
     // First try to load the default properties file
-    loadPropsFromFile(DEFAULT_PROPERTY_FILE);
-   
+    loadPropsFromStream(DEFAULT_PROPERTY_FILE);
+
     // Try to load props from the querier and responder property files, if they exist
-    loadPropsFromFile(QUERIER_PROPERTIES_FILE);
-    loadPropsFromFile(RESPONDER_PROPERTIES_FILE);
-    
+    loadPropsFromStream(QUERIER_PROPERTIES_FILE);
+    loadPropsFromStream(RESPONDER_PROPERTIES_FILE);
+
     // Try to load the local properties files, if they exists
     loadPropsFromDir(LOCAL_PROPERTIES_DIR);
   }
@@ -128,10 +104,10 @@ public class SystemConfiguration
   {
     props.setProperty(propertyName, value);
   }
-  
+
   public static boolean hasProperty(String propertyName)
   {
-    return props.contains(propertyName);
+    return props.containsKey(propertyName);
   }
 
   /**
@@ -141,18 +117,19 @@ public class SystemConfiguration
    */
   public static void appendProperty(String property, String propToAdd)
   {
-     String value = props.getProperty(property);
-     if(value != null)
-     {
-       value += "," + propToAdd;
-     }
-     else
-     {
-       value = propToAdd;
-     }
-     props.setProperty(property, value);
+    String value = props.getProperty(property);
+
+    if (value != null && !value.equals("none"))
+    {
+      value += "," + propToAdd;
+    }
+    else
+    {
+      value = propToAdd;
+    }
+    props.setProperty(property, value);
   }
-  
+
   /**
    * Reset all properties to the default values
    */
@@ -161,7 +138,7 @@ public class SystemConfiguration
     clearProperties();
     initialize();
   }
-  
+
   /**
    * Loads the properties from local properties file in the specified directory
    * <p>
@@ -171,27 +148,18 @@ public class SystemConfiguration
   {
     File dir = new File(dirName);
     File[] directoryListing = dir.listFiles();
-    if (directoryListing != null) 
+    if (directoryListing != null)
     {
-      for (File file : directoryListing) 
+      for (File file : directoryListing)
       {
-        if(file.getName().endsWith(".properties"))
+        if (file.getName().endsWith(".properties"))
         {
           loadPropsFromFile(file);
         }
       }
-    } 
+    }
   }
-  
-  /**
-   * Loads the properties from the specified file
-   */
-  public static void loadPropsFromFile(String fileName)
-  {
-    File file = new File(getProperty(fileName));
-    loadPropsFromFile(file);
-  }
-  
+
   /**
    * Loads the properties from the specified file
    */
@@ -213,6 +181,31 @@ public class SystemConfiguration
     else
     {
       logger.warn("Properties file does not exist: '" + file.getAbsolutePath() + "'");
+    }
+  }
+
+  /**
+   * Loads the properties from the specified file on the classpath
+   */
+  public static void loadPropsFromStream(String name)
+  {
+    try
+    {
+      InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(name);
+      if (stream != null)
+      {
+        logger.info("Loading file '" + name + "'");
+        props.load(stream);
+        stream.close();
+      }
+      else
+      {
+        logger.error("No file found '" + name + "'");
+      }
+    } catch (IOException e)
+    {
+      logger.error("Problem loading file '" + name + "'");
+      e.printStackTrace();
     }
   }
 }

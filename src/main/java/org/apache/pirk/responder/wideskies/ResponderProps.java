@@ -45,15 +45,14 @@ public class ResponderProps
   public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
-  public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKeys";
+  public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
   public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
-  
-  public static final List<String> PROPSLIST = Arrays.asList(PLATFORM,QUERYINPUT,DATAINPUTFORMAT,
-      INPUTDATA,BASEQUERY,ESRESOURCE,ESQUERY,OUTPUTFILE,BASEINPUTFORMAT,STOPLISTFILE,NUMREDUCETASKS,
-      USELOCALCACHE,LIMITHITSPERSELECTOR,MAXHITSPERSELECTOR,MAPMEMORY,REDUCEMEMORY,MAPJAVAOPTS,
-      REDUCEJAVAOPTS,QUERYSCHEMAS,DATASCHEMAS,NUMEXPLOOKUPPARTS,USEHDFSLOOKUPTABLE,NUMDATAPARTITIONS,
-      NUMCOLMULTPARTITIONS,USEMODEXPJOIN,COLMULTREDUCEBYKEY,ALLOWEMBEDDEDQUERYSCHEMAS);
-  
+
+  public static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
+      BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
+      REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
+      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS);
+
   /**
    * Validates the responder properties
    * 
@@ -63,51 +62,51 @@ public class ResponderProps
     boolean valid = true;
 
     // Parse general required options
-    
+
     if (!SystemConfiguration.hasProperty(PLATFORM))
     {
       logger.info("Must have the option " + PLATFORM);
       valid = false;
     }
-    
+
     String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
     if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("standalone"))
     {
       logger.info("Unsupported platform: " + platform);
       valid = false;
     }
-    
+
     if (!SystemConfiguration.hasProperty(QUERYINPUT))
     {
       logger.info("Must have the option " + QUERYINPUT);
       valid = false;
     }
-    
+
     if (!SystemConfiguration.hasProperty(OUTPUTFILE))
     {
       logger.info("Must have the option " + OUTPUTFILE);
       valid = false;
     }
-    
-    if (!SystemConfiguration.hasProperty(QUERYSCHEMAS))
+
+    if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
     {
       SystemConfiguration.appendProperty("query.schemas", SystemConfiguration.getProperty(QUERYSCHEMAS));
     }
-    
-    if (!SystemConfiguration.hasProperty(DATASCHEMAS))
+
+    if (SystemConfiguration.hasProperty(DATASCHEMAS))
     {
       SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
     }
-    
+
     if (!SystemConfiguration.hasProperty(DATAINPUTFORMAT))
     {
       logger.info("Must have the option " + DATAINPUTFORMAT);
       valid = false;
     }
     String dataInputFormat = SystemConfiguration.getProperty(DATAINPUTFORMAT).toLowerCase();
-    
+
     // Parse required properties by dataInputFormat
-    
+
     if (dataInputFormat.equals(InputFormatConst.BASE_FORMAT))
     {
       if (!SystemConfiguration.hasProperty(BASEINPUTFORMAT))
@@ -115,7 +114,7 @@ public class ResponderProps
         logger.info("Must have the option " + BASEINPUTFORMAT + " if using " + InputFormatConst.BASE_FORMAT);
         valid = false;
       }
-     
+
       if (!SystemConfiguration.hasProperty(INPUTDATA))
       {
         logger.info("Must have the option " + INPUTDATA + " if using " + InputFormatConst.BASE_FORMAT);
@@ -134,7 +133,7 @@ public class ResponderProps
         logger.info("Must have the option " + ESRESOURCE);
         valid = false;
       }
-      
+
       if (!SystemConfiguration.hasProperty(ESQUERY))
       {
         logger.info("Must have the option " + ESQUERY);
@@ -156,7 +155,7 @@ public class ResponderProps
     }
 
     // Parse optional properties with defaults
-    
+
     if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
     {
       SystemConfiguration.setProperty(USEHDFSLOOKUPTABLE, "false");
@@ -187,21 +186,27 @@ public class ResponderProps
       SystemConfiguration.setProperty(ALLOWEMBEDDEDQUERYSCHEMAS, "false");
     }
 
-    // Load the new local query and data schemas
-    try
+    if (!SystemConfiguration.hasProperty(USELOCALCACHE))
     {
-      LoadDataSchemas.initialize();
-      LoadQuerySchemas.initialize();
-
-    } catch (Exception e)
-    {
-      e.printStackTrace();
+      SystemConfiguration.setProperty(USELOCALCACHE, "true");
     }
 
-    
+    // Load the new local query and data schemas
+    if (valid)
+    {
+      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
+          + SystemConfiguration.getProperty("query.schemas"));
+      try
+      {
+        LoadDataSchemas.initialize();
+        LoadQuerySchemas.initialize();
+
+      } catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+
     return valid;
   }
-  
-  
-
 }

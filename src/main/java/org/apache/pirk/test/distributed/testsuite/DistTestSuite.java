@@ -226,15 +226,15 @@ public class DistTestSuite
     // Test embedded QuerySchema
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Test pad columns

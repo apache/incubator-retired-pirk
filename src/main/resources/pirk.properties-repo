@@ -22,17 +22,16 @@
 ##
 
 # Name of log4j properties file (relative to current folder)
-log4jPropertiesFile=logging/log4j2.properties
+log4jPropertiesFile=log4j2.properties
 
-#Name of the local properties file - used when running with the 
-#hadoop jar command
-local.pirk.properties=/root/local.pirk.properties
+#Name of the directory holding the local properties files
+#All property files must end in .properties
+local.pirk.properties.dir=/root/properties
 
 ##
 ##Spark path for SparkLauncher
 ##
-#spark.home = /usr
-spark.home=/opt/cloudera/parcels/CDH/lib/spark
+spark.home = /usr
 
 ##
 ## Data schema properties
@@ -202,7 +201,7 @@ pir.esQuery = none
 pir.outputFile = none
 
 #Fully qualified dir in hdfs of file containing stoplist terms
-pir.stopListFile = stopListFile
+pir.stopListFile = none
 
 #Number of reduce tasks
 pir.numReduceTasks = 100

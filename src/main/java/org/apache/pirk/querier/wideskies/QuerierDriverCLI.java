@@ -18,14 +18,14 @@
  */
 package org.apache.pirk.querier.wideskies;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,43 +109,27 @@ public class QuerierDriverCLI
    */
   private boolean parseOptions()
   {
-    boolean valid = true; 
+    boolean valid = true;
 
-    //If we have a local.querier.properties file specified, load it 
-    if(hasOption(LOCALPROPFILE))
+    // If we have a local.querier.properties file specified, load it
+    if (hasOption(LOCALPROPFILE))
     {
-      SystemConfiguration.loadPropsFromFile(getOptionValue(LOCALPROPFILE));
+      SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
     }
-    else  
+    else
     {
-      //Pull options, set as properties   
-      for(String prop: QuerierProps.PROPSLIST)
+      // Pull options, set as properties
+      for (String prop : QuerierProps.PROPSLIST)
       {
-        if(hasOption(prop))
+        if (hasOption(prop))
         {
           SystemConfiguration.setProperty(prop, getOptionValue(prop));
         }
       }
     }
 
-    //Validate properties
+    // Validate properties
     valid = QuerierProps.validateQuerierProperties();
-
-    // Load the new local query and data schemas
-    if(valid)
-    {
-      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
-          + SystemConfiguration.getProperty("query.schemas"));
-      try
-      {
-        LoadDataSchemas.initialize();
-        LoadQuerySchemas.initialize();
-
-      } catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-    }
 
     return valid;
   }
@@ -247,7 +231,8 @@ public class QuerierDriverCLI
     options.addOption(optionHASHKEY);
 
     // DATAPARTITIONSIZE
-    Option optionDATAPARTITIONSIZE = new Option("dps", QuerierProps.DATAPARTITIONSIZE, true, "required for encryption -- Partition bit size in data partitioning");
+    Option optionDATAPARTITIONSIZE = new Option("dps", QuerierProps.DATAPARTITIONSIZE, true,
+        "required for encryption -- Partition bit size in data partitioning");
     optionDATAPARTITIONSIZE.setRequired(false);
     optionDATAPARTITIONSIZE.setArgName(QuerierProps.DATAPARTITIONSIZE);
     optionDATAPARTITIONSIZE.setType(String.class);
@@ -278,8 +263,8 @@ public class QuerierDriverCLI
     options.addOption(optionBITSET);
 
     // embedSelector
-    Option optionEmbedSelector = new Option("embed", QuerierProps.EMBEDSELECTOR, true, "required for encryption -- 'true' or 'false' - Whether or not to embed "
-        + "the selector in the results to reduce false positives");
+    Option optionEmbedSelector = new Option("embed", QuerierProps.EMBEDSELECTOR, true,
+        "required for encryption -- 'true' or 'false' - Whether or not to embed " + "the selector in the results to reduce false positives");
     optionEmbedSelector.setRequired(false);
     optionEmbedSelector.setArgName(QuerierProps.EMBEDSELECTOR);
     optionEmbedSelector.setType(String.class);
@@ -303,7 +288,8 @@ public class QuerierDriverCLI
     options.addOption(optionUseHDFSLookupTable);
 
     // QUERIERFILE
-    Option optionQUERIERFILE = new Option("qf", QuerierProps.QUERIERFILE, true, "required for decryption -- Fully qualified file containing the serialized Querier object");
+    Option optionQUERIERFILE = new Option("qf", QuerierProps.QUERIERFILE, true,
+        "required for decryption -- Fully qualified file containing the serialized Querier object");
     optionQUERIERFILE.setRequired(false);
     optionQUERIERFILE.setArgName(QuerierProps.QUERIERFILE);
     optionQUERIERFILE.setType(String.class);

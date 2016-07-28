@@ -18,6 +18,9 @@
  */
 package test.schema.query;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,9 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import test.schema.data.LoadDataSchemaTest;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import test.schema.data.LoadDataSchemaTest;
 
