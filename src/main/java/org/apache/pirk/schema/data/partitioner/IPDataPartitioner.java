@@ -34,7 +34,7 @@ public class IPDataPartitioner implements DataPartitioner
   private static final long serialVersionUID = 1L;
 
   @Override
-  public ArrayList<BigInteger> toPartitions(Object object, String type) throws Exception
+  public ArrayList<BigInteger> toPartitions(Object object, String type)
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws Exception
+  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type)
   {
     Object element;
 
@@ -59,13 +59,13 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public int getBits(String type) throws Exception
+  public int getBits(String type)
   {
     return Integer.SIZE;
   }
 
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws Exception
+  public ArrayList<BigInteger> getPaddedPartitions(String type)
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class IPDataPartitioner implements DataPartitioner
    * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
    */
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws Exception
+  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type)
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
@@ -101,7 +101,7 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public int getNumPartitions(String type) throws Exception
+  public int getNumPartitions(String type)
   {
     return 4;
   }

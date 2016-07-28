@@ -19,10 +19,12 @@
 package org.apache.pirk.schema.data.partitioner;
 
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pirk.utils.ISO8601DateParser;
+import org.apache.pirk.utils.PIRException;
 
 /**
  * Partitioner class for ISO8061 dates
@@ -41,15 +43,22 @@ public class ISO8601DatePartitioner implements DataPartitioner
   }
 
   @Override
-  public ArrayList<BigInteger> toPartitions(Object object, String type) throws Exception
+  public ArrayList<BigInteger> toPartitions(Object object, String type) throws PIRException
   {
-    long dateLongFormat = ISO8601DateParser.getLongDate((String) object);
+    long dateLongFormat;
+    try
+    {
+      dateLongFormat = ISO8601DateParser.getLongDate((String) object);
+    } catch (ParseException e)
+    {
+      throw new PIRException("Unable to parse ISO8601 date " + object, e);
+    }
 
     return ptp.toPartitions(dateLongFormat, PrimitiveTypePartitioner.LONG);
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws Exception
+  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws PIRException
   {
     long dateLongFormat = (long) ptp.fromPartitions(parts, partsIndex, PrimitiveTypePartitioner.LONG);
 
@@ -57,25 +66,25 @@ public class ISO8601DatePartitioner implements DataPartitioner
   }
 
   @Override
-  public int getBits(String type) throws Exception
+  public int getBits(String type)
   {
     return Long.SIZE;
   }
 
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws Exception
+  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
   {
     return ptp.arrayToPartitions(elementList, PrimitiveTypePartitioner.LONG);
   }
 
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws Exception
+  public ArrayList<BigInteger> getPaddedPartitions(String type) throws PIRException
   {
     return ptp.getPaddedPartitions(PrimitiveTypePartitioner.LONG);
   }
 
   @Override
-  public int getNumPartitions(String type) throws Exception
+  public int getNumPartitions(String type) throws PIRException
   {
     return ptp.getNumPartitions(PrimitiveTypePartitioner.LONG);
   }
