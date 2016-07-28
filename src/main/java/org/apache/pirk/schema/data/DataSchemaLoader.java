@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * Class to load any data schemas specified in the properties file, 'data.schemas'
  * <p>
- * Schemas should be specified as follows; all items are treated in a case insensitive manner:
+ * Schemas should be specified as follows:
  * 
  * <pre>
  * {@code
