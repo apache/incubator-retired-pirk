@@ -21,13 +21,13 @@ public class ResponderProps
   public static final String PLATFORM = "platform";
   public static final String QUERYINPUT = "pir.queryInput";
   public static final String DATAINPUTFORMAT = "pir.dataInputFormat";
+  public static final String OUTPUTFILE = "pir.outputFile";
+
+  // Optional properties
   public static final String INPUTDATA = "pir.inputData";
   public static final String BASEQUERY = "pir.baseQuery";
   public static final String ESRESOURCE = "pir.esResource";
   public static final String ESQUERY = "pir.esQuery";
-  public static final String OUTPUTFILE = "pir.outputFile";
-
-  // Optional properties
   public static final String BASEINPUTFORMAT = "pir.baseInputFormat";
   public static final String STOPLISTFILE = "pir.stopListFile";
   public static final String NUMREDUCETASKS = "pir.numReduceTasks";
@@ -88,16 +88,6 @@ public class ResponderProps
       valid = false;
     }
 
-    if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
-    {
-      SystemConfiguration.appendProperty("query.schemas", SystemConfiguration.getProperty(QUERYSCHEMAS));
-    }
-
-    if (SystemConfiguration.hasProperty(DATASCHEMAS))
-    {
-      SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
-    }
-
     if (!SystemConfiguration.hasProperty(DATAINPUTFORMAT))
     {
       logger.info("Must have the option " + DATAINPUTFORMAT);
@@ -111,13 +101,13 @@ public class ResponderProps
     {
       if (!SystemConfiguration.hasProperty(BASEINPUTFORMAT))
       {
-        logger.info("Must have the option " + BASEINPUTFORMAT + " if using " + InputFormatConst.BASE_FORMAT);
+        logger.info("For base inputformt: Must have the option " + BASEINPUTFORMAT + " if using " + InputFormatConst.BASE_FORMAT);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(INPUTDATA))
       {
-        logger.info("Must have the option " + INPUTDATA + " if using " + InputFormatConst.BASE_FORMAT);
+        logger.info("For base inputformt: Must have the option " + INPUTDATA + " if using " + InputFormatConst.BASE_FORMAT);
         valid = false;
       }
 
@@ -130,13 +120,13 @@ public class ResponderProps
     {
       if (!SystemConfiguration.hasProperty(ESRESOURCE))
       {
-        logger.info("Must have the option " + ESRESOURCE);
+        logger.info("For ElasticSearch inputformt: Must have the option " + ESRESOURCE);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(ESQUERY))
       {
-        logger.info("Must have the option " + ESQUERY);
+        logger.info("For ElasticSearch inputformat: Must have the option " + ESQUERY);
         valid = false;
       }
     }
@@ -155,6 +145,16 @@ public class ResponderProps
     }
 
     // Parse optional properties with defaults
+
+    if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
+    {
+      SystemConfiguration.appendProperty("query.schemas", SystemConfiguration.getProperty(QUERYSCHEMAS));
+    }
+
+    if (SystemConfiguration.hasProperty(DATASCHEMAS))
+    {
+      SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
+    }
 
     if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
     {

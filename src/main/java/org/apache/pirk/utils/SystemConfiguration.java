@@ -20,6 +20,7 @@ package org.apache.pirk.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -111,7 +112,7 @@ public class SystemConfiguration
   }
 
   /**
-   * Append a property via a column separated list
+   * Append a property via a comma separated list
    * <p>
    * If the property does not exist, it adds it
    */
@@ -146,16 +147,20 @@ public class SystemConfiguration
    */
   public static void loadPropsFromDir(String dirName)
   {
-    File dir = new File(dirName);
-    File[] directoryListing = dir.listFiles();
+    File[] directoryListing = new File(dirName).listFiles(new FilenameFilter()
+    {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+        return name.endsWith(".properties");
+      }
+    });
+
     if (directoryListing != null)
     {
       for (File file : directoryListing)
       {
-        if (file.getName().endsWith(".properties"))
-        {
-          loadPropsFromFile(file);
-        }
+        loadPropsFromFile(file);
       }
     }
   }

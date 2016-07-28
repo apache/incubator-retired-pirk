@@ -114,6 +114,7 @@ public class QuerierDriverCLI
     // If we have a local.querier.properties file specified, load it
     if (hasOption(LOCALPROPFILE))
     {
+      System.out.println("getOptionValue(LOCALPROPFILE) = " + getOptionValue(LOCALPROPFILE));
       SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
     }
     else
@@ -149,8 +150,10 @@ public class QuerierDriverCLI
     options.addOption(optionHelp);
 
     // local.querier.properties
-    Option optionLocalPropFile = new Option("localPropFile", LOCALPROPFILE, false, "Optional local properties file");
+    Option optionLocalPropFile = new Option("localPropFile", LOCALPROPFILE, true, "Optional local properties file");
     optionLocalPropFile.setRequired(false);
+    optionLocalPropFile.setArgName(LOCALPROPFILE);
+    optionLocalPropFile.setType(String.class);
     options.addOption(optionLocalPropFile);
 
     // ACTION

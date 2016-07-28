@@ -99,49 +99,49 @@ public class QuerierProps
     {
       if (!SystemConfiguration.hasProperty(QUERYTYPE))
       {
-        logger.info("Must have the option " + QUERYTYPE);
+        logger.info("For action='encrypt': Must have the option " + QUERYTYPE);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(HASHBITSIZE))
       {
-        logger.info("Must have the option " + HASHBITSIZE);
+        logger.info("For action='encrypt': Must have the option " + HASHBITSIZE);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(HASHKEY))
       {
-        logger.info("Must have the option " + HASHKEY);
+        logger.info("For action='encrypt': Must have the option " + HASHKEY);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(DATAPARTITIONSIZE))
       {
-        logger.info("Must have the option " + DATAPARTITIONSIZE);
+        logger.info("For action='encrypt': Must have the option " + DATAPARTITIONSIZE);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(PAILLIERBITSIZE))
       {
-        logger.info("Must have the option " + PAILLIERBITSIZE);
+        logger.info("For action='encrypt': Must have the option " + PAILLIERBITSIZE);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(CERTAINTY))
       {
-        logger.info("Must have the option " + CERTAINTY);
+        logger.info("For action='encrypt': Must have the option " + CERTAINTY);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(QUERYNAME))
       {
-        logger.info("Must have the option " + QUERYNAME);
+        logger.info("For action='encrypt': Must have the option " + QUERYNAME);
         valid = false;
       }
 
       if (!SystemConfiguration.hasProperty(BITSET))
       {
-        logger.info("Must have the option " + BITSET);
+        logger.info("For action='encrypt': Must have the option " + BITSET);
         valid = false;
       }
 
@@ -176,7 +176,7 @@ public class QuerierProps
     {
       if (!SystemConfiguration.hasProperty(QUERIERFILE))
       {
-        logger.info("Must have the option " + QUERIERFILE);
+        logger.info("For action='decrypt': Must have the option " + QUERIERFILE);
         valid = false;
       }
     }

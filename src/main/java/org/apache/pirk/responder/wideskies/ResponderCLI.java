@@ -148,6 +148,13 @@ public class ResponderCLI
     optionHelp.setRequired(false);
     options.addOption(optionHelp);
 
+    // local.querier.properties
+    Option optionLocalPropFile = new Option("localPropFile", LOCALPROPFILE, true, "Optional local properties file");
+    optionLocalPropFile.setRequired(false);
+    optionLocalPropFile.setArgName(LOCALPROPFILE);
+    optionLocalPropFile.setType(String.class);
+    options.addOption(optionLocalPropFile);
+
     // platform
     Option optionPlatform = new Option("p", ResponderProps.PLATFORM, true,
         "required -- 'mapreduce', 'spark', or 'standalone' : Processing platform technology for the responder");
@@ -348,7 +355,7 @@ public class ResponderCLI
     optionColMultReduceByKey.setType(String.class);
     options.addOption(optionColMultReduceByKey);
 
-    // colMultReduceByKey
+    // allowEmbeddedQS
     Option optionAllowEmbeddedQS = new Option("allowEmbeddedQS", ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS, true,
         "optional -- 'true' or 'false'  (defaults to 'false') -- " + "If true, allows embedded QuerySchemas for a query.");
     optionAllowEmbeddedQS.setRequired(false);
