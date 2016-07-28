@@ -3,8 +3,8 @@ package org.apache.pirk.querier.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,8 +188,8 @@ public class QuerierProps
           + SystemConfiguration.getProperty("query.schemas"));
       try
       {
-        LoadDataSchemas.initialize();
-        LoadQuerySchemas.initialize();
+        DataSchemaLoader.initialize();
+        QuerySchemaLoader.initialize();
 
       } catch (Exception e)
       {

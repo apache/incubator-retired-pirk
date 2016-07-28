@@ -34,9 +34,11 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -159,8 +161,8 @@ public class ComputeResponse
   private void setup() throws Exception
   {
     // Load the schemas
-    LoadDataSchemas.initialize(true, fs);
-    LoadQuerySchemas.initialize(true, fs);
+    DataSchemaLoader.initialize(true, fs);
+    QuerySchemaLoader.initialize(true, fs);
 
     // Create the accumulators and broadcast variables
     accum = new Accumulators(sc);
@@ -179,10 +181,10 @@ public class ComputeResponse
     }
     if (qSchema == null)
     {
-      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+      qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     }
-
-    DataSchema dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    
+    DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     bVars.setQuerySchema(qSchema);
     bVars.setDataSchema(dSchema);
 
@@ -250,13 +252,13 @@ public class ComputeResponse
     job.getConfiguration().set("query", baseQuery);
 
     logger.debug("queryType = " + bVars.getQueryInfo().getQueryType());
-    logger.debug("LoadQuerySchemas.getSchemaNames().size() = " + LoadQuerySchemas.getSchemaNames().size());
-    for (String name : LoadQuerySchemas.getSchemaNames())
+    logger.debug("QuerySchemaLoader.getSchemaNames().size() = " + QuerySchemaRegistry.getNames().size());
+    for (String name : QuerySchemaRegistry.getNames())
     {
       logger.debug("schemaName = " + name);
     }
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(bVars.getQueryInfo().getQueryType());
+    QuerySchema qSchema = QuerySchemaRegistry.get(bVars.getQueryInfo().getQueryType());
     job.getConfiguration().set("dataSchemaName", qSchema.getDataSchemaName());
     job.getConfiguration().set("data.schemas", SystemConfiguration.getProperty("data.schemas"));
 

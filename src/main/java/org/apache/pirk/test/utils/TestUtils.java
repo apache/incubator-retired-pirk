@@ -190,17 +190,17 @@ public class TestUtils
 
       // Add the schemaName
       Element schemaNameElement = doc.createElement("schemaName");
-      schemaNameElement.appendChild(doc.createTextNode(querySchemaName.toLowerCase()));
+      schemaNameElement.appendChild(doc.createTextNode(querySchemaName));
       rootElement.appendChild(schemaNameElement);
 
       // Add the dataSchemaName
       Element dataSchemaNameElement = doc.createElement("dataSchemaName");
-      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput.toLowerCase()));
+      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput));
       rootElement.appendChild(dataSchemaNameElement);
 
       // Add the selectorName
       Element selectorNameElement = doc.createElement("selectorName");
-      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput.toLowerCase()));
+      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput));
       rootElement.appendChild(selectorNameElement);
 
       // Add the elementNames
@@ -210,7 +210,7 @@ public class TestUtils
       {
         logger.info("elementName = " + elementName);
         Element name = doc.createElement("name");
-        name.appendChild(doc.createTextNode(elementName.toLowerCase()));
+        name.appendChild(doc.createTextNode(elementName));
         elements.appendChild(name);
       }
 
@@ -228,7 +228,7 @@ public class TestUtils
         {
           logger.info("filterName = " + filterName);
           Element name = doc.createElement("name");
-          name.appendChild(doc.createTextNode(filterName.toLowerCase()));
+          name.appendChild(doc.createTextNode(filterName));
           filterNamesElement.appendChild(name);
         }
       }

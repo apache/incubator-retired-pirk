@@ -23,11 +23,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.utils.SystemConfiguration;
 
 /**
@@ -35,7 +35,7 @@ import org.apache.pirk.utils.SystemConfiguration;
  */
 public class FilterFactory
 {
-  public static Object getFilter(String filterName, QuerySchema qSchema) throws Exception
+  public static DataFilter getFilter(String filterName, Set<String> filteredElementNames) throws Exception
   {
     Object obj = null;
 
@@ -66,7 +66,7 @@ public class FilterFactory
           stopList.add(qLine);
         }
 
-        obj = new StopListFilter(qSchema.getFilterElementNames(), stopList);
+        obj = new StopListFilter(filteredElementNames, stopList);
       }
     }
     else
@@ -80,6 +80,6 @@ public class FilterFactory
       }
     }
 
-    return obj;
+    return (DataFilter) obj;
   }
 }

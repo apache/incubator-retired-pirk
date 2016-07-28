@@ -109,7 +109,7 @@ public class StringUtils
         if (jsonObj.get(key) != null)
         {
           logger.debug("key = " + key.toString());
-          if (dataSchema.hasListRep((String) key))
+          if (dataSchema.isArrayElement((String) key))
           {
             WritableArrayWritable mapValue = StringUtils.jsonArrayStringToWritableArrayWritable(jsonObj.get(key).toString());
             value.put(mapKey, mapValue);
@@ -149,7 +149,7 @@ public class StringUtils
         if (jsonObj.get(key) != null)
         {
           logger.debug("key = " + key.toString());
-          if (dataSchema.hasListRep((String) key))
+          if (dataSchema.isArrayElement((String) key))
           {
             ArrayWritable mapValue = StringUtils.jsonArrayStringtoArrayWritable(jsonObj.get(key).toString());
             value.put(mapKey, mapValue);
@@ -188,7 +188,7 @@ public class StringUtils
         String mapKey = key.toString();
         if (jsonObj.get(key) != null)
         {
-          if (dataSchema.hasListRep((String) key))
+          if (dataSchema.isArrayElement((String) key))
           {
             ArrayList<String> mapValue = StringUtils.jsonArrayStringToArrayList(jsonObj.get(key).toString());
             value.put(mapKey, mapValue);

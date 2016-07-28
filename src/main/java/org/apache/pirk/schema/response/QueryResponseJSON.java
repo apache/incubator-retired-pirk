@@ -21,15 +21,14 @@ package org.apache.pirk.schema.response;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
@@ -76,8 +75,8 @@ public class QueryResponseJSON implements Serializable
       logger.info("queryInfo is null");
     }
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
+    dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     jsonObj = new JSONObject();
     setGeneralQueryResponseFields(queryInfo);
@@ -123,12 +122,12 @@ public class QueryResponseJSON implements Serializable
   @SuppressWarnings("unchecked")
   private void initialize()
   {
-    HashSet<String> schemaStringRep = dSchema.getNonListRep();
+    Set<String> schemaStringRep = dSchema.getNonArrayElements();
     for (String key : schemaStringRep)
     {
       jsonObj.put(key, "");
     }
-    HashSet<String> schemaListRep = dSchema.getListRep();
+    Set<String> schemaListRep = dSchema.getArrayElements();
     for (String key : schemaListRep)
     {
       jsonObj.put(key, new ArrayList<>());
@@ -148,7 +147,7 @@ public class QueryResponseJSON implements Serializable
     }
     else
     {
-      if (dSchema.getListRep().contains(key))
+      if (dSchema.getArrayElements().contains(key))
       {
         if (!(val instanceof ArrayList))
         {
@@ -171,7 +170,7 @@ public class QueryResponseJSON implements Serializable
           jsonObj.put(key, val);
         }
       }
-      else if (dSchema.getNonListRep().contains(key) || key.equals(SELECTOR))
+      else if (dSchema.getNonArrayElements().contains(key) || key.equals(SELECTOR))
       {
         jsonObj.put(key, val);
       }

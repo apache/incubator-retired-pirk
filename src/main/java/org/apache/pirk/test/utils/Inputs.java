@@ -35,11 +35,11 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.utils.HDFS;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -437,7 +437,7 @@ public class Inputs
     {
       createDataSchema(fs, true);
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create and load the query schemas
     // DNS_HOSTNAME_QUERY
@@ -497,7 +497,7 @@ public class Inputs
           null, null, false, fs, hdfs);
     }
 
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
   }
 
   /**

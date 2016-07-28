@@ -26,9 +26,9 @@ import java.util.Arrays;
  */
 public class InputFormatConst
 {
-  public static String BASE_FORMAT = "base";
+  public static final String BASE_FORMAT = "base";
 
-  public static String ES = "elasticsearch";
+  public static final String ES = "elasticsearch";
 
-  public static ArrayList<String> ALLOWED_FORMATS = new ArrayList<>(Arrays.asList(BASE_FORMAT, ES));
+  public static final ArrayList<String> ALLOWED_FORMATS = new ArrayList<>(Arrays.asList(BASE_FORMAT, ES));
 }

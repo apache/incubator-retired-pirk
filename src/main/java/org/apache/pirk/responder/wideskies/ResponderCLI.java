@@ -41,7 +41,7 @@ public class ResponderCLI
   private CommandLine commandLine = null;
 
   private static final String LOCALPROPFILE = "local.responder.properties";
-
+  
   /**
    * Create and parse allowable options
    * 
