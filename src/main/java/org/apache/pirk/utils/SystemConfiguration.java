@@ -20,12 +20,11 @@ package org.apache.pirk.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 1) Load in the DEFAULT_PROPERTY_FILE, if found on the classpath. (Currently 'pirk.properties')
  * <p>
- * 2) Load in any properties from LOCAL_PROPERTY_FILE
+ * 2) Load in any properties files in the LOCAL_PROPERTIES_DIR. The filenames must end with '.properties'
+ * <p>
+ * 3) Load in properties from the QUERIER_PROPERTIES_FILE and RESPONDER_PROPERTIES_FILE
  * 
  */
 public class SystemConfiguration
@@ -44,78 +45,31 @@ public class SystemConfiguration
   private static final Properties props;
 
   /**
-   * By default, if the pirk.properties file is found on the root of the classpath, it is loaded first.
+   * By default, these files should be found on the root of the classpath
    */
   private static final String DEFAULT_PROPERTY_FILE = "pirk.properties";
+  private static final String QUERIER_PROPERTIES_FILE = "querier.properties";
+  private static final String RESPONDER_PROPERTIES_FILE = "responder.properties";
 
-  /**
-   * By default, if the local.pirk.properties file is found on the root of the classpath, it is loaded after pirk.properites.
-   */
-  private static final String LOCAL_PROPERTY_FILE = "local.pirk.properties";
+  private static final String LOCAL_PROPERTIES_DIR = "local.pirk.properties.dir";
 
   static
   {
     props = new Properties();
     initialize();
-
-    // Load any data schema files indicated in the properties
-    try
-    {
-      DataSchemaLoader.class.newInstance();
-    } catch (Exception e)
-    {
-      logger.error("Issue when invoking DataSchemaLoader");
-      e.printStackTrace();
-    }
-
-    // Load any query schema files indicated in the properties
-    try
-    {
-      QuerySchemaLoader.class.newInstance();
-    } catch (Exception e)
-    {
-      logger.error("Issue when invoking DataSchemaLoader");
-      e.printStackTrace();
-    }
   }
 
   public static void initialize()
   {
     // First try to load the default properties file
-    try
-    {
-      InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(DEFAULT_PROPERTY_FILE);
-      if (stream != null)
-      {
-        logger.info("Loading default properties file '" + DEFAULT_PROPERTY_FILE + "'");
-        props.load(stream);
-        stream.close();
-      }
-      else
-      {
-        logger.error("No default configuration file found '" + DEFAULT_PROPERTY_FILE + "'");
-      }
-    } catch (IOException e)
-    {
-      logger.error("Problem loading default properties file '" + DEFAULT_PROPERTY_FILE + "'");
-      e.printStackTrace();
-    }
+    loadPropsFromStream(DEFAULT_PROPERTY_FILE);
 
-    // Try to load the local properties file, if one exists
-    File localFile = new File(getProperty(LOCAL_PROPERTY_FILE));
-    if (localFile.exists())
-    {
-      try (InputStream stream = new FileInputStream(localFile);)
-      {
-        logger.info("Loading local properties file '" + localFile.getAbsolutePath() + "'");
-        props.load(stream);
-        stream.close();
-      } catch (IOException e)
-      {
-        logger.error("Problem loading local properties file '" + localFile.getAbsolutePath() + "'");
-        e.printStackTrace();
-      }
-    }
+    // Try to load props from the querier and responder property files, if they exist
+    loadPropsFromStream(QUERIER_PROPERTIES_FILE);
+    loadPropsFromStream(RESPONDER_PROPERTIES_FILE);
+
+    // Try to load the local properties files, if they exists
+    loadPropsFromDir(LOCAL_PROPERTIES_DIR);
   }
 
   /**
@@ -152,6 +106,31 @@ public class SystemConfiguration
     props.setProperty(propertyName, value);
   }
 
+  public static boolean hasProperty(String propertyName)
+  {
+    return props.containsKey(propertyName);
+  }
+
+  /**
+   * Append a property via a comma separated list
+   * <p>
+   * If the property does not exist, it adds it
+   */
+  public static void appendProperty(String property, String propToAdd)
+  {
+    String value = props.getProperty(property);
+
+    if (value != null && !value.equals("none"))
+    {
+      value += "," + propToAdd;
+    }
+    else
+    {
+      value = propToAdd;
+    }
+    props.setProperty(property, value);
+  }
+
   /**
    * Reset all properties to the default values
    */
@@ -159,5 +138,79 @@ public class SystemConfiguration
   {
     clearProperties();
     initialize();
+  }
+
+  /**
+   * Loads the properties from local properties file in the specified directory
+   * <p>
+   * Only files ending in '.properties' will be loaded
+   */
+  public static void loadPropsFromDir(String dirName)
+  {
+    File[] directoryListing = new File(dirName).listFiles(new FilenameFilter()
+    {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+        return name.endsWith(".properties");
+      }
+    });
+
+    if (directoryListing != null)
+    {
+      for (File file : directoryListing)
+      {
+        loadPropsFromFile(file);
+      }
+    }
+  }
+
+  /**
+   * Loads the properties from the specified file
+   */
+  public static void loadPropsFromFile(File file)
+  {
+    if (file.exists())
+    {
+      try (InputStream stream = new FileInputStream(file);)
+      {
+        logger.info("Loading properties file '" + file.getAbsolutePath() + "'");
+        props.load(stream);
+        stream.close();
+      } catch (IOException e)
+      {
+        logger.error("Problem loading properties file '" + file.getAbsolutePath() + "'");
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      logger.warn("Properties file does not exist: '" + file.getAbsolutePath() + "'");
+    }
+  }
+
+  /**
+   * Loads the properties from the specified file on the classpath
+   */
+  public static void loadPropsFromStream(String name)
+  {
+    try
+    {
+      InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(name);
+      if (stream != null)
+      {
+        logger.info("Loading file '" + name + "'");
+        props.load(stream);
+        stream.close();
+      }
+      else
+      {
+        logger.error("No file found '" + name + "'");
+      }
+    } catch (IOException e)
+    {
+      logger.error("Problem loading file '" + name + "'");
+      e.printStackTrace();
+    }
   }
 }

@@ -183,6 +183,7 @@ public class ComputeResponse
     {
       qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     }
+
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
     bVars.setQuerySchema(qSchema);
     bVars.setDataSchema(dSchema);
@@ -202,7 +203,7 @@ public class ComputeResponse
     numColMultPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numColMultPartitions", numDataPartsString));
 
     // Whether or not we are performing a reduceByKey or a groupByKey->reduce for column multiplication
-    colMultReduceByKey = SystemConfiguration.getProperty("pir.colMultReduceByKey").equals("true");
+    colMultReduceByKey = SystemConfiguration.getProperty("pir.colMultReduceByKey", "false").equals("true");
 
     // Set the expDir
     bVars.setExpDir(outputDirExp);

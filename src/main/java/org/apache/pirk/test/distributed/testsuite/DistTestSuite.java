@@ -32,7 +32,7 @@ import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.responder.wideskies.ResponderCLI;
+import org.apache.pirk.responder.wideskies.ResponderProps;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
@@ -226,15 +226,15 @@ public class DistTestSuite
     // Test embedded QuerySchema
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Test pad columns
@@ -402,30 +402,30 @@ public class DistTestSuite
       String inputFormat = SystemConfiguration.getProperty("pir.dataInputFormat");
       logger.info("inputFormat = " + inputFormat);
       ArrayList<String> args = new ArrayList<>();
-      args.add("-" + ResponderCLI.PLATFORM + "=spark");
-      args.add("-" + ResponderCLI.DATAINPUTFORMAT + "=" + inputFormat);
-      args.add("-" + ResponderCLI.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
-      args.add("-" + ResponderCLI.OUTPUTFILE + "=" + SystemConfiguration.getProperty("pir.outputFile"));
-      args.add("-" + ResponderCLI.STOPLISTFILE + "=" + SystemConfiguration.getProperty("pir.stopListFile"));
-      args.add("-" + ResponderCLI.USELOCALCACHE + "=" + SystemConfiguration.getProperty("pir.useLocalCache", "true"));
-      args.add("-" + ResponderCLI.LIMITHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.limitHitsPerSelector", "false"));
-      args.add("-" + ResponderCLI.MAXHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.maxHitsPerSelector", "1000"));
-      args.add("-" + ResponderCLI.QUERYSCHEMAS + "=" + Inputs.HDFS_QUERY_FILES);
-      args.add("-" + ResponderCLI.DATASCHEMAS + "=" + Inputs.DATA_SCHEMA_FILE_HDFS);
-      args.add("-" + ResponderCLI.NUMEXPLOOKUPPARTS + "=" + SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
-      args.add("-" + ResponderCLI.USEMODEXPJOIN + "=" + SystemConfiguration.getProperty("pir.useModExpJoin", "false"));
-      args.add("-" + ResponderCLI.NUMCOLMULTPARTITIONS + "=" + SystemConfiguration.getProperty("pir.numColMultPartitions", "20"));
-      args.add("-" + ResponderCLI.COLMULTREDUCEBYKEY + "=" + SystemConfiguration.getProperty("pir.colMultReduceByKey", "false"));
+      args.add("-" + ResponderProps.PLATFORM + "=spark");
+      args.add("-" + ResponderProps.DATAINPUTFORMAT + "=" + inputFormat);
+      args.add("-" + ResponderProps.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
+      args.add("-" + ResponderProps.OUTPUTFILE + "=" + SystemConfiguration.getProperty("pir.outputFile"));
+      args.add("-" + ResponderProps.STOPLISTFILE + "=" + SystemConfiguration.getProperty("pir.stopListFile"));
+      args.add("-" + ResponderProps.USELOCALCACHE + "=" + SystemConfiguration.getProperty("pir.useLocalCache", "true"));
+      args.add("-" + ResponderProps.LIMITHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.limitHitsPerSelector", "false"));
+      args.add("-" + ResponderProps.MAXHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.maxHitsPerSelector", "1000"));
+      args.add("-" + ResponderProps.QUERYSCHEMAS + "=" + Inputs.HDFS_QUERY_FILES);
+      args.add("-" + ResponderProps.DATASCHEMAS + "=" + Inputs.DATA_SCHEMA_FILE_HDFS);
+      args.add("-" + ResponderProps.NUMEXPLOOKUPPARTS + "=" + SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
+      args.add("-" + ResponderProps.USEMODEXPJOIN + "=" + SystemConfiguration.getProperty("pir.useModExpJoin", "false"));
+      args.add("-" + ResponderProps.NUMCOLMULTPARTITIONS + "=" + SystemConfiguration.getProperty("pir.numColMultPartitions", "20"));
+      args.add("-" + ResponderProps.COLMULTREDUCEBYKEY + "=" + SystemConfiguration.getProperty("pir.colMultReduceByKey", "false"));
       if (inputFormat.equals(InputFormatConst.BASE_FORMAT))
       {
-        args.add("-" + ResponderCLI.INPUTDATA + "=" + SystemConfiguration.getProperty("pir.inputData"));
-        args.add("-" + ResponderCLI.BASEQUERY + "=" + SystemConfiguration.getProperty("pir.baseQuery"));
-        args.add("-" + ResponderCLI.BASEINPUTFORMAT + "=" + SystemConfiguration.getProperty("pir.baseInputFormat"));
+        args.add("-" + ResponderProps.INPUTDATA + "=" + SystemConfiguration.getProperty("pir.inputData"));
+        args.add("-" + ResponderProps.BASEQUERY + "=" + SystemConfiguration.getProperty("pir.baseQuery"));
+        args.add("-" + ResponderProps.BASEINPUTFORMAT + "=" + SystemConfiguration.getProperty("pir.baseInputFormat"));
       }
       else if (inputFormat.equals(InputFormatConst.ES))
       {
-        args.add("-" + ResponderCLI.ESQUERY + "=" + SystemConfiguration.getProperty("pir.esQuery"));
-        args.add("-" + ResponderCLI.ESRESOURCE + "=" + SystemConfiguration.getProperty("pir.esResource"));
+        args.add("-" + ResponderProps.ESQUERY + "=" + SystemConfiguration.getProperty("pir.esQuery"));
+        args.add("-" + ResponderProps.ESRESOURCE + "=" + SystemConfiguration.getProperty("pir.esResource"));
       }
 
       for (String arg : args)

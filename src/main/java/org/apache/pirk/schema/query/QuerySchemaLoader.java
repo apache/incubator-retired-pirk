@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 /**
  * Class to load any query schemas specified in the properties file, 'query.schemas'
  * <p>
- * Schemas should be specified as follows; all items are treated in a case insensitive manner:
+ * Schemas should be specified as follows:
  * 
  * <pre>
  * {@code
