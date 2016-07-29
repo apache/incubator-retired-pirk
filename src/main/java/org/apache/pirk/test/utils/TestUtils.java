@@ -21,8 +21,8 @@ package org.apache.pirk.test.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -293,25 +293,22 @@ public class TestUtils
    * Write the ArrayList<String to a tmp file in the local filesystem with the given fileName
    * 
    */
-  public static String writeToTmpFile(ArrayList<String> list, String fileName, String suffix) throws IOException
+  public static String writeToTmpFile(List<String> list, String fileName, String suffix) throws IOException
   {
-    String filename;
-
     File file = File.createTempFile(fileName, suffix);
     file.deleteOnExit();
-    filename = file.toString();
-    logger.info("localFS: file = " + file.toString());
+    logger.info("localFS: file = " + file);
 
-    FileOutputStream fos = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-    for (String s : list)
+    FileWriter fw = new FileWriter(file);
+    try (BufferedWriter bw = new BufferedWriter(fw))
     {
-      bw.write(s);
-      bw.newLine();
+      for (String s : list)
+      {
+        bw.write(s);
+        bw.newLine();
+      }
     }
-    bw.close();
 
-    return filename;
+    return file.getPath();
   }
 }

@@ -221,7 +221,7 @@ public class EncryptQuery
   private void serialEncrypt(HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
   {
     int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
-    
+
     EncryptQueryRunnable runner = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, 0, numElements - 1);
     runner.run();
 

@@ -43,6 +43,7 @@ import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -307,7 +308,7 @@ public class LoadQuerySchemaTest
   }
 
   // Create the stoplist file and alter the properties accordingly
-  private void createStopListFile() throws IOException
+  private void createStopListFile() throws IOException, PIRException
   {
     SystemConfiguration.setProperty("pir.stopListFile", "testStopListFile");
     String newSLFile = Inputs.createPIRStopList(null, false);
