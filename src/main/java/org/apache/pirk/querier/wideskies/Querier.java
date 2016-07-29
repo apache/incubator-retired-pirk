@@ -66,7 +66,7 @@ public class Querier implements Serializable, Storable
     embedSelectorMap = embedSelectorMapInput;
   }
 
-  public QueryInfo getPirWatchlist()
+  public QueryInfo getQueryInfo()
   {
     return queryInfo;
   }

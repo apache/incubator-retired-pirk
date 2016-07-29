@@ -203,6 +203,8 @@ public class QuerierDriver implements Serializable
       Response response = storage.recall(inputFile, Response.class);
       Querier querier = storage.recall(querierFile, Querier.class);
 
+      querier.  
+      
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);
       decryptResponse.decrypt(numThreads);
