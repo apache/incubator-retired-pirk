@@ -24,12 +24,12 @@ package org.apache.pirk.utils;
 public class FileConst
 {
   // For general output
-  public static String COUNTS = "counts";
-  public static String DETAILS = "details";
+  public static final String COUNTS = "counts";
+  public static final String DETAILS = "details";
 
   // For PIR
-  public static String PIR = "pir";
-  public static String EXP = "exp";
-  public static String PIR_COLS = "pirCols";
-  public static String PIR_FINAL = "pirFinal";
+  public static final String PIR = "pir";
+  public static final String EXP = "exp";
+  public static final String PIR_COLS = "pirCols";
+  public static final String PIR_FINAL = "pirFinal";
 }

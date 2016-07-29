@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.distributed.testsuite.DistTestSuite;
 import org.apache.pirk.test.utils.Inputs;
@@ -137,12 +137,12 @@ public class DistributedTestDriver
     // Force the query and data schemas to load their original values
     if (!dataSchemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
   }
 }

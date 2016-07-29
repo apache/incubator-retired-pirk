@@ -21,13 +21,15 @@ package org.apache.pirk.schema.query.filter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 
 /**
@@ -35,7 +37,7 @@ import org.apache.pirk.utils.SystemConfiguration;
  */
 public class FilterFactory
 {
-  public static Object getFilter(String filterName, QuerySchema qSchema) throws Exception
+  public static DataFilter getFilter(String filterName, Set<String> filteredElementNames) throws IOException, PIRException
   {
     Object obj = null;
 
@@ -66,20 +68,23 @@ public class FilterFactory
           stopList.add(qLine);
         }
 
-        obj = new StopListFilter(qSchema.getFilterElementNames(), stopList);
+        obj = new StopListFilter(filteredElementNames, stopList);
       }
     }
     else
     {
       // Instantiate and validate the interface implementation
-      Class c = Class.forName(filterName);
-      obj = c.newInstance();
-      if (!(obj instanceof DataFilter))
+      try
       {
-        throw new Exception("filterName = " + filterName + " DOES NOT implement the DataFilter interface");
+        @SuppressWarnings("unchecked")
+        Class<? extends DataFilter> c = (Class<? extends DataFilter>) Class.forName(filterName);
+        obj = c.newInstance();
+      } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e)
+      {
+        throw new PIRException("filterName = " + filterName + " cannot be instantiated or does not implement DataFilter interface");
       }
     }
 
-    return obj;
+    return (DataFilter) obj;
   }
 }

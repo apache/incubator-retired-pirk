@@ -18,6 +18,8 @@
  */
 package org.apache.pirk.test.utils;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,8 +35,8 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
@@ -42,7 +44,6 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.fail;
 
 public class StandaloneQuery
 {
@@ -61,7 +62,7 @@ public class StandaloneQuery
     logger.info("Performing watchlisting: ");
 
     ArrayList<QueryResponseJSON> results = null;
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(queryType);
+    QuerySchema qSchema = QuerySchemaRegistry.get(queryType);
 
     // Create the necessary files
     LocalFileSystemStore storage = new LocalFileSystemStore();

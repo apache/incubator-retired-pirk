@@ -35,13 +35,14 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.utils.HDFS;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -390,27 +391,29 @@ public class Inputs
   /**
    * Creates PIR stoplist file
    */
-  public static String createPIRStopList(FileSystem fs, boolean hdfs) throws IOException
+  public static String createPIRStopList(FileSystem fs, boolean hdfs) throws IOException, PIRException
   {
     logger.info("PIR stopList file being created");
 
-    String tmpFileName;
-
-    ArrayList<String> elements = new ArrayList<>();
-    elements.add("something.else.on.stoplist");
-    elements.add("3.3.3.132");
+    List<String> elements = Arrays.asList("something.else.on.stoplist", "3.3.3.132");
 
     if (hdfs)
     {
       String pirStopListFile = SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE);
-
+      if (pirStopListFile == null)
+      {
+        throw new PIRException("HDFS stop list file configuration name is required.");
+      }
       HDFS.writeFile(elements, fs, pirStopListFile, true);
-      logger.info("pirStopListFile file successfully created!");
+      logger.info("pirStopListFile file successfully created on hdfs!");
     }
 
-    tmpFileName = TestUtils.writeToTmpFile(elements, SystemConfiguration.getProperty("pir.stopListFile"), null);
-
-    return tmpFileName;
+    String prefix = SystemConfiguration.getProperty("pir.stopListFile");
+    if (prefix == null)
+    {
+      throw new PIRException("Local stop list file configuration name is required.");
+    }
+    return TestUtils.writeToTmpFile(elements, prefix, null);
   }
 
   /**
@@ -437,7 +440,7 @@ public class Inputs
     {
       createDataSchema(fs, true);
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create and load the query schemas
     // DNS_HOSTNAME_QUERY
@@ -497,7 +500,7 @@ public class Inputs
           null, null, false, fs, hdfs);
     }
 
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
   }
 
   /**

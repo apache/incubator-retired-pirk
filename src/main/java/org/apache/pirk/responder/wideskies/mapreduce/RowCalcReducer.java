@@ -32,13 +32,14 @@ import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**
@@ -86,8 +87,8 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
       SystemConfiguration.setProperty("query.schemas", ctx.getConfiguration().get("query.schemas"));
       SystemConfiguration.setProperty("pir.stopListFile", ctx.getConfiguration().get("pirMR.stopListFile"));
 
-      LoadDataSchemas.initialize(true, fs);
-      LoadQuerySchemas.initialize(true, fs);
+      DataSchemaLoader.initialize(true, fs);
+      QuerySchemaLoader.initialize(true, fs);
 
     } catch (Exception e)
     {

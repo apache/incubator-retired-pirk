@@ -18,12 +18,15 @@
  */
 package test.general;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
@@ -31,9 +34,6 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Class for testing the QueryParser methods
@@ -54,7 +54,7 @@ public class QueryParserUtilsTest
 
     Inputs.createSchemaFiles(null, false, null);
 
-    dSchema = LoadDataSchemas.getSchema(Inputs.TEST_DATA_SCHEMA_NAME);
+    dSchema = DataSchemaRegistry.get(Inputs.TEST_DATA_SCHEMA_NAME);
 
     // ProcessBuilder pAdd1 = new ProcessBuilder("curl", "-XPUT", indexTypeNum1, "-d",
     // "{\"qname\":\"a.b.c.com\",\"date\":\"2016-02-20T23:29:05.000Z\",\"qtype\":[\"1\"]"

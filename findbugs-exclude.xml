@@ -1,0 +1,13 @@
+<!-- FindBugs filter for reported bugs that have been reviewed and identified 
+    as false positives. -->
+
+<FindBugsFilter>
+    <Match>
+        <Class name="org.apache.pirk.schema.data.DataSchema" />
+        <or>
+            <Field name="partitionerInstances" />
+            <Field name="textRep" />
+        </or>
+        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+    </Match>
+</FindBugsFilter>

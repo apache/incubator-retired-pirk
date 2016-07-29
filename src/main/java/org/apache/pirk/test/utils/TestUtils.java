@@ -21,8 +21,8 @@ package org.apache.pirk.test.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -190,17 +190,17 @@ public class TestUtils
 
       // Add the schemaName
       Element schemaNameElement = doc.createElement("schemaName");
-      schemaNameElement.appendChild(doc.createTextNode(querySchemaName.toLowerCase()));
+      schemaNameElement.appendChild(doc.createTextNode(querySchemaName));
       rootElement.appendChild(schemaNameElement);
 
       // Add the dataSchemaName
       Element dataSchemaNameElement = doc.createElement("dataSchemaName");
-      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput.toLowerCase()));
+      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput));
       rootElement.appendChild(dataSchemaNameElement);
 
       // Add the selectorName
       Element selectorNameElement = doc.createElement("selectorName");
-      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput.toLowerCase()));
+      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput));
       rootElement.appendChild(selectorNameElement);
 
       // Add the elementNames
@@ -210,7 +210,7 @@ public class TestUtils
       {
         logger.info("elementName = " + elementName);
         Element name = doc.createElement("name");
-        name.appendChild(doc.createTextNode(elementName.toLowerCase()));
+        name.appendChild(doc.createTextNode(elementName));
         elements.appendChild(name);
       }
 
@@ -228,7 +228,7 @@ public class TestUtils
         {
           logger.info("filterName = " + filterName);
           Element name = doc.createElement("name");
-          name.appendChild(doc.createTextNode(filterName.toLowerCase()));
+          name.appendChild(doc.createTextNode(filterName));
           filterNamesElement.appendChild(name);
         }
       }
@@ -293,25 +293,22 @@ public class TestUtils
    * Write the ArrayList<String to a tmp file in the local filesystem with the given fileName
    * 
    */
-  public static String writeToTmpFile(ArrayList<String> list, String fileName, String suffix) throws IOException
+  public static String writeToTmpFile(List<String> list, String fileName, String suffix) throws IOException
   {
-    String filename;
-
     File file = File.createTempFile(fileName, suffix);
     file.deleteOnExit();
-    filename = file.toString();
-    logger.info("localFS: file = " + file.toString());
+    logger.info("localFS: file = " + file);
 
-    FileOutputStream fos = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-    for (String s : list)
+    FileWriter fw = new FileWriter(file);
+    try (BufferedWriter bw = new BufferedWriter(fw))
     {
-      bw.write(s);
-      bw.newLine();
+      for (String s : list)
+      {
+        bw.write(s);
+        bw.newLine();
+      }
     }
-    bw.close();
 
-    return filename;
+    return file.getPath();
   }
 }

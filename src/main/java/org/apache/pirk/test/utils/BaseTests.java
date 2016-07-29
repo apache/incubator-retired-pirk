@@ -18,6 +18,8 @@
  */
 package org.apache.pirk.test.utils;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,8 +27,8 @@ import java.util.Set;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.query.wideskies.QueryUtils;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.test.distributed.testsuite.DistTestSuite;
 import org.apache.pirk.utils.StringUtils;
@@ -35,7 +37,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.fail;
 
 /**
  * Class to hold the base functional distributed tests
@@ -74,7 +75,7 @@ public class BaseTests
   {
     logger.info("Running testDNSHostnameQuery(): ");
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_HOSTNAME_QUERY);
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_HOSTNAME_QUERY);
 
     int numExpectedResults = 6;
     ArrayList<QueryResponseJSON> results;
@@ -199,7 +200,7 @@ public class BaseTests
   {
     logger.info("Running testDNSIPQuery(): ");
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_IP_QUERY);
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_IP_QUERY);
     ArrayList<QueryResponseJSON> results;
 
     if (isDistributed)
@@ -274,7 +275,7 @@ public class BaseTests
   {
     logger.info("Running testDNSNXDOMAINQuery(): ");
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_NXDOMAIN_QUERY);
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_NXDOMAIN_QUERY);
     ArrayList<QueryResponseJSON> results;
 
     if (isDistributed)
@@ -338,7 +339,7 @@ public class BaseTests
   {
     logger.info("Running testSRCIPQuery(): ");
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY);
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_SRCIP_QUERY);
     ArrayList<QueryResponseJSON> results;
 
     int removeTailElements = 0;
@@ -412,7 +413,7 @@ public class BaseTests
   {
     logger.info("Running testSRCIPQueryNoFilter(): ");
 
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(Inputs.DNS_SRCIP_QUERY_NO_FILTER);
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_SRCIP_QUERY_NO_FILTER);
     ArrayList<QueryResponseJSON> results;
 
     int numExpectedResults = 3;

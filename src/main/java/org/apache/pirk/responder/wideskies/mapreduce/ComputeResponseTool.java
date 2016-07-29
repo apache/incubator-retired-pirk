@@ -46,9 +46,10 @@ import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.HDFS;
@@ -125,8 +126,8 @@ public class ComputeResponseTool extends Configured implements Tool
     fs = FileSystem.get(conf);
 
     // Load the schemas
-    LoadDataSchemas.initialize(true, fs);
-    LoadQuerySchemas.initialize(true, fs);
+    DataSchemaLoader.initialize(true, fs);
+    QuerySchemaLoader.initialize(true, fs);
 
     query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);
     queryInfo = query.getQueryInfo();
@@ -136,7 +137,7 @@ public class ComputeResponseTool extends Configured implements Tool
     }
     if (qSchema == null)
     {
-      qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
+      qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     }
 
     logger.info("outputFile = " + outputFile + " outputDirInit = " + outputDirInit + " outputDirColumnMult = " + outputDirColumnMult + " queryInputDir = "

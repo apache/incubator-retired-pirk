@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * 
    */
   @Override
-  public int getNumPartitions(String type) throws Exception
+  public int getNumPartitions(String type) throws PIRException
   {
     int partitionSize = 8;
 
@@ -140,7 +141,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
         numParts = Integer.parseInt(SystemConfiguration.getProperty("pir.stringBits")) / partitionSize;
         break;
       default:
-        throw new Exception("type = " + type + " not recognized!");
+        throw new PIRException("type = " + type + " not recognized!");
     }
     return numParts;
   }
@@ -149,7 +150,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Get the bit size of the allowed primitive java types
    */
   @Override
-  public int getBits(String type) throws Exception
+  public int getBits(String type) throws PIRException
   {
     int bits;
     switch (type)
@@ -179,7 +180,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
         bits = Integer.parseInt(SystemConfiguration.getProperty("pir.stringBits"));
         break;
       default:
-        throw new Exception("type = " + type + " not recognized!");
+        throw new PIRException("type = " + type + " not recognized!");
     }
     return bits;
   }
@@ -188,7 +189,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Reconstructs the object from the partitions
    */
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws Exception
+  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws PIRException
   {
     Object element;
 
@@ -242,7 +243,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
         break;
       }
       default:
-        throw new Exception("type = " + type + " not recognized!");
+        throw new PIRException("type = " + type + " not recognized!");
     }
     return element;
   }
@@ -264,7 +265,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Partitions an object to an ArrayList of BigInteger values, currently represents an 8-bit partitioning
    */
   @Override
-  public ArrayList<BigInteger> toPartitions(Object obj, String type) throws Exception
+  public ArrayList<BigInteger> toPartitions(Object obj, String type) throws PIRException
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
@@ -378,7 +379,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Method to get an empty set of partitions by data type - used for padding return array values
    */
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws Exception
+  public ArrayList<BigInteger> getPaddedPartitions(String type) throws PIRException
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
@@ -433,7 +434,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
    */
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws Exception
+  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
