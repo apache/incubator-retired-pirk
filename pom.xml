@@ -302,6 +302,7 @@
                         <exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
                         <exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
                         <exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
+						<exclude>KEYS</exclude> <!-- GPG keys of Release Managers -->
                     </excludes>
                 </configuration>
                 <dependencies>
