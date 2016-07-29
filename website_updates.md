@@ -24,7 +24,7 @@ To get help with jekyll:
 
 To test the site locally (usually on http://localhost:4000):
 
-    bundle exec jekyll serve --config _config-asf.yml --safe
+    bundle exec jekyll serve --config _config-asf.yml --safe --baseurl=""
 
 To build for updating the `asf-site` branch:
 

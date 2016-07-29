@@ -56,7 +56,7 @@ Pirk follows coding style practices found in the [eclipse-pirk-codestyle.xml](ht
 
 #### Eclipse
 * Import Formatter: Properties > Java Code Style > Formatter and import the [eclipse-pirk-codestyle.xml](https://github.com/apache/incubator-pirk) file.
-* Import Template: Properties > Java Code Style > Code Templates and import the [eclipse-pirk-codestyle.xml](https://github.com/apache/incubator-pirk). Make sure to check the “Automatically add comments” box. This template adds the ASF header and so on for new code.
+* Import Template: Properties > Java Code Style > Code Templates and import the [eclipse-pirk-template.xml](https://github.com/apache/incubator-pirk). Make sure to check the “Automatically add comments” box. This template adds the ASF header and so on for new code.
 
 #### IntelliJ
 * Formatter [plugin](https://code.google.com/p/eclipse-code-formatter-intellij-plugin) that uses eclipse code style xml.

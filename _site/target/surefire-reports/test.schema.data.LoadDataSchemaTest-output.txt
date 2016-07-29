@@ -1,0 +1,54 @@
+ INFO [main] 2016-07-28 14:55:17,387 (LoadDataSchemaTest.java:189) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/unknownPartitioner1409159550330146036.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>int</type><partitioner>fakePartitioner</partitioner></element></schema>
+ INFO [main] 2016-07-28 14:55:17,391 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/unknownPartitioner1409159550330146036.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,391 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/unknownPartitioner1409159550330146036.xml
+ INFO [main] 2016-07-28 14:55:17,392 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,392 (DataSchemaLoader.java:172) - schemaName = fakeDataSchema
+ INFO [main] 2016-07-28 14:55:17,393 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,393 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml
+ INFO [main] 2016-07-28 14:55:17,394 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:172) - schemaName = testDataSchema
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,395 (DataSchemaLoader.java:238) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,396 (LoadDataSchemaTest.java:234) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/schemaFile4275166956904824149.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>string</type></element><element><name>elementName2</name><type>int</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName3</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element></schema>
+ INFO [main] 2016-07-28 14:55:17,399 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/schemaFile4275166956904824149.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,399 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/schemaFile4275166956904824149.xml
+ INFO [main] 2016-07-28 14:55:17,400 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,400 (DataSchemaLoader.java:172) - schemaName = fakeDataSchema
+ INFO [main] 2016-07-28 14:55:17,400 (DataSchemaLoader.java:238) - name = elementName1 javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,400 (DataSchemaLoader.java:238) - name = elementName2 javaType = int isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,401 (DataSchemaLoader.java:238) - name = elementName3 javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,401 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,401 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml
+ INFO [main] 2016-07-28 14:55:17,402 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,402 (DataSchemaLoader.java:172) - schemaName = testDataSchema
+ INFO [main] 2016-07-28 14:55:17,402 (DataSchemaLoader.java:238) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,403 (DataSchemaLoader.java:238) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,404 (LoadDataSchemaTest.java:288) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/wrongJavaType1908233396410933597.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>bogus</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element></schema>
+ INFO [main] 2016-07-28 14:55:17,406 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/wrongJavaType1908233396410933597.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,406 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/wrongJavaType1908233396410933597.xml
+ INFO [main] 2016-07-28 14:55:17,407 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,407 (DataSchemaLoader.java:172) - schemaName = fakeDataSchema
+ INFO [main] 2016-07-28 14:55:17,407 (DataSchemaLoader.java:105) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml hdfs = false
+ INFO [main] 2016-07-28 14:55:17,407 (DataSchemaLoader.java:118) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile8686086504793353994.xml
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:163) - Root element: schema
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:172) - schemaName = testDataSchema
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:238) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:238) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:238) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:238) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-28 14:55:17,409 (DataSchemaLoader.java:238) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,410 (DataSchemaLoader.java:238) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-28 14:55:17,410 (DataSchemaLoader.java:238) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
