@@ -1,10 +1,6 @@
 language: java
-
-os:
-  - linux
-
-jdk:
-  - oraclejdk8
+os: linux
+jdk: oraclejdk8
 
 # before_install is used to provide a workaround for buffer overflow issues with OpenJDK versions of java as per:
 #    https://github.com/travis-ci/travis-ci/issues/5227#issuecomment-165135711
@@ -19,9 +15,8 @@ before_install:
   - export PATH=$PWD/apache-maven-3.3.9/bin:${PATH}
   - hash -r
 
-before_script:
-  - export M2_HOME=$PWD/apache-maven-3.3.9
-  - export PATH=$PWD/apache-maven-3.3.9/bin:${PATH}
-  - hash -r
+cache:
+  directories:
+    - $HOME/.m2
 
 install: mvn clean install
