@@ -38,8 +38,7 @@ import org.apache.pirk.querier.wideskies.QuerierConst;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.responder.wideskies.storm.OutputBolt;
-import org.apache.pirk.responder.wideskies.storm.PirkTopology;
+import org.apache.pirk.responder.wideskies.storm.*;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.schema.response.QueryResponseJSON;
@@ -53,7 +52,6 @@ import org.apache.storm.ILocalCluster;
 import org.apache.storm.Testing;
 import org.apache.storm.generated.StormTopology;
 import org.apache.storm.kafka.SpoutConfig;
-import org.apache.storm.kafka.StringScheme;
 import org.apache.storm.kafka.ZkHosts;
 import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.testing.IntegrationTest;
@@ -66,6 +64,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -87,12 +86,15 @@ public class KafkaStormIntegrationTest
   private static File fileFinalResults;
   private static String localStopListFile;
 
+  private QueryInfo queryInfo;
+  private BigInteger nSquared;
+
   @Test
   public void testKafkaStormIntegration() throws Exception
   {
     //SystemConfiguration.setProperty("storm.splitPartitions", "true");
     SystemConfiguration.setProperty("storm.splitPartitions", "false");
-    SystemConfiguration.setProperty("storm.saltColumns", "false");
+    SystemConfiguration.setProperty("storm.saltColumns", "true");
     SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "true");
     SystemConfiguration.getProperty("pir.maxHitsPerSelector", "10");
@@ -116,6 +118,7 @@ public class KafkaStormIntegrationTest
     // SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
     Inputs.createSchemaFiles(StopListFilter.class.getName());
 
+    // Perform encryption. Set queryInfo, nSquared, fileQuery, and fileQuerier
     performEncryption();
     SystemConfiguration.setProperty("pir.queryInput", fileQuery.getAbsolutePath());
 
@@ -143,6 +146,8 @@ public class KafkaStormIntegrationTest
     // Need to do this another way that is not dependent on timing...
     // probably use "withSimulatedTimeLocalCluster", but I can't get it to work how I want it to.
     Config conf = PirkTopology.createStormConf();
+    conf.put(StormConstants.N_SQUARED_KEY, nSquared.toString());
+    conf.put(StormConstants.QUERY_INFO_KEY, queryInfo.toMap());
     // conf.setDebug(true);
     mkClusterParam.setDaemonConf(conf);
 
@@ -153,7 +158,7 @@ public class KafkaStormIntegrationTest
 
   private TestJob createPirkTestJob(final Config config)
   {
-    final SpoutConfig kafkaConfig = setUpTestKafkaSpout();
+    final SpoutConfig kafkaConfig = setUpTestKafkaSpout(config);
     return new TestJob()
     {
       StormTopology topology = PirkTopology.getPirkTopology(kafkaConfig);
@@ -176,11 +181,13 @@ public class KafkaStormIntegrationTest
     };
   }
 
-  private SpoutConfig setUpTestKafkaSpout()
+  private SpoutConfig setUpTestKafkaSpout(Config conf)
   {
     ZkHosts zkHost = new ZkHosts(zookeeperLocalCluster.getConnectString());
     SpoutConfig kafkaConfig = new SpoutConfig(zkHost, topic, "/pirk_test_root", "pirk_integr_test_spout");
-    kafkaConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+    //kafkaConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+    kafkaConfig.scheme = new SchemeAsMultiScheme(new PirkHashScheme(conf));
+    //kafkaConfig.scheme = new SchemeAsMultiScheme(new HashMessageMetadataScheme(queryInfo));
     logger.info("KafkaConfig initialized...");
 
     return kafkaConfig;
@@ -261,7 +268,9 @@ public class KafkaStormIntegrationTest
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);
 
-    QueryInfo queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
+    nSquared = paillier.getNSquared();
+
+    queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
         queryType, queryType + "_" + BaseTests.queryNum, paillier.getBitLength(), false, true, false);
 
     // Perform the encryption
