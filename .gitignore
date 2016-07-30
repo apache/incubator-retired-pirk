@@ -30,3 +30,4 @@
 *.jar
 *.log
 .DS_Store
+pom.xml.releaseBackup

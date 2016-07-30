@@ -22,7 +22,7 @@
 
 
 	<groupId>org.apache.pirk</groupId>
-	<artifactId>pirk</artifactId>
+	<artifactId>apache-pirk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -61,6 +61,18 @@
 		</mailingList>
 	</mailingLists>
 
+	<scm>
+		<connection>scm:git:git://git.apache.org/incubator-pirk.git</connection>
+		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-pirk.git</developerConnection>
+		<url>https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://issues.apache.org/jira/browse/PIRK</url>
+	</issueManagement>
+
 	<repositories>
 		<repository>
 			<id>mvn-public</id>
@@ -72,19 +84,19 @@
 
 	</repositories>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <scala.version>2.10.4</scala.version>
-        <jmh.version>1.11.3</jmh.version>
-        <benchmarkjar.name>benchmarks</benchmarkjar.name>
-        <javac.target>1.7</javac.target>
-        <slf4j.version>1.7.21</slf4j.version>
-        <log4j2.version>2.6.2</log4j2.version>
-        <junit.version>4.12</junit.version>
-        <log4j.configuration>log4j2.properties</log4j.configuration>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<scala.version>2.10.4</scala.version>
+		<jmh.version>1.11.3</jmh.version>
+		<benchmarkjar.name>benchmarks</benchmarkjar.name>
+		<javac.target>1.8</javac.target>
+		<slf4j.version>1.7.21</slf4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
+		<junit.version>4.12</junit.version>
+		<log4j.configuration>log4j2.properties</log4j.configuration>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -140,7 +152,7 @@
 			<artifactId>spark-core_2.11</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-  
+
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-hadoop</artifactId>
@@ -204,126 +216,158 @@
 
 	<build>
 		<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>2.18</version>
-			<configuration>
-			<redirectTestOutputToFile>true</redirectTestOutputToFile>
-			<argLine combine.children="append">-Xmx1G
-				-Djava.net.preferIPv4Stack=true</argLine>
-			<systemPropertyVariables>
-				<log4j.configuration>${log4j.configuration}</log4j.configuration>
-			</systemPropertyVariables>
-			</configuration>
-			<dependencies>
-				<dependency>
-				<!-- Force surefire to use JUnit -->
-				<groupId>org.apache.maven.surefire</groupId>
-				<artifactId>surefire-junit4</artifactId>
-				<version>2.18</version>
-				</dependency>
-			</dependencies>
-                </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<compilerVersion>${javac.target}</compilerVersion>
-					<source>${javac.target}</source>
-					<target>${javac.target}</target>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<excludes>
-						<exclude>org/apache/pirk/benchmark/**</exclude>
-						<exclude>org/openjdk/jmh/**</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version> <!-- older versions of maven-shade-plugin make JMH painful -->
+			</plugin>
 
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<id>main</id>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>exe</shadedClassifierName>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								</transformer>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
-								</transformer>
-							</transformers>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
+			<plugin>
+				<groupId>org.apache.rat</groupId>
+				<artifactId>apache-rat-plugin</artifactId>
+			</plugin>
 
-                    <!-- in the version with benchmarks (pom-with-benchmarks.xml), this
-                        is where that <execution></execution> lives -->
-
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <version>0.11</version>
-                <configuration>
-                    <excludes>
-                        <exclude>nb-configuration.xml</exclude> <!-- courtesy excludes for netbeans users -->
-                        <exclude>nbactions.xml</exclude> <!-- courtesy excludes for netbeans users -->
-                        <exclude>DEPENDENCIES
-                        </exclude> <!-- auto generated file by apache's maven config while building sources.zip -->
-                        <exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
-                        <exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
-                        <exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
-						<exclude>KEYS</exclude> <!-- GPG keys of Release Managers -->
-                    </excludes>
-                </configuration>
-                <dependencies>
-                    <!-- workaround for RAT-158 -->
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-core</artifactId>
-                        <version>1.6</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>xerces</groupId>
-                                <artifactId>xercesImpl</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+		</plugins>
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.rat</groupId>
+					<artifactId>apache-rat-plugin</artifactId>
+					<version>0.11</version>
+					<configuration>
+						<excludes>
+							<exclude>nb-configuration.xml</exclude> <!-- courtesy excludes for netbeans users -->
+							<exclude>nbactions.xml</exclude> <!-- courtesy excludes for netbeans users -->
+							<exclude>DEPENDENCIES
+							</exclude> <!-- auto generated file by apache's maven config while building sources.zip -->
+							<exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
+							<exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
+							<exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
+							<exclude>KEYS</exclude> <!-- GPG keys of Release Managers -->
+						</excludes>
+					</configuration>
+					<dependencies>
+						<!-- workaround for RAT-158 -->
+						<dependency>
+							<groupId>org.apache.maven.doxia</groupId>
+							<artifactId>doxia-core</artifactId>
+							<version>1.6</version>
+							<exclusions>
+								<exclusion>
+									<groupId>xerces</groupId>
+									<artifactId>xercesImpl</artifactId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.18</version>
+					<configuration>
+						<redirectTestOutputToFile>true</redirectTestOutputToFile>
+						<argLine combine.children="append">-Xmx1G
+							-Djava.net.preferIPv4Stack=true
+						</argLine>
+						<systemPropertyVariables>
+							<log4j.configuration>${log4j.configuration}</log4j.configuration>
+						</systemPropertyVariables>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<!-- Force surefire to use JUnit -->
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit4</artifactId>
+							<version>2.18</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.5.1</version>
+					<configuration>
+						<compilerVersion>${javac.target}</compilerVersion>
+						<source>${javac.target}</source>
+						<target>${javac.target}</target>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.1</version>
+					<configuration>
+						<excludes>
+							<exclude>org/apache/pirk/benchmark/**</exclude>
+							<exclude>org/openjdk/jmh/**</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.4.3</version> <!-- older versions of maven-shade-plugin make JMH painful -->
+
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<id>main</id>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>exe</shadedClassifierName>
+								<transformers>
+									<transformer
+											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									</transformer>
+									<transformer
+											implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+									</transformer>
+								</transformers>
+								<filters>
+									<filter>
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>META-INF/*.SF</exclude>
+											<exclude>META-INF/*.DSA</exclude>
+											<exclude>META-INF/*.RSA</exclude>
+										</excludes>
+									</filter>
+								</filters>
+							</configuration>
+						</execution>
+
+						<!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+							is where that <execution></execution> lives -->
+
+					</executions>
+				</plugin>
+
 				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
@@ -375,9 +419,122 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<useReleaseProfile>true</useReleaseProfile>
+						<releaseProfiles>apache-release</releaseProfiles>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<goals>deploy</goals>
+						<tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
+						<pushChanges>false</pushChanges>
+						<localCheckout>true</localCheckout>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default</id>
+							<goals>
+								<goal>perform</goal>
+							</goals>
+							<configuration>
+								<pomFileName>pom.xml</pomFileName>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
 	</build>
+
+	<profiles>
+		<profile>
+			<!-- Performs execution of Integration Tests using the Maven FailSafe Plugin. The view of integration tests in this context
+			are those tests interfacing with external sources and services requiring additional resources or credentials that cannot
+			be explicitly provided. -->
+			<id>integration-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Checks style and licensing requirements. This is a good idea to run
+			for contributions and for the release process. While it would be nice to
+			run always these plugins can considerably slow the build and have proven
+			to create unstable builds in our multi-module project and when building using
+			multiple threads. The stability issues seen with Checkstyle in multi-module
+			builds include false-positives and false negatives. -->
+			<id>contrib-check</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.rat</groupId>
+						<artifactId>apache-rat-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>check-style</id>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- This profile will disable DocLint which performs strict
+				JavaDoc processing which was introduced in JDK 8. These are technically errors
+				in the JavaDoc which we need to eventually address. However, if a release
+				is performed using JDK 8, the JavaDoc generation would fail. By activating
+				this profile when running on JDK 8 we can ensure the JavaDocs continue to
+				generate successfully -->
+			<id>disable-doclint</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<configuration>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
