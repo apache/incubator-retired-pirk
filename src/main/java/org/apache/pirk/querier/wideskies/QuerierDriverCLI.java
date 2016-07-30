@@ -55,7 +55,7 @@ public class QuerierDriverCLI
   public static final String PAILLIERBITSIZE = "paillierBitSize";
   public static final String BITSET = "bitSet";
   public static final String CERTAINTY = "certainty";
-  public static final String QUERYNAME = "queryName";
+  public static final String QUERYID = "queryID";
   public static final String QUERYSCHEMAS = "querySchemas";
   public static final String DATASCHEMAS = "dataSchemas";
   public static final String EMBEDSELECTOR = "embedSelector";
@@ -239,12 +239,12 @@ public class QuerierDriverCLI
       }
       SystemConfiguration.setProperty(CERTAINTY, getOptionValue(CERTAINTY));
 
-      if (!hasOption(QUERYNAME))
+      if (!hasOption(QUERYID))
       {
-        logger.info("Must have the option " + QUERYNAME);
+        logger.info("Must have the option " + QUERYID);
         return false;
       }
-      SystemConfiguration.setProperty(QUERYNAME, getOptionValue(QUERYNAME));
+      SystemConfiguration.setProperty(QUERYID, getOptionValue(QUERYID));
 
       if (!hasOption(BITSET))
       {
@@ -397,9 +397,9 @@ public class QuerierDriverCLI
     options.addOption(optionTYPE);
 
     // NAME
-    Option optionNAME = new Option("qn", QUERYNAME, true, "required for encryption -- Name of the query");
+    Option optionNAME = new Option("qn", QUERYID, true, "required for encryption -- Name of the query");
     optionNAME.setRequired(false);
-    optionNAME.setArgName(QUERYNAME);
+    optionNAME.setArgName(QUERYID);
     optionNAME.setType(String.class);
     options.addOption(optionNAME);
 

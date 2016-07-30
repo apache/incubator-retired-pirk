@@ -91,7 +91,7 @@ public class QuerierDriver implements Serializable
     int dataPartitionBitSize = 0;
     int paillierBitSize = 0;
     int certainty = 0;
-    String queryName = null;
+    String queryID = null;
     int bitSet = -1;
     boolean embedSelector = true;
     boolean useMemLookupTable = false;
@@ -111,7 +111,7 @@ public class QuerierDriver implements Serializable
     if (action.equals("encrypt"))
     {
       queryType = qdriverCLI.getOptionValue(QuerierDriverCLI.TYPE);
-      queryName = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYNAME);
+      queryID = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYNAME);
       hashBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE));
       hashKey = qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE);
       dataPartitionBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.DATAPARTITIONSIZE));
