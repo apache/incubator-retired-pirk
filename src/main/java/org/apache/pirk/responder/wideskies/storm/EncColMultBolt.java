@@ -84,14 +84,16 @@ public class EncColMultBolt extends BaseRichBolt
       numFlushSignals += 1;
       logger.debug("Received  " + numFlushSignals + " flush signals out of " + totalFlushSignals);
 
+      // Need to receive notice from all EncRowCalcBolts in order to flush.
       if (numFlushSignals == totalFlushSignals)
       {
         logger.debug("Received signal to flush in EncColMultBolt. Outputting " + resultsMap.keySet().size() + " results.");
         for (Long key : resultsMap.keySet())
-          // key = column Id
+          // key = column Id, value = aggregated product
           outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(key, resultsMap.get(key)));
         resultsMap.clear();
 
+        // Send signal to OutputBolt to write output and notify EncRowCalcBolt that results have been flushed.
         outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(new Long(-1), BigInteger.valueOf(0)));
         outputCollector.emit(StormConstants.ENCCOLMULTBOLT_SESSION_END, new Values(1));
         numFlushSignals = 0;
@@ -99,15 +101,17 @@ public class EncColMultBolt extends BaseRichBolt
     }
     else
     {
-      Long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ERC_FIELD);
+      // Data tuple received. Do column multiplication.
+
+      long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ERC_FIELD);
       colVal1 = (BigInteger) tuple.getValueByField(StormConstants.ENCRYPTED_VALUE_FIELD);
 
       logger.debug("Received tuple in ECM, multiplying " + colVal1 + " to col " + colIndex);
 
       if (resultsMap.containsKey(colIndex))
       {
-        colMult = (colVal1.multiply(resultsMap.get(colIndex))).mod(nSquared);
-        resultsMap.put(colIndex, colMult);
+        colMult = colVal1.multiply(resultsMap.get(colIndex));
+        resultsMap.put(colIndex, colMult.mod(nSquared));
       }
       else
       {
@@ -120,8 +124,8 @@ public class EncColMultBolt extends BaseRichBolt
   @Override
   public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
-    outputFieldsDeclarer
-        .declareStream(StormConstants.ENCCOLMULTBOLT_ID, new Fields(StormConstants.COLUMN_INDEX_ECM_FIELD, StormConstants.COLUMN_PRODUCT_FIELD));
+    outputFieldsDeclarer.declareStream(StormConstants.ENCCOLMULTBOLT_ID,
+        new Fields(StormConstants.COLUMN_INDEX_ECM_FIELD, StormConstants.COLUMN_PRODUCT_FIELD));
     outputFieldsDeclarer.declareStream(StormConstants.ENCCOLMULTBOLT_SESSION_END, new Fields("finished"));
   }
 }

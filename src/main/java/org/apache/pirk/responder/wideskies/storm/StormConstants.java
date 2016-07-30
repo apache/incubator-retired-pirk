@@ -22,8 +22,7 @@ public class StormConstants
 {
   // Topology Components
   public static final String SPOUT_ID = "kafkaspout";
-  public static final String HASH_SELECTORS_BOLT_ID = "hashSelectorsBolt";
-  public static final String PARTITION_DATA_BOLT_ID = "partitionDataBolt";
+  public static final String PARTITION_DATA_BOLT_ID = "partitiondataBolt";
   public static final String ENCROWCALCBOLT_ID = "encrowcalcbolt";
   public static final String ENCCOLMULTBOLT_ID = "enccolmultbolt";
   public static final String OUTPUTBOLT_ID = "outputbolt";
@@ -56,7 +55,6 @@ public class StormConstants
   public static final String OUTPUT_FILE_KEY = "output";
   public static final String LIMIT_HITS_PER_SEL_KEY = "limitHitsPerSelector";
   public static final String MAX_HITS_PER_SEL_KEY = "maxHitsPerSelector";
-  public static final String TIME_TO_FLUSH_KEY = "timeToFlush";
   public static final String SALT_COLUMNS_KEY = "saltColumns";
   public static final String ROW_DIVISIONS_KEY = "rowDivisions";
   public static final String SPLIT_PARTITIONS_KEY = "splitPartitions";

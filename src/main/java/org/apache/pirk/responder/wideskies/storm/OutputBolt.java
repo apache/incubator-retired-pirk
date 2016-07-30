@@ -77,8 +77,8 @@ public class OutputBolt extends BaseRichBolt
   // This is the main object here. It holds column Id -> product
   private HashMap<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
 
-  BigInteger colVal;
-  BigInteger colMult;
+  private BigInteger colVal;
+  private BigInteger colMult;
 
   private BigInteger nSquared;
 
@@ -102,15 +102,18 @@ public class OutputBolt extends BaseRichBolt
   @Override
   public void execute(Tuple tuple)
   {
-    Long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ECM_FIELD);
+    long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ECM_FIELD);
     colVal = (BigInteger) tuple.getValueByField(StormConstants.COLUMN_PRODUCT_FIELD);
 
+    // colIndex == -1 is just the signal sent by EncColMultBolt to notify that it flushed it's values.
+    // Could have created a new stream for such signals, but that seemed like overkill.
     if (colIndex == -1)
     {
       flushCounter++;
 
       logger.debug("Received " + flushCounter + " output flush signals out of " + totalFlushSigs);
 
+      // Wait till all EncColMultBolts have been flushed
       if (flushCounter == totalFlushSigs)
       {
         logger.info("TimeToFlush reached - outputting response file with columns.size = " + resultsMap.keySet().size());
@@ -145,13 +148,16 @@ public class OutputBolt extends BaseRichBolt
         // Reset
         resultsMap.clear();
         flushCounter = 0;
-        latch.countDown();
         for (Tuple t : tuplesToAck)
           outputCollector.ack(t);
+        // Used for integration test
+        latch.countDown();
       }
     }
     else
     {
+      // Process data values: add them to map. The column multiplication is only done in the case where saltColumns==true,
+      // in which case a small number of multiplications still need to be done per column.
       if (resultsMap.containsKey(colIndex))
       {
         colMult = colVal.multiply(resultsMap.get(colIndex)).mod(nSquared);
