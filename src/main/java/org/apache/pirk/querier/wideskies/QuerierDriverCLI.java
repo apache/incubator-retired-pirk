@@ -30,6 +30,9 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 /**
  * Class for parsing the command line options for the QuerierDriver
  */
@@ -244,7 +247,14 @@ public class QuerierDriverCLI
         logger.info("Must have the option " + QUERYID);
         return false;
       }
-      SystemConfiguration.setProperty(QUERYID, getOptionValue(QUERYID));
+      
+      // create a formatted date/time string
+      Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("MM.dd.yyyy_hh.mm.ss");
+      String formattedDate = sdf.format(date);
+      
+      // append date/time string to queryID for uniqueness
+      SystemConfiguration.setProperty(QUERYID, getOptionValue(QUERYID) + "_" + formattedDate);
 
       if (!hasOption(BITSET))
       {
@@ -504,7 +514,7 @@ public class QuerierDriverCLI
 
     return options;
   }
-
+  
   /**
    * Prints out the help message
    */
