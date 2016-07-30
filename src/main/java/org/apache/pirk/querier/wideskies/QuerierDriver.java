@@ -111,7 +111,7 @@ public class QuerierDriver implements Serializable
     if (action.equals("encrypt"))
     {
       queryType = qdriverCLI.getOptionValue(QuerierDriverCLI.TYPE);
-      queryID = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYNAME);
+      queryID = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYID);
       hashBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE));
       hashKey = qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE);
       dataPartitionBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.DATAPARTITIONSIZE));
@@ -165,7 +165,7 @@ public class QuerierDriver implements Serializable
       logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors);
 
       // Set the necessary QueryInfo and Paillier objects
-      QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryName, paillierBitSize,
+      QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryID, paillierBitSize,
           useMemLookupTable, embedSelector, useHDFSLookupTable);
 
       if (SystemConfiguration.getProperty("pir.embedQuerySchema").equals("true"))
@@ -203,7 +203,14 @@ public class QuerierDriver implements Serializable
       Response response = storage.recall(inputFile, Response.class);
       Querier querier = storage.recall(querierFile, Querier.class);
 
-      querier.  
+      /** if the user-specified QueryID in the Querier does not match the QueryID returned
+          in the Response object, throw an error */
+      if(!querier.getQueryInfo().getQueryID().equals(response.getQueryInfo().getQueryID()))
+      {
+        logger.error("The QueryID in the Response does not match the QueryID specified in the Querier.");
+      
+        System.exit(0); // exit
+      }
       
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);
