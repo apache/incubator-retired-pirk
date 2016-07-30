@@ -251,17 +251,16 @@
 				<plugin>
 					<groupId>org.apache.rat</groupId>
 					<artifactId>apache-rat-plugin</artifactId>
-					<version>0.11</version>
+					<version>0.12</version>
 					<configuration>
 						<excludes>
-							<exclude>nb-configuration.xml</exclude> <!-- courtesy excludes for netbeans users -->
-							<exclude>nbactions.xml</exclude> <!-- courtesy excludes for netbeans users -->
-							<exclude>DEPENDENCIES
-							</exclude> <!-- auto generated file by apache's maven config while building sources.zip -->
 							<exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
-							<exclude>appveyor.yml</exclude> <!-- AppVeyor CI Build Descriptor File -->
 							<exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
 							<exclude>KEYS</exclude> <!-- GPG keys of Release Managers -->
+							<exclude>eclipse*.xml</exclude> <!-- Exclude eclipse* xml -->
+							<exclude>docs/*</exclude> <!-- Exclude docs -->
+							<exclude>logs/*</exclude> <!-- Exclude logs -->
+							<exclude>**/m2.conf</exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
 						</excludes>
 					</configuration>
 					<dependencies>
@@ -278,6 +277,14 @@
 							</exclusions>
 						</dependency>
 					</dependencies>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 				<plugin>
