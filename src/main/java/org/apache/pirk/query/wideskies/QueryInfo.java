@@ -43,7 +43,7 @@ public class QueryInfo implements Serializable
 
   private String queryType = null; // QueryType string const
 
-  private String queryName = null; // Name of query
+  private String queryID = null; // Unique query ID
 
   private int paillierBitSize = 0; // Paillier modulus size
 
@@ -67,12 +67,12 @@ public class QueryInfo implements Serializable
   QuerySchema qSchema = null;
 
   public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
+      String queryTypeInput, String queryIDInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
       boolean useHDFSExpLookupTableInput)
   {
     queryNum = queryNumInput;
     queryType = queryTypeInput;
-    queryName = queryNameInput;
+    queryID = queryIDInput;
 
     numSelectors = numSelectorsInput;
 
@@ -98,9 +98,9 @@ public class QueryInfo implements Serializable
   }
 
   public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn)
+      String queryTypeInput, String queryIDInput, int paillierBitSizeIn)
   {
-    this(queryNumInput, numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, queryNameInput, paillierBitSizeIn, false,
+    this(queryNumInput, numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, queryIDInput, paillierBitSizeIn, false,
         true, false);
   }
 
@@ -114,9 +114,9 @@ public class QueryInfo implements Serializable
     return queryType;
   }
 
-  public String getQueryName()
+  public String getQueryID()
   {
-    return queryName;
+    return queryID;
   }
 
   public int getNumSelectors()
@@ -183,13 +183,13 @@ public class QueryInfo implements Serializable
   {
     logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
         + " dataPartitionBitSize = " + dataPartitionBitSize + " numBitsPerDataElement = " + numBitsPerDataElement + " numPartitionsPerDataElement = "
-        + numPartitionsPerDataElement + " queryType = " + queryType + " queryName = " + queryName + " paillierBitSize = " + paillierBitSize
+        + numPartitionsPerDataElement + " queryType = " + queryType + " queryID = " + queryID + " paillierBitSize = " + paillierBitSize
         + " useExpLookupTable = " + useExpLookupTable + " useHDFSExpLookupTable = " + useHDFSExpLookupTable + " embedSelector = " + embedSelector);
   }
 
   public QueryInfo copy()
   {
-    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryName,
+    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryID,
         this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
   }
 }
