@@ -50,6 +50,7 @@ public class StormConstants
   public static final String HDFS_URI_KEY = "hdfsUri";
   public static final String QUERY_FILE_KEY = "queryFile";
   public static final String QUERY_INFO_KEY = "queryInfo";
+  public static final String ALLOW_ADHOC_QSCHEMAS_KEY = "allowAdHocQuerySchemas";
   public static final String QSCHEMA_KEY = "qSchema";
   public static final String DSCHEMA_KEY = "dschema";
   public static final String OUTPUT_FILE_KEY = "output";

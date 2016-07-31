@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,20 +15,20 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.query.filter;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.StopListUtils;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Filter class to filter data elements based upon a stoplist applied to specified field elements
@@ -37,12 +37,12 @@ public class StopListFilter implements DataFilter
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(StopListFilter.class);
 
-  HashSet<String> filterSet = null;
-  HashSet<String> stopList = null;
+  private Set<String> filterSet = null;
+  private Set<String> stopList = null;
 
-  public StopListFilter(HashSet<String> filterSetIn, HashSet<String> stopListIn)
+  public StopListFilter(Set<String> filterSetIn, Set<String> stopListIn)
   {
     filterSet = filterSetIn;
     stopList = stopListIn;
@@ -56,16 +56,16 @@ public class StopListFilter implements DataFilter
     // If the data element contains a value on the stoplist (corresponding to a key in the filterSet), do not use
     for (String filterName : filterSet)
     {
-      if (dSchema.hasListRep(filterName))
+      if (dSchema.isArrayElement(filterName))
       {
         List<String> elementArray = null;
-        if (dataElement.get(dSchema.getTextElement(filterName)) instanceof WritableArrayWritable)
+        if (dataElement.get(dSchema.getTextName(filterName)) instanceof WritableArrayWritable)
         {
-          elementArray = Arrays.asList(((WritableArrayWritable) dataElement.get(dSchema.getTextElement(filterName))).toStrings());
+          elementArray = Arrays.asList(((WritableArrayWritable) dataElement.get(dSchema.getTextName(filterName))).toStrings());
         }
-        else if (dataElement.get(dSchema.getTextElement(filterName)) instanceof ArrayWritable)
+        else if (dataElement.get(dSchema.getTextName(filterName)) instanceof ArrayWritable)
         {
-          elementArray = Arrays.asList(((ArrayWritable) dataElement.get(dSchema.getTextElement(filterName))).toStrings());
+          elementArray = Arrays.asList(((ArrayWritable) dataElement.get(dSchema.getTextName(filterName))).toStrings());
         }
 
         for (String element : elementArray)
@@ -79,7 +79,7 @@ public class StopListFilter implements DataFilter
       }
       else
       {
-        String element = dataElement.get(dSchema.getTextElement(filterName)).toString();
+        String element = dataElement.get(dSchema.getTextName(filterName)).toString();
         passFilter = StopListUtils.checkElement(element, stopList);
       }
       if (!passFilter)

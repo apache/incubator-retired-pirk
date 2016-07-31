@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.data.partitioner;
 
 import java.math.BigInteger;
@@ -34,9 +34,9 @@ public class IPDataPartitioner implements DataPartitioner
   private static final long serialVersionUID = 1L;
 
   @Override
-  public ArrayList<BigInteger> toPartitions(Object object, String type) throws Exception
+  public ArrayList<BigInteger> toPartitions(Object object, String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> parts = new ArrayList<>();
 
     String[] octets = ((String) object).split("\\.");
     for (String oct : octets)
@@ -48,9 +48,9 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws Exception
+  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type)
   {
-    Object element = null;
+    Object element;
 
     element = parts.get(partsIndex).toString() + "." + parts.get(partsIndex + 1).toString() + "." + parts.get(partsIndex + 2).toString() + "."
         + parts.get(partsIndex + 3).toString();
@@ -59,15 +59,15 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public int getBits(String type) throws Exception
+  public int getBits(String type)
   {
     return Integer.SIZE;
   }
 
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws Exception
+  public ArrayList<BigInteger> getPaddedPartitions(String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> parts = new ArrayList<>();
 
     for (int i = 0; i < 4; ++i)
     {
@@ -80,9 +80,9 @@ public class IPDataPartitioner implements DataPartitioner
    * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
    */
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws Exception
+  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<BigInteger>();
+    ArrayList<BigInteger> parts = new ArrayList<>();
 
     int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
     for (int i = 0; i < numArrayElementsToReturn; ++i)
@@ -101,7 +101,7 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public int getNumPartitions(String type) throws Exception
+  public int getNumPartitions(String type)
   {
     return 4;
   }

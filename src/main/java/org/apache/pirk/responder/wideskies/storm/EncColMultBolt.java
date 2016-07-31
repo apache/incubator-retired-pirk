@@ -18,8 +18,6 @@
  *******************************************************************************/
 package org.apache.pirk.responder.wideskies.storm;
 
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -27,6 +25,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -52,7 +51,7 @@ public class EncColMultBolt extends BaseRichBolt
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EncColMultBolt.class);
 
   private OutputCollector outputCollector;
 

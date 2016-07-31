@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.common;
 
 import java.io.BufferedReader;
@@ -28,11 +28,11 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 import scala.Tuple3;
@@ -46,11 +46,11 @@ import com.google.common.cache.LoadingCache;
  */
 public class ComputeEncryptedRow
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ComputeEncryptedRow.class);
 
   // Input: base, exponent, NSquared
   // <<base,exponent,NSquared>, base^exponent mod N^2>
-  static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
+  private static LoadingCache<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger> expCache = CacheBuilder.newBuilder().maximumSize(10000)
       .build(new CacheLoader<Tuple3<BigInteger,BigInteger,BigInteger>,BigInteger>()
       {
         @Override
@@ -82,14 +82,14 @@ public class ComputeEncryptedRow
       BigInteger value = new BigInteger(expMod[1]);
 
       // Cache: <<base,exponent,NSquared>, base^exponent mod N^2>
-      Tuple3<BigInteger,BigInteger,BigInteger> key = new Tuple3<BigInteger,BigInteger,BigInteger>(base, exponent, query.getNSquared());
+      Tuple3<BigInteger,BigInteger,BigInteger> key = new Tuple3<>(base, exponent, query.getNSquared());
       expCache.put(key, value);
     }
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@code<BytesArrayWritable>}
-   * <p/>
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable>}
+   * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p/>
    * Optionally uses a static LRU cache for the modular exponentiation
@@ -99,7 +99,7 @@ public class ComputeEncryptedRow
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(Iterable<BytesArrayWritable> dataPartitionsIter, Query query, int rowIndex,
       boolean limitHitsPerSelector, int maxHitsPerSelector, boolean useCache) throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     // Pull the corresponding encrypted row query
     BigInteger rowQuery = query.getQueryElement(rowIndex);
@@ -128,7 +128,7 @@ public class ComputeEncryptedRow
         {
           if (useCache)
           {
-            exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+            exp = expCache.get(new Tuple3<>(rowQuery, part, query.getNSquared()));
           }
           else
           {
@@ -141,7 +141,7 @@ public class ComputeEncryptedRow
         logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
             + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
-        returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+        returnPairs.add(new Tuple2<>(colCounter, exp));
 
         ++colCounter;
       }
@@ -151,10 +151,8 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@ArrayList<BigInteger>
-   *  <p/>
-   * * }
-   * <p/>
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link ArrayList<BigInteger> * * * * }
+   * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p/>
    * Optionally uses a static LRU cache for the modular exponentiation
@@ -164,7 +162,7 @@ public class ComputeEncryptedRow
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRowBI(Iterable<ArrayList<BigInteger>> dataPartitionsIter, Query query, int rowIndex,
       boolean limitHitsPerSelector, int maxHitsPerSelector, boolean useCache) throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     // Pull the corresponding encrypted row query
     BigInteger rowQuery = query.getQueryElement(rowIndex);
@@ -196,7 +194,7 @@ public class ComputeEncryptedRow
         {
           if (useCache)
           {
-            exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+            exp = expCache.get(new Tuple3<>(rowQuery, part, query.getNSquared()));
           }
           else
           {
@@ -209,7 +207,7 @@ public class ComputeEncryptedRow
         logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
             + exp + " i = " + i);
 
-        returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+        returnPairs.add(new Tuple2<>(colCounter, exp));
 
         ++colCounter;
       }
@@ -225,10 +223,9 @@ public class ComputeEncryptedRow
   }
 
   /**
-   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@<BytesArrayWritable>
-   *  <p/>
-   * * } given an input modular exponentiation table for the row
-   * <p/>
+   * Method to compute the encrypted row elements for a query from extracted data partitions in the form of Iterable{@link <BytesArrayWritable> * * * * } given
+   * an input modular exponentiation table for the row
+   * <p>
    * For each row (as indicated by key = hash(selector)), iterates over the dataPartitions and calculates the column values.
    * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
@@ -236,7 +233,7 @@ public class ComputeEncryptedRow
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<ArrayList<BigInteger>> dataPartitionsIter,
       HashMap<Integer,BigInteger> cache, int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     long colCounter = 0;
     int elementCounter = 0;
@@ -261,7 +258,7 @@ public class ComputeEncryptedRow
 
         logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " exp = " + exp + " i = " + i);
 
-        returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+        returnPairs.add(new Tuple2<>(colCounter, exp));
 
         ++colCounter;
       }
@@ -283,7 +280,7 @@ public class ComputeEncryptedRow
    */
   public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(BytesArrayWritable dataPartitions, Query query, int rowIndex, int colIndex) throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     // Pull the corresponding encrypted row query
     BigInteger rowQuery = query.getQueryElement(rowIndex);
@@ -301,7 +298,7 @@ public class ComputeEncryptedRow
       BigInteger exp = null;
       try
       {
-        exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+        exp = expCache.get(new Tuple3<>(rowQuery, part, query.getNSquared()));
       } catch (ExecutionException e)
       {
         e.printStackTrace();
@@ -310,7 +307,7 @@ public class ComputeEncryptedRow
       logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
           + exp + " i = " + i + " partition = " + dataPartitions.getBigInteger(i) + " = " + dataPartitions.getBigInteger(i).toString(2));
 
-      returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+      returnPairs.add(new Tuple2<>(colCounter, exp));
 
       ++colCounter;
     }

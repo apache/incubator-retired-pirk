@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.encryption;
 
 import java.math.BigDecimal;
@@ -23,9 +23,9 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to generate the primes used in the Paillier cryptosystem
@@ -53,10 +53,10 @@ import org.apache.pirk.utils.SystemConfiguration;
  */
 public class PrimeGenerator
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(PrimeGenerator.class);
 
-  private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<Integer,BigInteger>();
-  private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<Integer,BigInteger>();
+  private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<>();
+  private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<>();
 
   private static boolean additionalChecksEnabled = SystemConfiguration.getProperty("pallier.FIPSPrimeGenerationChecks").equals("true");
 
@@ -69,7 +69,7 @@ public class PrimeGenerator
    */
   public static BigInteger getSinglePrime(int bitLength, int certainty, Random rnd)
   {
-    BigInteger p = null;
+    BigInteger p;
 
     logger.debug("bitLength " + bitLength + " certainty " + certainty + " random " + rnd);
 
@@ -85,15 +85,15 @@ public class PrimeGenerator
       int roundsLeft = calcNumAdditionalMillerRabinRounds(bitLength);
 
       // Calculate the lower bound (\sqrt(2))(2^(bitLength/2) – 1)) for use in FIPS 186-4 B.3.3, step 4.4
-      BigInteger lowerBound = null;
-      if (!lowerBoundCache.containsKey(Integer.valueOf(bitLength)))
+      BigInteger lowerBound;
+      if (!lowerBoundCache.containsKey(bitLength))
       {
         lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
-        lowerBoundCache.put(Integer.valueOf(bitLength), lowerBound);
+        lowerBoundCache.put(bitLength, lowerBound);
       }
       else
       {
-        lowerBound = lowerBoundCache.get(Integer.valueOf(bitLength));
+        lowerBound = lowerBoundCache.get(bitLength);
       }
 
       // Complete FIPS 186-4 B.3.3, steps 4.2 - 4.5
@@ -130,7 +130,7 @@ public class PrimeGenerator
    */
   public static BigInteger getSecondPrime(int bitLength, int certainty, Random rnd, BigInteger p)
   {
-    BigInteger q = null;
+    BigInteger q;
 
     logger.debug("bitLength " + bitLength + " certainty " + certainty + " random " + rnd);
 
@@ -146,27 +146,27 @@ public class PrimeGenerator
       int roundsLeft = calcNumAdditionalMillerRabinRounds(bitLength);
 
       // Calculate the lower bound (\sqrt(2))(2^(bitLength/2) – 1)) for use in FIPS 186-4 B.3.3, step 5.5
-      BigInteger lowerBound = null;
-      if (!lowerBoundCache.containsKey(Integer.valueOf(bitLength)))
+      BigInteger lowerBound;
+      if (!lowerBoundCache.containsKey(bitLength))
       {
         lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
-        lowerBoundCache.put(Integer.valueOf(bitLength), lowerBound);
+        lowerBoundCache.put(bitLength, lowerBound);
       }
       else
       {
-        lowerBound = lowerBoundCache.get(Integer.valueOf(bitLength));
+        lowerBound = lowerBoundCache.get(bitLength);
       }
 
       // Compute the minimumDifference 2^((bitLength/2) – 100) for use in FIPS 186-4 B.3.3, step 5.4
-      BigInteger minimumDifference = null;
-      if (!minimumDifferenceCache.containsKey(Integer.valueOf(bitLength)))
+      BigInteger minimumDifference;
+      if (!minimumDifferenceCache.containsKey(bitLength))
       {
         minimumDifference = BigDecimal.valueOf(2).pow(bitLength / 2 - 100).toBigInteger();
-        minimumDifferenceCache.put(Integer.valueOf(bitLength), minimumDifference);
+        minimumDifferenceCache.put(bitLength, minimumDifference);
       }
       else
       {
-        minimumDifference = minimumDifferenceCache.get(Integer.valueOf(bitLength));
+        minimumDifference = minimumDifferenceCache.get(bitLength);
       }
 
       // Complete FIPS 186-4 B.3.3, steps 5.2 - 5.6

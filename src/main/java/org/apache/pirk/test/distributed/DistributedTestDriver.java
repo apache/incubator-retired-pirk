@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,22 +15,22 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.distributed;
 
 import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.log4j.Logger;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.distributed.testsuite.DistTestSuite;
 import org.apache.pirk.test.utils.Inputs;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Driver class to run the suite of functional tests for MR and Spark PIR
@@ -38,7 +38,7 @@ import org.json.simple.JSONObject;
  */
 public class DistributedTestDriver
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DistributedTestDriver.class);
 
   // Input
   public static final String JSON_PIR_INPUT_FILE_PROPERTY = "test.pir.inputJSONFile";
@@ -137,12 +137,12 @@ public class DistributedTestDriver
     // Force the query and data schemas to load their original values
     if (!dataSchemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
   }
 }

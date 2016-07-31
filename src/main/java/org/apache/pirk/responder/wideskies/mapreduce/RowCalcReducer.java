@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
@@ -23,24 +23,22 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
@@ -54,22 +52,20 @@ import scala.Tuple2;
  */
 public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongWritable,Text>
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(RowCalcReducer.class);
 
-  LongWritable keyOut = null;
-  Text valueOut = null;
+  private LongWritable keyOut = null;
+  private Text valueOut = null;
 
   private MultipleOutputs<LongWritable,Text> mos = null;
 
-  FileSystem fs = null;
-  Query query = null;
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
-  DataSchema dSchema = null;
+  private FileSystem fs = null;
+  private Query query = null;
+  private QueryInfo queryInfo = null;
 
-  boolean useLocalCache = false;
-  boolean limitHitsPerSelector = false;
-  int maxHitsPerSelector = 1000;
+  private boolean useLocalCache = false;
+  private boolean limitHitsPerSelector = false;
+  private int maxHitsPerSelector = 1000;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
@@ -78,11 +74,11 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
 
     keyOut = new LongWritable();
     valueOut = new Text();
-    mos = new MultipleOutputs<LongWritable,Text>(ctx);
+    mos = new MultipleOutputs<>(ctx);
 
     fs = FileSystem.newInstance(ctx.getConfiguration());
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = Query.readFromHDFSFile(new Path(queryDir), fs);
+    query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
     queryInfo = query.getQueryInfo();
 
     try
@@ -91,16 +87,13 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
       SystemConfiguration.setProperty("query.schemas", ctx.getConfiguration().get("query.schemas"));
       SystemConfiguration.setProperty("pir.stopListFile", ctx.getConfiguration().get("pirMR.stopListFile"));
 
-      LoadDataSchemas.initialize(true, fs);
-      LoadQuerySchemas.initialize(true, fs);
+      DataSchemaLoader.initialize(true, fs);
+      QuerySchemaLoader.initialize(true, fs);
 
     } catch (Exception e)
     {
       e.printStackTrace();
     }
-
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
 
     if (ctx.getConfiguration().get("pirWL.useLocalCache").equals("true"))
     {
@@ -120,7 +113,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
   public void reduce(IntWritable rowIndex, Iterable<BytesArrayWritable> dataElementPartitions, Context ctx) throws IOException, InterruptedException
   {
     logger.debug("Processing reducer for hash = " + rowIndex);
-    ctx.getCounter(MRStats.Stats.NUM_HASHES_REDUCER).increment(1);
+    ctx.getCounter(MRStats.NUM_HASHES_REDUCER).increment(1);
 
     if (queryInfo.getUseHDFSExpLookupTable())
     {

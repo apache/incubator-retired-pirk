@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.general;
 
 import static org.junit.Assert.assertEquals;
@@ -24,27 +24,20 @@ import static org.junit.Assert.fail;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to functionally test the bit conversion utils
  */
 public class PartitionUtilsTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
-
-  PrimitiveTypePartitioner primitivePartitioner = null;
-
-  public PartitionUtilsTest()
-  {
-    primitivePartitioner = new PrimitiveTypePartitioner();
-  }
+  private static final Logger logger = LoggerFactory.getLogger(PartitionUtilsTest.class);
 
   @Test
   public void testMask()
@@ -113,7 +106,7 @@ public class PartitionUtilsTest
 
       fail("BitConversionUtils.partitionBits did not throw error for mismatched partitionSize and mask size");
 
-    } catch (Exception e)
+    } catch (Exception ignore)
     {}
 
     logger.info("Successfully completed testPartitionBits");
@@ -158,7 +151,7 @@ public class PartitionUtilsTest
     SystemConfiguration.setProperty("pir.stringBits", stringBits);
 
     // Test short
-    short shortTest = new Short("2456").shortValue();
+    short shortTest = new Short("2456");
     ArrayList<BigInteger> partsShort = primitivePartitioner.toPartitions(shortTest, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShort.size());
     assertEquals(shortTest, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,17 +15,17 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
@@ -38,18 +38,16 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ExpTableGenerator.class);
 
-  BroadcastVars bbVars = null;
   Query query = null;
-  BigInteger NSquared = null;
-  int maxValue = 0;
+  private BigInteger NSquared = null;
+  private int maxValue = 0;
 
   public ExpTableGenerator(BroadcastVars bbVarsIn)
   {
-    bbVars = bbVarsIn;
 
-    query = bbVars.getQuery();
+    query = bbVarsIn.getQuery();
     NSquared = query.getNSquared();
 
     int dataPartitionBitSize = query.getQueryInfo().getDataPartitionBitSize();
@@ -60,14 +58,14 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
   public Iterable<Tuple2<Integer,Tuple2<Integer,BigInteger>>> call(Integer queryHashKey) throws Exception
   {
     // queryHashKey -> <<power>,<element^power mod N^2>>
-    ArrayList<Tuple2<Integer,Tuple2<Integer,BigInteger>>> modExp = new ArrayList<Tuple2<Integer,Tuple2<Integer,BigInteger>>>();
+    ArrayList<Tuple2<Integer,Tuple2<Integer,BigInteger>>> modExp = new ArrayList<>();
 
     BigInteger element = query.getQueryElement(queryHashKey);
     for (int i = 0; i <= maxValue; ++i)
     {
       BigInteger modPow = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
-      Tuple2<Integer,BigInteger> modPowTuple = new Tuple2<Integer,BigInteger>(i, modPow);
-      modExp.add(new Tuple2<Integer,Tuple2<Integer,BigInteger>>(queryHashKey, modPowTuple));
+      Tuple2<Integer,BigInteger> modPowTuple = new Tuple2<>(i, modPow);
+      modExp.add(new Tuple2<>(queryHashKey, modPowTuple));
     }
 
     return modExp;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.general;
 
 import static org.junit.Assert.assertEquals;
@@ -24,13 +24,13 @@ import static org.junit.Assert.fail;
 import java.math.BigInteger;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
-import org.apache.pirk.encryption.Paillier;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic test functionality for Paillier library
@@ -38,24 +38,25 @@ import org.apache.pirk.encryption.Paillier;
  */
 public class PaillierTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(PaillierTest.class);
 
-  BigInteger p = null; // large prime
-  BigInteger q = null; // large prime
-  BigInteger N = null; // N=pq, RSA modulus
-  BigInteger NSquared = null; // N^2
-  BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1)
+  private static BigInteger p = null; // large prime
+  private static BigInteger q = null; // large prime
+  private static BigInteger N = null; // N=pq, RSA modulus
+  private static BigInteger NSquared = null; // N^2
+  private static BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1)
 
-  int bitLength = 0; // bit length of the modulus N
-  int certainty = 64; // prob that new BigInteger values represents primes will exceed (1 - (1/2)^certainty)
+  private static int bitLength = 0; // bit length of the modulus N
+  private static int certainty = 64; // prob that new BigInteger values represents primes will exceed (1 - (1/2)^certainty)
 
-  BigInteger r1 = null; // random number in (Z/NZ)*
-  BigInteger r2 = null; // random number in (Z/NZ)*
+  private static BigInteger r1 = null; // random number in (Z/NZ)*
+  private static BigInteger r2 = null; // random number in (Z/NZ)*
 
-  BigInteger m1 = null; // message to encrypt
-  BigInteger m2 = null; // message to encrypt
+  private static BigInteger m1 = null; // message to encrypt
+  private static BigInteger m2 = null; // message to encrypt
 
-  public PaillierTest()
+  @BeforeClass
+  public static void setup()
   {
     p = BigInteger.valueOf(7);
     q = BigInteger.valueOf(17);
@@ -85,42 +86,42 @@ public class PaillierTest
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(2), 128);
       fail("Paillier constructor did not throw PIRException for p,q < 3");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(3), 128);
       fail("Paillier constructor did not throw PIRException for p < 3");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(3), BigInteger.valueOf(2), 128);
       fail("Paillier constructor did not throw PIRException for q < 3");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(7), 128);
       fail("Paillier constructor did not throw PIRException for p = q");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(8), BigInteger.valueOf(7), 128);
       fail("Paillier constructor did not throw PIRException for p not prime");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(10), 128);
       fail("Paillier constructor did not throw PIRException for q not prime");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
@@ -128,7 +129,7 @@ public class PaillierTest
       int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
       Paillier paillier = new Paillier(3072, systemPrimeCertainty - 10);
       fail("Paillier constructor did not throw PIRException for certainty less than system default of " + systemPrimeCertainty);
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
@@ -136,7 +137,7 @@ public class PaillierTest
       Paillier pailler = new Paillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N);
       fail("Paillier encryption did not throw PIRException for message m = N");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
@@ -144,21 +145,21 @@ public class PaillierTest
       Paillier pailler = new Paillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N.add(BigInteger.TEN));
       fail("Paillier encryption did not throw PIRException for message m > N");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength);
       fail("Paillier constructor did not throw PIRException for ensureBitSet = bitLength");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
 
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength + 1);
       fail("Paillier constructor did not throw PIRException for ensureBitSet > bitLength");
-    } catch (PIRException e)
+    } catch (PIRException ignore)
     {}
   }
 

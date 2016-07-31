@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,19 +15,23 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.wideskies.standalone;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Functional test suite for stand alone testing - non Spark applications
@@ -41,14 +45,21 @@ import org.junit.Test;
  */
 public class StandaloneTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(StandaloneTest.class);
 
   private static final String STOPLIST_FILE = "testStopListFile";
 
-  String stopListFileProp = null;
+  private static String stopListFileProp = null;
 
-  public StandaloneTest() throws Exception
+  @BeforeClass
+  public static void setup() throws Exception
   {
+    // Reset the schema properties and registries
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
+
     // Create the stoplist file
     stopListFileProp = SystemConfiguration.getProperty("pir.stopListFile");
     SystemConfiguration.setProperty("pir.stopListFile", STOPLIST_FILE);
@@ -60,11 +71,24 @@ public class StandaloneTest
     Inputs.createSchemaFiles(StopListFilter.class.getName());
   }
 
+  @AfterClass
+  public static void teardown()
+  {
+    // Reset the schema properties and registries
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
+  }
+
   @Test
   public void runTests() throws Exception
   {
     ArrayList<JSONObject> dataElements = Inputs.createJSONDataElements();
     ArrayList<JSONObject> dataElementsRcode3 = Inputs.getRcode3JSONDataElements();
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Run tests and use the embedded selector
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
@@ -72,6 +96,20 @@ public class StandaloneTest
     BaseTests.testSRCIPQuery(dataElements, 2);
     BaseTests.testDNSIPQuery(dataElements, 3); // numThreads % num elements to encrypt != 0
     BaseTests.testDNSNXDOMAINQuery(dataElementsRcode3, 4); // numThreads % num elements to encrypt = 0
+
+    // Test embedded QuerySchema
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    BaseTests.testDNSHostnameQuery(dataElements, 1, false);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, 1, false);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, 1, false);
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Run tests without using the embedded selector
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");

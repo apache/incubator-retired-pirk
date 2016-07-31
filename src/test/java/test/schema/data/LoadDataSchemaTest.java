@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.schema.data;
 
 import static org.junit.Assert.assertEquals;
@@ -32,15 +32,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -49,13 +50,13 @@ import org.w3c.dom.Element;
  */
 public class LoadDataSchemaTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
 
-  String dataSchemaName = "fakeDataSchema";
+  private String dataSchemaName = "fakeDataSchema";
 
-  String element1 = "elementName1";
-  String element2 = "elementName2";
-  String element3 = "elementName3";
+  private String element1 = "elementName1";
+  private String element2 = "elementName2";
+  private String element3 = "elementName3";
 
   @Test
   public void testGeneralSchemaLoad() throws Exception
@@ -74,37 +75,38 @@ public class LoadDataSchemaTest
     }
 
     // Force the schema to load
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Check the entries
-    DataSchema dSchema = LoadDataSchemas.getSchema(dataSchemaName);
+    DataSchema dSchema = DataSchemaRegistry.get(dataSchemaName);
 
-    assertEquals(dataSchemaName.toLowerCase(), dSchema.getSchemaName());
+    assertEquals(dataSchemaName, dSchema.getSchemaName());
 
-    assertEquals(3, dSchema.getTextRep().size());
+    assertEquals(3, dSchema.getElementNames().size());
 
-    assertEquals(3, dSchema.getTypeMap().size());
-    assertEquals(PrimitiveTypePartitioner.STRING, dSchema.getElementType(element1.toLowerCase()));
-    assertEquals(PrimitiveTypePartitioner.INT, dSchema.getElementType(element2.toLowerCase()));
-    assertEquals(PrimitiveTypePartitioner.STRING, dSchema.getElementType(element3.toLowerCase()));
+    // TODO: check Hadoop text names
 
-    assertEquals(PrimitiveTypePartitioner.class.getName(), dSchema.getPartitionerName(element1.toLowerCase()));
-    if (!(dSchema.getPartitionerForElement(element1.toLowerCase()) instanceof PrimitiveTypePartitioner))
+    assertEquals(PrimitiveTypePartitioner.STRING, dSchema.getElementType(element1));
+    assertEquals(PrimitiveTypePartitioner.INT, dSchema.getElementType(element2));
+    assertEquals(PrimitiveTypePartitioner.STRING, dSchema.getElementType(element3));
+
+    assertEquals(PrimitiveTypePartitioner.class.getName(), dSchema.getPartitionerTypeName(element1));
+    if (!(dSchema.getPartitionerForElement(element1) instanceof PrimitiveTypePartitioner))
     {
       fail("Partitioner instance for element1 must be PrimitiveTypePartitioner");
     }
-    assertEquals(IPDataPartitioner.class.getName(), dSchema.getPartitionerName(element3.toLowerCase()));
-    if (!(dSchema.getPartitionerForElement(element3.toLowerCase()) instanceof IPDataPartitioner))
+    assertEquals(IPDataPartitioner.class.getName(), dSchema.getPartitionerTypeName(element3));
+    if (!(dSchema.getPartitionerForElement(element3) instanceof IPDataPartitioner))
     {
       fail("Partitioner instance for element3 must be IPDataPartitioner");
     }
 
-    assertEquals(2, dSchema.getListRep().size());
-    assertTrue(dSchema.getListRep().contains(element2.toLowerCase()));
-    assertTrue(dSchema.getListRep().contains(element3.toLowerCase()));
+    assertEquals(2, dSchema.getArrayElements().size());
+    assertTrue(dSchema.getArrayElements().contains(element2));
+    assertTrue(dSchema.getArrayElements().contains(element3));
 
-    assertEquals(1, dSchema.getNonListRep().size());
-    assertTrue(dSchema.getNonListRep().contains(element1.toLowerCase()));
+    assertEquals(1, dSchema.getNonArrayElements().size());
+    assertTrue(dSchema.getNonArrayElements().contains(element1));
 
     // Reset original data.schemas property
     SystemConfiguration.setProperty("data.schemas", schemasProp);
@@ -112,7 +114,7 @@ public class LoadDataSchemaTest
     // Force the schema to load
     if (!schemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
   }
 
@@ -135,16 +137,16 @@ public class LoadDataSchemaTest
     try
     {
       // Force the schema to load
-      LoadDataSchemas.initialize();
-      fail("LoadDataSchemas did not throw exception for incorrect javaType");
-    } catch (Exception e)
+      DataSchemaLoader.initialize();
+      fail("DataSchemaLoader did not throw exception for incorrect javaType");
+    } catch (Exception ignore)
     {}
 
     // Reset original data.schemas property
     SystemConfiguration.setProperty("data.schemas", schemasProp);
 
     // Force the schema to load
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
   }
 
   @Test
@@ -166,16 +168,16 @@ public class LoadDataSchemaTest
     try
     {
       // Force the schema to load
-      LoadDataSchemas.initialize();
-      fail("LoadDataSchemas did not throw exception for unknown partitioner");
-    } catch (Exception e)
+      DataSchemaLoader.initialize();
+      fail("DataSchemaLoader did not throw exception for unknown partitioner");
+    } catch (Exception ignore)
     {}
 
     // Reset original data.schemas property
     SystemConfiguration.setProperty("data.schemas", schemasProp);
 
     // Force the schema to load
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
   }
 
   // Create the file that contains an unknown partitioner

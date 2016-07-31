@@ -31,7 +31,6 @@ import org.apache.curator.test.TestingServer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierConst;
@@ -42,10 +41,10 @@ import org.apache.pirk.responder.wideskies.storm.*;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.storm.Config;
 import org.apache.storm.ILocalCluster;
@@ -62,17 +61,21 @@ import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
 @Category(IntegrationTest.class)
 public class KafkaStormIntegrationTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KafkaStormIntegrationTest.class);
+
+  private static final LocalFileSystemStore localStore = new LocalFileSystemStore();
 
   private static TestingServer zookeeperLocalCluster;
   private static KafkaServer kafkaLocalBroker;
@@ -263,7 +266,8 @@ public class KafkaStormIntegrationTest
 
   private void performEncryption() throws Exception
   {
-    ArrayList<String> selectors = BaseTests.selectorsDomain;
+    //ArrayList<String> selectors = BaseTests.selectorsDomain;
+    ArrayList<String> selectors = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
     String queryType = Inputs.DNS_HOSTNAME_QUERY;
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);
@@ -283,7 +287,8 @@ public class KafkaStormIntegrationTest
     fileQuerier = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERIER_FILETAG, ".txt");
     fileQuery = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERY_FILETAG, ".txt");
 
-    encryptQuery.writeOutputFiles(fileQuerier, fileQuery);
+    localStore.store(fileQuerier.getAbsolutePath(), encryptQuery.getQuerier());
+    localStore.store(fileQuery, encryptQuery.getQuery());
   }
 
   private void performDecryption() throws Exception
@@ -294,9 +299,8 @@ public class KafkaStormIntegrationTest
     String outputFile = fileFinalResults.getAbsolutePath();
     int numThreads = 1;
 
-    Response response = Response.readFromFile(responseFilePath);
-
-    Querier querier = Querier.readFromFile(querierFilePath);
+    Response response = localStore.recall(responseFilePath, Response.class);
+    Querier querier = localStore.recall(querierFilePath, Querier.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);

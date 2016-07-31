@@ -18,9 +18,7 @@
  *******************************************************************************/
 package org.apache.pirk.responder.wideskies.storm;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
@@ -30,6 +28,7 @@ import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.topology.BoltDeclarer;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
+import org.slf4j.LoggerFactory;
 
 /**
  * Storm topology class for wideskies Pirk implementation
@@ -38,7 +37,7 @@ import org.apache.storm.tuple.Fields;
  */
 public class PirkTopology
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PirkTopology.class);
 
   private static final String kafkaClientId = SystemConfiguration.getProperty("kafka.clientId", "KafkaSpout");
   private static final String brokerZk = SystemConfiguration.getProperty("kafka.zk", "localhost:2181");
@@ -155,6 +154,7 @@ public class PirkTopology
     conf.put(conf.TOPOLOGY_COMPONENT_RESOURCES_ONHEAP_MEMORY_MB, Double.parseDouble(SystemConfiguration.getProperty("storm.componentOnheapMem", "128")));
 
     // Pirk parameters to send to bolts
+    conf.put(StormConstants.ALLOW_ADHOC_QSCHEMAS_KEY, SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"));
     conf.put(StormConstants.QSCHEMA_KEY, SystemConfiguration.getProperty("query.schemas"));
     conf.put(StormConstants.DSCHEMA_KEY, SystemConfiguration.getProperty("data.schemas"));
     conf.put(StormConstants.HDFS_URI_KEY, hdfsUri);

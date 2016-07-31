@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.IOException;
@@ -27,13 +27,14 @@ import java.util.TreeMap;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
@@ -43,7 +44,7 @@ import scala.Tuple2;
  */
 public class ComputeExpLookupTable
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ComputeExpLookupTable.class);
 
   /**
    * Method to create the distributed modular exponentiation lookup table in hdfs for a given Query
@@ -64,7 +65,7 @@ public class ComputeExpLookupTable
   public static JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> computeExpTable(JavaSparkContext sc, FileSystem fs, BroadcastVars bVars, Query query,
       String queryInputFile, String outputDirExp, boolean useModExpJoin)
   {
-    JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations = null;
+    JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations;
 
     logger.info("Creating expTable in hdfs for queryName = " + query.getQueryInfo().getQueryName());
 
@@ -83,7 +84,7 @@ public class ComputeExpLookupTable
 
     // Write the query hashes to a RDD
     TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
-    ArrayList<Integer> keys = new ArrayList<Integer>(queryElements.keySet());
+    ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = Integer.parseInt(SystemConfiguration.getProperty("pir.expCreationSplits", "100"));
     JavaRDD<Integer> queryHashes = sc.parallelize(keys, numSplits);
@@ -100,8 +101,14 @@ public class ComputeExpLookupTable
 
       // Place exp table in query object and in the BroadcastVars
       Map<Integer,String> queryHashFileNameMap = hashToPartition.collectAsMap();
-      query.setExpFileBasedLookup(new HashMap<Integer,String>(queryHashFileNameMap));
-      query.writeToHDFSFile(new Path(queryInputFile), fs);
+      query.setExpFileBasedLookup(new HashMap<>(queryHashFileNameMap));
+      try
+      {
+        new HadoopFileSystemStore(fs).store(queryInputFile, query);
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
       bVars.setQuery(query);
     }
 

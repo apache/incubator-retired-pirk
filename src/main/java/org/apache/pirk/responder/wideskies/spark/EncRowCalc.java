@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.IOException;
@@ -24,16 +24,12 @@ import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
@@ -49,36 +45,31 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(EncRowCalc.class);
 
-  Accumulators accum = null;
-  BroadcastVars bbVars = null;
+  private Accumulators accum = null;
+  private BroadcastVars bVars = null;
 
-  Query query = null;
-  QueryInfo queryInfo = null;
-  QuerySchema qSchema = null;
-  DataSchema dSchema = null;
+  private Query query = null;
+  private QueryInfo queryInfo = null;
 
-  boolean useLocalCache = false;
-  boolean limitHitsPerSelector = false;
-  int maxHitsPerSelector = 0;
+  private boolean useLocalCache = false;
+  private boolean limitHitsPerSelector = false;
+  private int maxHitsPerSelector = 0;
 
-  public EncRowCalc(Accumulators pirWLAccum, BroadcastVars pirWLBBVars)
+  public EncRowCalc(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = pirWLAccum;
-    bbVars = pirWLBBVars;
+    accum = accumIn;
+    bVars = bvIn;
 
-    query = bbVars.getQuery();
-    queryInfo = bbVars.getQueryInfo();
-    qSchema = LoadQuerySchemas.getSchema(queryInfo.getQueryType());
-    dSchema = LoadDataSchemas.getSchema(qSchema.getDataSchemaName());
-
-    if (bbVars.getUseLocalCache().equals("true"))
+    query = bVars.getQuery();
+    queryInfo = bVars.getQueryInfo();
+    if (bVars.getUseLocalCache().equals("true"))
     {
       useLocalCache = true;
     }
-    limitHitsPerSelector = bbVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bbVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
+    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
 
     logger.info("Initialized EncRowCalc - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);
   }
@@ -86,7 +77,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   @Override
   public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Iterable<ArrayList<BigInteger>>> hashDocTuple) throws Exception
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);

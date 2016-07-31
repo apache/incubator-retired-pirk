@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,201 +15,267 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.schema.data;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.utils.PIRException;
 
 /**
- * Class to hold a data schema
+ * A data schema describes the target data being referenced by a <code>Querier</code> and a <code>Responder</code>.
+ * <p>
+ * The schema comprises a number of elements, each of which has a name, type, and a partitioner. Elements may be declared as arrays of types.
+ * <p>
+ * Schemas are typically loaded from XML descriptors.
+ * 
+ * @see DataSchemaLoader
  */
 public class DataSchema implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  // This schema's name.
+  private final String schemaName;
 
-  String schemaName = null;
+  // Maps element name -> Java type name
+  private final Map<String,String> typeMap = new HashMap<>();
 
-  String primitiveTypePartitionerName = null;
+  // Maps element name -> partitioner class name.
+  private final Map<String,String> partitionerTypeMap = new HashMap<>();
 
-  transient HashMap<String,Text> textRep = null; // string element name -> Text representation
+  // Element names that are declared as array types.
+  private final Set<String> arrayElements = new HashSet<>();
 
-  transient HashMap<String,Object> partitionerInstances = null; // partitioner class name -> Text representation
+  // Lazily maps partitioner class name -> an instance of the partitioner.
+  private transient Map<String,DataPartitioner> partitionerInstances = new HashMap<>();
 
-  HashMap<String,String> typeMap = null; // string element name -> java type
+  // Lazily maps element name -> Hadoop Text representation.
+  private transient Map<String,Text> textRep = new HashMap<>();
 
-  HashMap<String,String> partitionerMap = null; // string element name -> partitioner class name
-
-  HashSet<String> listRep = null; // elements that are list/array types
-
-  public DataSchema(String schemaNameInput, HashMap<String,Text> textRepInput, HashSet<String> listRepInput, HashMap<String,String> typeMapInput,
-      HashMap<String,String> partitionerMapInput)
+  /*
+   * Creates an empty, named data schema.
+   */
+  DataSchema(String schemaName)
   {
-    schemaName = schemaNameInput;
-    textRep = textRepInput;
-    listRep = listRepInput;
-    typeMap = typeMapInput;
-    partitionerMap = partitionerMapInput;
-    primitiveTypePartitionerName = PrimitiveTypePartitioner.class.getName();
+    this.schemaName = schemaName;
   }
 
+  /**
+   * Returns true if the data schema contains an element with the given name.
+   * 
+   * @param elementName
+   *          The element name to check.
+   * @return true if the schema does define an element with that name, of false otherwise.
+   */
+  public boolean containsElement(String elementName)
+  {
+    return typeMap.containsKey(elementName);
+  }
+
+  /**
+   * Returns the set of element names defined by this schema.
+   *
+   * @return The possibly empty set of element names.
+   */
+  public Set<String> getElementNames()
+  {
+    return typeMap.keySet();
+  }
+
+  /**
+   * Returns the name of the Java type associated with the given element name.
+   * <p>
+   * The Java type is either a primitive type name, as defined in the {@link PrimitiveTypePartitioner}, or a full canonical class name representing the element
+   * type.
+   * 
+   * @see PrimitiveTypePartitioner
+   * @param elementName
+   *          The element name whose type is requested.
+   * @return The type of the element, or <code>null</code> if the schema does not define the given element name.
+   */
+  public String getElementType(String elementName)
+  {
+    return typeMap.get(elementName);
+  }
+
+  /**
+   * Returns the element names that are declared as arrays.
+   *
+   * @return The set of names that are arrays, or an empty set if none.
+   */
+  public Set<String> getArrayElements()
+  {
+    return arrayElements;
+  }
+
+  /**
+   * Returns the element names that are declared to not be arrays.
+   * 
+   * @return The set of names that are not arrays, or an empty set if none.
+   */
+  public Set<String> getNonArrayElements()
+  {
+    Set<String> elements = new HashSet<>();
+    elements.addAll(typeMap.keySet());
+    elements.removeAll(getArrayElements());
+    return elements;
+
+  }
+
+  /**
+   * Returns the partitioner instance for the given element name.
+   * <p>
+   * A partitioner for the named type is created on first request, and the same partitioner is returned on subsequent calls.
+   * 
+   * @param elementName
+   *          the name of the element whose partitioner is required.
+   * @return the data partitioner, or <code>null</code> if the element does not exist.
+   * @throws PIRExcpetion
+   *           if the partitioner cannot be instantiated.
+   * @see DataSchema#getPartitionerInstance(String)
+   */
+  public DataPartitioner getPartitionerForElement(String elementName) throws PIRException
+  {
+    String partitionerType = partitionerTypeMap.get(elementName);
+    return partitionerType == null ? null : getPartitionerInstance(partitionerType);
+  }
+
+  /**
+   * Returns the partitioner corresponding to the given partitioner class name.
+   * <p>
+   * A partitioner for the named type is created on first request, and the same partitioner is returned on subsequent calls to this method.
+   * 
+   * @param partitionerTypeName
+   *          The class name for a partitioner type.
+   * @return The partitioner instance of the requested type.
+   * @throws PIRException
+   *           If a problem occurs instantiating a new partitioner of the requested type.
+   */
+  public DataPartitioner getPartitionerInstance(String partitionerTypeName) throws PIRException
+  {
+    DataPartitioner partitioner = partitionerInstances.get(partitionerTypeName);
+    if (partitioner == null)
+    {
+      boolean isPrimitivePartitioner = partitionerTypeName.equals(PrimitiveTypePartitioner.class.getName());
+      partitioner = isPrimitivePartitioner ? new PrimitiveTypePartitioner() : instantiatePartitioner(partitionerTypeName);
+      partitionerInstances.put(partitionerTypeName, partitioner);
+    }
+    return partitioner;
+  }
+
+  /**
+   * Returns the partitioner type name for a given element name.
+   * <p>
+   * The partitioner type name is either that of the primitive partitioner, where the element name is a primitive type. For non-primitives it is the fully
+   * qualified name of a Java class that implements the {@link DataPartitioner} interface.
+   * 
+   * @param elementName
+   *          The element name whose partitioner type is requested.
+   * @return The type name of the element's partitioner, or <code>null</code> if there is no element of that name.
+   */
+  public String getPartitionerTypeName(String elementName)
+  {
+    return partitionerTypeMap.get(elementName);
+  }
+
+  /**
+   * Returns the name of this schema.
+   * 
+   * @return The schema name.
+   */
   public String getSchemaName()
   {
     return schemaName;
   }
 
-  public HashMap<String,Text> getTextRep()
+  /**
+   * Returns the Hadoop text representation of a given element name.
+   * 
+   * @param elementName
+   *          The name of the element whose text representation is requested.
+   * @returns The text representation, or <code>null</code> if the element name does not exist in this schema.
+   */
+  public Text getTextName(String elementName)
   {
-    if (textRep == null)
+    Text text = textRep.get(elementName);
+    if (text == null && containsElement(elementName))
     {
-      constructTextRep();
+      text = new Text(elementName);
+      textRep.put(elementName, text);
     }
-    return textRep;
-  }
-
-  private void constructTextRep()
-  {
-    textRep = new HashMap<String,Text>();
-    for (String name : typeMap.keySet())
-    {
-      textRep.put(name, new Text(name));
-    }
+    return text;
   }
 
   /**
-   * Method to get the partitionerInstances HashMap<String,Object> of partitionerName -> partitionerInstance
+   * Returns true if the given element name is an array type.
    * <p>
-   * Will create it if it doesn't already exist
+   * The method returns <code>false</code> if the element is not an array type or the schema does not define an element of this type.
+   * 
+   * @param element
+   *          The name of the element to test.
+   * @return <code>true</code> if the element is an array type, and <code>false</code> otherwise.
    */
-  public HashMap<String,Object> getPartitionerInstances() throws Exception
+  public boolean isArrayElement(String element)
   {
-    if (partitionerInstances == null)
-    {
-      constructPartitionerInstances();
-    }
+    return arrayElements.contains(element);
+  }
+
+  /*
+   * Returns the map of partitionerTypeName -> partitionerInstance
+   */
+  Map<String,DataPartitioner> getPartitionerInstances()
+  {
     return partitionerInstances;
   }
 
-  private void constructPartitionerInstances() throws Exception
-  {
-    partitionerInstances = new HashMap<String,Object>();
-    for (String partitionerName : partitionerMap.values())
-    {
-      if (!partitionerInstances.containsKey(partitionerName))
-      {
-        if (partitionerName.equals(primitiveTypePartitionerName))
-        {
-          partitionerInstances.put(primitiveTypePartitionerName, new PrimitiveTypePartitioner());
-        }
-        else
-        // If we have a non-primitive partitioner
-        {
-          Class c = Class.forName(partitionerName);
-          Object obj = c.newInstance();
-
-          // Interface check again just in case the class is used independently of the LoadDataSchemas load functionality
-          if (!(obj instanceof DataPartitioner))
-          {
-            throw new Exception("partitionerName = " + partitionerName + " DOES NOT implement the DataPartitioner interface");
-          }
-          partitionerInstances.put(partitionerName, obj);
-        }
-      }
-    }
-  }
-
-  /**
-   * Method to set the partitionerInstances HashMap<String,Object> of partitionerName -> partitionerInstance
+  /*
+   * Returns the mapping from element name to partitioner type name.
    */
-  public void setPartitionerInstances(HashMap<String,Object> partitionerInstancesInput)
+  Map<String,String> getPartitionerTypeMap()
   {
-    partitionerInstances = partitionerInstancesInput;
+    return partitionerTypeMap;
   }
 
-  /**
-   * Method to get the partitioner class instance corresponding to the given partitioner class name
-   * <p>
-   * Will construct the partitionerInstances HashMap if it doesn't exist
+  /*
+   * Returns the Hadoop text map.
    */
-  public Object getPartitionerInstance(String partitionerName) throws Exception
+  Map<String,Text> getTextRep()
   {
-    if (partitionerInstances == null)
-    {
-      constructPartitionerInstances();
-    }
-    return partitionerInstances.get(partitionerName);
+    return textRep;
   }
 
-  /**
-   * Method to get the partitioner instance given an element name
-   * <p>
-   * Will construct the partitionerInstances HashMap if it doesn't exist
+  /*
+   * Returns the mapping from element name to element's Java type.
    */
-  public Object getPartitionerForElement(String element) throws Exception
-  {
-    return getPartitionerInstance(partitionerMap.get(element));
-  }
-
-  /**
-   * Method to get the partitioner class name given an element name
-   */
-  public String getPartitionerName(String element)
-  {
-    return partitionerMap.get(element);
-  }
-
-  /**
-   * Get the representation of a given element name
-   */
-  public Text getTextElement(String element)
-  {
-    if (textRep == null)
-    {
-      constructTextRep();
-    }
-
-    return textRep.get(element);
-  }
-
-  public HashMap<String,String> getTypeMap()
+  Map<String,String> getTypeMap()
   {
     return typeMap;
   }
 
-  public String getElementType(String element)
+  /*
+   * Creates a new instance of the partitioner with the given type name, or throws a PIRExcpetion describing the problem.
+   */
+  DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
-    return typeMap.get(element);
-  }
+    Object obj;
+    try
+    {
+      @SuppressWarnings("unchecked")
+      Class<? extends DataPartitioner> c = (Class<? extends DataPartitioner>) Class.forName(partitionerTypeName);
+      obj = c.newInstance();
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e)
+    {
+      throw new PIRException("partitioner = " + partitionerTypeName + " cannot be instantiated or does not implement DataParitioner.", e);
+    }
 
-  public boolean containsElement(String element)
-  {
-    return textRep.keySet().contains(element);
-  }
-
-  public HashSet<String> getListRep()
-  {
-    return listRep;
-  }
-
-  public HashSet<String> getNonListRep()
-  {
-    HashSet<String> elements = new HashSet<String>();
-    elements.addAll(textRep.keySet());
-    elements.removeAll(listRep);
-    return elements;
-  }
-
-  public boolean hasListRep(String element)
-  {
-    return listRep.contains(element);
+    return (DataPartitioner) obj;
   }
 }

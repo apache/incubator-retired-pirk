@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package test.schema.query;
 
 import static org.junit.Assert.assertEquals;
@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,39 +34,43 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import test.schema.data.LoadDataSchemaTest;
 
 /**
  * Test suite for LoadQuerySchema and QuerySchema
  */
 public class LoadQuerySchemaTest
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
 
-  String querySchemaFile = "querySchemaFile";
-  String dataSchemaName = "fakeDataSchema";
-  String querySchemaName = "fakeQuerySchema";
+  private String querySchemaFile = "querySchemaFile";
+  private String dataSchemaName = "fakeDataSchema";
+  private String querySchemaName = "fakeQuerySchema";
 
-  String element1 = "elementName1";
-  String element2 = "elementName2";
-  String element3 = "elementName3";
-  String element4 = "elementName4";
+  private String element1 = "elementName1";
+  private String element2 = "elementName2";
+  private String element3 = "elementName3";
+  private String element4 = "elementName4";
 
-  List<String> queryElements = Arrays.asList(element1, element2, element3);
-  List<String> filterElements = Arrays.asList(element2);
+  private List<String> queryElements = Arrays.asList(element1, element2, element3);
+  private List<String> filterElements = Collections.singletonList(element2);
 
   @Test
   public void testGeneralSchemaLoad() throws Exception
@@ -89,7 +94,7 @@ public class LoadQuerySchemaTest
       e.printStackTrace();
       fail(e.toString());
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
     try
@@ -101,17 +106,17 @@ public class LoadQuerySchemaTest
       e.printStackTrace();
       fail(e.toString());
     }
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
 
     // Check the entries
-    QuerySchema qSchema = LoadQuerySchemas.getSchema(querySchemaName);
+    QuerySchema qSchema = QuerySchemaRegistry.get(querySchemaName);
 
-    assertEquals(querySchemaName.toLowerCase(), qSchema.getSchemaName());
-    assertEquals(dataSchemaName.toLowerCase(), qSchema.getDataSchemaName());
-    assertEquals(element4.toLowerCase(), qSchema.getSelectorName());
+    assertEquals(querySchemaName, qSchema.getSchemaName());
+    assertEquals(dataSchemaName, qSchema.getDataSchemaName());
+    assertEquals(element4, qSchema.getSelectorName());
 
-    assertEquals(StopListFilter.class.getName(), qSchema.getFilter());
-    if (!(qSchema.getFilterInstance() instanceof StopListFilter))
+    assertEquals(StopListFilter.class.getName(), qSchema.getFilterTypeName());
+    if (!(qSchema.getFilter() instanceof StopListFilter))
     {
       fail("Filter class instance must be StopListFilter");
     }
@@ -119,18 +124,17 @@ public class LoadQuerySchemaTest
     assertEquals(3, qSchema.getElementNames().size());
     for (String item : qSchema.getElementNames())
     {
-      if (!(item.equals(element1.toLowerCase()) || item.equals(element2.toLowerCase()) || item.equals(element3.toLowerCase())))
+      if (!(item.equals(element1) || item.equals(element2) || item.equals(element3)))
       {
-        fail("elementNames: item = " + item + " must equal one of: " + element1.toLowerCase() + ", " + element2.toLowerCase() + ", or "
-            + element3.toLowerCase());
+        fail("elementNames: item = " + item + " must equal one of: " + element1 + ", " + element2 + ", or " + element3);
       }
     }
-    assertEquals(1, qSchema.getFilterElementNames().size());
-    for (String item : qSchema.getFilterElementNames())
+    assertEquals(1, qSchema.getFilteredElementNames().size());
+    for (String item : qSchema.getFilteredElementNames())
     {
-      if (!item.equals(element2.toLowerCase()))
+      if (!item.equals(element2))
       {
-        fail("filterElementNames: item = " + item + " must equal " + element2.toLowerCase());
+        fail("filterElementNames: item = " + item + " must equal " + element2);
       }
     }
 
@@ -148,12 +152,12 @@ public class LoadQuerySchemaTest
     // Force the query and data schemas to load their original values
     if (!dataSchemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testGeneralSchemaLoad: ");
@@ -175,7 +179,7 @@ public class LoadQuerySchemaTest
       e.printStackTrace();
       fail(e.toString());
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
     try
@@ -189,9 +193,9 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for bogus filter class");
-    } catch (Exception e)
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for bogus filter class");
+    } catch (Exception ignore)
     {}
 
     // Reset original query and data schema properties
@@ -201,12 +205,12 @@ public class LoadQuerySchemaTest
     // Force the query and data schemas to load their original values
     if (!dataSchemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testFunkyFilterScenarios");
@@ -232,16 +236,16 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for non-existent DataSchema");
-    } catch (Exception e)
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for non-existent DataSchema");
+    } catch (Exception ignore)
     {}
 
     // Reset original query properties and force to load
     SystemConfiguration.setProperty("query.schemas", querySchemasProp);
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testDataSchemaDoesNotExist ");
@@ -265,7 +269,7 @@ public class LoadQuerySchemaTest
       e.printStackTrace();
       fail(e.toString());
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
     try
@@ -280,9 +284,9 @@ public class LoadQuerySchemaTest
     }
     try
     {
-      LoadQuerySchemas.initialize();
-      fail("LoadQuerySchemas did not throw exception for non-existent selectorName");
-    } catch (Exception e)
+      QuerySchemaLoader.initialize();
+      fail("QuerySchemaLoader did not throw exception for non-existent selectorName");
+    } catch (Exception ignore)
     {}
 
     // Reset original query and data schema properties
@@ -292,19 +296,19 @@ public class LoadQuerySchemaTest
     // Force the query and data schemas to load their original values
     if (!dataSchemasProp.equals("none"))
     {
-      LoadDataSchemas.initialize();
+      DataSchemaLoader.initialize();
     }
 
     if (!querySchemasProp.equals("none"))
     {
-      LoadQuerySchemas.initialize();
+      QuerySchemaLoader.initialize();
     }
 
     logger.info("Finished testSelectorDoesNotExistInDataSchema ");
   }
 
   // Create the stoplist file and alter the properties accordingly
-  private void createStopListFile() throws IOException
+  private void createStopListFile() throws IOException, PIRException
   {
     SystemConfiguration.setProperty("pir.stopListFile", "testStopListFile");
     String newSLFile = Inputs.createPIRStopList(null, false);

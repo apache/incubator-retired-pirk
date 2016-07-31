@@ -23,12 +23,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
-import org.apache.pirk.utils.LogUtils;
 
+import org.apache.pirk.schema.data.DataSchema;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -37,6 +38,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.simple.JSONObject;
+import org.slf4j.LoggerFactory;
 
 /**
  * Bolt to extract the partitions of the data record and output {@code <hash(selector), dataPartitions>}
@@ -47,12 +49,14 @@ import org.json.simple.JSONObject;
  */
 public class PartitionDataBolt extends BaseBasicBolt
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PartitionDataBolt.class);
 
   private static final long serialVersionUID = 1L;
 
   private QueryInfo queryInfo;
   private String queryType;
+  private QuerySchema qSchema = null;
+
   private boolean embedSelector;
 
   private boolean splitPartitions;
@@ -63,16 +67,24 @@ public class PartitionDataBolt extends BaseBasicBolt
   @Override
   public void prepare(Map map, TopologyContext context)
   {
+    queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
+    queryType = queryInfo.getQueryType();
+    embedSelector = queryInfo.getEmbedSelector();
     try
     {
-      StormUtils.initializeSchemas(map);
+      //StormUtils.initializeSchemas(map);
+      if ((boolean) map.get(StormConstants.ALLOW_ADHOC_QSCHEMAS_KEY))
+      {
+        qSchema = queryInfo.getQuerySchema();
+      }
+      if (qSchema == null)
+      {
+        qSchema = QuerySchemaRegistry.get(queryType);
+      }
     } catch (Exception e)
     {
       logger.error("Unable to initialize schemas in HashBolt. ", e);
     }
-    queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
-    queryType = queryInfo.getQueryType();
-    embedSelector = queryInfo.getEmbedSelector();
 
     json = new JSONObject();
     splitPartitions = (boolean) map.get(StormConstants.SPLIT_PARTITIONS_KEY);
@@ -88,7 +100,7 @@ public class PartitionDataBolt extends BaseBasicBolt
 
     try
     {
-      partitions = QueryUtils.partitionDataElement(queryType, json, embedSelector);
+      partitions = QueryUtils.partitionDataElement(qSchema, json, embedSelector);
 
       logger.debug("HashSelectorsAndPartitionDataBolt processing " + json.toString() + " outputting results - " + partitions.size());
 

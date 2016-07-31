@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,14 +15,14 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -38,10 +38,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  */
 public class TestUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
   /**
    * Method to delete an ES index
@@ -81,7 +81,7 @@ public class TestUtils
 
     // Read the output from the command
     logger.info("Standard output of the command:\n");
-    String s = null;
+    String s;
     while ((s = stdInput.readLine()) != null)
     {
       logger.info(s);
@@ -111,9 +111,10 @@ public class TestUtils
     type.appendChild(doc.createTextNode(typeIn));
     element.appendChild(type);
 
-    Element isArray = doc.createElement("isArray");
-    isArray.appendChild(doc.createTextNode(isArrayIn));
-    element.appendChild(isArray);
+    if (isArrayIn.equals("true"))
+    {
+      element.appendChild(doc.createElement("isArray"));
+    }
 
     if (partitionerIn != null)
     {
@@ -141,7 +142,7 @@ public class TestUtils
     logger.info("createQuerySchema: querySchemaName = " + querySchemaName);
 
     // Create a temporary file for the test schema, set in the properties
-    String fileName = null;
+    String fileName;
     File file = null;
     OutputStreamWriter osw = null;
     if (hdfs)
@@ -189,17 +190,17 @@ public class TestUtils
 
       // Add the schemaName
       Element schemaNameElement = doc.createElement("schemaName");
-      schemaNameElement.appendChild(doc.createTextNode(querySchemaName.toLowerCase()));
+      schemaNameElement.appendChild(doc.createTextNode(querySchemaName));
       rootElement.appendChild(schemaNameElement);
 
       // Add the dataSchemaName
       Element dataSchemaNameElement = doc.createElement("dataSchemaName");
-      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput.toLowerCase()));
+      dataSchemaNameElement.appendChild(doc.createTextNode(dataSchemaNameInput));
       rootElement.appendChild(dataSchemaNameElement);
 
       // Add the selectorName
       Element selectorNameElement = doc.createElement("selectorName");
-      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput.toLowerCase()));
+      selectorNameElement.appendChild(doc.createTextNode(selectorNameInput));
       rootElement.appendChild(selectorNameElement);
 
       // Add the elementNames
@@ -209,7 +210,7 @@ public class TestUtils
       {
         logger.info("elementName = " + elementName);
         Element name = doc.createElement("name");
-        name.appendChild(doc.createTextNode(elementName.toLowerCase()));
+        name.appendChild(doc.createTextNode(elementName));
         elements.appendChild(name);
       }
 
@@ -227,7 +228,7 @@ public class TestUtils
         {
           logger.info("filterName = " + filterName);
           Element name = doc.createElement("name");
-          name.appendChild(doc.createTextNode(filterName.toLowerCase()));
+          name.appendChild(doc.createTextNode(filterName));
           filterNamesElement.appendChild(name);
         }
       }
@@ -236,7 +237,7 @@ public class TestUtils
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       DOMSource source = new DOMSource(doc);
-      StreamResult result = null;
+      StreamResult result;
       if (hdfs)
       {
         result = new StreamResult(osw);
@@ -268,7 +269,7 @@ public class TestUtils
    */
   public static ArrayList<QueryResponseJSON> readResultsFile(File file)
   {
-    ArrayList<QueryResponseJSON> results = new ArrayList<QueryResponseJSON>();
+    ArrayList<QueryResponseJSON> results = new ArrayList<>();
     try
     {
       FileReader fr = new FileReader(file);
@@ -292,25 +293,22 @@ public class TestUtils
    * Write the ArrayList<String to a tmp file in the local filesystem with the given fileName
    * 
    */
-  public static String writeToTmpFile(ArrayList<String> list, String fileName, String suffix) throws IOException
+  public static String writeToTmpFile(List<String> list, String fileName, String suffix) throws IOException
   {
-    String filename = null;
-
     File file = File.createTempFile(fileName, suffix);
     file.deleteOnExit();
-    filename = file.toString();
-    logger.info("localFS: file = " + file.toString());
+    logger.info("localFS: file = " + file);
 
-    FileOutputStream fos = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-    for (String s : list)
+    FileWriter fw = new FileWriter(file);
+    try (BufferedWriter bw = new BufferedWriter(fw))
     {
-      bw.write(s);
-      bw.newLine();
+      for (String s : list)
+      {
+        bw.write(s);
+        bw.newLine();
+      }
     }
-    bw.close();
 
-    return filename;
+    return file.getPath();
   }
 }

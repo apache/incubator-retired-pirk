@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.distributed.testsuite;
 
 import java.io.File;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.inputformat.hadoop.json.JSONInputFormatBase;
@@ -33,18 +32,20 @@ import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.responder.wideskies.ResponderCLI;
+import org.apache.pirk.responder.wideskies.ResponderProps;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.launcher.SparkLauncher;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Distributed test class for PIR
@@ -52,7 +53,7 @@ import org.json.simple.JSONObject;
  */
 public class DistTestSuite
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(DistTestSuite.class);
 
   // This method also tests all non-query specific configuration options/properties
   // for the MapReduce version of PIR
@@ -66,6 +67,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "100");
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up base configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.BASE_FORMAT);
@@ -130,6 +134,19 @@ public class DistTestSuite
     // Reset property
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
 
+    // Test embedded QuerySchema
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
+
     logger.info("Completed testJSONInputMR");
   }
 
@@ -142,6 +159,9 @@ public class DistTestSuite
 
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
@@ -183,6 +203,9 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pir.numColMultPartitions", "20");
     SystemConfiguration.setProperty("pir.colMultReduceByKey", "false");
 
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+
     // Set up JSON configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.BASE_FORMAT);
     SystemConfiguration.setProperty("pir.inputData", SystemConfiguration.getProperty(DistributedTestDriver.JSON_PIR_INPUT_FILE_PROPERTY));
@@ -199,6 +222,20 @@ public class DistTestSuite
     BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2);
 
     BaseTests.testSRCIPQueryNoFilter(dataElements, fs, true, true, 2);
+
+    // Test embedded QuerySchema
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+    BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Test pad columns
     SystemConfiguration.setProperty("pir.padEmptyColumns", "true");
@@ -254,6 +291,9 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
     SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
 
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
     SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:0");
@@ -299,7 +339,7 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pir.numReduceTasks", "1");
     SystemConfiguration.setProperty("pir.stopListFile", SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE));
 
-    ArrayList<QueryResponseJSON> results = null;
+    ArrayList<QueryResponseJSON> results;
 
     // Create the temp result file
     File fileFinalResults = File.createTempFile("finalResultsFile", ".txt");
@@ -342,7 +382,7 @@ public class DistTestSuite
 
     // Write the Querier object to a file
     Path queryInputDirPath = new Path(queryInputDir);
-    query.writeToHDFSFile(queryInputDirPath, fs);
+    new HadoopFileSystemStore(fs).store(queryInputDirPath, query);
     fs.deleteOnExit(queryInputDirPath);
 
     // Grab the original data and query schema properties to reset upon completion
@@ -361,31 +401,31 @@ public class DistTestSuite
       // Build args
       String inputFormat = SystemConfiguration.getProperty("pir.dataInputFormat");
       logger.info("inputFormat = " + inputFormat);
-      ArrayList<String> args = new ArrayList<String>();
-      args.add("-" + ResponderCLI.PLATFORM + "=spark");
-      args.add("-" + ResponderCLI.DATAINPUTFORMAT + "=" + inputFormat);
-      args.add("-" + ResponderCLI.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
-      args.add("-" + ResponderCLI.OUTPUTFILE + "=" + SystemConfiguration.getProperty("pir.outputFile"));
-      args.add("-" + ResponderCLI.STOPLISTFILE + "=" + SystemConfiguration.getProperty("pir.stopListFile"));
-      args.add("-" + ResponderCLI.USELOCALCACHE + "=" + SystemConfiguration.getProperty("pir.useLocalCache", "true"));
-      args.add("-" + ResponderCLI.LIMITHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.limitHitsPerSelector", "false"));
-      args.add("-" + ResponderCLI.MAXHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.maxHitsPerSelector", "1000"));
-      args.add("-" + ResponderCLI.QUERYSCHEMAS + "=" + Inputs.HDFS_QUERY_FILES);
-      args.add("-" + ResponderCLI.DATASCHEMAS + "=" + Inputs.DATA_SCHEMA_FILE_HDFS);
-      args.add("-" + ResponderCLI.NUMEXPLOOKUPPARTS + "=" + SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
-      args.add("-" + ResponderCLI.USEMODEXPJOIN + "=" + SystemConfiguration.getProperty("pir.useModExpJoin", "false"));
-      args.add("-" + ResponderCLI.NUMCOLMULTPARTITIONS + "=" + SystemConfiguration.getProperty("pir.numColMultPartitions", "20"));
-      args.add("-" + ResponderCLI.COLMULTREDUCEBYKEY + "=" + SystemConfiguration.getProperty("pir.colMultReduceByKey", "false"));
+      ArrayList<String> args = new ArrayList<>();
+      args.add("-" + ResponderProps.PLATFORM + "=spark");
+      args.add("-" + ResponderProps.DATAINPUTFORMAT + "=" + inputFormat);
+      args.add("-" + ResponderProps.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
+      args.add("-" + ResponderProps.OUTPUTFILE + "=" + SystemConfiguration.getProperty("pir.outputFile"));
+      args.add("-" + ResponderProps.STOPLISTFILE + "=" + SystemConfiguration.getProperty("pir.stopListFile"));
+      args.add("-" + ResponderProps.USELOCALCACHE + "=" + SystemConfiguration.getProperty("pir.useLocalCache", "true"));
+      args.add("-" + ResponderProps.LIMITHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.limitHitsPerSelector", "false"));
+      args.add("-" + ResponderProps.MAXHITSPERSELECTOR + "=" + SystemConfiguration.getProperty("pir.maxHitsPerSelector", "1000"));
+      args.add("-" + ResponderProps.QUERYSCHEMAS + "=" + Inputs.HDFS_QUERY_FILES);
+      args.add("-" + ResponderProps.DATASCHEMAS + "=" + Inputs.DATA_SCHEMA_FILE_HDFS);
+      args.add("-" + ResponderProps.NUMEXPLOOKUPPARTS + "=" + SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
+      args.add("-" + ResponderProps.USEMODEXPJOIN + "=" + SystemConfiguration.getProperty("pir.useModExpJoin", "false"));
+      args.add("-" + ResponderProps.NUMCOLMULTPARTITIONS + "=" + SystemConfiguration.getProperty("pir.numColMultPartitions", "20"));
+      args.add("-" + ResponderProps.COLMULTREDUCEBYKEY + "=" + SystemConfiguration.getProperty("pir.colMultReduceByKey", "false"));
       if (inputFormat.equals(InputFormatConst.BASE_FORMAT))
       {
-        args.add("-" + ResponderCLI.INPUTDATA + "=" + SystemConfiguration.getProperty("pir.inputData"));
-        args.add("-" + ResponderCLI.BASEQUERY + "=" + SystemConfiguration.getProperty("pir.baseQuery"));
-        args.add("-" + ResponderCLI.BASEINPUTFORMAT + "=" + SystemConfiguration.getProperty("pir.baseInputFormat"));
+        args.add("-" + ResponderProps.INPUTDATA + "=" + SystemConfiguration.getProperty("pir.inputData"));
+        args.add("-" + ResponderProps.BASEQUERY + "=" + SystemConfiguration.getProperty("pir.baseQuery"));
+        args.add("-" + ResponderProps.BASEINPUTFORMAT + "=" + SystemConfiguration.getProperty("pir.baseInputFormat"));
       }
       else if (inputFormat.equals(InputFormatConst.ES))
       {
-        args.add("-" + ResponderCLI.ESQUERY + "=" + SystemConfiguration.getProperty("pir.esQuery"));
-        args.add("-" + ResponderCLI.ESRESOURCE + "=" + SystemConfiguration.getProperty("pir.esResource"));
+        args.add("-" + ResponderProps.ESQUERY + "=" + SystemConfiguration.getProperty("pir.esQuery"));
+        args.add("-" + ResponderProps.ESRESOURCE + "=" + SystemConfiguration.getProperty("pir.esResource"));
       }
 
       for (String arg : args)
@@ -413,7 +453,7 @@ public class DistTestSuite
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
-    Response response = Response.readFromHDFSFile(new Path(outputFile), fs);
+    Response response = new HadoopFileSystemStore(fs).recall(outputFile, Response.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);

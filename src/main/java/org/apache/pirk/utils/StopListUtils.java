@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,10 +15,10 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.utils;
 
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utilities for stop listing data items/elements
@@ -28,7 +28,7 @@ public class StopListUtils
   /**
    * Checks to see whether an element (or subdomain of the given element) is contained in the HashSet If it is not in the set, returns true (keep)
    */
-  public static boolean checkElement(String element, HashSet<String> filterSet)
+  public static boolean checkElement(String element, Set<String> filterSet)
   {
     boolean notInSet = true;
 

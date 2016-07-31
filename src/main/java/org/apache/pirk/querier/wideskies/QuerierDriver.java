@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.querier.wideskies;
 
 import java.io.IOException;
@@ -23,17 +23,18 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.FileIOUtils;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Driver class for encryption of a query or decryption of a response
@@ -72,16 +73,18 @@ import org.apache.pirk.utils.SystemConfiguration;
 public class QuerierDriver implements Serializable
 {
   private static final long serialVersionUID = 1L;
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+
+  private static final Logger logger = LoggerFactory.getLogger(QuerierDriver.class);
 
   public static void main(String... args) throws IOException, InterruptedException, PIRException
   {
     // General variables
-    String action = null;
-    String inputFile = null;
-    String outputFile = null;
+    String action;
+    String inputFile;
+    String outputFile;
     String queryType = null;
-    int numThreads = 1;
+    int numThreads;
+    LocalFileSystemStore storage = new LocalFileSystemStore();
 
     // Encryption variables
     int hashBitSize = 0;
@@ -102,34 +105,37 @@ public class QuerierDriver implements Serializable
     QuerierDriverCLI qdriverCLI = new QuerierDriverCLI(args);
 
     // Set the variables
-    action = qdriverCLI.getOptionValue(QuerierDriverCLI.ACTION);
-    inputFile = qdriverCLI.getOptionValue(QuerierDriverCLI.INPUTFILE);
-    outputFile = qdriverCLI.getOptionValue(QuerierDriverCLI.OUTPUTFILE);
-    numThreads = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.NUMTHREADS));
+    action = SystemConfiguration.getProperty(QuerierProps.ACTION);
+    inputFile = SystemConfiguration.getProperty(QuerierProps.INPUTFILE);
+    outputFile = SystemConfiguration.getProperty(QuerierProps.OUTPUTFILE);
+    numThreads = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.NUMTHREADS));
     if (action.equals("encrypt"))
     {
-      queryType = qdriverCLI.getOptionValue(QuerierDriverCLI.TYPE);
-      queryName = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERYNAME);
-      hashBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE));
-      hashKey = qdriverCLI.getOptionValue(QuerierDriverCLI.HASHBITSIZE);
-      dataPartitionBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.DATAPARTITIONSIZE));
-      paillierBitSize = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.PAILLIERBITSIZE));
-      certainty = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.CERTAINTY));
-      embedSelector = SystemConfiguration.getProperty(QuerierDriverCLI.EMBEDSELECTOR, "true").equals("true");
-      useMemLookupTable = SystemConfiguration.getProperty(QuerierDriverCLI.USEMEMLOOKUPTABLE, "false").equals("true");
-      useHDFSLookupTable = SystemConfiguration.getProperty(QuerierDriverCLI.USEHDFSLOOKUPTABLE, "false").equals("true");
+      queryType = SystemConfiguration.getProperty(QuerierProps.QUERYTYPE);
+      queryName = SystemConfiguration.getProperty(QuerierProps.QUERYNAME);
+      hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
+      hashKey = SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE);
+      dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
+      paillierBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.PAILLIERBITSIZE));
+      certainty = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.CERTAINTY));
+      embedSelector = SystemConfiguration.getProperty(QuerierProps.EMBEDSELECTOR, "true").equals("true");
+      useMemLookupTable = SystemConfiguration.getProperty(QuerierProps.USEMEMLOOKUPTABLE, "false").equals("true");
+      useHDFSLookupTable = SystemConfiguration.getProperty(QuerierProps.USEHDFSLOOKUPTABLE, "false").equals("true");
 
-      if (qdriverCLI.hasOption(QuerierDriverCLI.BITSET))
+      if (SystemConfiguration.hasProperty(QuerierProps.BITSET))
       {
-        bitSet = Integer.parseInt(qdriverCLI.getOptionValue(QuerierDriverCLI.BITSET));
+        bitSet = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.BITSET));
         logger.info("bitSet = " + bitSet);
       }
 
       // Check to ensure we have a valid queryType
-      if (!LoadQuerySchemas.containsSchema(queryType))
+      if (QuerySchemaRegistry.get(queryType) == null)
       {
         logger.error("Invalid schema: " + queryType + "; The following schemas are loaded:");
-        LoadQuerySchemas.printSchemas();
+        for (String schema : QuerySchemaRegistry.getNames())
+        {
+          logger.info("schema = " + schema);
+        }
         System.exit(0);
       }
 
@@ -141,7 +147,7 @@ public class QuerierDriver implements Serializable
     }
     if (action.equals("decrypt"))
     {
-      querierFile = qdriverCLI.getOptionValue(QuerierDriverCLI.QUERIERFILE);
+      querierFile = SystemConfiguration.getProperty(QuerierProps.QUERIERFILE);
     }
 
     // Perform the action
@@ -162,6 +168,12 @@ public class QuerierDriver implements Serializable
       // Set the necessary QueryInfo and Paillier objects
       QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryName, paillierBitSize,
           useMemLookupTable, embedSelector, useHDFSLookupTable);
+
+      if (SystemConfiguration.getProperty("pir.embedQuerySchema").equals("true"))
+      {
+        queryInfo.addQuerySchema(QuerySchemaRegistry.get(queryType));
+      }
+
       Paillier paillier = new Paillier(paillierBitSize, certainty, bitSet); // throws PIRException if certainty conditions are not satisfied
 
       // Check the number of selectors to ensure that 2^{numSelector*dataPartitionBitSize} < N
@@ -182,14 +194,15 @@ public class QuerierDriver implements Serializable
       // Write necessary output files - two files written -
       // (1) Querier object to <outputFile>-QuerierConst.QUERIER_FILETAG
       // (2) Query object to <outputFile>-QuerierConst.QUERY_FILETAG
-      encryptQuery.writeOutputFiles(outputFile);
+      storage.store(outputFile + "-" + QuerierConst.QUERIER_FILETAG, encryptQuery.getQuerier());
+      storage.store(outputFile + "-" + QuerierConst.QUERY_FILETAG, encryptQuery.getQuery());
     }
     else
     // Decryption
     {
       // Reconstruct the necessary objects from the files
-      Response response = Response.readFromFile(inputFile);
-      Querier querier = Querier.readFromFile(querierFile);
+      Response response = storage.recall(inputFile, Response.class);
+      Querier querier = storage.recall(querierFile, Querier.class);
 
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);

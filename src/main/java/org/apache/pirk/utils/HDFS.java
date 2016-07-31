@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.utils;
 
 import java.io.BufferedReader;
@@ -33,15 +33,16 @@ import java.util.Map;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for basic HDFS fileIO utils
  */
 public class HDFS
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(HDFS.class);
 
   public static void writeFile(Collection<String> elements, FileSystem fs, String path, boolean deleteOnExit)
   {
@@ -190,7 +191,7 @@ public class HDFS
   public static HashSet<String> readFileHashSet(FileSystem fs, Path path)
   {
 
-    HashSet<String> rv = new HashSet<String>();
+    HashSet<String> rv = new HashSet<>();
     try
     {
       InputStreamReader isr = new InputStreamReader(fs.open(path));

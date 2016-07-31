@@ -17,10 +17,8 @@
  *******************************************************************************/
 package org.apache.pirk.responder.wideskies.storm;
 
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -28,6 +26,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 import java.io.IOException;
@@ -51,7 +50,7 @@ public class EncRowCalcBolt extends BaseRichBolt
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EncRowCalcBolt.class);
 
   private OutputCollector outputCollector;
   private static Query query;

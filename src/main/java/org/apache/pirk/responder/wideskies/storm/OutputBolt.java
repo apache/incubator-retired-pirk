@@ -21,15 +21,16 @@ package org.apache.pirk.responder.wideskies.storm;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class OutputBolt extends BaseRichBolt
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(OutputBolt.class);
 
   private OutputCollector outputCollector;
   private QueryInfo queryInfo;
@@ -70,6 +71,9 @@ public class OutputBolt extends BaseRichBolt
   private Integer flushCounter = 0;
   private ArrayList<Tuple> tuplesToAck = new ArrayList<Tuple>();
   private Integer totalFlushSigs;
+
+  private LocalFileSystemStore localStore;
+  private HadoopFileSystemStore hadoopStore;
 
   // This latch just serves as a hook for testing.
   public static CountDownLatch latch = new CountDownLatch(1);
@@ -91,7 +95,21 @@ public class OutputBolt extends BaseRichBolt
     outputFile = (String) map.get(StormConstants.OUTPUT_FILE_KEY);
     hdfs = (boolean) map.get(StormConstants.USE_HDFS);
     if (hdfs)
-      hdfsUri = (String) map.get(StormConstants.HDFS_URI_KEY);
+    {
+      try
+      {
+        FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
+        hadoopStore = new HadoopFileSystemStore(fs);
+      } catch (IOException e)
+      {
+        logger.error("Failed to initialize Hadoop file system for output.");
+        throw new RuntimeException(e);
+      }
+    }
+    else
+    {
+      localStore = new LocalFileSystemStore();
+    }
     nSquared = new BigInteger((String) map.get(StormConstants.N_SQUARED_KEY));
     queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
     response = new Response(queryInfo);
@@ -127,13 +145,12 @@ public class OutputBolt extends BaseRichBolt
 
           if (hdfs)
           {
-            FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
-            response.writeToHDFSFile(new Path(outputFile + "_" + timestamp), fs);
+            hadoopStore.store(new Path(outputFile + "_" + timestamp), response);
           }
           else
           { // In order to accommodate testing, this does not currently include timestamp.
             // Should probably be fixed, but this will not likely be used outside of testing.
-            response.writeToFile(new File(outputFile));
+            localStore.store(new File(outputFile), response);
             for (long cv : resultsMap.keySet())
             {
               response.addElement((int) cv, resultsMap.get(cv));

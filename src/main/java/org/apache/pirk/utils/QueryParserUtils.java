@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,21 +15,23 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.utils;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 import org.apache.pirk.inputformat.hadoop.TextArrayWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class used for URI query parsing
@@ -41,7 +43,7 @@ import org.elasticsearch.hadoop.mr.WritableArrayWritable;
  */
 public class QueryParserUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryParserUtils.class);
 
   /**
    * Given a URI query string, checks to see if the given document satisfies the query
@@ -73,7 +75,7 @@ public class QueryParserUtils
 
     String[] queryTokens = uriQuery.split("\\+(?=AND)|\\+(?=OR)|\\+(?=[a-z])"); // booleans of the form +AND+, +OR+, don't split on +T0+
     int index = 0;
-    String item = null;
+    String item;
     while (index < queryTokens.length)
     {
       boolean ignoreCase = false;
@@ -227,7 +229,7 @@ public class QueryParserUtils
       {
         if (queryTokens[index].equals("AND")) // Do nothing and keep going
         {
-          if (satisfiesQuery == false)
+          if (!satisfiesQuery)
           {
             break;
           }
@@ -247,7 +249,7 @@ public class QueryParserUtils
             satisfiesQuery = true; // reset so that we pick up matches for the next term
           }
         }
-        else if (satisfiesQuery == false)
+        else if (!satisfiesQuery)
         {
           logger.debug("Does not satisfy the query and no boolean ops next...");
           break;
@@ -274,7 +276,7 @@ public class QueryParserUtils
 
     String[] queryTokens = uriQuery.split("\\+(?=AND)|\\+(?=OR)|\\+(?=[a-z])"); // booleans of the form +AND+, +OR+, don't split on +T0+
     int index = 0;
-    String item = null;
+    String item;
     while (index < queryTokens.length)
     {
       item = queryTokens[index];
@@ -374,12 +376,12 @@ public class QueryParserUtils
               logger.debug("itemTokens[1] = " + itemTokens[1] + " contains wildcard");
               if (!Pattern.matches(wildcardToRegex(itemTokens[1]), (String) value))
               {
-                logger.debug("stringValue = " + (String) value + " did not satisfy itemTokens[1] = " + itemTokens[1]);
+                logger.debug("stringValue = " + value + " did not satisfy itemTokens[1] = " + itemTokens[1]);
                 satisfiesQuery = false;
               }
-              logger.debug("stringValue = " + (String) value + " did satisfy itemTokens[1] = " + itemTokens[1]);
+              logger.debug("stringValue = " + value + " did satisfy itemTokens[1] = " + itemTokens[1]);
             }
-            else if (!((String) value).equals(itemTokens[1])) // Single value match
+            else if (!(value).equals(itemTokens[1])) // Single value match
             {
               logger.debug("We do not have a single value match: stringValue " + (String) value + " != itemTokens[1] = " + itemTokens[1]);
               satisfiesQuery = false;
@@ -427,7 +429,7 @@ public class QueryParserUtils
       {
         if (queryTokens[index].equals("AND")) // Do nothing and keep going
         {
-          if (satisfiesQuery == false)
+          if (!satisfiesQuery)
           {
             break;
           }
@@ -447,7 +449,7 @@ public class QueryParserUtils
             satisfiesQuery = true; // reset so that we pick up matches for the next term
           }
         }
-        else if (satisfiesQuery == false)
+        else if (!satisfiesQuery)
         {
           logger.debug("Does not satisfy the query and no boolean ops next...");
           break;
@@ -474,7 +476,7 @@ public class QueryParserUtils
 
     String[] queryTokens = uriQuery.split("\\+(?=AND)|\\+(?=OR)|\\+(?=[a-z])"); // booleans of the form +AND+, +OR+, don't split on +T0+
     int index = 0;
-    String item = null;
+    String item;
     while (index < queryTokens.length)
     {
       boolean ignoreCase = false;
@@ -628,7 +630,7 @@ public class QueryParserUtils
       {
         if (queryTokens[index].equals("AND")) // Do nothing and keep going
         {
-          if (satisfiesQuery == false)
+          if (!satisfiesQuery)
           {
             break;
           }
@@ -648,7 +650,7 @@ public class QueryParserUtils
             satisfiesQuery = true; // reset so that we pick up matches for the next term
           }
         }
-        else if (satisfiesQuery == false)
+        else if (!satisfiesQuery)
         {
           logger.debug("Does not satisfy the query and no boolean ops next...");
           break;
@@ -683,14 +685,14 @@ public class QueryParserUtils
     logger.debug("query = " + query);
 
     // Special case for IPs
-    if (dataSchema.getPartitionerName(field).equals(IPDataPartitioner.class.getName())) // Doesn't handle arrays of IPs in the value right now...
+    if (dataSchema.getPartitionerTypeName(field).equals(IPDataPartitioner.class.getName())) // Doesn't handle arrays of IPs in the value right now...
     {
       logger.debug("Have IP Field");
 
       String[] ranges = query.split("\\+TO\\+");
       logger.info("ranges[0] = " + ranges[0] + " ranges[1] = " + ranges[1]);
 
-      if ((inclusive == false) && (value.equals(ranges[0]) || value.equals(ranges[1])))
+      if ((!inclusive) && (value.equals(ranges[0]) || value.equals(ranges[1])))
       {
         logger.debug("inclusive = false and either value.equals(ranges[0]) or value.equals(ranges[1])");
         matches = false;
@@ -769,10 +771,10 @@ public class QueryParserUtils
           toMilli = Integer.parseInt(toDateArr[1]);
         } catch (Exception e)
         {
-          logger.info(e.getStackTrace().toString());
+          logger.info(Arrays.toString(e.getStackTrace()));
         }
 
-        if ((inclusive == false) && (fromDate == valueDate || toDate == valueDate))
+        if ((!inclusive) && (fromDate == valueDate || toDate == valueDate))
         {
           logger.debug("(inclusive == false) && (fromDate == valueDate || toDate == valueDate))");
           matches = false;
@@ -800,7 +802,7 @@ public class QueryParserUtils
         {
           e.printStackTrace();
         }
-        if ((inclusive == false) && (lower == valueDate || upper == valueDate))
+        if ((!inclusive) && (lower == valueDate || upper == valueDate))
         {
           logger.debug("(inclusive == false) && (lower == valueDate || upper == valueDate))");
           matches = false;
@@ -830,7 +832,7 @@ public class QueryParserUtils
       int valueInt = Integer.parseInt(value);
       logger.debug("valueInt = " + valueInt + " lower = " + lower + " upper = " + upper);
 
-      if ((inclusive == false) && (lower == valueInt || upper == valueInt))
+      if ((!inclusive) && (lower == valueInt || upper == valueInt))
       {
         logger.debug("(inclusive == false) && (lower == valueInt || upper == valueInt))");
         matches = false;
@@ -855,7 +857,7 @@ public class QueryParserUtils
    */
   public static String wildcardToRegex(String wildcard)
   {
-    StringBuffer s = new StringBuffer(wildcard.length());
+    StringBuilder s = new StringBuilder(wildcard.length());
     for (int i = 0, is = wildcard.length(); i < is; i++)
     {
       char c = wildcard.charAt(i);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,8 +15,10 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies;
+
+import java.io.File;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -24,52 +26,21 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
-import org.apache.pirk.inputformat.hadoop.InputFormatConst;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for parsing the command line options for the ResponderDriver
  */
 public class ResponderCLI
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(ResponderCLI.class);
 
-  Options cliOptions = null;
-  CommandLine commandLine = null;
+  private Options cliOptions = null;
+  private CommandLine commandLine = null;
 
-  // Required args
-  public static String PLATFORM = "platform";
-  public static String QUERYINPUT = "queryInput";
-  public static String DATAINPUTFORMAT = "dataInputFormat";
-  public static String INPUTDATA = "inputData";
-  public static String BASEQUERY = "baseQuery";
-  public static String ESRESOURCE = "esResource";
-  public static String ESQUERY = "esQuery";
-  public static String OUTPUTFILE = "outputFile";
-
-  // Optional args
-  public static String BASEINPUTFORMAT = "baseInputFormat";
-  public static String STOPLISTFILE = "stopListFile";
-  public static String NUMREDUCETASKS = "numReduceTasks";
-  public static String USELOCALCACHE = "useLocalCache";
-  public static String LIMITHITSPERSELECTOR = "limitHitsPerSelector";
-  public static String MAXHITSPERSELECTOR = "maxHitsPerSelector";
-  public static String MAPMEMORY = "mapreduceMapMemoryMb";
-  public static String REDUCEMEMORY = "mapreduceReduceMemoryMb";
-  public static String MAPJAVAOPTS = "mapreduceMapJavaOpts";
-  public static String REDUCEJAVAOPTS = "mapreduceReduceJavaOpts";
-  public static String QUERYSCHEMAS = "querySchemas";
-  public static String DATASCHEMAS = "dataSchemas";
-  public static String NUMEXPLOOKUPPARTS = "numExpLookupPartitions";
-  public static String USEHDFSLOOKUPTABLE = "useHDFSLookupTable";
-  public static String NUMDATAPARTITIONS = "numDataPartitions";
-  public static String NUMCOLMULTPARTITIONS = "numColMultPartitions";
-  public static String USEMODEXPJOIN = "useModExpJoin";
-  public static String COLMULTREDUCEBYKEY = "colMultReduceByKey";
+  private static final String LOCALPROPFILE = "local.responder.properties";
 
   /**
    * Create and parse allowable options
@@ -140,219 +111,25 @@ public class ResponderCLI
   {
     boolean valid = true;
 
-    // Parse general required options
-    if (!hasOption(PLATFORM))
+    // If we have a local.querier.properties file specified, load it
+    if (hasOption(LOCALPROPFILE))
     {
-      logger.info("Must have the option " + PLATFORM);
-      return false;
-    }
-    String platform = getOptionValue(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("standalone"))
-    {
-      logger.info("Unsupported platform: " + platform);
-      return false;
-    }
-    SystemConfiguration.setProperty("platform", getOptionValue(PLATFORM));
-
-    if (!hasOption(QUERYINPUT))
-    {
-      logger.info("Must have the option " + QUERYINPUT);
-      return false;
-    }
-    SystemConfiguration.setProperty("pir.queryInput", getOptionValue(QUERYINPUT));
-
-    if (!hasOption(OUTPUTFILE))
-    {
-      logger.info("Must have the option " + OUTPUTFILE);
-      return false;
-    }
-    SystemConfiguration.setProperty("pir.outputFile", getOptionValue(OUTPUTFILE));
-
-    if (!hasOption(QUERYSCHEMAS))
-    {
-      logger.info("Must have the option " + QUERYSCHEMAS);
-      return false;
-    }
-    SystemConfiguration.setProperty("query.schemas", getOptionValue(QUERYSCHEMAS));
-
-    if (!hasOption(DATASCHEMAS))
-    {
-      logger.info("Must have the option " + DATASCHEMAS);
-      return false;
-    }
-    SystemConfiguration.setProperty("data.schemas", getOptionValue(DATASCHEMAS));
-
-    if (!hasOption(DATAINPUTFORMAT))
-    {
-      logger.info("Must have the option " + DATAINPUTFORMAT);
-      return false;
-    }
-    String dataInputFormat = getOptionValue(DATAINPUTFORMAT).toLowerCase();
-    SystemConfiguration.setProperty("pir.dataInputFormat", dataInputFormat);
-
-    // Parse required options by dataInputFormat
-    if (dataInputFormat.equals(InputFormatConst.BASE_FORMAT))
-    {
-      if (!hasOption(BASEINPUTFORMAT))
-      {
-        logger.info("Must have the option " + BASEINPUTFORMAT + " if using " + InputFormatConst.BASE_FORMAT);
-        return false;
-      }
-      SystemConfiguration.setProperty("pir.baseInputFormat", getOptionValue(BASEINPUTFORMAT));
-
-      if (!hasOption(INPUTDATA))
-      {
-        logger.info("Must have the option " + INPUTDATA + " if using " + InputFormatConst.BASE_FORMAT);
-        return false;
-      }
-      SystemConfiguration.setProperty("pir.inputData", getOptionValue(INPUTDATA));
-
-      if (hasOption(BASEQUERY))
-      {
-        SystemConfiguration.setProperty("pir.baseQuery", getOptionValue(BASEQUERY));
-      }
-      else
-      {
-        SystemConfiguration.setProperty("pir.baseQuery", "?q=*");
-      }
-    }
-    else if (dataInputFormat.equals(InputFormatConst.ES))
-    {
-      if (!hasOption(ESRESOURCE))
-      {
-        logger.info("Must have the option " + ESRESOURCE);
-        return false;
-      }
-      SystemConfiguration.setProperty("pir.esResource", getOptionValue(ESRESOURCE));
-
-      if (!hasOption(ESQUERY))
-      {
-        logger.info("Must have the option " + ESQUERY);
-        return false;
-      }
-      SystemConfiguration.setProperty("pir.esQuery", getOptionValue(ESQUERY));
-    }
-    else if (dataInputFormat.equalsIgnoreCase("standalone"))
-    {
-      if (!hasOption(INPUTDATA))
-      {
-        logger.info("Must have the option " + INPUTDATA + " if using " + InputFormatConst.BASE_FORMAT);
-        return false;
-      }
-      SystemConfiguration.setProperty("pir.inputData", getOptionValue(INPUTDATA));
+      SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
     }
     else
     {
-      logger.info("Unsupported inputFormat = " + dataInputFormat);
-      return false;
+      // Pull options, set as properties
+      for (String prop : ResponderProps.PROPSLIST)
+      {
+        if (hasOption(prop))
+        {
+          SystemConfiguration.setProperty(prop, getOptionValue(prop));
+        }
+      }
     }
 
-    // Parse optional args
-    if (hasOption(STOPLISTFILE))
-    {
-      SystemConfiguration.setProperty("pir.stopListFile", getOptionValue(STOPLISTFILE));
-    }
-
-    if (hasOption(NUMREDUCETASKS))
-    {
-      SystemConfiguration.setProperty("pir.numReduceTasks", getOptionValue(NUMREDUCETASKS));
-    }
-
-    if (hasOption(USELOCALCACHE))
-    {
-      SystemConfiguration.setProperty("pir.useLocalCache", getOptionValue(USELOCALCACHE));
-    }
-
-    if (hasOption(LIMITHITSPERSELECTOR))
-    {
-      SystemConfiguration.setProperty("pir.limitHitsPerSelector", getOptionValue(LIMITHITSPERSELECTOR));
-    }
-
-    if (hasOption(MAXHITSPERSELECTOR))
-    {
-      SystemConfiguration.setProperty("pir.maxHitsPerSelector", getOptionValue(MAXHITSPERSELECTOR));
-    }
-
-    if (hasOption(MAPMEMORY))
-    {
-      SystemConfiguration.setProperty("mapreduce.map.memory.mb", getOptionValue(MAPMEMORY));
-    }
-
-    if (hasOption(REDUCEMEMORY))
-    {
-      SystemConfiguration.setProperty("mapreduce.reduce.memory.mb", getOptionValue(REDUCEMEMORY));
-    }
-
-    if (hasOption(MAPJAVAOPTS))
-    {
-      SystemConfiguration.setProperty("mapreduce.map.java.opts", getOptionValue(MAPJAVAOPTS));
-    }
-
-    if (hasOption(REDUCEJAVAOPTS))
-    {
-      SystemConfiguration.setProperty("mapreduce.reduce.java.opts", getOptionValue(REDUCEJAVAOPTS));
-    }
-
-    if (hasOption(NUMEXPLOOKUPPARTS))
-    {
-      SystemConfiguration.setProperty("pir.numExpLookupPartitions", getOptionValue(NUMEXPLOOKUPPARTS));
-    }
-
-    if (hasOption(USEHDFSLOOKUPTABLE))
-    {
-      SystemConfiguration.setProperty("pir.useHDFSLookupTable", getOptionValue(USEHDFSLOOKUPTABLE));
-    }
-    else
-    {
-      SystemConfiguration.setProperty("pir.useHDFSLookupTable", "false");
-    }
-
-    if (hasOption(USEMODEXPJOIN))
-    {
-      SystemConfiguration.setProperty("pir.useModExpJoin", getOptionValue(USEMODEXPJOIN));
-    }
-    else
-    {
-      SystemConfiguration.setProperty("pir.useModExpJoin", "false");
-    }
-
-    if (hasOption(NUMDATAPARTITIONS))
-    {
-      SystemConfiguration.setProperty("pir.numDataPartitions", getOptionValue(NUMDATAPARTITIONS));
-    }
-    else
-    {
-      SystemConfiguration.setProperty("pir.numDataPartitions", "1000");
-    }
-
-    if (hasOption(NUMCOLMULTPARTITIONS))
-    {
-      SystemConfiguration.setProperty("pir.numColMultPartitions", getOptionValue(NUMCOLMULTPARTITIONS));
-    }
-    else
-    {
-      SystemConfiguration.setProperty("pir.numColMultPartitions", "1000");
-    }
-
-    if (hasOption(COLMULTREDUCEBYKEY))
-    {
-      SystemConfiguration.setProperty("pir.colMultReduceByKey", getOptionValue(COLMULTREDUCEBYKEY));
-    }
-    else
-    {
-      SystemConfiguration.setProperty("pir.colMultReduceByKey", "false");
-    }
-
-    // Load the new local query and data schemas
-    try
-    {
-      LoadDataSchemas.initialize();
-      LoadQuerySchemas.initialize();
-
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-    }
+    // Validate properties
+    valid = ResponderProps.validateResponderProperties();
 
     return valid;
   }
@@ -371,199 +148,220 @@ public class ResponderCLI
     optionHelp.setRequired(false);
     options.addOption(optionHelp);
 
+    // local.querier.properties
+    Option optionLocalPropFile = new Option("localPropFile", LOCALPROPFILE, true, "Optional local properties file");
+    optionLocalPropFile.setRequired(false);
+    optionLocalPropFile.setArgName(LOCALPROPFILE);
+    optionLocalPropFile.setType(String.class);
+    options.addOption(optionLocalPropFile);
+
     // platform
-    Option optionPlatform = new Option("p", PLATFORM, true,
+    Option optionPlatform = new Option("p", ResponderProps.PLATFORM, true,
         "required -- 'mapreduce', 'spark', or 'standalone' : Processing platform technology for the responder");
     optionPlatform.setRequired(false);
-    optionPlatform.setArgName(PLATFORM);
+    optionPlatform.setArgName(ResponderProps.PLATFORM);
     optionPlatform.setType(String.class);
     options.addOption(optionPlatform);
 
     // queryInput
-    Option optionQueryInput = new Option("q", QUERYINPUT, true, "required -- Fully qualified dir in hdfs of Query files");
+    Option optionQueryInput = new Option("q", ResponderProps.QUERYINPUT, true, "required -- Fully qualified dir in hdfs of Query files");
     optionQueryInput.setRequired(false);
-    optionQueryInput.setArgName(QUERYINPUT);
+    optionQueryInput.setArgName(ResponderProps.QUERYINPUT);
     optionQueryInput.setType(String.class);
     options.addOption(optionQueryInput);
 
     // dataInputFormat
-    Option optionDataInputFormat = new Option("d", DATAINPUTFORMAT, true, "required -- 'base', 'elasticsearch', or 'standalone' : Specify the input format");
+    Option optionDataInputFormat = new Option("d", ResponderProps.DATAINPUTFORMAT, true,
+        "required -- 'base', 'elasticsearch', or 'standalone' : Specify the input format");
     optionDataInputFormat.setRequired(false);
-    optionDataInputFormat.setArgName(DATAINPUTFORMAT);
+    optionDataInputFormat.setArgName(ResponderProps.DATAINPUTFORMAT);
     optionDataInputFormat.setType(String.class);
     options.addOption(optionDataInputFormat);
 
     // inputData
-    Option optionInputData = new Option("i", INPUTDATA, true, "required -- Fully qualified name of input file/directory in hdfs; used if inputFormat = 'base'");
+    Option optionInputData = new Option("i", ResponderProps.INPUTDATA, true,
+        "required -- Fully qualified name of input file/directory in hdfs; used if inputFormat = 'base'");
     optionInputData.setRequired(false);
-    optionInputData.setArgName(INPUTDATA);
+    optionInputData.setArgName(ResponderProps.INPUTDATA);
     optionInputData.setType(String.class);
     options.addOption(optionInputData);
 
     // baseInputFormat
-    Option optionBaseInputFormat = new Option("bif", BASEINPUTFORMAT, true,
+    Option optionBaseInputFormat = new Option("bif", ResponderProps.BASEINPUTFORMAT, true,
         "required if baseInputFormat = 'base' -- Full class name of the InputFormat to use when reading in the data - must extend BaseInputFormat");
     optionBaseInputFormat.setRequired(false);
-    optionBaseInputFormat.setArgName(BASEINPUTFORMAT);
+    optionBaseInputFormat.setArgName(ResponderProps.BASEINPUTFORMAT);
     optionBaseInputFormat.setType(String.class);
     options.addOption(optionBaseInputFormat);
 
     // baseQuery
-    Option optionBaseQuery = new Option("j", BASEQUERY, true,
+    Option optionBaseQuery = new Option("j", ResponderProps.BASEQUERY, true,
         "optional -- ElasticSearch-like query if using 'base' input format - used to filter records in the RecordReader");
     optionBaseQuery.setRequired(false);
-    optionBaseQuery.setArgName(BASEQUERY);
+    optionBaseQuery.setArgName(ResponderProps.BASEQUERY);
     optionBaseQuery.setType(String.class);
     options.addOption(optionBaseQuery);
 
     // esResource
-    Option optionEsResource = new Option("er", ESRESOURCE, true,
+    Option optionEsResource = new Option("er", ResponderProps.ESRESOURCE, true,
         "required if baseInputFormat = 'elasticsearch' -- Requires the format <index>/<type> : Elasticsearch resource where data is read and written to");
     optionEsResource.setRequired(false);
-    optionEsResource.setArgName(ESRESOURCE);
+    optionEsResource.setArgName(ResponderProps.ESRESOURCE);
     optionEsResource.setType(String.class);
     options.addOption(optionEsResource);
 
     // esQuery
-    Option optionEsQuery = new Option("eq", ESQUERY, true,
+    Option optionEsQuery = new Option("eq", ResponderProps.ESQUERY, true,
         "required if baseInputFormat = 'elasticsearch' -- ElasticSearch query if using 'elasticsearch' input format");
     optionEsQuery.setRequired(false);
-    optionEsQuery.setArgName(ESQUERY);
+    optionEsQuery.setArgName(ResponderProps.ESQUERY);
     optionEsQuery.setType(String.class);
     options.addOption(optionEsQuery);
 
     // outputFile
-    Option optionOutputFile = new Option("o", OUTPUTFILE, true, "required -- Fully qualified name of output file in hdfs");
+    Option optionOutputFile = new Option("o", ResponderProps.OUTPUTFILE, true, "required -- Fully qualified name of output file in hdfs");
     optionOutputFile.setRequired(false);
-    optionOutputFile.setArgName(OUTPUTFILE);
+    optionOutputFile.setArgName(ResponderProps.OUTPUTFILE);
     optionOutputFile.setType(String.class);
     options.addOption(optionOutputFile);
 
     // stopListFile
-    Option optionStopListFile = new Option("sf", STOPLISTFILE, true,
+    Option optionStopListFile = new Option("sf", ResponderProps.STOPLISTFILE, true,
         "optional (unless using StopListFilter) -- Fully qualified file in hdfs containing stoplist terms; used by the StopListFilter");
     optionStopListFile.setRequired(false);
-    optionStopListFile.setArgName(STOPLISTFILE);
+    optionStopListFile.setArgName(ResponderProps.STOPLISTFILE);
     optionStopListFile.setType(String.class);
     options.addOption(optionStopListFile);
 
     // numReduceTasks
-    Option optionNumReduceTasks = new Option("nr", NUMREDUCETASKS, true, "optional -- Number of reduce tasks");
+    Option optionNumReduceTasks = new Option("nr", ResponderProps.NUMREDUCETASKS, true, "optional -- Number of reduce tasks");
     optionNumReduceTasks.setRequired(false);
-    optionNumReduceTasks.setArgName(NUMREDUCETASKS);
+    optionNumReduceTasks.setArgName(ResponderProps.NUMREDUCETASKS);
     optionNumReduceTasks.setType(String.class);
     options.addOption(optionNumReduceTasks);
 
     // useLocalCache
-    Option optionUseLocalCache = new Option("ulc", USELOCALCACHE, true,
+    Option optionUseLocalCache = new Option("ulc", ResponderProps.USELOCALCACHE, true,
         "optional -- 'true' or 'false : Whether or not to use the local cache for modular exponentiation; Default is 'true'");
     optionUseLocalCache.setRequired(false);
-    optionUseLocalCache.setArgName(USELOCALCACHE);
+    optionUseLocalCache.setArgName(ResponderProps.USELOCALCACHE);
     optionUseLocalCache.setType(String.class);
     options.addOption(optionUseLocalCache);
 
     // limitHitsPerSelector
-    Option optionLimitHitsPerSelector = new Option("lh", LIMITHITSPERSELECTOR, true,
+    Option optionLimitHitsPerSelector = new Option("lh", ResponderProps.LIMITHITSPERSELECTOR, true,
         "optional -- 'true' or 'false : Whether or not to limit the number of hits per selector; Default is 'true'");
     optionLimitHitsPerSelector.setRequired(false);
-    optionLimitHitsPerSelector.setArgName(LIMITHITSPERSELECTOR);
+    optionLimitHitsPerSelector.setArgName(ResponderProps.LIMITHITSPERSELECTOR);
     optionLimitHitsPerSelector.setType(String.class);
     options.addOption(optionLimitHitsPerSelector);
 
     // maxHitsPerSelector
-    Option optionMaxHitsPerSelector = new Option("mh", MAXHITSPERSELECTOR, true, "optional -- Max number of hits encrypted per selector");
+    Option optionMaxHitsPerSelector = new Option("mh", ResponderProps.MAXHITSPERSELECTOR, true, "optional -- Max number of hits encrypted per selector");
     optionMaxHitsPerSelector.setRequired(false);
-    optionMaxHitsPerSelector.setArgName(MAXHITSPERSELECTOR);
+    optionMaxHitsPerSelector.setArgName(ResponderProps.MAXHITSPERSELECTOR);
     optionMaxHitsPerSelector.setType(String.class);
     options.addOption(optionMaxHitsPerSelector);
 
     // mapreduce.map.memory.mb
-    Option optionMapMemory = new Option("mm", MAPMEMORY, true, "optional -- Amount of memory (in MB) to allocate per map task; Default is 3000");
+    Option optionMapMemory = new Option("mm", ResponderProps.MAPMEMORY, true, "optional -- Amount of memory (in MB) to allocate per map task; Default is 3000");
     optionMapMemory.setRequired(false);
-    optionMapMemory.setArgName(MAPMEMORY);
+    optionMapMemory.setArgName(ResponderProps.MAPMEMORY);
     optionMapMemory.setType(String.class);
     options.addOption(optionMapMemory);
 
     // mapreduce.reduce.memory.mb
-    Option optionReduceMemory = new Option("rm", REDUCEMEMORY, true, "optional -- Amount of memory (in MB) to allocate per reduce task; Default is 3000");
+    Option optionReduceMemory = new Option("rm", ResponderProps.REDUCEMEMORY, true,
+        "optional -- Amount of memory (in MB) to allocate per reduce task; Default is 3000");
     optionReduceMemory.setRequired(false);
-    optionReduceMemory.setArgName(REDUCEMEMORY);
+    optionReduceMemory.setArgName(ResponderProps.REDUCEMEMORY);
     optionReduceMemory.setType(String.class);
     options.addOption(optionReduceMemory);
 
     // mapreduce.map.java.opts
-    Option optionMapOpts = new Option("mjo", MAPJAVAOPTS, true, "optional -- Amount of heap (in MB) to allocate per map task; Default is -Xmx2800m");
+    Option optionMapOpts = new Option("mjo", ResponderProps.MAPJAVAOPTS, true,
+        "optional -- Amount of heap (in MB) to allocate per map task; Default is -Xmx2800m");
     optionMapOpts.setRequired(false);
-    optionMapOpts.setArgName(MAPJAVAOPTS);
+    optionMapOpts.setArgName(ResponderProps.MAPJAVAOPTS);
     optionMapOpts.setType(String.class);
     options.addOption(optionMapOpts);
 
     // mapreduce.reduce.java.opts
-    Option optionReduceOpts = new Option("rjo", REDUCEJAVAOPTS, true, "optional -- Amount of heap (in MB) to allocate per reduce task; Default is -Xmx2800m");
+    Option optionReduceOpts = new Option("rjo", ResponderProps.REDUCEJAVAOPTS, true,
+        "optional -- Amount of heap (in MB) to allocate per reduce task; Default is -Xmx2800m");
     optionReduceOpts.setRequired(false);
-    optionReduceOpts.setArgName(REDUCEJAVAOPTS);
+    optionReduceOpts.setArgName(ResponderProps.REDUCEJAVAOPTS);
     optionReduceOpts.setType(String.class);
     options.addOption(optionReduceOpts);
 
     // data.schemas
-    Option optionDataSchemas = new Option("ds", DATASCHEMAS, true, "required -- Comma separated list of data schema file names");
+    Option optionDataSchemas = new Option("ds", ResponderProps.DATASCHEMAS, true, "required -- Comma separated list of data schema file names");
     optionDataSchemas.setRequired(false);
-    optionDataSchemas.setArgName(DATASCHEMAS);
+    optionDataSchemas.setArgName(ResponderProps.DATASCHEMAS);
     optionDataSchemas.setType(String.class);
     options.addOption(optionDataSchemas);
 
     // query.schemas
-    Option optionQuerySchemas = new Option("qs", QUERYSCHEMAS, true, "required -- Comma separated list of query schema file names");
+    Option optionQuerySchemas = new Option("qs", ResponderProps.QUERYSCHEMAS, true, "required -- Comma separated list of query schema file names");
     optionQuerySchemas.setRequired(false);
-    optionQuerySchemas.setArgName(QUERYSCHEMAS);
+    optionQuerySchemas.setArgName(ResponderProps.QUERYSCHEMAS);
     optionQuerySchemas.setType(String.class);
     options.addOption(optionQuerySchemas);
 
     // pir.numExpLookupPartitions
-    Option optionExpParts = new Option("expParts", NUMEXPLOOKUPPARTS, true, "optional -- Number of partitions for the exp lookup table");
+    Option optionExpParts = new Option("expParts", ResponderProps.NUMEXPLOOKUPPARTS, true, "optional -- Number of partitions for the exp lookup table");
     optionExpParts.setRequired(false);
-    optionExpParts.setArgName(NUMEXPLOOKUPPARTS);
+    optionExpParts.setArgName(ResponderProps.NUMEXPLOOKUPPARTS);
     optionExpParts.setType(String.class);
     options.addOption(optionExpParts);
 
     // pir.numExpLookupPartitions
-    Option optionHdfsExp = new Option("hdfsExp", USEHDFSLOOKUPTABLE, true,
+    Option optionHdfsExp = new Option("hdfsExp", ResponderProps.USEHDFSLOOKUPTABLE, true,
         "optional -- 'true' or 'false' - Whether or not to generate and use the hdfs lookup table" + " for modular exponentiation");
     optionHdfsExp.setRequired(false);
-    optionHdfsExp.setArgName(USEHDFSLOOKUPTABLE);
+    optionHdfsExp.setArgName(ResponderProps.USEHDFSLOOKUPTABLE);
     optionHdfsExp.setType(String.class);
     options.addOption(optionHdfsExp);
 
     // numDataPartitions
-    Option optionDataParts = new Option("dataParts", NUMDATAPARTITIONS, true, "optional -- Number of partitions for the input data");
+    Option optionDataParts = new Option("dataParts", ResponderProps.NUMDATAPARTITIONS, true, "optional -- Number of partitions for the input data");
     optionDataParts.setRequired(false);
-    optionDataParts.setArgName(NUMDATAPARTITIONS);
+    optionDataParts.setArgName(ResponderProps.NUMDATAPARTITIONS);
     optionDataParts.setType(String.class);
     options.addOption(optionDataParts);
 
     // useModExpJoin
-    Option optionModExpJoin = new Option("useModExpJoin", USEMODEXPJOIN, true, "optional -- 'true' or 'false' -- Spark only -- Whether or not to "
-        + "pre-compute the modular exponentiation table and join it to the data partitions when performing the encrypted row calculations");
+    Option optionModExpJoin = new Option("useModExpJoin", ResponderProps.USEMODEXPJOIN, true,
+        "optional -- 'true' or 'false' -- Spark only -- Whether or not to "
+            + "pre-compute the modular exponentiation table and join it to the data partitions when performing the encrypted row calculations");
     optionModExpJoin.setRequired(false);
-    optionModExpJoin.setArgName(USEMODEXPJOIN);
+    optionModExpJoin.setArgName(ResponderProps.USEMODEXPJOIN);
     optionModExpJoin.setType(String.class);
     options.addOption(optionModExpJoin);
 
     // numColMultPartitions
-    Option optionNumColMultPartitions = new Option("numColMultParts", NUMCOLMULTPARTITIONS, true, "optional, Spark only -- Number of partitions to "
-        + "use when performing column multiplication");
-    optionModExpJoin.setRequired(false);
-    optionModExpJoin.setArgName(NUMCOLMULTPARTITIONS);
-    optionModExpJoin.setType(String.class);
+    Option optionNumColMultPartitions = new Option("numColMultParts", ResponderProps.NUMCOLMULTPARTITIONS, true,
+        "optional, Spark only -- Number of partitions to " + "use when performing column multiplication");
+    optionNumColMultPartitions.setRequired(false);
+    optionNumColMultPartitions.setArgName(ResponderProps.NUMCOLMULTPARTITIONS);
+    optionNumColMultPartitions.setType(String.class);
     options.addOption(optionNumColMultPartitions);
 
     // colMultReduceByKey
-    Option optionColMultReduceByKey = new Option("colMultRBK", COLMULTREDUCEBYKEY, true, "optional -- 'true' or 'false' -- Spark only -- "
+    Option optionColMultReduceByKey = new Option("colMultRBK", ResponderProps.COLMULTREDUCEBYKEY, true, "optional -- 'true' or 'false' -- Spark only -- "
         + "If true, uses reduceByKey in performing column multiplication; if false, uses groupByKey -> reduce");
-    optionModExpJoin.setRequired(false);
-    optionModExpJoin.setArgName(COLMULTREDUCEBYKEY);
-    optionModExpJoin.setType(String.class);
+    optionColMultReduceByKey.setRequired(false);
+    optionColMultReduceByKey.setArgName(ResponderProps.COLMULTREDUCEBYKEY);
+    optionColMultReduceByKey.setType(String.class);
     options.addOption(optionColMultReduceByKey);
+
+    // allowEmbeddedQS
+    Option optionAllowEmbeddedQS = new Option("allowEmbeddedQS", ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS, true,
+        "optional -- 'true' or 'false'  (defaults to 'false') -- " + "If true, allows embedded QuerySchemas for a query.");
+    optionAllowEmbeddedQS.setRequired(false);
+    optionAllowEmbeddedQS.setArgName(ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS);
+    optionAllowEmbeddedQS.setType(String.class);
+    options.addOption(optionAllowEmbeddedQS);
 
     return options;
   }

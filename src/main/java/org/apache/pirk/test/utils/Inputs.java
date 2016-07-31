@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.test.utils;
 
 import java.io.File;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -34,17 +35,18 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
-import org.apache.pirk.schema.data.LoadDataSchemas;
+import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.utils.HDFS;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -54,7 +56,7 @@ import org.w3c.dom.Element;
  */
 public class Inputs
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(Inputs.class);
 
   // Test data schema fields
   public static final String DATE = "date";
@@ -100,7 +102,7 @@ public class Inputs
   public static final String DATA_SCHEMA_FILE_HDFS = "/tmp/testDataSchemaFile.xml";
 
   /**
-   * Delete the Elastic Search indices that was used for functional testing
+   * Delete the ElasticSearch indices that was used for functional testing
    */
   public static void deleteESInput()
   {
@@ -126,16 +128,16 @@ public class Inputs
   @SuppressWarnings("unchecked")
   public static ArrayList<JSONObject> createJSONDataElements()
   {
-    ArrayList<JSONObject> dataElementsJSON = new ArrayList<JSONObject>();
+    ArrayList<JSONObject> dataElementsJSON = new ArrayList<>();
 
     JSONObject jsonObj1 = new JSONObject();
     jsonObj1.put(DATE, "2016-02-20T23:29:05.000Z");
     jsonObj1.put(QNAME, "a.b.c.com"); // hits on domain selector
     jsonObj1.put(SRCIP, "55.55.55.55"); // hits on IP selector
     jsonObj1.put(DSTIP, "1.2.3.6");
-    jsonObj1.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj1.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj1.put(RCODE, 0);
-    jsonObj1.put(IPS, new ArrayList<String>(Arrays.asList("10.20.30.40", "10.20.30.60")));
+    jsonObj1.put(IPS, new ArrayList<>(Arrays.asList("10.20.30.40", "10.20.30.60")));
 
     dataElementsJSON.add(jsonObj1);
 
@@ -144,9 +146,9 @@ public class Inputs
     jsonObj2.put(QNAME, "d.e.com");
     jsonObj2.put(SRCIP, "127.128.129.130");
     jsonObj2.put(DSTIP, "1.2.3.4");
-    jsonObj2.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj2.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj2.put(RCODE, 0);
-    jsonObj2.put(IPS, new ArrayList<String>(Arrays.asList("5.6.7.8")));
+    jsonObj2.put(IPS, new ArrayList<>(Collections.singletonList("5.6.7.8")));
 
     dataElementsJSON.add(jsonObj2);
 
@@ -155,9 +157,9 @@ public class Inputs
     jsonObj3.put(QNAME, "d.e.com");
     jsonObj3.put(SRCIP, "131.132.133.134");
     jsonObj3.put(DSTIP, "9.10.11.12");
-    jsonObj3.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj3.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj3.put(RCODE, 0);
-    jsonObj3.put(IPS, new ArrayList<String>(Arrays.asList("13.14.15.16")));
+    jsonObj3.put(IPS, new ArrayList<>(Collections.singletonList("13.14.15.16")));
 
     dataElementsJSON.add(jsonObj3);
 
@@ -166,9 +168,9 @@ public class Inputs
     jsonObj4.put(QNAME, "d.e.com");
     jsonObj4.put(SRCIP, "135.136.137.138");
     jsonObj4.put(DSTIP, "17.18.19.20");
-    jsonObj4.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj4.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj4.put(RCODE, 3);
-    jsonObj4.put(IPS, new ArrayList<String>(Arrays.asList("21.22.23.24")));
+    jsonObj4.put(IPS, new ArrayList<>(Collections.singletonList("21.22.23.24")));
 
     dataElementsJSON.add(jsonObj4);
 
@@ -177,9 +179,9 @@ public class Inputs
     jsonObj5.put(QNAME, "d.e.com");
     jsonObj5.put(SRCIP, "139.140.141.142");
     jsonObj5.put(DSTIP, "25.26.27.28");
-    jsonObj5.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj5.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj5.put(RCODE, 0);
-    jsonObj5.put(IPS, new ArrayList<String>(Arrays.asList("5.6.7.8")));
+    jsonObj5.put(IPS, new ArrayList<>(Collections.singletonList("5.6.7.8")));
 
     dataElementsJSON.add(jsonObj5);
 
@@ -188,9 +190,9 @@ public class Inputs
     jsonObj6.put(QNAME, "d.e.com");
     jsonObj6.put(SRCIP, "143.144.145.146");
     jsonObj6.put(DSTIP, "33.34.35.36");
-    jsonObj6.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj6.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj6.put(RCODE, 0);
-    jsonObj6.put(IPS, new ArrayList<String>(Arrays.asList("5.6.7.8")));
+    jsonObj6.put(IPS, new ArrayList<>(Collections.singletonList("5.6.7.8")));
 
     dataElementsJSON.add(jsonObj6);
 
@@ -199,9 +201,9 @@ public class Inputs
     jsonObj7.put(QNAME, "something.else");
     jsonObj7.put(SRCIP, "1.1.1.1");
     jsonObj7.put(DSTIP, "2.2.2.2");
-    jsonObj7.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj7.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj7.put(RCODE, 0);
-    jsonObj7.put(IPS, new ArrayList<String>(Arrays.asList("3.3.3.3")));
+    jsonObj7.put(IPS, new ArrayList<>(Collections.singletonList("3.3.3.3")));
 
     dataElementsJSON.add(jsonObj7);
 
@@ -212,9 +214,9 @@ public class Inputs
     jsonObj8.put(QNAME, "something.else2");
     jsonObj8.put(SRCIP, "5.6.7.8");
     jsonObj8.put(DSTIP, "2.2.2.22");
-    jsonObj8.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj8.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj8.put(RCODE, 0);
-    jsonObj8.put(IPS, new ArrayList<String>(Arrays.asList("3.3.3.132")));
+    jsonObj8.put(IPS, new ArrayList<>(Collections.singletonList("3.3.3.132")));
 
     dataElementsJSON.add(jsonObj8);
 
@@ -224,9 +226,9 @@ public class Inputs
     jsonObj9.put(QNAME, "something.else.on.stoplist");
     jsonObj9.put(SRCIP, "55.55.55.55");
     jsonObj9.put(DSTIP, "2.2.2.232");
-    jsonObj9.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj9.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj9.put(RCODE, 0);
-    jsonObj9.put(IPS, new ArrayList<String>(Arrays.asList("3.3.3.132")));
+    jsonObj9.put(IPS, new ArrayList<>(Collections.singletonList("3.3.3.132")));
 
     dataElementsJSON.add(jsonObj9);
 
@@ -239,16 +241,16 @@ public class Inputs
   @SuppressWarnings("unchecked")
   public static ArrayList<JSONObject> getRcode3JSONDataElements()
   {
-    ArrayList<JSONObject> dataElementsJSON = new ArrayList<JSONObject>();
+    ArrayList<JSONObject> dataElementsJSON = new ArrayList<>();
 
     JSONObject jsonObj4 = new JSONObject();
     jsonObj4.put(DATE, "2016-02-20T23:29:08.000Z");
     jsonObj4.put(QNAME, "d.e.com");
     jsonObj4.put(SRCIP, "135.136.137.138");
     jsonObj4.put(DSTIP, "17.18.19.20");
-    jsonObj4.put(QTYPE, new ArrayList<Short>(Arrays.asList((short) 1)));
+    jsonObj4.put(QTYPE, new ArrayList<>(Collections.singletonList((short) 1)));
     jsonObj4.put(RCODE, 3);
-    jsonObj4.put(IPS, new ArrayList<String>(Arrays.asList("21.22.23.24")));
+    jsonObj4.put(IPS, new ArrayList<>(Collections.singletonList("21.22.23.24")));
 
     dataElementsJSON.add(jsonObj4);
 
@@ -389,27 +391,29 @@ public class Inputs
   /**
    * Creates PIR stoplist file
    */
-  public static String createPIRStopList(FileSystem fs, boolean hdfs) throws IOException
+  public static String createPIRStopList(FileSystem fs, boolean hdfs) throws IOException, PIRException
   {
     logger.info("PIR stopList file being created");
 
-    String tmpFileName = null;
-
-    ArrayList<String> elements = new ArrayList<String>();
-    elements.add("something.else.on.stoplist");
-    elements.add("3.3.3.132");
+    List<String> elements = Arrays.asList("something.else.on.stoplist", "3.3.3.132");
 
     if (hdfs)
     {
       String pirStopListFile = SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE);
-
+      if (pirStopListFile == null)
+      {
+        throw new PIRException("HDFS stop list file configuration name is required.");
+      }
       HDFS.writeFile(elements, fs, pirStopListFile, true);
-      logger.info("pirStopListFile file successfully created!");
+      logger.info("pirStopListFile file successfully created on hdfs!");
     }
 
-    tmpFileName = TestUtils.writeToTmpFile(elements, SystemConfiguration.getProperty("pir.stopListFile"), null);
-
-    return tmpFileName;
+    String prefix = SystemConfiguration.getProperty("pir.stopListFile");
+    if (prefix == null)
+    {
+      throw new PIRException("Local stop list file configuration name is required.");
+    }
+    return TestUtils.writeToTmpFile(elements, prefix, null);
   }
 
   /**
@@ -436,12 +440,12 @@ public class Inputs
     {
       createDataSchema(fs, true);
     }
-    LoadDataSchemas.initialize();
+    DataSchemaLoader.initialize();
 
     // Create and load the query schemas
     // DNS_HOSTNAME_QUERY
     List<String> dnsHostnameQueryElements = Arrays.asList(DATE, SRCIP, DSTIP, QTYPE, RCODE, IPS);
-    List<String> dnsHostnameQueryFilterElements = Arrays.asList(QNAME);
+    List<String> dnsHostnameQueryFilterElements = Collections.singletonList(QNAME);
 
     TestUtils.createQuerySchema(DNS_HOSTNAME_QUERY_FILE, DNS_HOSTNAME_QUERY, TEST_DATA_SCHEMA_NAME, QNAME, dnsHostnameQueryElements,
         dnsHostnameQueryFilterElements, filter);
@@ -453,7 +457,7 @@ public class Inputs
 
     // DNS_IP_QUERY
     List<String> dnsIPQueryElements = Arrays.asList(SRCIP, DSTIP, IPS);
-    List<String> dnsIPQueryFilterElements = Arrays.asList(QNAME);
+    List<String> dnsIPQueryFilterElements = Collections.singletonList(QNAME);
 
     TestUtils.createQuerySchema(DNS_IP_QUERY_FILE, DNS_IP_QUERY, TEST_DATA_SCHEMA_NAME, IPS, dnsIPQueryElements, dnsIPQueryFilterElements, filter);
     if (hdfs)
@@ -464,7 +468,7 @@ public class Inputs
 
     // DNS_NXDOMAIN_QUERY
     List<String> dnsNXQueryElements = Arrays.asList(QNAME, SRCIP, DSTIP);
-    List<String> dnsNXQueryFilterElements = Arrays.asList(QNAME);
+    List<String> dnsNXQueryFilterElements = Collections.singletonList(QNAME);
 
     TestUtils
         .createQuerySchema(DNS_NXDOMAIN_QUERY_FILE, DNS_NXDOMAIN_QUERY, TEST_DATA_SCHEMA_NAME, QNAME, dnsNXQueryElements, dnsNXQueryFilterElements, filter);
@@ -496,7 +500,7 @@ public class Inputs
           null, null, false, fs, hdfs);
     }
 
-    LoadQuerySchemas.initialize();
+    QuerySchemaLoader.initialize();
   }
 
   /**

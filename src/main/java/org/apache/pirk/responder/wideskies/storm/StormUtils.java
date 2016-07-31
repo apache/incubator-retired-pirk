@@ -21,14 +21,13 @@ package org.apache.pirk.responder.wideskies.storm;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.schema.data.LoadDataSchemas;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.serialization.HadoopFileSystemStore;
+import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.storm.Constants;
 import org.apache.storm.tuple.Tuple;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
@@ -39,7 +38,7 @@ import java.util.Map;
  */
 public class StormUtils
 {
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(StormUtils.class);
 
   /**
    * Method to read in serialized Query object from the given queryFile
@@ -59,13 +58,12 @@ public class StormUtils
       {
         FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
         logger.info("reading query file from hdfs: " + queryFile);
-
-        query = Query.readFromHDFSFile(new Path(queryFile), fs);
+        query = (new HadoopFileSystemStore(fs)).recall(queryFile, Query.class);
       }
       else
       {
         logger.info("reading local query file from " + queryFile);
-        query = Query.readFromFile(new File(queryFile));
+        query = (new LocalFileSystemStore()).recall(queryFile, Query.class);
       }
     } catch (Exception e)
     {
@@ -89,7 +87,6 @@ public class StormUtils
     String queryFile = (String) map.get(StormConstants.QUERY_FILE_KEY);
     try
     {
-      StormUtils.initializeSchemas(map);
       query = StormUtils.getQuery(useHdfs, hdfsUri, queryFile);
 
     } catch (Exception e)
@@ -98,33 +95,6 @@ public class StormUtils
     }
 
     return query;
-  }
-
-  /**
-   * Loads the QuerySchema and DataSchema objects
-   * 
-   * @param map
-   * @throws Exception
-   */
-  public static void initializeSchemas(Map map) throws Exception
-  {
-    SystemConfiguration.setProperty("data.schemas", (String) map.get(StormConstants.DSCHEMA_KEY));
-    SystemConfiguration.setProperty("query.schemas", (String) map.get(StormConstants.QSCHEMA_KEY));
-
-    boolean hdfs = (boolean) map.get(StormConstants.USE_HDFS);
-
-    if (hdfs)
-    {
-      String hdfsUri = (String) map.get(StormConstants.HDFS_URI_KEY);
-      FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
-      LoadDataSchemas.initialize(true, fs);
-      LoadQuerySchemas.initialize(true, fs);
-    }
-    else
-    {
-      LoadDataSchemas.initialize();
-      LoadQuerySchemas.initialize();
-    }
   }
 
   protected static boolean isTickTuple(Tuple tuple)

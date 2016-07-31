@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,16 +15,17 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.apache.pirk.schema.query.LoadQuerySchemas;
-import org.apache.pirk.utils.LogUtils;
+import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold all of the basic information regarding a query
@@ -37,7 +38,7 @@ public class QueryInfo implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);
 
   private double queryNum = 0.0; // the identifier num of the query
   private int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
@@ -45,7 +46,6 @@ public class QueryInfo implements Serializable
   private String queryType; // QueryType string const
 
   private String queryName; // Name of query
-
   private int paillierBitSize = 0; // Paillier modulus size
 
   private int hashBitSize = 0; // Bit size of the keyed hash function
@@ -65,9 +65,10 @@ public class QueryInfo implements Serializable
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
 
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
-      boolean useHDFSExpLookupTableInput)
+  QuerySchema qSchema = null;
+
+  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+      String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
   {
     queryNum = queryNumInput;
     queryType = queryTypeInput;
@@ -82,7 +83,7 @@ public class QueryInfo implements Serializable
     useHDFSExpLookupTable = useHDFSExpLookupTableInput;
     embedSelector = embedSelectorInput;
 
-    numBitsPerDataElement = LoadQuerySchemas.getSchema(queryType).getDataElementSize();
+    numBitsPerDataElement = QuerySchemaRegistry.get(queryType).getDataElementSize();
     dataPartitionBitSize = dataPartitionBitSizeInput;
     numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
 
@@ -96,8 +97,8 @@ public class QueryInfo implements Serializable
     printQueryInfo();
   }
 
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn)
+  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+      String queryNameInput, int paillierBitSizeIn)
   {
     this(queryNumInput, numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, queryNameInput, paillierBitSizeIn, false,
         true, false);
@@ -106,7 +107,7 @@ public class QueryInfo implements Serializable
   public QueryInfo(Map queryInfoMap)
   {
     // Seemed that the Storm Config would serialize the map as a json and read back in with numeric values as longs.
-    // So had to cast as a long and call .intValue.  However, this didn't work in the PirkHashScheme and had to try
+    // So had to cast as a long and call .intValue. However, this didn't work in the PirkHashScheme and had to try
     // the normal way of doing it as well.
     try
     {
@@ -228,6 +229,16 @@ public class QueryInfo implements Serializable
     return queryInfo;
   }
 
+  public void addQuerySchema(QuerySchema qSchemaIn)
+  {
+    qSchema = qSchemaIn;
+  }
+
+  public QuerySchema getQuerySchema()
+  {
+    return qSchema;
+  }
+
   public void printQueryInfo()
   {
     logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
@@ -238,9 +249,7 @@ public class QueryInfo implements Serializable
 
   public QueryInfo copy()
   {
-    QueryInfo queryInfo = new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType,
-        this.queryName, this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
-
-    return queryInfo;
+    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryName,
+        this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
   }
 }

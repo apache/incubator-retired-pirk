@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,13 +15,15 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.Serializable;
 
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
+import org.apache.pirk.schema.data.DataSchema;
+import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 
@@ -33,19 +35,23 @@ public class BroadcastVars implements Serializable
 {
   private static final long serialVersionUID = 1L;
 
-  transient JavaSparkContext jsc = null;
+  private transient JavaSparkContext jsc = null;
 
   Broadcast<Query> query = null;
 
-  Broadcast<QueryInfo> queryInfo = null;
+  private Broadcast<QueryInfo> queryInfo = null;
 
-  Broadcast<String> useLocalCache = null;
+  private Broadcast<DataSchema> dataSchema = null;
 
-  Broadcast<Boolean> limitHitsPerSelector = null;
+  private Broadcast<QuerySchema> querySchema = null;
 
-  Broadcast<Integer> maxHitsPerSelector = null;
+  private Broadcast<String> useLocalCache = null;
 
-  Broadcast<String> expDir = null;
+  private Broadcast<Boolean> limitHitsPerSelector = null;
+
+  private Broadcast<Integer> maxHitsPerSelector = null;
+
+  private Broadcast<String> expDir = null;
 
   public BroadcastVars(JavaSparkContext sc)
   {
@@ -70,6 +76,26 @@ public class BroadcastVars implements Serializable
   public void setQueryInfo(QueryInfo queryInfoIn)
   {
     queryInfo = jsc.broadcast(queryInfoIn);
+  }
+
+  public void setQuerySchema(QuerySchema qSchemaIn)
+  {
+    querySchema = jsc.broadcast(qSchemaIn);
+  }
+
+  public QuerySchema getQuerySchema()
+  {
+    return querySchema.getValue();
+  }
+
+  public void setDataSchema(DataSchema dSchemaIn)
+  {
+    dataSchema = jsc.broadcast(dSchemaIn);
+  }
+
+  public DataSchema getDataSchema()
+  {
+    return dataSchema.getValue();
   }
 
   public void setUseLocalCache(String useLocalCacheInput)

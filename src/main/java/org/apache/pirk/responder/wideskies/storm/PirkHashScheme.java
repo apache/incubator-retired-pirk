@@ -18,12 +18,11 @@
  *******************************************************************************/
 package org.apache.pirk.responder.wideskies.storm;
 
-import org.apache.log4j.Logger;
-
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
+import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.LogUtils;
 
 import org.apache.storm.Config;
 import org.apache.storm.kafka.StringScheme;
@@ -34,6 +33,7 @@ import org.apache.storm.tuple.Values;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.Map;
 public class PirkHashScheme extends StringScheme implements Scheme
 {
 
-  private static Logger logger = LogUtils.getLoggerForThisClass();
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PirkHashScheme.class);
 
   private QueryInfo queryInfo;
 
@@ -55,6 +55,7 @@ public class PirkHashScheme extends StringScheme implements Scheme
   private ArrayList<List<Object>> values = new ArrayList<List<Object>>();;
   private List<Object> value = new ArrayList<Object>();
   private boolean initialized = false;
+  private QuerySchema qSchema;
   private Config conf;
 
   public PirkHashScheme(Config conf)
@@ -67,15 +68,16 @@ public class PirkHashScheme extends StringScheme implements Scheme
     if (!initialized)
     {
       parser = new JSONParser();
-      try
-      {
-        StormUtils.initializeSchemas(conf);
-      } catch (Exception e)
-      {
-        logger.error("Spout could not initialize. ");
-        throw new RuntimeException(e);
-      }
       queryInfo = new QueryInfo((Map) conf.get(StormConstants.QUERY_INFO_KEY));
+      if ((boolean) conf.get(StormConstants.ALLOW_ADHOC_QSCHEMAS_KEY))
+      {
+        qSchema = queryInfo.getQuerySchema();
+      }
+      if (qSchema == null)
+      {
+        qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
+      }
+
       initialized = true;
     }
     String str = super.deserializeString(bytes);
@@ -88,7 +90,7 @@ public class PirkHashScheme extends StringScheme implements Scheme
       json = null;
       logger.warn("ParseException. ", e);
     }
-    String selector = QueryUtils.getSelectorByQueryTypeJSON(queryInfo.getQueryType(), json);
+    String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, json);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
 
     return new Values(hash, json);
