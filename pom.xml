@@ -99,6 +99,8 @@
 		<hadoop.version>2.7.2</hadoop.version>
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
+		<pirk.forkCount>1C</pirk.forkCount>
+		<pirk.reuseForks>true</pirk.reuseForks>
 	</properties>
 
 	<dependencies>
@@ -342,6 +344,8 @@
 						<systemPropertyVariables>
 							<log4j.configuration>${log4j.configuration}</log4j.configuration>
 						</systemPropertyVariables>
+						<forkCount>${pirk.forkCount}</forkCount>
+						<reuseForks>${pirk.reuseForks}</reuseForks>
 					</configuration>
 					<dependencies>
 						<dependency>
