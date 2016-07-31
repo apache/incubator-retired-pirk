@@ -194,9 +194,8 @@ public class SystemConfiguration
    */
   public static void loadPropsFromStream(String name)
   {
-    try
+    try (InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(name))
     {
-      InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(name);
       if (stream != null)
       {
         logger.info("Loading file '" + name + "'");

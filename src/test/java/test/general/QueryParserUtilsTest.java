@@ -27,9 +27,11 @@ import java.util.Map;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.QueryParserUtils;
 import org.apache.pirk.utils.StringUtils;
+import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -51,6 +53,11 @@ public class QueryParserUtilsTest
   public QueryParserUtilsTest() throws Exception
   {
     ArrayList<JSONObject> dataElementsJSON = Inputs.createJSONDataElements();
+
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
 
     Inputs.createSchemaFiles(null, false, null);
 

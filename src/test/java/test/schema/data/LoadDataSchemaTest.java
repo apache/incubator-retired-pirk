@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
  */
 public class LoadDataSchemaTest
 {
-  private static Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
 
   private String dataSchemaName = "fakeDataSchema";
 
