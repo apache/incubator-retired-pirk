@@ -20,6 +20,8 @@ package test.wideskies.standalone;
 
 import java.util.ArrayList;
 
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
@@ -49,6 +51,12 @@ public class StandaloneTest
 
   public StandaloneTest() throws Exception
   {
+    // Reset the schema properties and registries
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
+
     // Create the stoplist file
     stopListFileProp = SystemConfiguration.getProperty("pir.stopListFile");
     SystemConfiguration.setProperty("pir.stopListFile", STOPLIST_FILE);

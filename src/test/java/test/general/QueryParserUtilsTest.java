@@ -54,6 +54,7 @@ public class QueryParserUtilsTest
   {
     ArrayList<JSONObject> dataElementsJSON = Inputs.createJSONDataElements();
 
+    // Reset the schema properties and registries
     DataSchemaRegistry.clearRegistry();
     QuerySchemaRegistry.clearRegistry();
     SystemConfiguration.setProperty("data.schemas", "none");
