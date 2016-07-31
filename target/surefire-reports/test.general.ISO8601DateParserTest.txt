@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: test.general.ISO8601DateParserTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.335 sec - in test.general.ISO8601DateParserTest

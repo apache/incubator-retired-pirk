@@ -1,5 +1,6 @@
 org.apache.pirk.benchmark
 org.apache.pirk.encryption
+org.apache.pirk.general
 org.apache.pirk.inputformat.hadoop
 org.apache.pirk.inputformat.hadoop.json
 org.apache.pirk.querier.wideskies
@@ -22,7 +23,4 @@ org.apache.pirk.test.distributed
 org.apache.pirk.test.distributed.testsuite
 org.apache.pirk.test.utils
 org.apache.pirk.utils
-test.general
-test.schema.data
-test.schema.query
-test.wideskies.standalone
+org.apache.pirk.wideskies.standalone

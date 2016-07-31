@@ -1,0 +1,525 @@
+ INFO [main] 2016-07-31 19:04:20,734 (Inputs.java:522) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile1090831749032831903.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>testDataSchema</schemaName><element><name>date</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner</partitioner></element><element><name>qname</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>src_ip</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>dest_ip</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>qtype</name><type>short</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>rcode</name><type>int</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>ip</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element></schema>
+ INFO [main] 2016-07-31 19:04:20,805 (DataSchemaLoader.java:77) - Loading pre-configured data schemas: 
+ INFO [main] 2016-07-31 19:04:20,805 (DataSchemaLoader.java:107) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile1090831749032831903.xml hdfs = false
+ INFO [main] 2016-07-31 19:04:20,806 (DataSchemaLoader.java:120) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile1090831749032831903.xml
+ INFO [main] 2016-07-31 19:04:20,809 (DataSchemaLoader.java:194) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,811 (DataSchemaLoader.java:163) - schemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,812 (DataSchemaLoader.java:244) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-31 19:04:20,812 (DataSchemaLoader.java:244) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,812 (DataSchemaLoader.java:244) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,812 (DataSchemaLoader.java:244) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,813 (DataSchemaLoader.java:244) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,813 (DataSchemaLoader.java:244) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,814 (DataSchemaLoader.java:244) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,814 (DataSchemaLoader.java:107) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile1090831749032831903.xml hdfs = false
+ INFO [main] 2016-07-31 19:04:20,814 (DataSchemaLoader.java:120) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/testDataSchemaFile1090831749032831903.xml
+ INFO [main] 2016-07-31 19:04:20,817 (DataSchemaLoader.java:194) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,818 (DataSchemaLoader.java:163) - schemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,818 (DataSchemaLoader.java:244) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-31 19:04:20,818 (DataSchemaLoader.java:244) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,818 (DataSchemaLoader.java:244) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,818 (DataSchemaLoader.java:244) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,819 (DataSchemaLoader.java:244) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,819 (DataSchemaLoader.java:244) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,819 (DataSchemaLoader.java:244) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,819 (TestUtils.java:142) - createQuerySchema: querySchemaName = dns-hostname-query
+ INFO [main] 2016-07-31 19:04:20,820 (TestUtils.java:163) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,820 (TestUtils.java:178) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,821 (TestUtils.java:211) - elementName = date
+ INFO [main] 2016-07-31 19:04:20,822 (TestUtils.java:211) - elementName = src_ip
+ INFO [main] 2016-07-31 19:04:20,822 (TestUtils.java:211) - elementName = dest_ip
+ INFO [main] 2016-07-31 19:04:20,822 (TestUtils.java:211) - elementName = qtype
+ INFO [main] 2016-07-31 19:04:20,823 (TestUtils.java:211) - elementName = rcode
+ INFO [main] 2016-07-31 19:04:20,823 (TestUtils.java:211) - elementName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-hostname-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>qname</selectorName><elements><name>date</name><name>src_ip</name><name>dest_ip</name><name>qtype</name><name>rcode</name><name>ip</name></elements></schema>
+ INFO [main] 2016-07-31 19:04:20,825 (TestUtils.java:142) - createQuerySchema: querySchemaName = dns-ip-query
+ INFO [main] 2016-07-31 19:04:20,825 (TestUtils.java:163) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,826 (TestUtils.java:178) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,827 (TestUtils.java:211) - elementName = src_ip
+ INFO [main] 2016-07-31 19:04:20,827 (TestUtils.java:211) - elementName = dest_ip
+ INFO [main] 2016-07-31 19:04:20,827 (TestUtils.java:211) - elementName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-ip-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>ip</selectorName><elements><name>src_ip</name><name>dest_ip</name><name>ip</name></elements></schema>
+ INFO [main] 2016-07-31 19:04:20,829 (TestUtils.java:142) - createQuerySchema: querySchemaName = dns-nxdomain-query
+ INFO [main] 2016-07-31 19:04:20,829 (TestUtils.java:163) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,829 (TestUtils.java:178) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,830 (TestUtils.java:211) - elementName = qname
+ INFO [main] 2016-07-31 19:04:20,830 (TestUtils.java:211) - elementName = src_ip
+ INFO [main] 2016-07-31 19:04:20,831 (TestUtils.java:211) - elementName = dest_ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-nxdomain-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>qname</selectorName><elements><name>qname</name><name>src_ip</name><name>dest_ip</name></elements></schema>
+ INFO [main] 2016-07-31 19:04:20,832 (TestUtils.java:142) - createQuerySchema: querySchemaName = dns-srcip-query
+ INFO [main] 2016-07-31 19:04:20,833 (TestUtils.java:163) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,833 (TestUtils.java:178) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,834 (TestUtils.java:211) - elementName = qname
+ INFO [main] 2016-07-31 19:04:20,834 (TestUtils.java:211) - elementName = dest_ip
+ INFO [main] 2016-07-31 19:04:20,835 (TestUtils.java:211) - elementName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-srcip-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>src_ip</selectorName><elements><name>qname</name><name>dest_ip</name><name>ip</name></elements></schema>
+ INFO [main] 2016-07-31 19:04:20,836 (TestUtils.java:142) - createQuerySchema: querySchemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-07-31 19:04:20,837 (TestUtils.java:163) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,837 (TestUtils.java:178) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml,/var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,838 (TestUtils.java:211) - elementName = qname
+ INFO [main] 2016-07-31 19:04:20,839 (TestUtils.java:211) - elementName = dest_ip
+ INFO [main] 2016-07-31 19:04:20,839 (TestUtils.java:211) - elementName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-srcip-query-no-filter</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>src_ip</selectorName><elements><name>qname</name><name>dest_ip</name><name>ip</name></elements></schema>
+ INFO [main] 2016-07-31 19:04:20,843 (QuerySchemaLoader.java:81) - Loading query schemas: 
+ INFO [main] 2016-07-31 19:04:20,844 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,844 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,846 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,847 (QuerySchemaLoader.java:163) - schemaName = dns-hostname-query
+ INFO [main] 2016-07-31 19:04:20,847 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,847 (QuerySchemaLoader.java:178) - selectorName = qname
+ INFO [main] 2016-07-31 19:04:20,848 (QuerySchemaLoader.java:207) - name = date partitionerName = org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-31 19:04:20,848 (QuerySchemaLoader.java:220) - name = date bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,848 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,848 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,848 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,849 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,849 (QuerySchemaLoader.java:207) - name = qtype partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,849 (QuerySchemaLoader.java:220) - name = qtype bits = 32 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,849 (QuerySchemaLoader.java:207) - name = rcode partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,849 (QuerySchemaLoader.java:220) - name = rcode bits = 32 dataElementSize = 192
+ INFO [main] 2016-07-31 19:04:20,850 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,850 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 256
+ INFO [main] 2016-07-31 19:04:20,851 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,851 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,852 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:163) - schemaName = dns-ip-query
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:178) - selectorName = ip
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 32
+ INFO [main] 2016-07-31 19:04:20,853 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,854 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,854 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,854 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,854 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,854 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,856 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:163) - schemaName = dns-nxdomain-query
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:178) - selectorName = qname
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,857 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,858 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,858 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,858 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,858 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,858 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,861 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,862 (QuerySchemaLoader.java:163) - schemaName = dns-srcip-query
+ INFO [main] 2016-07-31 19:04:20,862 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,862 (QuerySchemaLoader.java:178) - selectorName = src_ip
+ INFO [main] 2016-07-31 19:04:20,862 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,862 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,863 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,863 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,863 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,863 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,863 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,864 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,866 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,867 (QuerySchemaLoader.java:163) - schemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-07-31 19:04:20,867 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,867 (QuerySchemaLoader.java:178) - selectorName = src_ip
+ INFO [main] 2016-07-31 19:04:20,867 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,868 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,868 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,868 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,868 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,868 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,869 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,869 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-hostname-query_file4675211142522863928.xml
+ INFO [main] 2016-07-31 19:04:20,870 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:163) - schemaName = dns-hostname-query
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:178) - selectorName = qname
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:207) - name = date partitionerName = org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:220) - name = date bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,871 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,872 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,872 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,872 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,872 (QuerySchemaLoader.java:207) - name = qtype partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,872 (QuerySchemaLoader.java:220) - name = qtype bits = 32 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,873 (QuerySchemaLoader.java:207) - name = rcode partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,873 (QuerySchemaLoader.java:220) - name = rcode bits = 32 dataElementSize = 192
+ INFO [main] 2016-07-31 19:04:20,873 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,873 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 256
+ INFO [main] 2016-07-31 19:04:20,873 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,874 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-ip-query_file3981312525590106437.xml
+ INFO [main] 2016-07-31 19:04:20,876 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:163) - schemaName = dns-ip-query
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:178) - selectorName = ip
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 32
+ INFO [main] 2016-07-31 19:04:20,877 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,878 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,878 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,878 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,878 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,878 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-nxdomain-query_file5361512120777523373.xml
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:163) - schemaName = dns-nxdomain-query
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:178) - selectorName = qname
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,880 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:207) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:220) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,881 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query_file1510372206230419872.xml
+ INFO [main] 2016-07-31 19:04:20,883 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,884 (QuerySchemaLoader.java:163) - schemaName = dns-srcip-query
+ INFO [main] 2016-07-31 19:04:20,884 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,884 (QuerySchemaLoader.java:178) - selectorName = src_ip
+ INFO [main] 2016-07-31 19:04:20,884 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,885 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,885 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,885 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,885 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,885 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,886 (QuerySchemaLoader.java:110) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,886 (QuerySchemaLoader.java:123) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dns-srcip-query-no-filter_file3562689145459279483.xml
+ INFO [main] 2016-07-31 19:04:20,887 (QuerySchemaLoader.java:257) - Root element: schema
+ INFO [main] 2016-07-31 19:04:20,888 (QuerySchemaLoader.java:163) - schemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-07-31 19:04:20,888 (QuerySchemaLoader.java:167) - dataSchemaName = testDataSchema
+ INFO [main] 2016-07-31 19:04:20,888 (QuerySchemaLoader.java:178) - selectorName = src_ip
+ INFO [main] 2016-07-31 19:04:20,888 (QuerySchemaLoader.java:207) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-07-31 19:04:20,889 (QuerySchemaLoader.java:220) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-07-31 19:04:20,889 (QuerySchemaLoader.java:207) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,889 (QuerySchemaLoader.java:220) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-07-31 19:04:20,889 (QuerySchemaLoader.java:207) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-07-31 19:04:20,889 (QuerySchemaLoader.java:220) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-07-31 19:04:20,949 (QueryParserUtils.java:672) - inclusive = true field = date query = [2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,950 (QueryParserUtils.java:736) - query:2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,950 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,950 (QueryParserUtils.java:738) - ranges[0] = 2014-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,952 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,952 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,952 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,952 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,953 (QueryParserUtils.java:672) - inclusive = true field = date query = [2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,953 (QueryParserUtils.java:736) - query:2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,953 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,953 (QueryParserUtils.java:738) - ranges[0] = 2016-02-20T23:29:05.000Z ranges[1] = 2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,954 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,954 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,954 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,954 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,955 (QueryParserUtils.java:672) - inclusive = true field = date query = [2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,955 (QueryParserUtils.java:736) - query:2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,955 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,955 (QueryParserUtils.java:738) - ranges[0] = 2013-05-05T20:33:07.000Z ranges[1] = 2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,956 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,956 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,956 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,956 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,957 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,957 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,957 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,958 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,958 (QueryParserUtils.java:672) - inclusive = true field = date query = [2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,958 (QueryParserUtils.java:736) - query:2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,958 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,959 (QueryParserUtils.java:738) - ranges[0] = 2014-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,959 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,960 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,960 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,960 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,961 (QueryParserUtils.java:672) - inclusive = true field = date query = [2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,961 (QueryParserUtils.java:736) - query:2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,961 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,961 (QueryParserUtils.java:738) - ranges[0] = 2016-02-20T23:29:05.000Z ranges[1] = 2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,962 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,962 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,962 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,962 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,963 (QueryParserUtils.java:672) - inclusive = true field = date query = [2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,963 (QueryParserUtils.java:736) - query:2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,963 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,963 (QueryParserUtils.java:738) - ranges[0] = 2013-05-05T20:33:07.000Z ranges[1] = 2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,964 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,964 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,965 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,965 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,965 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,965 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,966 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,966 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,966 (QueryParserUtils.java:672) - inclusive = true field = date query = [2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,967 (QueryParserUtils.java:736) - query:2014-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,967 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,967 (QueryParserUtils.java:738) - ranges[0] = 2014-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,968 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,968 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,968 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,968 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-04-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,969 (QueryParserUtils.java:672) - inclusive = true field = date query = [2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,969 (QueryParserUtils.java:736) - query:2016-02-20T23:29:05.000Z+TO+2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,969 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,969 (QueryParserUtils.java:738) - ranges[0] = 2016-02-20T23:29:05.000Z ranges[1] = 2017-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,970 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,970 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,970 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,971 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2016-02-20T23:30:05.000Z
+ INFO [main] 2016-07-31 19:04:20,971 (QueryParserUtils.java:672) - inclusive = true field = date query = [2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,971 (QueryParserUtils.java:736) - query:2013-05-05T20:33:07.000Z+TO+2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,972 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,972 (QueryParserUtils.java:738) - ranges[0] = 2013-05-05T20:33:07.000Z ranges[1] = 2014-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,972 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,973 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,973 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,973 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,974 (QueryParserUtils.java:672) - inclusive = false field = date query = {2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z} value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,974 (QueryParserUtils.java:736) - query:2015-06-05T20:33:07.000Z+TO+2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,974 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:20,974 (QueryParserUtils.java:738) - ranges[0] = 2015-06-05T20:33:07.000Z ranges[1] = 2015-07-05T20:33:07.000Z
+ INFO [main] 2016-07-31 19:04:20,980 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [0+TO+2] value = 0
+ INFO [main] 2016-07-31 19:04:20,981 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {-1+TO+2} value = 0
+ INFO [main] 2016-07-31 19:04:20,981 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [-1+TO+0] value = 0
+ INFO [main] 2016-07-31 19:04:20,981 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {0+TO+3} value = 0
+ INFO [main] 2016-07-31 19:04:20,982 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [3+TO+10] value = 0
+ INFO [main] 2016-07-31 19:04:20,982 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [0+TO+2] value = 0
+ INFO [main] 2016-07-31 19:04:20,982 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {-1+TO+2} value = 0
+ INFO [main] 2016-07-31 19:04:20,983 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [-1+TO+0] value = 0
+ INFO [main] 2016-07-31 19:04:20,983 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {0+TO+3} value = 0
+ INFO [main] 2016-07-31 19:04:20,983 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [3+TO+10] value = 0
+ INFO [main] 2016-07-31 19:04:20,983 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [0+TO+2] value = 0
+ INFO [main] 2016-07-31 19:04:20,984 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {-1+TO+2} value = 0
+ INFO [main] 2016-07-31 19:04:20,984 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [-1+TO+0] value = 0
+ INFO [main] 2016-07-31 19:04:20,985 (QueryParserUtils.java:672) - inclusive = false field = rcode query = {0+TO+3} value = 0
+ INFO [main] 2016-07-31 19:04:20,985 (QueryParserUtils.java:672) - inclusive = true field = rcode query = [3+TO+10] value = 0
+ INFO [main] 2016-07-31 19:04:20,986 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+173.248.255.255] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,986 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 173.248.255.255
+ INFO [main] 2016-07-31 19:04:20,987 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:20,987 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:20,987 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:20,987 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:20,987 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+55.55.55.100] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,988 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 55.55.55.100
+ INFO [main] 2016-07-31 19:04:20,988 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,988 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,988 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,988 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,989 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,989 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,989 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 100
+ INFO [main] 2016-07-31 19:04:20,989 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.2+TO+55.55.55.55] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,989 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,990 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,990 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,990 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,990 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,991 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,991 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,991 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,991 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.57} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.57
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,992 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 57
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {173.248.188.0+TO+173.248.188.10} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:693) - ranges[0] = 173.248.188.0 ranges[1] = 173.248.188.10
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 173 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:20,993 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 248 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 188 blocksUpper[ipBlock] = 188
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:20,994 (QueryParserUtils.java:725) - IP block not within given range
+ INFO [main] 2016-07-31 19:04:20,995 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.55} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,995 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,996 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+173.248.255.255] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,996 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 173.248.255.255
+ INFO [main] 2016-07-31 19:04:20,996 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:20,996 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:20,996 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+55.55.55.100] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 55.55.55.100
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,997 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,998 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,998 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,998 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,998 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 100
+ INFO [main] 2016-07-31 19:04:20,998 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.2+TO+55.55.55.55] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:20,999 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,000 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.57} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,000 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.57
+ INFO [main] 2016-07-31 19:04:21,000 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,000 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,000 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 57
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {173.248.188.0+TO+173.248.188.10} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:693) - ranges[0] = 173.248.188.0 ranges[1] = 173.248.188.10
+ INFO [main] 2016-07-31 19:04:21,001 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 173 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 248 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 188 blocksUpper[ipBlock] = 188
+ INFO [main] 2016-07-31 19:04:21,002 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:725) - IP block not within given range
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.55} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,003 (QueryParserUtils.java:672) - inclusive = true field = ip query = [10.20.30.50+TO+10.20.30.69] value = 10.20.30.40
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:693) - ranges[0] = 10.20.30.50 ranges[1] = 10.20.30.69
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 10 blocksLower[ipBlock] = 10 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 20 blocksLower[ipBlock] = 20 blocksUpper[ipBlock] = 20
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 30 blocksLower[ipBlock] = 30 blocksUpper[ipBlock] = 30
+ INFO [main] 2016-07-31 19:04:21,004 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,005 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 40 blocksLower[ipBlock] = 50 blocksUpper[ipBlock] = 69
+ INFO [main] 2016-07-31 19:04:21,005 (QueryParserUtils.java:725) - IP block not within given range
+ INFO [main] 2016-07-31 19:04:21,005 (QueryParserUtils.java:672) - inclusive = true field = ip query = [10.20.30.50+TO+10.20.30.69] value = 10.20.30.60
+ INFO [main] 2016-07-31 19:04:21,005 (QueryParserUtils.java:693) - ranges[0] = 10.20.30.50 ranges[1] = 10.20.30.69
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 10 blocksLower[ipBlock] = 10 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 20 blocksLower[ipBlock] = 20 blocksUpper[ipBlock] = 20
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 30 blocksLower[ipBlock] = 30 blocksUpper[ipBlock] = 30
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,006 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 60 blocksLower[ipBlock] = 50 blocksUpper[ipBlock] = 69
+ INFO [main] 2016-07-31 19:04:21,007 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+173.248.255.255] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,007 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 173.248.255.255
+ INFO [main] 2016-07-31 19:04:21,007 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:21,007 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:21,007 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:21,008 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 255
+ INFO [main] 2016-07-31 19:04:21,008 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.0+TO+55.55.55.100] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,008 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.0 ranges[1] = 55.55.55.100
+ INFO [main] 2016-07-31 19:04:21,008 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,009 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,009 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,009 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,009 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,009 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,010 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 100
+ INFO [main] 2016-07-31 19:04:21,010 (QueryParserUtils.java:672) - inclusive = true field = src_ip query = [55.55.55.2+TO+55.55.55.55] value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,010 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,010 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,010 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,011 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.57} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,012 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.57
+ INFO [main] 2016-07-31 19:04:21,012 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,012 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,012 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,012 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,013 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 55 blocksUpper[ipBlock] = 55
+ INFO [main] 2016-07-31 19:04:21,013 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,013 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 2 blocksUpper[ipBlock] = 57
+ INFO [main] 2016-07-31 19:04:21,013 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {173.248.188.0+TO+173.248.188.10} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:693) - ranges[0] = 173.248.188.0 ranges[1] = 173.248.188.10
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 173 blocksUpper[ipBlock] = 173
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 248 blocksUpper[ipBlock] = 248
+ INFO [main] 2016-07-31 19:04:21,014 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 188 blocksUpper[ipBlock] = 188
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:716) - !ipValue[ipBlock].equals(blocksLower[ipBlock]
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 55 blocksLower[ipBlock] = 0 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,015 (QueryParserUtils.java:725) - IP block not within given range
+ INFO [main] 2016-07-31 19:04:21,016 (QueryParserUtils.java:672) - inclusive = false field = src_ip query = {55.55.55.2+TO+55.55.55.55} value = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,016 (QueryParserUtils.java:693) - ranges[0] = 55.55.55.2 ranges[1] = 55.55.55.55
+ INFO [main] 2016-07-31 19:04:21,016 (QueryParserUtils.java:672) - inclusive = true field = ip query = [10.20.30.50+TO+10.20.30.69] value = 10.20.30.40
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:693) - ranges[0] = 10.20.30.50 ranges[1] = 10.20.30.69
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 10 blocksLower[ipBlock] = 10 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 20 blocksLower[ipBlock] = 20 blocksUpper[ipBlock] = 20
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 30 blocksLower[ipBlock] = 30 blocksUpper[ipBlock] = 30
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,017 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 40 blocksLower[ipBlock] = 50 blocksUpper[ipBlock] = 69
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:725) - IP block not within given range
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:672) - inclusive = true field = ip query = [10.20.30.50+TO+10.20.30.69] value = 10.20.30.60
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:693) - ranges[0] = 10.20.30.50 ranges[1] = 10.20.30.69
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:708) - ipBlock = 0 ipValue[ipBlock] = 10 blocksLower[ipBlock] = 10 blocksUpper[ipBlock] = 10
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:708) - ipBlock = 1 ipValue[ipBlock] = 20 blocksLower[ipBlock] = 20 blocksUpper[ipBlock] = 20
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,018 (QueryParserUtils.java:708) - ipBlock = 2 ipValue[ipBlock] = 30 blocksLower[ipBlock] = 30 blocksUpper[ipBlock] = 30
+ INFO [main] 2016-07-31 19:04:21,019 (QueryParserUtils.java:713) - blocksLower[ipBlock].equals(blocksUpper[ipBlock])
+ INFO [main] 2016-07-31 19:04:21,019 (QueryParserUtils.java:708) - ipBlock = 3 ipValue[ipBlock] = 60 blocksLower[ipBlock] = 50 blocksUpper[ipBlock] = 69
+ INFO [main] 2016-07-31 19:04:21,019 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,020 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,020 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,020 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,021 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,021 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,021 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,021 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,022 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,022 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,022 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,022 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,024 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,024 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,024 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,024 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,025 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,025 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,025 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,025 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,026 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,026 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,026 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,026 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,027 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,027 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,027 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,027 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,028 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,028 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,028 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,028 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,029 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,029 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,029 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,029 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,030 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,030 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,030 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,030 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,031 (QueryParserUtils.java:672) - inclusive = true field = date query = [2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z] value = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,031 (QueryParserUtils.java:736) - query:2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,031 (QueryParserUtils.java:737) - value:2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,031 (QueryParserUtils.java:738) - ranges[0] = 2015-05-05T20:33:07.000Z ranges[1] = 2016-02-20T23:29:05.000Z
+ INFO [main] 2016-07-31 19:04:21,032 (QueryParserUtilsTest.java:137) - running testIgnoreCase
+ INFO [main] 2016-07-31 19:04:21,033 (QueryParserUtilsTest.java:157) - completed testIgnoreCase
+ INFO [main] 2016-07-31 19:04:21,035 (QueryParserUtilsTest.java:111) - running testQueryFieldDoesNotExist
+ INFO [main] 2016-07-31 19:04:21,035 (QueryParserUtilsTest.java:131) - completed testQueryFieldDoesNotExist
