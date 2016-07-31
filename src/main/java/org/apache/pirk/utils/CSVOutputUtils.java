@@ -71,14 +71,12 @@ public class CSVOutputUtils
   public static String[] extractCSVOutput(Text value)
   {
     String csvOut = value.toString();
-    String tokens[] = csvOut.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-    return tokens;
+    return csvOut.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
   }
 
   public static String[] extractCSVOutput(String value)
   {
-    String tokens[] = value.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-    return tokens;
+    return value.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
   }
 
   public static void extractCSVOutputIdentity(Text key, Text value, Text input)
