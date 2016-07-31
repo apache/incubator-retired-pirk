@@ -27,6 +27,7 @@ import java.util.Random;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,22 +40,23 @@ public class PaillierTest
 {
   private static final Logger logger = LoggerFactory.getLogger(PaillierTest.class);
 
-  private BigInteger p = null; // large prime
-  private BigInteger q = null; // large prime
-  private BigInteger N = null; // N=pq, RSA modulus
-  private BigInteger NSquared = null; // N^2
-  private BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1)
+  private static BigInteger p = null; // large prime
+  private static BigInteger q = null; // large prime
+  private static BigInteger N = null; // N=pq, RSA modulus
+  private static BigInteger NSquared = null; // N^2
+  private static BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1)
 
-  private int bitLength = 0; // bit length of the modulus N
-  private int certainty = 64; // prob that new BigInteger values represents primes will exceed (1 - (1/2)^certainty)
+  private static int bitLength = 0; // bit length of the modulus N
+  private static int certainty = 64; // prob that new BigInteger values represents primes will exceed (1 - (1/2)^certainty)
 
-  private BigInteger r1 = null; // random number in (Z/NZ)*
-  private BigInteger r2 = null; // random number in (Z/NZ)*
+  private static BigInteger r1 = null; // random number in (Z/NZ)*
+  private static BigInteger r2 = null; // random number in (Z/NZ)*
 
-  private BigInteger m1 = null; // message to encrypt
-  private BigInteger m2 = null; // message to encrypt
+  private static BigInteger m1 = null; // message to encrypt
+  private static BigInteger m2 = null; // message to encrypt
 
-  public PaillierTest()
+  @BeforeClass
+  public static void setup()
   {
     p = BigInteger.valueOf(7);
     q = BigInteger.valueOf(17);

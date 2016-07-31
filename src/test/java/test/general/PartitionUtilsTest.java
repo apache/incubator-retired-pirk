@@ -28,6 +28,7 @@ import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.utils.SystemConfiguration;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,8 @@ public class PartitionUtilsTest
 {
   private static final Logger logger = LoggerFactory.getLogger(PartitionUtilsTest.class);
 
-  public PartitionUtilsTest()
+  @BeforeClass
+  public static void setup()
   {
     PrimitiveTypePartitioner primitivePartitioner = new PrimitiveTypePartitioner();
   }
