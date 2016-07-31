@@ -39,11 +39,6 @@ public class PartitionUtilsTest
 {
   private static final Logger logger = LoggerFactory.getLogger(PartitionUtilsTest.class);
 
-  public PartitionUtilsTest()
-  {
-    PrimitiveTypePartitioner primitivePartitioner = new PrimitiveTypePartitioner();
-  }
-
   @Test
   public void testMask()
   {
