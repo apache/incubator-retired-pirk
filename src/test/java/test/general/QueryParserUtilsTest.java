@@ -58,7 +58,7 @@ public class QueryParserUtilsTest
     QuerySchemaRegistry.clearRegistry();
     SystemConfiguration.setProperty("data.schemas", "none");
     SystemConfiguration.setProperty("query.schemas", "none");
-    
+
     Inputs.createSchemaFiles(null, false, null);
 
     dSchema = DataSchemaRegistry.get(Inputs.TEST_DATA_SCHEMA_NAME);

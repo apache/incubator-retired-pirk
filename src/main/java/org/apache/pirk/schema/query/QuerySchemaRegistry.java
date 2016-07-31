@@ -68,7 +68,7 @@ public class QuerySchemaRegistry
   {
     return registry.keySet();
   }
-  
+
   /**
    * Clear the registry
    */

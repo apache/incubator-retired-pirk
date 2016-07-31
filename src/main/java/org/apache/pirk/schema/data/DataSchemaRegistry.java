@@ -74,7 +74,7 @@ public class DataSchemaRegistry
   {
     return registry.keySet();
   }
-  
+
   /**
    * Clear the registry
    */
