@@ -22,20 +22,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-//TODO: Waiting for Jackson adoption
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class JsonSerializer extends SerializationService
 {
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  public void write(OutputStream w, Storable obj) throws IOException
+  public void write(OutputStream outputStream, Storable obj) throws IOException
   {
-    throw new RuntimeException("Not yet implemented");
+    objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
   }
 
   @Override
-  public <T> T read(InputStream stream, Class<T> type) throws IOException
+  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
   {
-    throw new RuntimeException("Not yet implemented");
+    return objectMapper.readValue(inputStream, classType);
   }
 
 }
