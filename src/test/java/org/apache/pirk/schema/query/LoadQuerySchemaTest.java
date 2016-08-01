@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.schema.query;
+package org.apache.pirk.schema.query;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -37,9 +37,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
-import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.schema.query.QuerySchemaLoader;
-import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
@@ -51,14 +48,12 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import test.schema.data.LoadDataSchemaTest;
-
 /**
  * Test suite for LoadQuerySchema and QuerySchema
  */
 public class LoadQuerySchemaTest
 {
-  private static final Logger logger = LoggerFactory.getLogger(LoadDataSchemaTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(LoadQuerySchemaTest.class);
 
   private String querySchemaFile = "querySchemaFile";
   private String dataSchemaName = "fakeDataSchema";

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.general;
+package org.apache.pirk.general;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -38,11 +38,6 @@ import org.slf4j.LoggerFactory;
 public class PartitionUtilsTest
 {
   private static final Logger logger = LoggerFactory.getLogger(PartitionUtilsTest.class);
-
-  public PartitionUtilsTest()
-  {
-    PrimitiveTypePartitioner primitivePartitioner = new PrimitiveTypePartitioner();
-  }
 
   @Test
   public void testMask()

@@ -499,6 +499,17 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<configuration>
+						<javadocDirectory>docs</javadocDirectory>
+						<testJavadocDirectory>docs/test</testJavadocDirectory>
+						<javadocVersion>1.8</javadocVersion>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -511,7 +522,7 @@
 			be explicitly provided. -->
 			<id>integration-tests</id>
 			<build>
-				<plugins>
+			<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>

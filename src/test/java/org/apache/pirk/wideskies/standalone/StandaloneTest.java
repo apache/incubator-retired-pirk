@@ -16,15 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.wideskies.standalone;
+package org.apache.pirk.wideskies.standalone;
 
 import java.util.ArrayList;
 
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +49,17 @@ public class StandaloneTest
 
   private static final String STOPLIST_FILE = "testStopListFile";
 
-  private String stopListFileProp = null;
+  private static String stopListFileProp = null;
 
-  public StandaloneTest() throws Exception
+  @BeforeClass
+  public static void setup() throws Exception
   {
+    // Reset the schema properties and registries
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
+
     // Create the stoplist file
     stopListFileProp = SystemConfiguration.getProperty("pir.stopListFile");
     SystemConfiguration.setProperty("pir.stopListFile", STOPLIST_FILE);
@@ -58,6 +69,16 @@ public class StandaloneTest
 
     // Create data and query schemas
     Inputs.createSchemaFiles(StopListFilter.class.getName());
+  }
+
+  @AfterClass
+  public static void teardown()
+  {
+    // Reset the schema properties and registries
+    DataSchemaRegistry.clearRegistry();
+    QuerySchemaRegistry.clearRegistry();
+    SystemConfiguration.setProperty("data.schemas", "none");
+    SystemConfiguration.setProperty("query.schemas", "none");
   }
 
   @Test
