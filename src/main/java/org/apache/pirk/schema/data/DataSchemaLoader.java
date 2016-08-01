@@ -195,9 +195,9 @@ public class DataSchemaLoader
   }
 
   /*
-   * Parses an XML document
+   * Parses and normalizes the XML document available on the given stream.
    * @param stream The input stream.
-   * @return A Document representing the XML document.
+   * @return A {@link Document} representing the XML document.
    * @throws IOException
    * @throws PIRException
    */
