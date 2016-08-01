@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.serialization;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class LocalFileSystemStore extends StorageService
   /**
    * Stores the given object at the given file location. The object is serialized using the configured serializer.
    * 
-   * @param path
+   * @param file
    *          The local file system location to store the object.
    * @param obj
    *          The object to store.
