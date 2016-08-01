@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package test.storm;
+package org.apache.pirk.storm;
 
 import kafka.utils.Time;
 
