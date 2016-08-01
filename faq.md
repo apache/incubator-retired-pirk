@@ -13,6 +13,6 @@ Communication between the Querier and Responder entities is necessary for the Qu
 
 As such, the authentication of the Query and Response objects remain external to Pirk and is left as a part of the access control/authentication of users' systems that are running the Pirk application and communicating with each other. 
 
-This also of the same philosophy as the Responder's data access: the Responder can only execute a query over data to which the data owner has given it access. This is enforced outside of Pirk -- data access controls of the data owner for a data user (such as Pirk) are outside of the scope of the Pirk project.
+This also is of the same philosophy as the Responder's data access: the Responder can only execute a query over data to which the data owner has given it access. This is enforced outside of Pirk -- data access controls of the data owner for a data user (such as Pirk) are outside of the scope of the Pirk project.
 
 
