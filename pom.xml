@@ -101,6 +101,7 @@
 		<elasticsearch.version>2.3.3</elasticsearch.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
+		<jackson.version>2.8.1</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -255,6 +256,13 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.6.2</version>
+		</dependency>
+
+		<!-- Jackson dependency -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 
 	</dependencies>
