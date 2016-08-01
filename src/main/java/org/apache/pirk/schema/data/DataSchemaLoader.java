@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import scala.tools.nsc.transform.patmat.Logic;
 
 /**
  * Class to load any data schemas specified in the properties file, 'data.schemas'
@@ -93,7 +92,7 @@ public class DataSchemaLoader
   /* Kept for compatibility */
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of
-   * available registry names.
+   * available data schema names.
    * @throws Exception
    */
   public static void initialize() throws Exception
@@ -103,8 +102,8 @@ public class DataSchemaLoader
 
   /* Kept for compatibility */
   /**
-   * Initializes the static {@link org.apache.pirk.schema.data.DataSchemaRegistry} with a list of
-   * available registry names.
+   * Initializes the static {@link DataSchemaRegistry} with a list of
+   * available data schema names.
    * @param hdfs If true, specifies that the DataSchema is an hdfs file; if false, that it is a regular file.
    * @param fs Used only when {@paramref hdfs} is true; the {@link org.apache.hadoop.fs.FileSystem} handle for the hdfs in which the DataSchema exists
    * @throws Exception
