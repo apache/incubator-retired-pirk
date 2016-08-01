@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<!-- ~ Licensed to the Apache Software Foundation (ASF) under one or more 
+	~ contributor license agreements. See the NOTICE file distributed with ~ 
+	this work for additional information regarding copyright ownership. ~ The 
+	ASF licenses this file to You under the Apache License, Version 2.0 ~ (the 
+	"License"); you may not use this file except in compliance with ~ the License. 
+	You may obtain a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 
+	~ ~ Unless required by applicable law or agreed to in writing, software ~ 
+	distributed under the License is distributed on an "AS IS" BASIS, ~ WITHOUT 
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ~ See the 
+	License for the specific language governing permissions and ~ limitations 
+	under the License. -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -99,7 +94,7 @@
 		<hadoop.version>2.7.2</hadoop.version>
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
-        <storm.version>1.0.1</storm.version>
+		<storm.version>1.0.1</storm.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
 	</properties>
@@ -186,6 +181,18 @@
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.scala-lang</groupId>
+					<artifactId>scalap</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.scala-lang</groupId>
+					<artifactId>scala-library</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.scala-lang</groupId>
+					<artifactId>scala-reflect</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -199,9 +206,9 @@
 					<groupId>commons-net</groupId>
 				</exclusion>
 				<exclusion>
-                  <groupId>org.apache.hive</groupId>
-                  <artifactId>hive-service</artifactId>
-              	</exclusion>
+					<groupId>org.apache.hive</groupId>
+					<artifactId>hive-service</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
@@ -218,52 +225,64 @@
 		</dependency>
 
 
-        <dependency>
-            <groupId>org.apache.storm</groupId>
-            <artifactId>storm-core</artifactId>
-            <version>${storm.version}</version>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>${storm.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-slf4j-impl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.storm</groupId>
-            <artifactId>storm-kafka</artifactId>
-            <version>${storm.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-kafka</artifactId>
+			<version>${storm.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.10</artifactId>
-            <version>0.9.0.1</version>
-            <exclusions>
-                <!--		<exclusion>
-                            <groupId>org.apache.zookeeper</groupId>
-                            <artifactId>zookeeper</artifactId>
-                        </exclusion> -->
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.9.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.scala-lang</groupId>
+					<artifactId>scala-library</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-test</artifactId>
-            <version>2.10.0</version>
-            <!--       <exclusions>
-                       <exclusion>
-                           <groupId>org.apache.zookeeper</groupId>
-                           <artifactId>zookeeper</artifactId>
-                       </exclusion>
-                   </exclusions> -->
-        </dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-test</artifactId>
+			<version>2.10.0</version>
+		</dependency>
 
-        <!-- Square's JNA GMP module -->
+		<!-- Square's JNA GMP module -->
 		<dependency>
 			<groupId>com.squareup.jnagmp</groupId>
 			<artifactId>jnagmp</artifactId>
@@ -302,6 +321,12 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.10.4</version>
 		</dependency>
 
 	</dependencies>
@@ -444,10 +469,10 @@
 								<shadedClassifierName>exe</shadedClassifierName>
 								<transformers>
 									<transformer
-											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									</transformer>
 									<transformer
-											implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 									</transformer>
 								</transformers>
 								<filters>
@@ -463,13 +488,13 @@
 							</configuration>
 						</execution>
 
-						<!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+						<!-- in the version with benchmarks (pom-with-benchmarks.xml), this 
 							is where that <execution></execution> lives -->
 
 					</executions>
 				</plugin>
 
-				<!--This plugin's configuration is used to store Eclipse m2e settings
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -494,27 +519,27 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore/>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
-								    <pluginExecutionFilter>
-								        <groupId>
-								            org.apache.rat
-								        </groupId>
-								        <artifactId>
-								            apache-rat-plugin
-								        </artifactId>
-								        <versionRange>
-								            [0.11,)
-								        </versionRange>
-								        <goals>
-								            <goal>check</goal>
-								        </goals>
-								    </pluginExecutionFilter>
-								    <action>
-								        <ignore/>
-								    </action>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.rat
+										</groupId>
+										<artifactId>
+											apache-rat-plugin
+										</artifactId>
+										<versionRange>
+											[0.11,)
+										</versionRange>
+										<goals>
+											<goal>check</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
@@ -546,6 +571,17 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<configuration>
+						<javadocDirectory>docs</javadocDirectory>
+						<testJavadocDirectory>docs/test</testJavadocDirectory>
+						<javadocVersion>1.8</javadocVersion>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -553,9 +589,10 @@
 
 	<profiles>
 		<profile>
-			<!-- Performs execution of Integration Tests using the Maven FailSafe Plugin. The view of integration tests in this context
-			are those tests interfacing with external sources and services requiring additional resources or credentials that cannot
-			be explicitly provided. -->
+			<!-- Performs execution of Integration Tests using the Maven FailSafe 
+				Plugin. The view of integration tests in this context are those tests interfacing 
+				with external sources and services requiring additional resources or credentials 
+				that cannot be explicitly provided. -->
 			<id>integration-tests</id>
 			<build>
 				<plugins>
@@ -575,12 +612,12 @@
 			</build>
 		</profile>
 		<profile>
-			<!-- Checks style and licensing requirements. This is a good idea to run
-			for contributions and for the release process. While it would be nice to
-			run always these plugins can considerably slow the build and have proven
-			to create unstable builds in our multi-module project and when building using
-			multiple threads. The stability issues seen with Checkstyle in multi-module
-			builds include false-positives and false negatives. -->
+			<!-- Checks style and licensing requirements. This is a good idea to run 
+				for contributions and for the release process. While it would be nice to 
+				run always these plugins can considerably slow the build and have proven 
+				to create unstable builds in our multi-module project and when building using 
+				multiple threads. The stability issues seen with Checkstyle in multi-module 
+				builds include false-positives and false negatives. -->
 			<id>contrib-check</id>
 			<build>
 				<plugins>
@@ -612,12 +649,11 @@
 			</build>
 		</profile>
 		<profile>
-			<!-- This profile will disable DocLint which performs strict
-				JavaDoc processing which was introduced in JDK 8. These are technically errors
-				in the JavaDoc which we need to eventually address. However, if a release
-				is performed using JDK 8, the JavaDoc generation would fail. By activating
-				this profile when running on JDK 8 we can ensure the JavaDocs continue to
-				generate successfully -->
+			<!-- This profile will disable DocLint which performs strict JavaDoc processing 
+				which was introduced in JDK 8. These are technically errors in the JavaDoc 
+				which we need to eventually address. However, if a release is performed using 
+				JDK 8, the JavaDoc generation would fail. By activating this profile when 
+				running on JDK 8 we can ensure the JavaDocs continue to generate successfully -->
 			<id>disable-doclint</id>
 			<activation>
 				<jdk>1.8</jdk>
