@@ -41,22 +41,24 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import scala.tools.nsc.transform.patmat.Logic;
 
 /**
  * Class to load any data schemas specified in the properties file, 'data.schemas'
  * <p>
  * Schemas should be specified as follows:
- * 
- * <pre>
- * {@code
+ *
+ * <pre>{@code
  * <schema>
- *  <schemaName> name of the schema </schemaName>
- *  <element>
- *      <name> element name /name>
- *      <type> class name or type name (if Java primitive type) of the element </type>
- *      <isArray> true or false -- whether or not the schema element is an array within the data </isArray>
- *      <partitioner> optional - Partitioner class for the element; defaults to primitive java type partitioner </partitioner> 
- *  </element>
+ *    <schemaName> name of the schema </schemaName>
+ *    <element>
+ *        <name> element name </name>
+ *        <type> class name or type name (if Java primitive type) of the element </type>
+ *        <isArray> whether or not the schema element is an array within the data.
+ *                  Set to true by including this tag with no text or the string "true" (comparison is case-insensitive).
+ *                  Omitting this tag or using any other text indicates this element is not an array.</isArray>
+ *        <partitioner> optional - Partitioner class for the element; defaults to primitive java type partitioner </partitioner>
+ *    </element>
  * </schema>
  * }
  * </pre>
@@ -86,13 +88,27 @@ public class DataSchemaLoader
     }
   }
 
+
+
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link DataSchemaRegistry} with a list of
+   * available registry names.
+   * @throws Exception
+   */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link org.apache.pirk.schema.data.DataSchemaRegistry} with a list of
+   * available registry names.
+   * @param hdfs If true, specifies that the DataSchema is an hdfs file; if false, that it is a regular file.
+   * @param fs Used only when {@paramref hdfs} is true; the {@link org.apache.hadoop.fs.FileSystem} handle for the hdfs in which the DataSchema exists
+   * @throws Exception
+   */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
@@ -179,6 +195,13 @@ public class DataSchemaLoader
     return dataSchema;
   }
 
+  /*
+   * Parses an XML document
+   * @param stream The input stream.
+   * @return A Document representing the XML document.
+   * @throws IOException
+   * @throws PIRException
+   */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
     Document doc;
@@ -196,6 +219,12 @@ public class DataSchemaLoader
     return doc;
   }
 
+  /*
+   * Extracts a data schema element node's contents
+   * @param eElement A data schema element node.
+   * @param schema The data schema
+   * @throws PIRException
+   */
   private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
   {
     // Pull out the element name and type attributes.
@@ -203,7 +232,7 @@ public class DataSchemaLoader
     String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
     schema.getTypeMap().put(name, type);
 
-    // An absent isArray means false, and an empty isArray means true, otherwise take the value.
+    // An empty isArray or one whose value evaluates to "true" is an array; otherwise (including absence) the element is not an array
     Node isArrayNode = eElement.getElementsByTagName("isArray").item(0);
     if (isArrayNode != null)
     {
