@@ -26,7 +26,9 @@ nav: nav_peoplepirk
 | username      | name              |
 |---------------|-------------------|
 | tbrown	    | Tracy Brown        | 
+| tellison	    | Tim Ellison        | 
 | charris	    | Chris Harris        | 
+| smarthi	    | Suneel Marthi     |
 | raydulany	    | Walter Ray-Dulany     |
 | jacobwilder	| Jacob Wilder     | 
 | eawilliams	| Ellison Anne Williams          |
