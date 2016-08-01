@@ -20,7 +20,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>apache-pirk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -99,8 +98,8 @@
 		<hadoop.version>2.7.2</hadoop.version>
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
-		<pirk.forkCount>1C</pirk.forkCount>
-		<pirk.reuseForks>true</pirk.reuseForks>
+		<pirk.forkCount>2</pirk.forkCount>
+		<pirk.reuseForks>false</pirk.reuseForks>
 	</properties>
 
 	<dependencies>
