@@ -104,8 +104,8 @@ public class DataSchemaLoader
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of
    * available data schema names.
-   * @param hdfs If true, specifies that the DataSchema is an hdfs file; if false, that it is a regular file.
-   * @param fs Used only when {@paramref hdfs} is true; the {@link org.apache.hadoop.fs.FileSystem} handle for the hdfs in which the DataSchema exists
+   * @param hdfs If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
+   * @param fs Used only when {@paramref hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
    * @throws Exception
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
