@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  * <schema>
  *    <schemaName> name of the schema </schemaName>
  *    <element>
- *        <name> element name </name>
+ *        <name> element name; note that element names are case sensitive </name>
  *        <type> class name or type name (if Java primitive type) of the element </type>
  *        <isArray> whether or not the schema element is an array within the data.
  *                  Set to true by including this tag with no text or the string "true" (comparison is case-insensitive).
