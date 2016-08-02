@@ -204,7 +204,7 @@ public class QueryResponseJSON implements Serializable
   {
     jsonObj.put(EVENT_TYPE, queryInfo.getQueryType());
     jsonObj.put(QUERY_ID, queryInfo.getQueryNum());
-    jsonObj.put(QUERY_NAME, queryInfo.getQueryName());
+    jsonObj.put(QUERY_NAME, queryInfo.getQueryID());
   }
 
   @Override

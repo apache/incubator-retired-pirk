@@ -67,7 +67,7 @@ public class ComputeExpLookupTable
   {
     JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations;
 
-    logger.info("Creating expTable in hdfs for queryName = " + query.getQueryInfo().getQueryName());
+    logger.info("Creating expTable in hdfs for queryName = " + query.getQueryInfo().getQueryID());
 
     // Prep the output directory
     Path outPathExp = new Path(outputDirExp);
