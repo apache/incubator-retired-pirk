@@ -17,7 +17,7 @@
  * under the License.
  *******************************************************************************/
 package org.apache.pirk.querier.wideskies;
-
+ 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
+ *
  * 
  */
 public class Querier implements Serializable, Storable
