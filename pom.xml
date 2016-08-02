@@ -101,6 +101,7 @@
 		<elasticsearch.version>2.3.3</elasticsearch.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
+		<jackson.version>2.8.1</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -257,6 +258,13 @@
 			<version>2.6.2</version>
 		</dependency>
 
+		<!-- Jackson dependency -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -395,6 +403,7 @@
 							<configuration>
 								<shadedArtifactAttached>true</shadedArtifactAttached>
 								<shadedClassifierName>exe</shadedClassifierName>
+								<minimizeJar>true</minimizeJar>
 								<transformers>
 									<transformer
 											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
