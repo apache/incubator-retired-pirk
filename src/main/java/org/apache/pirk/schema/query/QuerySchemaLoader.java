@@ -105,8 +105,12 @@ public class QuerySchemaLoader
   /**
    * Initializes the static {@link QuerySchemaRegistry} with a list of
    * available query schema names.
-   * @param hdfs If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
-   * @param fs Used only when {@paramref hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
+   * @param hdfs
+   *    If true, specifies that the query schema is an hdfs file; if false,
+   *    that it is a regular file.
+   * @param fs
+   *    Used only when {@code hdfs} is true; the {@link FileSystem} handle
+   *    for the hdfs in which the query schema exists
    * @throws Exception
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
@@ -161,9 +165,9 @@ public class QuerySchemaLoader
    *          The source of the XML query schema description.
    * @return The query schema.
    * @throws IOException
-   *           A problem occurred reading from the given stream.
+   *          A problem occurred reading from the given stream.
    * @throws PIRException
-   *           The schema description is invalid.
+   *          The schema description is invalid.
    */
   public QuerySchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -251,10 +255,11 @@ public class QuerySchemaLoader
     return querySchema;
   }
 
-  /*
+  /**
    * Parses and normalizes the XML document available on the given stream.
-   * @param stream The input stream.
-   * @return A {@link Document} representing the XML document.
+   * @param stream
+   *          The input stream.
+   * @return A Document representing the XML document.
    * @throws IOException
    * @throws PIRException
    */
@@ -275,11 +280,12 @@ public class QuerySchemaLoader
     return doc;
   }
 
-  /*
+  /**
    * Returns the possibly empty set of element names over which the filter is applied, maintaining document order.
    *
    * @param doc
-   * @return
+   *          An XML document specifying names upon which we will filter the query.
+   * @return The set of names upon which we will filter the query.
    * @throws PIRException
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
@@ -313,10 +319,17 @@ public class QuerySchemaLoader
     return filteredNamesSet;
   }
 
-  /*
+  /**
    * Extracts a top level, single value from the XML structure.
    * 
    * Throws an exception if there is not exactly one tag with the given name.
+   *
+   * @param doc
+   *          The XML document from which we extract data
+   * @param tagName
+   *          The name of the tag we wish to extract from the {@code doc}
+   * @return The text content of the tag.
+   * @throws PIRException
    */
   private String extractValue(Document doc, String tagName) throws PIRException
   {
@@ -328,6 +341,18 @@ public class QuerySchemaLoader
     return itemList.item(0).getTextContent().trim();
   }
 
+  /**
+   * Instantiate the specified filter.
+   *
+   * Exceptions derive from call to {@link FilterFactory.getFilter}
+   * @param filterTypeName
+   *          The name of the filter class we are instantiating
+   * @param filteredElementNames
+   *          The set of names of elements of the data schema up which the filter will act.
+   * @return An instantiation of the filter, set up to filter upon the specified names.
+   * @throws IOException
+   * @throws PIRException
+   */
   private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
   {
     return filterTypeName.equals(NO_FILTER) ? null : FilterFactory.getFilter(filterTypeName, filteredElementNames);
