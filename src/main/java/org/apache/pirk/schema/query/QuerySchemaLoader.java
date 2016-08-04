@@ -50,15 +50,15 @@ import org.xml.sax.SAXException;
  * Class to load any query schemas specified in the properties file, 'query.schemas'
  * <p>
  * Schemas should be specified as follows:
- * 
- * <pre>
- * {@code
- *  <schema>
+ *
+ * <pre>{@code
+ * <schema>
  *    <schemaName> name of the schema </schemaName>
  *    <dataSchemaName> name of the data schema over which this query is run </dataSchemaName>
  *    <selectorName> name of the element in the data schema that will be the selector </selectorName>
  *    <elements>
- *       <name> element name of element in the data schema to include in the query response </name>
+ *       <name> element name of element in the data schema to include in the query response; just
+ *              as with the data schema, the element name is case sensitive</name>
  *    </elements>
  *    <filter> (optional) name of the filter class to use to filter the data </filter>
  *    <filterNames> (optional)
@@ -91,12 +91,24 @@ public class QuerySchemaLoader
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link QuerySchemaRegistry} with a list of
+   * query schema names.
+   * @throws Exception
+   */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link QuerySchemaRegistry} with a list of
+   * available query schema names.
+   * @param hdfs If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
+   * @param fs Used only when {@paramref hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
+   * @throws Exception
+   */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String querySchemas = SystemConfiguration.getProperty("query.schemas", "none");
@@ -241,6 +253,10 @@ public class QuerySchemaLoader
 
   /*
    * Parses and normalizes the XML document available on the given stream.
+   * @param stream The input stream.
+   * @return A {@link Document} representing the XML document.
+   * @throws IOException
+   * @throws PIRException
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -261,6 +277,10 @@ public class QuerySchemaLoader
 
   /*
    * Returns the possibly empty set of element names over which the filter is applied, maintaining document order.
+   *
+   * @param doc
+   * @return
+   * @throws PIRException
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
   {
