@@ -104,8 +104,12 @@ public class DataSchemaLoader
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of
    * available data schema names.
-   * @param hdfs If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
-   * @param fs Used only when {@paramref hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
+   * @param hdfs
+   *          If true, specifies that the data schema is an hdfs file; if
+   *          false, that it is a regular file.
+   * @param fs
+   *          Used only when {@paramref hdfs} is true; the {@link FileSystem}
+   *          handle for the hdfs in which the data schema exists
    * @throws Exception
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
@@ -159,9 +163,9 @@ public class DataSchemaLoader
    *          The source of the XML data schema description.
    * @return The data schema.
    * @throws IOException
-   *           A problem occurred reading from the given stream.
+   *          A problem occurred reading from the given stream.
    * @throws PIRException
-   *           The schema description is invalid.
+   *          The schema description is invalid.
    */
   public DataSchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -196,8 +200,10 @@ public class DataSchemaLoader
 
   /*
    * Parses and normalizes the XML document available on the given stream.
-   * @param stream The input stream.
-   * @return A {@link Document} representing the XML document.
+   * @param stream
+   *          The input stream.
+   * @return
+   *          A {@link Document} representing the XML document.
    * @throws IOException
    * @throws PIRException
    */
@@ -220,8 +226,10 @@ public class DataSchemaLoader
 
   /*
    * Extracts a data schema element node's contents
-   * @param eElement A data schema element node.
-   * @param schema The data schema
+   * @param eElement
+   *          A data schema element node.
+   * @param schema
+   *          The data schema
    * @throws PIRException
    */
   private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
@@ -274,6 +282,10 @@ public class DataSchemaLoader
 
   /*
    * Checks the given type name is a supported Java primitive type, and throws a PIRException if not.
+   *
+   * @param typeName
+   *          The type name to check.
+   * @throws PIRException
    */
   void validateIsPrimitiveType(String typeName) throws PIRException
   {
@@ -287,6 +299,12 @@ public class DataSchemaLoader
    * Creates a new instance of a class with the given type name.
    * 
    * Throws an exception if the class cannot be instantiated, or it does not implement the required interface.
+   *
+   * @param partitionerTypeName
+   *          The name of the {@link DataPartitioner} subclass to instantiate.
+   * @return
+   *          An instance of the named {@link DataPartitioner} subclass.
+   * @throws PIRException
    */
   DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
