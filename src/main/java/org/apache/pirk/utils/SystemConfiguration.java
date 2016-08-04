@@ -69,7 +69,7 @@ public class SystemConfiguration
     loadPropsFromStream(RESPONDER_PROPERTIES_FILE);
 
     // Try to load the local properties files, if they exists
-    loadPropsFromDir(LOCAL_PROPERTIES_DIR);
+    loadPropsFromDir(getProperty(LOCAL_PROPERTIES_DIR));
   }
 
   /**

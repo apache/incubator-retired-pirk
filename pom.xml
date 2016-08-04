@@ -101,6 +101,7 @@
 		<elasticsearch.version>2.3.3</elasticsearch.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
+		<jackson.version>2.8.1</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -257,6 +258,13 @@
 			<version>2.6.2</version>
 		</dependency>
 
+		<!-- Jackson dependency -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -395,6 +403,7 @@
 							<configuration>
 								<shadedArtifactAttached>true</shadedArtifactAttached>
 								<shadedClassifierName>exe</shadedClassifierName>
+								<minimizeJar>true</minimizeJar>
 								<transformers>
 									<transformer
 											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -499,6 +508,17 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<configuration>
+						<javadocDirectory>docs</javadocDirectory>
+						<testJavadocDirectory>docs/test</testJavadocDirectory>
+						<javadocVersion>1.8</javadocVersion>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -511,7 +531,7 @@
 			be explicitly provided. -->
 			<id>integration-tests</id>
 			<build>
-				<plugins>
+			<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>

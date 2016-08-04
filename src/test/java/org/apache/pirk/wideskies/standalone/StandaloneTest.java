@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.wideskies.standalone;
+package org.apache.pirk.wideskies.standalone;
 
 import java.util.ArrayList;
 
