@@ -108,7 +108,7 @@ public class DataSchemaLoader
    *          If true, specifies that the data schema is an hdfs file; if
    *          false, that it is a regular file.
    * @param fs
-   *          Used only when {@paramref hdfs} is true; the {@link FileSystem}
+   *          Used only when {@code hdfs} is true; the {@link FileSystem}
    *          handle for the hdfs in which the data schema exists
    * @throws Exception
    */
@@ -198,7 +198,7 @@ public class DataSchemaLoader
     return dataSchema;
   }
 
-  /*
+  /**
    * Parses and normalizes the XML document available on the given stream.
    * @param stream
    *          The input stream.
@@ -224,7 +224,7 @@ public class DataSchemaLoader
     return doc;
   }
 
-  /*
+  /**
    * Extracts a data schema element node's contents
    * @param eElement
    *          A data schema element node.
@@ -280,7 +280,7 @@ public class DataSchemaLoader
     logger.info("name = " + name + " javaType = " + type + " isArray = " + schema.getArrayElements().contains(name) + " partitioner " + partitionerTypeName);
   }
 
-  /*
+  /**
    * Checks the given type name is a supported Java primitive type, and throws a PIRException if not.
    *
    * @param typeName
@@ -295,7 +295,7 @@ public class DataSchemaLoader
     }
   }
 
-  /*
+  /**
    * Creates a new instance of a class with the given type name.
    * 
    * Throws an exception if the class cannot be instantiated, or it does not implement the required interface.
