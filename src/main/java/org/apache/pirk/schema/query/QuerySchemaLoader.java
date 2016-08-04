@@ -344,7 +344,7 @@ public class QuerySchemaLoader
   /**
    * Instantiate the specified filter.
    *
-   * Exceptions derive from call to {@link FilterFactory.getFilter}
+   * Exceptions derive from call to the {@code getFilter} method of {@link FilterFactory}
    * @param filterTypeName
    *          The name of the filter class we are instantiating
    * @param filteredElementNames
