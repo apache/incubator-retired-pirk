@@ -45,13 +45,12 @@ public class ModularInverseBenchmark
 
   private static final int MODULUS_SIZE = 3074;
   private static final int FACTOR_SIZE = MODULUS_SIZE * 2;
-  
+
   @State(Scope.Benchmark) public static class ModularInverseBenchmarkState
   {
     // Instantiate a Paillier object so we can grab the N-squared from it: 
     Paillier paillier = null;
-    
-    
+
     BigInteger factor1 = null;
     BigInteger modulus = null;
 
@@ -64,13 +63,13 @@ public class ModularInverseBenchmark
       try
       {
         // Create a new large number with the second highest bit definitely set
-        paillier = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE-2);
+        paillier = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE - 2);
       } catch (PIRException e)
       {
         System.out.printf("Couldn't build paillier object!\n");
       }
-      
-      factor1 = ModularMultiplyBenchmark.getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE-2);
+
+      factor1 = ModularMultiplyBenchmark.getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
       modulus = paillier.getNSquared();
     }
   }

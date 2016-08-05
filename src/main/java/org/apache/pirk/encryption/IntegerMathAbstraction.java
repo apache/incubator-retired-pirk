@@ -26,17 +26,29 @@ import com.squareup.jnagmp.Gmp;
 
 /**
  * This class is designed to offer a one-stop-shop for invoking the desired version of
- * modPow and modularMultiply
+ * modPow, modularMultiply, and modInverse
  */
 public final class IntegerMathAbstraction
 {
-  
+
   private static boolean useGMPForModPow, useGMPConstantTimeMethods, useGMPmodularMultiply, useGMPmodularInverse;
-  
+
   static
   {
     // Load the configuration
     reloadConfiguration();
+  }
+
+  /**
+   * Reloads the configuration options for this class. They control which implementations are used for integer
+   * math: GMP or BigInteger.
+   */
+  public static void reloadConfiguration()
+  {
+    useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
+    useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
+    useGMPmodularMultiply = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
+    useGMPmodularInverse = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
   }
 
   /**
@@ -117,11 +129,11 @@ public final class IntegerMathAbstraction
 
     return result;
   }
-  
+
   public static BigInteger modInverse(BigInteger dividend, BigInteger modulus)
   {
-    BigInteger result; 
-    
+    BigInteger result;
+
     if (useGMPmodularInverse)
     {
       result = Gmp.modInverse(dividend, modulus);
@@ -130,16 +142,7 @@ public final class IntegerMathAbstraction
     {
       result = dividend.modInverse(modulus);
     }
-    
-    return result;
-  }
-  
 
-  public static void reloadConfiguration()
-  {
-    useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
-    useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
-    useGMPmodularMultiply = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
-    useGMPmodularInverse = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
+    return result;
   }
 }

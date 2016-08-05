@@ -60,9 +60,9 @@ public class ModularMultiplyBenchmark
       try
       {
         // Create a new large numbers with the second highest bit definitely set
-        factor1 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE-2);
-        factor2 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE-2);
-        modulus = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE-2).getNSquared();
+        factor1 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
+        factor2 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
+        modulus = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE - 2).getNSquared();
       } catch (PIRException e)
       {
         System.out.printf("Couldn't build paillier object!\n");
@@ -70,16 +70,15 @@ public class ModularMultiplyBenchmark
     }
   }
 
-  public static BigInteger getRandomBigIntegerWithBitSet(int bitlength, int bitset) 
+  public static BigInteger getRandomBigIntegerWithBitSet(int bitlength, int bitset)
   {
     BigInteger toReturn = null;
-    do 
+    do
     {
       toReturn = new BigInteger(bitlength, rand);
-    } while(!toReturn.testBit(bitset));
+    } while (!toReturn.testBit(bitset));
     return toReturn;
   }
-  
 
   @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(ModularMultiplyBenchmarkState allState)
   {
