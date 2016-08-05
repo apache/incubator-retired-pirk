@@ -21,7 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
     BigInteger element = query.getQueryElement(queryHashKey);
     for (int i = 0; i <= maxValue; ++i)
     {
-      BigInteger modPow = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+      BigInteger modPow = IntegerMathAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
       Tuple2<Integer,BigInteger> modPowTuple = new Tuple2<>(i, modPow);
       modExp.add(new Tuple2<>(queryHashKey, modPowTuple));
     }

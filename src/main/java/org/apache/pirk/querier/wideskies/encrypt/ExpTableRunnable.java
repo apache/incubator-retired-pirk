@@ -22,7 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class ExpTableRunnable implements Runnable
       HashMap<Integer,BigInteger> powMap = new HashMap<>(); // <power, element^power mod N^2>
       for (int i = 0; i <= maxValue; ++i)
       {
-        BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+        BigInteger value = IntegerMathAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
 
         powMap.put(i, value);
       }

@@ -22,6 +22,7 @@ import java.math.BigInteger;
 
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +56,7 @@ public class EncColMultGroupedMapper implements PairFunction<Tuple2<Long,Iterabl
     BigInteger colVal = BigInteger.ONE;
     for (BigInteger col : colVals._2)
     {
-      colVal = colVal.multiply(col).mod(query.getNSquared());
+      colVal = IntegerMathAbstraction.modularMultiply(colVal, col, query.getNSquared());
     }
 
     // long endTime = System.currentTimeMillis();

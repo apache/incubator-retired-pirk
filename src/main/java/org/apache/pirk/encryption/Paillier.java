@@ -247,7 +247,7 @@ public class Paillier implements Cloneable, Serializable
     // lambda(N) = lcm(p-1,q-1)
     lambdaN = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE)).divide(p.subtract(BigInteger.ONE).gcd(q.subtract(BigInteger.ONE)));
 
-    w = lambdaN.modInverse(N); // lambda(N)^-1 mod N
+    w = IntegerMathAbstraction.modInverse(lambdaN, N); // lambda(N)^-1 mod N
   }
 
   /**
@@ -279,7 +279,7 @@ public class Paillier implements Cloneable, Serializable
 
     // E(m) = (1 + mN)r^N mod N^2 = (((1+mN) mod N^2) * (r^N mod N^2)) mod N^2
     BigInteger term1 = (m.multiply(N).add(BigInteger.ONE)).mod(NSquared);
-    BigInteger term2 = ModPowAbstraction.modPow(r, N, NSquared);
+    BigInteger term2 = IntegerMathAbstraction.modPow(r, N, NSquared);
 
     return (term1.multiply(term2)).mod(NSquared);
   }
@@ -290,7 +290,7 @@ public class Paillier implements Cloneable, Serializable
   public BigInteger decrypt(BigInteger c)
   {
     // w = lambda(N)^-1 mod N; x = c^(lambda(N)) mod N^2; y = (x-1)/N; d = yw mod N
-    BigInteger x = ModPowAbstraction.modPow(c, lambdaN, NSquared);
+    BigInteger x = IntegerMathAbstraction.modPow(c, lambdaN, NSquared);
     BigInteger y = (x.subtract(BigInteger.ONE)).divide(N);
 
     return (y.multiply(w)).mod(N);

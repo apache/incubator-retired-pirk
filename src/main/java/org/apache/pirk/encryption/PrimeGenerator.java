@@ -265,14 +265,14 @@ public class PrimeGenerator
 
       // Construct z = b^m mod w, step 4.3
       int j = 0;
-      BigInteger z = ModPowAbstraction.modPow(b, m, w);
+      BigInteger z = IntegerMathAbstraction.modPow(b, m, w);
       while (!((j == 0 && z.equals(BigInteger.ONE)) || z.equals(wMinusOne))) // step 4.4-4.5
       {
         if (j > 0 && z.equals(BigInteger.ONE) || ++j == a)
         {
           return false;
         }
-        z = ModPowAbstraction.modPow(z, BigInteger.valueOf(2), w); // step 4.5.1
+        z = IntegerMathAbstraction.modPow(z, BigInteger.valueOf(2), w); // step 4.5.1
       }
     }
     return true;

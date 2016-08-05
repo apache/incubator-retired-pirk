@@ -25,7 +25,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
@@ -200,9 +200,9 @@ public class Responder
       // without lookup table
       {
         logger.debug("i = " + i + " hitValPartitions.get(i).intValue() = " + hitValPartitions.get(i).intValue());
-        exp = ModPowAbstraction.modPow(rowQuery, hitValPartitions.get(i), query.getNSquared());
+        exp = IntegerMathAbstraction.modPow(rowQuery, hitValPartitions.get(i), query.getNSquared());
       }
-      column = (column.multiply(exp)).mod(query.getNSquared());
+      column = IntegerMathAbstraction.modularMultiply(column, exp, query.getNSquared());
 
       columns.put(i + rowCounter, column);
 
