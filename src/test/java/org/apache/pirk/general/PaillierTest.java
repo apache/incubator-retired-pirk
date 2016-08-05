@@ -25,6 +25,7 @@ import java.math.BigInteger;
 import java.util.Random;
 
 import org.apache.pirk.encryption.Paillier;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.BeforeClass;
@@ -190,7 +191,7 @@ public class PaillierTest
     assertEquals(decM2, m2);
 
     // Check homomorphic property: E_r1(m1)*E_r2(m2) mod N^2 = E_r1r2((m1+m2) mod N) mod N^2
-    BigInteger encM1_times_encM2 = (encM1.multiply(encM2)).mod(NSquared);
+    BigInteger encM1_times_encM2 = IntegerMathAbstraction.modularMultiply(encM1, encM2, NSquared);
     BigInteger encM1plusM2 = pailler.encrypt((m1.add(m2)).mod(N), r1.multiply(r2));
     logger.info("encM1_times_encM2 = " + encM1_times_encM2.intValue() + " encM1plusM2 = " + encM1plusM2.intValue());
 
@@ -281,7 +282,7 @@ public class PaillierTest
     assertEquals(decM2, m2);
 
     // Check homomorphic property: E_r1(m1)*E_r2(m2) mod N^2 = E_r1r2((m1+m2) mod N) mod N^2
-    BigInteger encM1_times_encM2 = (encM1.multiply(encM2)).mod(geneartedNsquared);
+    BigInteger encM1_times_encM2 = IntegerMathAbstraction.modularMultiply(encM1, encM2, geneartedNsquared);
     BigInteger multDecrypt = pailler.decrypt(encM1_times_encM2);
     BigInteger m1_plus_m2 = (m1.add(m2)).mod(N);
 
