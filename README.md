@@ -19,6 +19,7 @@ limitations under the License.
 --
 
 [![Build Status](https://api.travis-ci.org/apache/incubator-pirk.svg?branch=master)](https://travis-ci.org/apache/incubator-pirk?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/apache/incubator-pirk/badge.svg?branch=master)](https://coveralls.io/github/apache/incubator-pirk?branch=master)
 --
 
 [Apache Pirk (incubating)](http://pirk.incubator.apache.org/) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
