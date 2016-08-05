@@ -25,22 +25,28 @@ import org.apache.pirk.utils.SystemConfiguration;
 import com.squareup.jnagmp.Gmp;
 
 /**
- * This class is designed to offer a one-stop-shop for invoking the desired version of modPow
+ * This class is designed to offer a one-stop-shop for invoking the desired version of
+ * modPow and modularMultiply
  */
-public final class ModPowAbstraction
+public final class IntegerMathAbstraction
 {
-  private static boolean useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
-
-  private static boolean useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
+  
+  private static boolean useGMPForModPow, useGMPConstantTimeMethods, useGMPmodularMultiply, useGMPmodularInverse;
+  
+  static
+  {
+    // Load the configuration
+    reloadConfiguration();
+  }
 
   /**
    * Performs modPow: ({@code base}^{@code exponent}) mod {@code modulus}
-   * 
-   * This method uses the values of {@code paillier.useGMPForModPow} and {@code paillier.GMPConstantTimeMode} as they were when the class was loaded to decide
-   * which implementation of modPow to invoke.
-   * 
-   * These values can be reloaded by invoking static method {@code ModPowAbstraction.reloadConfiguration()}
-   * 
+   * <p>
+   * This method uses the values of {@code paillier.useGMPForModPow} and {@code paillier.GMPConstantTimeMode}
+   * as they were when the class was loaded to decide which implementation of modPow to invoke.
+   * <p>
+   * These values can be reloaded by invoking static method {@code IntegerMathAbstraction.reloadConfiguration()}
+   *
    * @return The result of modPow
    */
   public static BigInteger modPow(BigInteger base, BigInteger exponent, BigInteger modulus)
@@ -83,9 +89,57 @@ public final class ModPowAbstraction
     return modPow(BigInteger.valueOf(base), exponent, modulus);
   }
 
+  /**
+   * Performs modular multiply: ({@code factor1}*{@code factor2}) mod {@code modulus}
+   * <p>
+   * This method uses the value of {@code paillier.useGMPForModularMultiply} as it was set
+   * when the class was loaded to decide which implementation of modular multiplication to invoke.
+   * <p>
+   * These values can be reloaded by invoking static method {@code IntegerMathAbstraction.reloadConfiguration()}
+   *
+   * @param factor1 the first factor to the multiplication
+   * @param factor2 the second factor to the multiplication
+   * @param modulus the modulus to be applied to ({@code factor1}*{@code factor2})
+   * @return ({@code factor1}*{@code factor2}) mod {@code modulus}
+   */
+  public static BigInteger modularMultiply(BigInteger factor1, BigInteger factor2, BigInteger modulus)
+  {
+    BigInteger result;
+
+    if (useGMPmodularMultiply)
+    {
+      result = Gmp.modularMultiply(factor1, factor2, modulus);
+    }
+    else
+    {
+      result = factor1.multiply(factor2).mod(modulus);
+    }
+
+    return result;
+  }
+  
+  public static BigInteger modInverse(BigInteger dividend, BigInteger modulus)
+  {
+    BigInteger result; 
+    
+    if (useGMPmodularInverse)
+    {
+      result = Gmp.modInverse(dividend, modulus);
+    }
+    else
+    {
+      result = dividend.modInverse(modulus);
+    }
+    
+    return result;
+  }
+  
+
   public static void reloadConfiguration()
   {
     useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
     useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
+    useGMPmodularMultiply = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
+    useGMPmodularInverse = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
   }
 }
