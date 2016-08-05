@@ -34,93 +34,81 @@ import org.openjdk.jmh.annotations.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A JMH benchmark to evaluate Paillier performance both with and without using com.square.jnagmp.gmp to accelerate modPow
- * <p>
- * Guides to using JMH can be found at: http://tutorials.jenkov.com/java-performance/jmh.html and http://nitschinger.at/Using-JMH-for-Java-Microbenchmarking/
- */
+import java.security.SecureRandom;
 
-public class PaillierBenchmark
+public class ModularMultiplyBenchmark
 {
-  private static final int MODULUS_SIZE = 3074;
   private static final Logger logger = LoggerFactory.getLogger(PaillierBenchmark.class);
 
-  @State(Scope.Benchmark)
-  public static class PaillierBenchmarkState
-  {
-    BigInteger r1 = null; // random number in (Z/NZ)*
-    BigInteger m1 = null; // message to encrypt
+  private static final SecureRandom rand = new SecureRandom();
 
-    Paillier paillier = null;
+  private static final int MODULUS_SIZE = 3074;
+  private static final int FACTOR_SIZE = MODULUS_SIZE * 2;
+
+  @State(Scope.Benchmark) public static class ModularMultiplyBenchmarkState
+  {
+    BigInteger factor1 = null;
+    BigInteger factor2 = null;
+    BigInteger modulus = null;
 
     /**
      * This sets up the state for the two separate benchmarks
      */
-    @Setup(org.openjdk.jmh.annotations.Level.Trial)
-    public void setUp()
+    @Setup(org.openjdk.jmh.annotations.Level.Trial) public void setUp()
     {
       int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "100"));
       try
       {
-        paillier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);
-
+        // Create a new large numbers with the second highest bit definitely set
+        factor1 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE-2);
+        factor2 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE-2);
+        modulus = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE-2).getNSquared();
       } catch (PIRException e)
       {
         System.out.printf("Couldn't build paillier object!\n");
       }
-
-      r1 = BigInteger.valueOf(3);
-      m1 = BigInteger.valueOf(5);
     }
   }
 
-  @Benchmark
-  @BenchmarkMode(Mode.Throughput)
-  public void testWithGMP(PaillierBenchmarkState allState)
+  public static BigInteger getRandomBigIntegerWithBitSet(int bitlength, int bitset) 
   {
-    SystemConfiguration.setProperty("paillier.useGMPForModPow", "true");
-    SystemConfiguration.setProperty("paillier.GMPConstantTimeMode", "false");
+    BigInteger toReturn = null;
+    do 
+    {
+      toReturn = new BigInteger(bitlength, rand);
+    } while(!toReturn.testBit(bitset));
+    return toReturn;
+  }
+  
+
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(ModularMultiplyBenchmarkState allState)
+  {
+    SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.paillier.encrypt(allState.m1, allState.r1);
-    } catch (PIRException e)
+      IntegerMathAbstraction.modularMultiply(allState.factor1, allState.factor2, allState.modulus);
+    } catch (Exception e)
     {
-      logger.info("Exception in testWithGMP!\n");
+      logger.error("Exception in testWithGMP!\n" + e);
+      System.exit(1);
     }
   }
 
-  @Benchmark
-  @BenchmarkMode(Mode.Throughput)
-  public void testWithGMPConstantTime(PaillierBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(ModularMultiplyBenchmarkState allState)
   {
-    SystemConfiguration.setProperty("paillier.useGMPForModPow", "true");
-    SystemConfiguration.setProperty("paillier.GMPConstantTimeMode", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "false");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.paillier.encrypt(allState.m1, allState.r1);
-    } catch (PIRException e)
+      IntegerMathAbstraction.modularMultiply(allState.factor1, allState.factor2, allState.modulus);
+    } catch (Exception e)
     {
-      logger.info("Exception in testWithGMPConstantTime!\n");
+      logger.error("Exception in testWithoutGMP!\n" + e);
+      System.exit(1);
     }
   }
 
-  @Benchmark
-  @BenchmarkMode(Mode.Throughput)
-  public void testWithoutGMP(PaillierBenchmarkState allState)
-  {
-    SystemConfiguration.setProperty("paillier.useGMPForModPow", "false");
-    IntegerMathAbstraction.reloadConfiguration();
-
-    try
-    {
-      allState.paillier.encrypt(allState.m1, allState.r1);
-    } catch (PIRException e)
-    {
-      logger.info("Exception in testWithoutGMP!\n");
-    }
-  }
 }
