@@ -75,7 +75,17 @@
 			<id>conjars.org</id>
 			<url>http://conjars.org/repo</url>
 		</repository>
-             
+		
+		<!-- This repository is TEMPORARY while we pilot additions to JNA-GMP -->
+		<!-- before we do a pull request and wait for Square to do a release  -->
+		<repository>
+			<id>jna-gmp-mvn-repo-jacobwil</id>
+			<url>https://raw.github.com/jacobwil/jna-gmp/mvn-repo</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository> 
 	</repositories>
 
 	<properties>
@@ -156,11 +166,12 @@
 			</exclusions>
 		</dependency>
 		
-		<!-- Square's JNA GMP module-->
+		<!-- Square's JNA GMP module -->
+		<!-- This version is pulled from jacobwil's github *temporarily* -->
 		<dependency>
-		    <groupId>com.squareup.jnagmp</groupId>
-		    <artifactId>jnagmp</artifactId>
-		    <version>1.1.0</version>
+			<groupId>com.squareup.jnagmp</groupId>
+			<artifactId>jnagmp</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
 		</dependency>
 		<!-- JMH for benchmarking the Paillier functions -->
 		<dependency>
