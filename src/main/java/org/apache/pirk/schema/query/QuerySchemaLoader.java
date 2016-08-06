@@ -19,6 +19,7 @@
 package org.apache.pirk.schema.query;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -50,15 +51,15 @@ import org.xml.sax.SAXException;
  * Class to load any query schemas specified in the properties file, 'query.schemas'
  * <p>
  * Schemas should be specified as follows:
- * 
- * <pre>
- * {@code
- *  <schema>
+ *
+ * <pre>{@code
+ * <schema>
  *    <schemaName> name of the schema </schemaName>
  *    <dataSchemaName> name of the data schema over which this query is run </dataSchemaName>
  *    <selectorName> name of the element in the data schema that will be the selector </selectorName>
  *    <elements>
- *       <name> element name of element in the data schema to include in the query response </name>
+ *       <name> element name of element in the data schema to include in the query response; just
+ *              as with the data schema, the element name is case sensitive</name>
  *    </elements>
  *    <filter> (optional) name of the filter class to use to filter the data </filter>
  *    <filterNames> (optional)
@@ -91,12 +92,28 @@ public class QuerySchemaLoader
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link QuerySchemaRegistry} with a list of
+   * query schema names.
+   * @throws Exception
+   */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link QuerySchemaRegistry} with a list of
+   * available query schema names.
+   * @param hdfs
+   *    If true, specifies that the query schema is an hdfs file; if false,
+   *    that it is a regular file.
+   * @param fs
+   *    Used only when {@code hdfs} is true; the {@link FileSystem} handle
+   *    for the hdfs in which the query schema exists
+   * @throws Exception
+   */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String querySchemas = SystemConfiguration.getProperty("query.schemas", "none");
@@ -111,7 +128,7 @@ public class QuerySchemaLoader
 
       // Parse and load the schema file into a QuerySchema object; place in the schemaMap
       QuerySchemaLoader loader = new QuerySchemaLoader();
-      InputStream is;
+      InputStream is = null;
       if (hdfs)
       {
         is = fs.open(new Path(schemaFile));
@@ -119,17 +136,26 @@ public class QuerySchemaLoader
       }
       else
       {
-        is = new FileInputStream(schemaFile);
-        logger.info("localFS: inputFile = " + schemaFile);
+        try
+        {
+          is = new FileInputStream(schemaFile);
+          logger.info("localFS: inputFile = " + schemaFile);
+        } catch (FileNotFoundException e)
+        {
+          logger.info("localFS: inputFile = " + schemaFile + " not found");
+        }
       }
 
-      try
+      if (is != null)
       {
-        QuerySchema querySchema = loader.loadSchema(is);
-        QuerySchemaRegistry.put(querySchema);
-      } finally
-      {
-        is.close();
+        try
+        {
+          QuerySchema querySchema = loader.loadSchema(is);
+          QuerySchemaRegistry.put(querySchema);
+        } finally
+        {
+          is.close();
+        }
       }
     }
   }
@@ -149,9 +175,9 @@ public class QuerySchemaLoader
    *          The source of the XML query schema description.
    * @return The query schema.
    * @throws IOException
-   *           A problem occurred reading from the given stream.
+   *          A problem occurred reading from the given stream.
    * @throws PIRException
-   *           The schema description is invalid.
+   *          The schema description is invalid.
    */
   public QuerySchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -239,8 +265,13 @@ public class QuerySchemaLoader
     return querySchema;
   }
 
-  /*
+  /**
    * Parses and normalizes the XML document available on the given stream.
+   * @param stream
+   *          The input stream.
+   * @return A Document representing the XML document.
+   * @throws IOException
+   * @throws PIRException
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -259,8 +290,13 @@ public class QuerySchemaLoader
     return doc;
   }
 
-  /*
+  /**
    * Returns the possibly empty set of element names over which the filter is applied, maintaining document order.
+   *
+   * @param doc
+   *          An XML document specifying names upon which we will filter the query.
+   * @return The set of names upon which we will filter the query.
+   * @throws PIRException
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
   {
@@ -293,10 +329,17 @@ public class QuerySchemaLoader
     return filteredNamesSet;
   }
 
-  /*
+  /**
    * Extracts a top level, single value from the XML structure.
    * 
    * Throws an exception if there is not exactly one tag with the given name.
+   *
+   * @param doc
+   *          The XML document from which we extract data
+   * @param tagName
+   *          The name of the tag we wish to extract from the {@code doc}
+   * @return The text content of the tag.
+   * @throws PIRException
    */
   private String extractValue(Document doc, String tagName) throws PIRException
   {
@@ -308,6 +351,18 @@ public class QuerySchemaLoader
     return itemList.item(0).getTextContent().trim();
   }
 
+  /**
+   * Instantiate the specified filter.
+   *
+   * Exceptions derive from call to the {@code getFilter} method of {@link FilterFactory}
+   * @param filterTypeName
+   *          The name of the filter class we are instantiating
+   * @param filteredElementNames
+   *          The set of names of elements of the data schema up which the filter will act.
+   * @return An instantiation of the filter, set up to filter upon the specified names.
+   * @throws IOException
+   * @throws PIRException
+   */
   private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
   {
     return filterTypeName.equals(NO_FILTER) ? null : FilterFactory.getFilter(filterTypeName, filteredElementNames);

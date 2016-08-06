@@ -18,6 +18,7 @@
  */
 package org.apache.pirk.schema.data;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -277,5 +278,14 @@ public class DataSchema implements Serializable
     }
 
     return (DataPartitioner) obj;
+  }
+
+  private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+  {
+    in.defaultReadObject();
+
+    // Initialize transient elements
+    partitionerInstances = new HashMap<>();
+    textRep = new HashMap<>();
   }
 }
