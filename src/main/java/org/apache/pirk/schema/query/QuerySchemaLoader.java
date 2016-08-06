@@ -19,6 +19,7 @@
 package org.apache.pirk.schema.query;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -127,7 +128,7 @@ public class QuerySchemaLoader
 
       // Parse and load the schema file into a QuerySchema object; place in the schemaMap
       QuerySchemaLoader loader = new QuerySchemaLoader();
-      InputStream is;
+      InputStream is = null;
       if (hdfs)
       {
         is = fs.open(new Path(schemaFile));
@@ -135,17 +136,26 @@ public class QuerySchemaLoader
       }
       else
       {
-        is = new FileInputStream(schemaFile);
-        logger.info("localFS: inputFile = " + schemaFile);
+        try
+        {
+          is = new FileInputStream(schemaFile);
+          logger.info("localFS: inputFile = " + schemaFile);
+        } catch (FileNotFoundException e)
+        {
+          logger.info("localFS: inputFile = " + schemaFile + " not found");
+        }
       }
 
-      try
+      if (is != null)
       {
-        QuerySchema querySchema = loader.loadSchema(is);
-        QuerySchemaRegistry.put(querySchema);
-      } finally
-      {
-        is.close();
+        try
+        {
+          QuerySchema querySchema = loader.loadSchema(is);
+          QuerySchemaRegistry.put(querySchema);
+        } finally
+        {
+          is.close();
+        }
       }
     }
   }
