@@ -47,17 +47,18 @@ import org.xml.sax.SAXException;
  * Class to load any data schemas specified in the properties file, 'data.schemas'
  * <p>
  * Schemas should be specified as follows:
- * 
- * <pre>
- * {@code
+ *
+ * <pre>{@code
  * <schema>
- *  <schemaName> name of the schema </schemaName>
- *  <element>
- *      <name> element name /name>
- *      <type> class name or type name (if Java primitive type) of the element </type>
- *      <isArray> true or false -- whether or not the schema element is an array within the data </isArray>
- *      <partitioner> optional - Partitioner class for the element; defaults to primitive java type partitioner </partitioner> 
- *  </element>
+ *    <schemaName> name of the schema </schemaName>
+ *    <element>
+ *        <name> element name; note that element names are case sensitive </name>
+ *        <type> class name or type name (if Java primitive type) of the element </type>
+ *        <isArray> whether or not the schema element is an array within the data.
+ *                  Set to true by including this tag with no text or the string "true" (comparison is case-insensitive).
+ *                  Omitting this tag or using any other text indicates this element is not an array.</isArray>
+ *        <partitioner> optional - Partitioner class for the element; defaults to primitive java type partitioner </partitioner>
+ *    </element>
  * </schema>
  * }
  * </pre>
@@ -87,13 +88,31 @@ public class DataSchemaLoader
     }
   }
 
+
+
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link DataSchemaRegistry} with a list of
+   * available data schema names.
+   * @throws Exception
+   */
   public static void initialize() throws Exception
   {
     initialize(false, null);
   }
 
   /* Kept for compatibility */
+  /**
+   * Initializes the static {@link DataSchemaRegistry} with a list of
+   * available data schema names.
+   * @param hdfs
+   *          If true, specifies that the data schema is an hdfs file; if
+   *          false, that it is a regular file.
+   * @param fs
+   *          Used only when {@code hdfs} is true; the {@link FileSystem}
+   *          handle for the hdfs in which the data schema exists
+   * @throws Exception
+   */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
@@ -154,9 +173,9 @@ public class DataSchemaLoader
    *          The source of the XML data schema description.
    * @return The data schema.
    * @throws IOException
-   *           A problem occurred reading from the given stream.
+   *          A problem occurred reading from the given stream.
    * @throws PIRException
-   *           The schema description is invalid.
+   *          The schema description is invalid.
    */
   public DataSchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -189,6 +208,15 @@ public class DataSchemaLoader
     return dataSchema;
   }
 
+  /**
+   * Parses and normalizes the XML document available on the given stream.
+   * @param stream
+   *          The input stream.
+   * @return
+   *          A {@link Document} representing the XML document.
+   * @throws IOException
+   * @throws PIRException
+   */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
     Document doc;
@@ -206,6 +234,14 @@ public class DataSchemaLoader
     return doc;
   }
 
+  /**
+   * Extracts a data schema element node's contents
+   * @param eElement
+   *          A data schema element node.
+   * @param schema
+   *          The data schema
+   * @throws PIRException
+   */
   private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
   {
     // Pull out the element name and type attributes.
@@ -213,7 +249,7 @@ public class DataSchemaLoader
     String type = eElement.getElementsByTagName("type").item(0).getTextContent().trim();
     schema.getTypeMap().put(name, type);
 
-    // An absent isArray means false, and an empty isArray means true, otherwise take the value.
+    // An empty isArray or one whose value evaluates to "true" is an array; otherwise (including absence) the element is not an array
     Node isArrayNode = eElement.getElementsByTagName("isArray").item(0);
     if (isArrayNode != null)
     {
@@ -254,8 +290,12 @@ public class DataSchemaLoader
     logger.info("name = " + name + " javaType = " + type + " isArray = " + schema.getArrayElements().contains(name) + " partitioner " + partitionerTypeName);
   }
 
-  /*
+  /**
    * Checks the given type name is a supported Java primitive type, and throws a PIRException if not.
+   *
+   * @param typeName
+   *          The type name to check.
+   * @throws PIRException
    */
   void validateIsPrimitiveType(String typeName) throws PIRException
   {
@@ -265,10 +305,16 @@ public class DataSchemaLoader
     }
   }
 
-  /*
+  /**
    * Creates a new instance of a class with the given type name.
    * 
    * Throws an exception if the class cannot be instantiated, or it does not implement the required interface.
+   *
+   * @param partitionerTypeName
+   *          The name of the {@link DataPartitioner} subclass to instantiate.
+   * @return
+   *          An instance of the named {@link DataPartitioner} subclass.
+   * @throws PIRException
    */
   DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
