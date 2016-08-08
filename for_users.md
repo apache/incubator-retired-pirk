@@ -17,7 +17,7 @@ nav: nav_users
 
 ## System Requirements
 
-Pirk requires JDK 1.7 (or greater). The remaining system requirements depend on the platform chosen for the Querier and Responder.
+Pirk requires JDK 1.8. The remaining system requirements depend on the platform chosen for the Querier and Responder.
 
 ## Target Data
 
