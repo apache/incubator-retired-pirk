@@ -48,7 +48,8 @@ import org.xml.sax.SAXException;
  * <p>
  * Schemas should be specified as follows:
  *
- * <pre>{@code
+ * <pre>
+ * {@code
  * <schema>
  *    <schemaName> name of the schema </schemaName>
  *    <element>
@@ -88,12 +89,10 @@ public class DataSchemaLoader
     }
   }
 
-
-
   /* Kept for compatibility */
   /**
-   * Initializes the static {@link DataSchemaRegistry} with a list of
-   * available data schema names.
+   * Initializes the static {@link DataSchemaRegistry} with a list of available data schema names.
+   * 
    * @throws Exception
    */
   public static void initialize() throws Exception
@@ -103,14 +102,12 @@ public class DataSchemaLoader
 
   /* Kept for compatibility */
   /**
-   * Initializes the static {@link DataSchemaRegistry} with a list of
-   * available data schema names.
+   * Initializes the static {@link DataSchemaRegistry} with a list of available data schema names.
+   * 
    * @param hdfs
-   *          If true, specifies that the data schema is an hdfs file; if
-   *          false, that it is a regular file.
+   *          If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
    * @param fs
-   *          Used only when {@code hdfs} is true; the {@link FileSystem}
-   *          handle for the hdfs in which the data schema exists
+   *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
    * @throws Exception
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
@@ -173,9 +170,9 @@ public class DataSchemaLoader
    *          The source of the XML data schema description.
    * @return The data schema.
    * @throws IOException
-   *          A problem occurred reading from the given stream.
+   *           A problem occurred reading from the given stream.
    * @throws PIRException
-   *          The schema description is invalid.
+   *           The schema description is invalid.
    */
   public DataSchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -210,10 +207,10 @@ public class DataSchemaLoader
 
   /**
    * Parses and normalizes the XML document available on the given stream.
+   * 
    * @param stream
    *          The input stream.
-   * @return
-   *          A {@link Document} representing the XML document.
+   * @return A {@link Document} representing the XML document.
    * @throws IOException
    * @throws PIRException
    */
@@ -236,6 +233,7 @@ public class DataSchemaLoader
 
   /**
    * Extracts a data schema element node's contents
+   * 
    * @param eElement
    *          A data schema element node.
    * @param schema
@@ -312,8 +310,7 @@ public class DataSchemaLoader
    *
    * @param partitionerTypeName
    *          The name of the {@link DataPartitioner} subclass to instantiate.
-   * @return
-   *          An instance of the named {@link DataPartitioner} subclass.
+   * @return An instance of the named {@link DataPartitioner} subclass.
    * @throws PIRException
    */
   DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException

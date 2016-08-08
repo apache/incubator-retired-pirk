@@ -52,7 +52,8 @@ import org.xml.sax.SAXException;
  * <p>
  * Schemas should be specified as follows:
  *
- * <pre>{@code
+ * <pre>
+ * {@code
  * <schema>
  *    <schemaName> name of the schema </schemaName>
  *    <dataSchemaName> name of the data schema over which this query is run </dataSchemaName>
@@ -93,8 +94,8 @@ public class QuerySchemaLoader
 
   /* Kept for compatibility */
   /**
-   * Initializes the static {@link QuerySchemaRegistry} with a list of
-   * query schema names.
+   * Initializes the static {@link QuerySchemaRegistry} with a list of query schema names.
+   * 
    * @throws Exception
    */
   public static void initialize() throws Exception
@@ -104,14 +105,12 @@ public class QuerySchemaLoader
 
   /* Kept for compatibility */
   /**
-   * Initializes the static {@link QuerySchemaRegistry} with a list of
-   * available query schema names.
+   * Initializes the static {@link QuerySchemaRegistry} with a list of available query schema names.
+   * 
    * @param hdfs
-   *    If true, specifies that the query schema is an hdfs file; if false,
-   *    that it is a regular file.
+   *          If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
    * @param fs
-   *    Used only when {@code hdfs} is true; the {@link FileSystem} handle
-   *    for the hdfs in which the query schema exists
+   *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
    * @throws Exception
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
@@ -175,9 +174,9 @@ public class QuerySchemaLoader
    *          The source of the XML query schema description.
    * @return The query schema.
    * @throws IOException
-   *          A problem occurred reading from the given stream.
+   *           A problem occurred reading from the given stream.
    * @throws PIRException
-   *          The schema description is invalid.
+   *           The schema description is invalid.
    */
   public QuerySchema loadSchema(InputStream stream) throws IOException, PIRException
   {
@@ -267,6 +266,7 @@ public class QuerySchemaLoader
 
   /**
    * Parses and normalizes the XML document available on the given stream.
+   * 
    * @param stream
    *          The input stream.
    * @return A Document representing the XML document.
@@ -355,6 +355,7 @@ public class QuerySchemaLoader
    * Instantiate the specified filter.
    *
    * Exceptions derive from call to the {@code getFilter} method of {@link FilterFactory}
+   * 
    * @param filterTypeName
    *          The name of the filter class we are instantiating
    * @param filteredElementNames
