@@ -2,7 +2,7 @@
 title: Apache Pirk (incubating)
 skiph1fortitle: true
 nav: nav_index
-legal_notice: Apache Pirk (incubating), Apache, and the Apache feather logo, are trademarks of the [Apache Software Foundation](https://www.apache.org).
+legal_notice: Apache Pirk (incubating), Apache, the Apache Pirk logo, and the Apache feather logo, are trademarks of the [Apache Software Foundation](https://www.apache.org).
 ---
 
 <div class="row">
