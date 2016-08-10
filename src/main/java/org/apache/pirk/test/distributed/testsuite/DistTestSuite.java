@@ -347,19 +347,19 @@ public class DistTestSuite
     logger.info("fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
     boolean embedSelector = false;
-    if (SystemConfiguration.getProperty("pirTest.embedSelector", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pirTest.embedSelector", false))
     {
       embedSelector = true;
     }
 
     boolean useExpLookupTable = false;
-    if (SystemConfiguration.getProperty("pirTest.useExpLookupTable", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pirTest.useExpLookupTable", false))
     {
       useExpLookupTable = true;
     }
 
     boolean useHDFSExpLookupTable = false;
-    if (SystemConfiguration.getProperty("pirTest.useHDFSExpLookupTable", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false))
     {
       useHDFSExpLookupTable = true;
     }

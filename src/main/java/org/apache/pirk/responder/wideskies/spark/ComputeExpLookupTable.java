@@ -86,12 +86,12 @@ public class ComputeExpLookupTable
     TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
     ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
-    int numSplits = Integer.parseInt(SystemConfiguration.getProperty("pir.expCreationSplits", "100"));
+    int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
     JavaRDD<Integer> queryHashes = sc.parallelize(keys, numSplits);
 
     // Generate the exp table
     // <queryHash, <<power>,<element^power mod N^2>>
-    int numExpLookupPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
+    int numExpLookupPartitions = SystemConfiguration.getIntProperty("pir.numExpLookupPartitions", 100);
     expCalculations = queryHashes.flatMapToPair(new ExpTableGenerator(bVars)).groupByKey(numExpLookupPartitions);
 
     if (!useModExpJoin)

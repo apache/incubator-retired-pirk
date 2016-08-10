@@ -438,7 +438,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
-    int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
+    int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
     for (int i = 0; i < numArrayElementsToReturn; ++i)
     {
       if (elementList.size() > i) // we may have an element with a list rep that has fewer than numArrayElementsToReturn elements

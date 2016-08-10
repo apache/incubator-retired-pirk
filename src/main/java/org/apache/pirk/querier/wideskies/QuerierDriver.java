@@ -118,9 +118,9 @@ public class QuerierDriver implements Serializable
       dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
       paillierBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.PAILLIERBITSIZE));
       certainty = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.CERTAINTY));
-      embedSelector = SystemConfiguration.getProperty(QuerierProps.EMBEDSELECTOR, "true").equals("true");
-      useMemLookupTable = SystemConfiguration.getProperty(QuerierProps.USEMEMLOOKUPTABLE, "false").equals("true");
-      useHDFSLookupTable = SystemConfiguration.getProperty(QuerierProps.USEHDFSLOOKUPTABLE, "false").equals("true");
+      embedSelector = SystemConfiguration.getBooleanProperty(QuerierProps.EMBEDSELECTOR, true);
+      useMemLookupTable = SystemConfiguration.getBooleanProperty(QuerierProps.USEMEMLOOKUPTABLE, false);
+      useHDFSLookupTable = SystemConfiguration.getBooleanProperty(QuerierProps.USEHDFSLOOKUPTABLE, false);
 
       if (SystemConfiguration.hasProperty(QuerierProps.BITSET))
       {
@@ -169,7 +169,7 @@ public class QuerierDriver implements Serializable
       QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryName, paillierBitSize,
           useMemLookupTable, embedSelector, useHDFSLookupTable);
 
-      if (SystemConfiguration.getProperty("pir.embedQuerySchema").equals("true"))
+      if (SystemConfiguration.isSetTrue("pir.embedQuerySchema"))
       {
         queryInfo.addQuerySchema(QuerySchemaRegistry.get(queryType));
       }

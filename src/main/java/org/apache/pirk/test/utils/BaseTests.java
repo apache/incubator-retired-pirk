@@ -94,7 +94,7 @@ public class BaseTests
     logger.info("results:");
     printResultList(results);
 
-    if (isDistributed && SystemConfiguration.getProperty("pir.limitHitsPerSelector").equals("true"))
+    if (isDistributed && SystemConfiguration.isSetTrue("pir.limitHitsPerSelector"))
     {
       // 3 elements returned - one for each qname -- a.b.c.com, d.e.com, something.else
       if (results.size() != 3)
@@ -494,7 +494,7 @@ public class BaseTests
       values = StringUtils.jsonArrayStringToArrayList((String) dataMap.get(fieldName));
     }
 
-    int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
+    int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
     for (int i = 0; i < numArrayElementsToReturn; ++i)
     {
       if (i < values.size())
@@ -521,7 +521,7 @@ public class BaseTests
 
     ArrayList<Short> values = (ArrayList<Short>) dataMap.get(fieldName);
 
-    int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
+    int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
     for (int i = 0; i < numArrayElementsToReturn; ++i)
     {
       if (i < values.size())
