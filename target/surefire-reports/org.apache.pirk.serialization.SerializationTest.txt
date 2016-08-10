@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.apache.pirk.serialization.SerializationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 sec - in org.apache.pirk.serialization.SerializationTest
