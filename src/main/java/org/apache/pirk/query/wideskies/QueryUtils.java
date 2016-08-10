@@ -66,7 +66,7 @@ public class QueryUtils
     {
       String selectorFieldName = qSchema.getSelectorName();
       String type = dSchema.getElementType(selectorFieldName);
-      String embeddedSelector = getEmbeddedSelectorFromPartitions(parts, partsIndex, type, (dSchema.getPartitionerForElement(selectorFieldName)));
+      String embeddedSelector = getEmbeddedSelectorFromPartitions(parts, partsIndex, type, dSchema.getPartitionerForElement(selectorFieldName));
 
       qrJSON.setSelector(embeddedSelector);
       partsIndex += 4;
@@ -88,10 +88,10 @@ public class QueryUtils
         String type = dSchema.getElementType(fieldName);
         logger.debug("Extracting value for fieldName = " + fieldName + " type = " + type + " partsIndex = " + partsIndex);
 
-        Object element = ((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).fromPartitions(parts, partsIndex, type);
+        Object element = dSchema.getPartitionerForElement(fieldName).fromPartitions(parts, partsIndex, type);
 
         qrJSON.setMapping(fieldName, element);
-        partsIndex += ((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).getNumPartitions(type);
+        partsIndex += dSchema.getPartitionerForElement(fieldName).getNumPartitions(type);
 
         logger.debug("Adding qrJSON element = " + element + " element.getClass() = " + element.getClass());
       }
@@ -115,7 +115,7 @@ public class QueryUtils
       String type = dSchema.getElementType(selectorFieldName);
       String selector = getSelectorByQueryTypeJSON(qSchema, jsonData);
 
-      parts.addAll(embeddedSelectorToPartitions(selector, type, (dSchema.getPartitionerForElement(selectorFieldName))));
+      parts.addAll(embeddedSelectorToPartitions(selector, type, dSchema.getPartitionerForElement(selectorFieldName)));
 
       logger.debug("Added embedded selector for selector = " + selector + " type = " + type + " parts.size() = " + parts.size());
     }
@@ -143,7 +143,7 @@ public class QueryUtils
         }
         logger.debug("Adding parts for fieldName = " + fieldName + " type = " + dSchema.getElementType(fieldName) + " jsonData = " + dataElement);
 
-        parts.addAll(((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).arrayToPartitions(elementArray, dSchema.getElementType(fieldName)));
+        parts.addAll(dSchema.getPartitionerForElement(fieldName).arrayToPartitions(elementArray, dSchema.getElementType(fieldName)));
       }
       else
       {
@@ -153,7 +153,7 @@ public class QueryUtils
         }
         logger.debug("Adding parts for fieldName = " + fieldName + " type = " + dSchema.getElementType(fieldName) + " jsonData = " + dataElement);
 
-        parts.addAll(((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).toPartitions(dataElement.toString(), dSchema.getElementType(fieldName)));
+        parts.addAll(dSchema.getPartitionerForElement(fieldName).toPartitions(dataElement.toString(), dSchema.getElementType(fieldName)));
       }
     }
     logger.debug("parts.size() = " + parts.size());
@@ -209,7 +209,7 @@ public class QueryUtils
           elementArray = Arrays.asList(((ArrayWritable) dataElement).toStrings());
         }
 
-        parts.addAll(((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).arrayToPartitions(elementArray, dSchema.getElementType(fieldName)));
+        parts.addAll(dSchema.getPartitionerForElement(fieldName).arrayToPartitions(elementArray, dSchema.getElementType(fieldName)));
       }
       else
       {
@@ -221,7 +221,7 @@ public class QueryUtils
         {
           dataElement = dataElement.toString();
         }
-        parts.addAll(((DataPartitioner) dSchema.getPartitionerForElement(fieldName)).toPartitions(dataElement, dSchema.getElementType(fieldName)));
+        parts.addAll(dSchema.getPartitionerForElement(fieldName).toPartitions(dataElement, dSchema.getElementType(fieldName)));
       }
     }
     logger.debug("parts.size() = " + parts.size());
@@ -232,20 +232,20 @@ public class QueryUtils
   /**
    * Method to convert the given selector into the extracted BigInteger partitions
    */
-  public static List<BigInteger> embeddedSelectorToPartitions(Object selector, String type, Object partitioner) throws Exception
+  public static List<BigInteger> embeddedSelectorToPartitions(String selector, String type, DataPartitioner partitioner) throws Exception
   {
     List<BigInteger> parts;
 
-    int partitionBits = ((DataPartitioner) partitioner).getBits(type);
+    int partitionBits = partitioner.getBits(type);
     if (partitionBits > 32) // hash and add 32-bit hash value to partitions
     {
-      int hashedSelector = KeyedHash.hash("aux", 32, selector.toString(), "MD5");
-      parts = ((DataPartitioner) partitioner).toPartitions(hashedSelector, PrimitiveTypePartitioner.INT);
+      int hashedSelector = KeyedHash.hash("aux", 32, selector, "MD5");
+      parts = partitioner.toPartitions(hashedSelector, PrimitiveTypePartitioner.INT);
     }
     else
     // if selector size <= 32 bits or is an IP, add actual selector
     {
-      parts = ((DataPartitioner) partitioner).toPartitions(selector, type);
+      parts = partitioner.toPartitions(selector, type);
     }
 
     return parts;
@@ -255,19 +255,19 @@ public class QueryUtils
    * Method get the embedded selector from a given selector
    * 
    */
-  public static String getEmbeddedSelector(Object selector, String type, Object partitioner) throws Exception
+  public static String getEmbeddedSelector(String selector, String type, DataPartitioner partitioner) throws Exception
   {
     String embeddedSelector;
 
-    int partitionBits = ((DataPartitioner) partitioner).getBits(type);
+    int partitionBits = partitioner.getBits(type);
     if (partitionBits > 32) // hash and add 32-bit hash value to partitions
     {
-      embeddedSelector = String.valueOf(KeyedHash.hash("aux", 32, selector.toString(), "MD5"));
+      embeddedSelector = String.valueOf(KeyedHash.hash("aux", 32, selector, "MD5"));
     }
     else
     // if selector size <= 32 bits, add actual selector
     {
-      embeddedSelector = selector.toString();
+      embeddedSelector = selector;
     }
 
     return embeddedSelector;
@@ -313,7 +313,7 @@ public class QueryUtils
       }
       else
       {
-        String[] elementArray = ((ArrayWritable) (dataMap.get(dSchema.getTextName(fieldName)))).toStrings();
+        String[] elementArray = ((ArrayWritable) dataMap.get(dSchema.getTextName(fieldName))).toStrings();
         selector = elementArray[0];
       }
     }
