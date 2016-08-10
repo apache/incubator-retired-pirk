@@ -48,7 +48,7 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type)
+  public Object fromPartitions(List<BigInteger> parts, int partsIndex, String type)
   {
     Object element;
 

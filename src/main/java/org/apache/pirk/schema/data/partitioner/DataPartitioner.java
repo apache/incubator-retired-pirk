@@ -20,7 +20,6 @@ package org.apache.pirk.schema.data.partitioner;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pirk.utils.PIRException;
@@ -33,36 +32,36 @@ import org.apache.pirk.utils.PIRException;
 public interface DataPartitioner extends Serializable
 {
   /**
-   * Method to partition the given Object into an ArrayList of BigInteger partition elements given its type identifier
+   * Method to partition the given Object into a List of BigInteger partition elements given its type identifier.
    * <p>
-   * If the Object does not have/need a specific type identifier, use null
+   * If the Object does not have/need a specific type identifier, use null.
    */
-  ArrayList<BigInteger> toPartitions(Object object, String type) throws PIRException;
+  List<BigInteger> toPartitions(Object object, String type) throws PIRException;
 
   /**
-   * Method to reconstruct an Object given an ArrayList of its BigInteger partition elements and its type identifier
+   * Method to reconstruct an Object given a List of its BigInteger partition elements and its type identifier.
    * <p>
-   * If the Object does not have/need a specific type identifier, use null
+   * If the Object does not have/need a specific type identifier, use null.
    */
-  Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws PIRException;
+  Object fromPartitions(List<BigInteger> parts, int partsIndex, String type) throws PIRException;
 
   /**
-   * Method to return the number of bits of an object with the given type
+   * Returns the number of bits of an object with the given type.
    */
   int getBits(String type) throws PIRException;
 
   /**
-   * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
+   * Creates partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value.
    */
-  ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException;
+  List<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException;
 
   /**
-   * Method to get an empty set of partitions by data type - used for padding return array values
+   * Method to get an empty set of partitions by data type - used for padding return array values.
    */
-  ArrayList<BigInteger> getPaddedPartitions(String type) throws PIRException;
+  List<BigInteger> getPaddedPartitions(String type) throws PIRException;
 
   /**
-   * Method to get the number of partitions of the data object given the type
+   * Method to get the number of partitions of the data object given the type.
    */
   int getNumPartitions(String type) throws PIRException;
 }
