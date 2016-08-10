@@ -232,9 +232,9 @@ public class QueryUtils
   /**
    * Method to convert the given selector into the extracted BigInteger partitions
    */
-  public static ArrayList<BigInteger> embeddedSelectorToPartitions(Object selector, String type, Object partitioner) throws Exception
+  public static List<BigInteger> embeddedSelectorToPartitions(Object selector, String type, Object partitioner) throws Exception
   {
-    ArrayList<BigInteger> parts;
+    List<BigInteger> parts;
 
     int partitionBits = ((DataPartitioner) partitioner).getBits(type);
     if (partitionBits > 32) // hash and add 32-bit hash value to partitions
