@@ -115,7 +115,7 @@ public class EncryptQuery
    */
   public void encrypt() throws InterruptedException, PIRException
   {
-    int numThreads = Integer.parseInt(SystemConfiguration.getProperty("numThreads", "1"));
+    int numThreads = SystemConfiguration.getIntProperty("numThreads", 1);
     encrypt(numThreads);
   }
 

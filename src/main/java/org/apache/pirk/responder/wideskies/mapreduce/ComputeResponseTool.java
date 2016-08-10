@@ -131,7 +131,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);
     queryInfo = query.getQueryInfo();
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -225,9 +225,9 @@ public class ComputeResponseTool extends Configured implements Tool
     queryInputDir = SystemConfiguration.getProperty("pir.queryInput");
     stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
 
-    useHDFSLookupTable = SystemConfiguration.getProperty("pir.useHDFSLookupTable").equals("true");
+    useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 
-    numReduceTasks = Integer.parseInt(SystemConfiguration.getProperty("pir.numReduceTasks", "1"));
+    numReduceTasks = SystemConfiguration.getIntProperty("pir.numReduceTasks", 1);
   }
 
   private boolean computeExpTable() throws IOException, ClassNotFoundException, InterruptedException
@@ -246,7 +246,7 @@ public class ComputeResponseTool extends Configured implements Tool
     TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
     ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
-    int numSplits = Integer.parseInt(SystemConfiguration.getProperty("pir.expCreationSplits", "100"));
+    int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
     int elementsPerSplit = (int) Math.floor(queryElements.size() / numSplits);
     logger.info("numSplits = " + numSplits + " elementsPerSplit = " + elementsPerSplit);
     for (int i = 0; i < numSplits; ++i)
@@ -289,7 +289,7 @@ public class ComputeResponseTool extends Configured implements Tool
     jobExp.setMapOutputValueClass(Text.class);
 
     // Set the reducer and output params
-    int numExpLookupPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
+    int numExpLookupPartitions = SystemConfiguration.getIntProperty("pir.numExpLookupPartitions", 100);
     jobExp.setNumReduceTasks(numExpLookupPartitions);
     jobExp.setReducerClass(ExpTableReducer.class);
 

@@ -126,7 +126,7 @@ public class PaillierTest
 
     try
     {
-      int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
+      int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
       Paillier paillier = new Paillier(3072, systemPrimeCertainty - 10);
       fail("Paillier constructor did not throw PIRException for certainty less than system default of " + systemPrimeCertainty);
     } catch (PIRException ignore)
@@ -226,7 +226,7 @@ public class PaillierTest
     testPaillerWithKeyGenerationGeneral();
 
     // Reset the properties
-    SystemConfiguration.resetProperties();
+    SystemConfiguration.initialize();
 
     logger.info("Ending testPaillierWithKeyGeneration: ");
   }

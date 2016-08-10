@@ -61,7 +61,7 @@ public class DecryptResponseRunnable implements Runnable
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
 
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       if ((qSchema = queryInfo.getQuerySchema()) == null)
       {

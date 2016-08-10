@@ -57,7 +57,7 @@ public class QueryUtils
 
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
-    int numArrayElementsToReturn = Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements", "1"));
+    int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
 
     logger.debug("parts.size() = " + parts.size());
 
