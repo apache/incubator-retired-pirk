@@ -24,10 +24,7 @@ import java.util.HashMap;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
@@ -36,10 +33,6 @@ import org.slf4j.LoggerFactory;
 public class Querier implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
-
-  private static final Logger logger = LoggerFactory.getLogger(Querier.class);
-
-  private QueryInfo queryInfo = null;
 
   private Query query = null; // contains the query vectors and functionality
 
@@ -52,11 +45,8 @@ public class Querier implements Serializable, Storable
   // if the selector is of variable lengths
   private HashMap<Integer,String> embedSelectorMap = null;
 
-  public Querier(QueryInfo queryInfoInput, ArrayList<String> selectorsInput, Paillier paillierInput, Query pirQueryInput,
-      HashMap<Integer,String> embedSelectorMapInput)
+  public Querier(ArrayList<String> selectorsInput, Paillier paillierInput, Query pirQueryInput, HashMap<Integer,String> embedSelectorMapInput)
   {
-    queryInfo = queryInfoInput;
-
     selectors = selectorsInput;
 
     paillier = paillierInput;
@@ -64,11 +54,6 @@ public class Querier implements Serializable, Storable
     query = pirQueryInput;
 
     embedSelectorMap = embedSelectorMapInput;
-  }
-
-  public QueryInfo getPirWatchlist()
-  {
-    return queryInfo;
   }
 
   public Query getPirQuery()

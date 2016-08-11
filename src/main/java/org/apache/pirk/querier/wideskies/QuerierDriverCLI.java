@@ -211,13 +211,6 @@ public class QuerierDriverCLI
     optionTYPE.setType(String.class);
     options.addOption(optionTYPE);
 
-    // NAME
-    Option optionNAME = new Option("qn", QuerierProps.QUERYNAME, true, "required for encryption -- Name of the query");
-    optionNAME.setRequired(false);
-    optionNAME.setArgName(QuerierProps.QUERYNAME);
-    optionNAME.setType(String.class);
-    options.addOption(optionNAME);
-
     // HASHBITSIZE
     Option optionHASHBITSIZE = new Option("hb", QuerierProps.HASHBITSIZE, true, "required -- Bit size of keyed hash");
     optionHASHBITSIZE.setRequired(false);

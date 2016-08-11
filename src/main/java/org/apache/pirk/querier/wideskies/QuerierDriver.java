@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
@@ -92,7 +93,6 @@ public class QuerierDriver implements Serializable
     int dataPartitionBitSize = 0;
     int paillierBitSize = 0;
     int certainty = 0;
-    String queryName = null;
     int bitSet = -1;
     boolean embedSelector = true;
     boolean useMemLookupTable = false;
@@ -112,7 +112,6 @@ public class QuerierDriver implements Serializable
     if (action.equals("encrypt"))
     {
       queryType = SystemConfiguration.getProperty(QuerierProps.QUERYTYPE);
-      queryName = SystemConfiguration.getProperty(QuerierProps.QUERYNAME);
       hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
       hashKey = SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE);
       dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
@@ -157,17 +156,17 @@ public class QuerierDriver implements Serializable
           + "\n hashBitSize = " + hashBitSize + "\n hashKey = " + hashKey + "\n dataPartitionBitSize = " + dataPartitionBitSize + "\n paillierBitSize = "
           + paillierBitSize + "\n certainty = " + certainty);
 
-      // Read in the selectors and extract the queryNum - first line in the file
+      // Read in the selectors and extract the queryIdentifier - first line in the file
       ArrayList<String> selectors = FileIOUtils.readToArrayList(inputFile);
-      double queryNum = Double.parseDouble(selectors.get(0));
+      UUID queryIdentifier = UUID.fromString(selectors.get(0));
       selectors.remove(0);
 
       int numSelectors = selectors.size();
-      logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors);
+      logger.info("queryIdentifier = " + queryIdentifier + " numSelectors = " + numSelectors);
 
       // Set the necessary QueryInfo and Paillier objects
-      QueryInfo queryInfo = new QueryInfo(queryNum, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, queryName, paillierBitSize,
-          useMemLookupTable, embedSelector, useHDFSLookupTable);
+      QueryInfo queryInfo = new QueryInfo(queryIdentifier, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, useMemLookupTable,
+          embedSelector, useHDFSLookupTable);
 
       if (SystemConfiguration.isSetTrue("pir.embedQuerySchema"))
       {
