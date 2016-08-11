@@ -203,6 +203,15 @@ public class QuerierDriver implements Serializable
       Response response = storage.recall(inputFile, Response.class);
       Querier querier = storage.recall(querierFile, Querier.class);
 
+      UUID querierQueryID = querier.getQuery().getQueryInfo().getIdentifier();
+      UUID responseQueryID = response.getQueryInfo().getIdentifier();
+      if (!querierQueryID.equals(responseQueryID))
+      {
+        logger.error("The query identifier in the Response: " + responseQueryID.toString() + " does not match the query identifier specified in the Querier: "
+            + querierQueryID.toString());
+        System.exit(0);
+      }
+
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);
       decryptResponse.decrypt(numThreads);
