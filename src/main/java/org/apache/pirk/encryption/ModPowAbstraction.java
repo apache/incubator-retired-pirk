@@ -29,9 +29,9 @@ import com.squareup.jnagmp.Gmp;
  */
 public final class ModPowAbstraction
 {
-  private static boolean useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
+  private static boolean useGMPForModPow = SystemConfiguration.isSetTrue("paillier.useGMPForModPow");
 
-  private static boolean useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
+  private static boolean useGMPConstantTimeMethods = SystemConfiguration.isSetTrue("paillier.GMPConstantTimeMode");
 
   /**
    * Performs modPow: ({@code base}^{@code exponent}) mod {@code modulus}
@@ -85,7 +85,7 @@ public final class ModPowAbstraction
 
   public static void reloadConfiguration()
   {
-    useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
-    useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
+    useGMPForModPow = SystemConfiguration.isSetTrue("paillier.useGMPForModPow");
+    useGMPConstantTimeMethods = SystemConfiguration.isSetTrue("paillier.GMPConstantTimeMode");
   }
 }

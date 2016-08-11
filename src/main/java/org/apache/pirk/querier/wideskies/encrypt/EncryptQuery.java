@@ -115,7 +115,7 @@ public class EncryptQuery
    */
   public void encrypt() throws InterruptedException, PIRException
   {
-    int numThreads = Integer.parseInt(SystemConfiguration.getProperty("numThreads", "1"));
+    int numThreads = SystemConfiguration.getIntProperty("numThreads", 1);
     encrypt(numThreads);
   }
 
@@ -158,7 +158,7 @@ public class EncryptQuery
     }
 
     // Set the Querier object
-    querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
+    querier = new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
   private HashMap<Integer,Integer> computeSelectorQueryVecMap()

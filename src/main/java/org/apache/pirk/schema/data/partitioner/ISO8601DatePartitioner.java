@@ -58,7 +58,7 @@ public class ISO8601DatePartitioner implements DataPartitioner
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws PIRException
+  public Object fromPartitions(List<BigInteger> parts, int partsIndex, String type) throws PIRException
   {
     long dateLongFormat = (long) ptp.fromPartitions(parts, partsIndex, PrimitiveTypePartitioner.LONG);
 

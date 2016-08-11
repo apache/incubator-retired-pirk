@@ -116,7 +116,7 @@ public class Paillier implements Cloneable, Serializable
     bitLength = bitLengthInput;
 
     // Verify the prime conditions are satisfied
-    int primeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
+    int primeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
     BigInteger three = BigInteger.valueOf(3);
     if ((pInput.compareTo(three) < 0) || (qInput.compareTo(three) < 0) || pInput.equals(qInput) || !pInput.isProbablePrime(primeCertainty)
         || !qInput.isProbablePrime(primeCertainty))
@@ -144,8 +144,6 @@ public class Paillier implements Cloneable, Serializable
   public Paillier(int bitLengthInput, int certainty) throws PIRException
   {
     this(bitLengthInput, certainty, -1);
-
-    logger.info("Parameters = " + parametersToString());
   }
 
   /**
@@ -161,7 +159,7 @@ public class Paillier implements Cloneable, Serializable
   {
     bitLength = bitLengthInput;
 
-    int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
+    int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
     if (certainty < systemPrimeCertainty)
     {
       throw new PIRException("Input certainty = " + certainty + " is less than allowed system lower bound = " + systemPrimeCertainty);

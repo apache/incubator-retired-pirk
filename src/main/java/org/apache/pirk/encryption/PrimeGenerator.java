@@ -58,7 +58,7 @@ public class PrimeGenerator
   private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<>();
   private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<>();
 
-  private static boolean additionalChecksEnabled = SystemConfiguration.getProperty("pallier.FIPSPrimeGenerationChecks").equals("true");
+  private static boolean additionalChecksEnabled = SystemConfiguration.isSetTrue("pallier.FIPSPrimeGenerationChecks");
 
   /**
    * Method to generate a single prime
