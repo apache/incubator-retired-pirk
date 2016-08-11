@@ -38,25 +38,25 @@ public class Querier implements Serializable, Storable
 
   private Paillier paillier = null; // Paillier encryption functionality
 
-  private ArrayList<String> selectors = null; // selectors for the watchlist
+  private ArrayList<String> selectors = null; // selectors
 
   // map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
   private HashMap<Integer,String> embedSelectorMap = null;
 
-  public Querier(ArrayList<String> selectorsInput, Paillier paillierInput, Query pirQueryInput, HashMap<Integer,String> embedSelectorMapInput)
+  public Querier(ArrayList<String> selectorsInput, Paillier paillierInput, Query queryInput, HashMap<Integer,String> embedSelectorMapInput)
   {
     selectors = selectorsInput;
 
     paillier = paillierInput;
 
-    query = pirQueryInput;
+    query = queryInput;
 
     embedSelectorMap = embedSelectorMapInput;
   }
 
-  public Query getPirQuery()
+  public Query getQuery()
   {
     return query;
   }
