@@ -48,7 +48,6 @@ public class QuerierProps
   public static final String PAILLIERBITSIZE = "querier.paillierBitSize";
   public static final String BITSET = "querier.bitSet";
   public static final String CERTAINTY = "querier.certainty";
-  public static final String QUERYNAME = "querier.queryName";
   public static final String QUERYSCHEMAS = "querier.querySchemas";
   public static final String DATASCHEMAS = "querier.dataSchemas";
   public static final String EMBEDSELECTOR = "querier.embedSelector";
@@ -62,7 +61,7 @@ public class QuerierProps
   public static final String QUERIERFILE = "querier.querierFile";
 
   public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
-      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYNAME, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE,
+      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE,
       SR_ALGORITHM, SR_PROVIDER);
 
   /**
@@ -148,12 +147,6 @@ public class QuerierProps
       if (!SystemConfiguration.hasProperty(CERTAINTY))
       {
         logger.info("For action='encrypt': Must have the option " + CERTAINTY);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(QUERYNAME))
-      {
-        logger.info("For action='encrypt': Must have the option " + QUERYNAME);
         valid = false;
       }
 

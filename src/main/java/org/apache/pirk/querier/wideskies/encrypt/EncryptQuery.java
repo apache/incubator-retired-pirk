@@ -158,7 +158,7 @@ public class EncryptQuery
     }
 
     // Set the Querier object
-    querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
+    querier = new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
   private HashMap<Integer,Integer> computeSelectorQueryVecMap()

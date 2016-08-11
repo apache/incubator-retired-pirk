@@ -267,14 +267,11 @@ public class TestUtils
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
    */
-  public static ArrayList<QueryResponseJSON> readResultsFile(File file)
+  public static List<QueryResponseJSON> readResultsFile(File file)
   {
-    ArrayList<QueryResponseJSON> results = new ArrayList<>();
-    try
+    List<QueryResponseJSON> results = new ArrayList<>();
+    try (BufferedReader br = new BufferedReader(new FileReader(file)))
     {
-      FileReader fr = new FileReader(file);
-      BufferedReader br = new BufferedReader(fr);
-
       String line;
       while ((line = br.readLine()) != null)
       {

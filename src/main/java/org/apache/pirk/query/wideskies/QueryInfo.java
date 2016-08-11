@@ -19,6 +19,7 @@
 package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
@@ -32,20 +33,16 @@ import org.slf4j.LoggerFactory;
  * we no longer have collisions
  * 
  */
-public class QueryInfo implements Serializable
+public class QueryInfo implements Serializable, Cloneable
 {
   private static final long serialVersionUID = 1L;
 
   private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);
 
-  private double queryNum = 0.0; // the identifier num of the query
+  private UUID identifier; // the identifier of the query
   private int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
 
   private String queryType = null; // QueryType string const
-
-  private String queryName = null; // Name of query
-
-  private int paillierBitSize = 0; // Paillier modulus size
 
   private int hashBitSize = 0; // Bit size of the keyed hash function
   private String hashKey = null; // Key for the keyed hash function
@@ -66,13 +63,27 @@ public class QueryInfo implements Serializable
 
   QuerySchema qSchema = null;
 
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn, boolean useExpLookupTableInput, boolean embedSelectorInput,
+  public QueryInfo(int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+       boolean useExpLookupTableInput, boolean embedSelectorInput,
+       boolean useHDFSExpLookupTableInput)
+  {
+    this(UUID.randomUUID(), numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput,
+        useExpLookupTableInput, embedSelectorInput, useHDFSExpLookupTableInput);
+  }
+
+  public QueryInfo(
+      UUID identifierInput,
+      int numSelectorsInput,
+      int hashBitSizeInput,
+      String hashKeyInput,
+      int dataPartitionBitSizeInput,
+      String queryTypeInput,
+      boolean useExpLookupTableInput,
+      boolean embedSelectorInput,
       boolean useHDFSExpLookupTableInput)
   {
-    queryNum = queryNumInput;
+    identifier = identifierInput;
     queryType = queryTypeInput;
-    queryName = queryNameInput;
 
     numSelectors = numSelectorsInput;
 
@@ -87,8 +98,6 @@ public class QueryInfo implements Serializable
     dataPartitionBitSize = dataPartitionBitSizeInput;
     numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
 
-    paillierBitSize = paillierBitSizeIn;
-
     if (embedSelectorInput)
     {
       numPartitionsPerDataElement += 4; // using a 8-bit partition size and a 32-bit embedded selector
@@ -96,17 +105,10 @@ public class QueryInfo implements Serializable
 
     printQueryInfo();
   }
-
-  public QueryInfo(double queryNumInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, String queryNameInput, int paillierBitSizeIn)
+  
+  public UUID getIdentifier()
   {
-    this(queryNumInput, numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, queryNameInput, paillierBitSizeIn, false,
-        true, false);
-  }
-
-  public double getQueryNum()
-  {
-    return queryNum;
+    return identifier;
   }
 
   public String getQueryType()
@@ -114,19 +116,9 @@ public class QueryInfo implements Serializable
     return queryType;
   }
 
-  public String getQueryName()
-  {
-    return queryName;
-  }
-
   public int getNumSelectors()
   {
     return numSelectors;
-  }
-
-  public int getPaillierBitSize()
-  {
-    return paillierBitSize;
   }
 
   public int getHashBitSize()
@@ -181,15 +173,21 @@ public class QueryInfo implements Serializable
 
   public void printQueryInfo()
   {
-    logger.info("queryNum = " + queryNum + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
+    logger.info("identifier = " + identifier + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
         + " dataPartitionBitSize = " + dataPartitionBitSize + " numBitsPerDataElement = " + numBitsPerDataElement + " numPartitionsPerDataElement = "
-        + numPartitionsPerDataElement + " queryType = " + queryType + " queryName = " + queryName + " paillierBitSize = " + paillierBitSize
+        + numPartitionsPerDataElement + " queryType = " + queryType
         + " useExpLookupTable = " + useExpLookupTable + " useHDFSExpLookupTable = " + useHDFSExpLookupTable + " embedSelector = " + embedSelector);
   }
 
-  public QueryInfo copy()
+  @Override
+  public QueryInfo clone()
   {
-    return new QueryInfo(this.queryNum, this.numSelectors, this.hashBitSize, this.hashKey, this.dataPartitionBitSize, this.queryType, this.queryName,
-        this.paillierBitSize, this.useExpLookupTable, this.embedSelector, this.useHDFSExpLookupTable);
+    try
+    {
+      return (QueryInfo) super.clone();
+    } catch (CloneNotSupportedException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 }
