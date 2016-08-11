@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -56,12 +57,11 @@ public class StandaloneQuery
   String testQuerySchemaName = "testQuerySchema";
 
   // Base method to perform the query
-  public static ArrayList<QueryResponseJSON> performStandaloneQuery(ArrayList<JSONObject> dataElements, String queryType, ArrayList<String> selectors,
+  public static List<QueryResponseJSON> performStandaloneQuery(ArrayList<JSONObject> dataElements, String queryType, ArrayList<String> selectors,
       int numThreads, boolean testFalsePositive) throws IOException, InterruptedException, PIRException
   {
     logger.info("Performing watchlisting: ");
 
-    ArrayList<QueryResponseJSON> results = null;
     QuerySchema qSchema = QuerySchemaRegistry.get(queryType);
 
     // Create the necessary files
@@ -82,8 +82,8 @@ public class StandaloneQuery
     boolean useHDFSExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false);
 
     // Set the necessary objects
-    QueryInfo queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
-        queryType, queryType + "_" + BaseTests.queryNum, BaseTests.paillierBitSize, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
+    QueryInfo queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
+        queryType, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
 
     if (SystemConfiguration.getBooleanProperty("pir.embedQuerySchema", false))
     {
@@ -152,7 +152,7 @@ public class StandaloneQuery
 
     // Read in results
     logger.info("Reading in and checking results");
-    results = TestUtils.readResultsFile(fileFinalResults);
+    List<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
 
     // Clean up
     fileQuerier.delete();

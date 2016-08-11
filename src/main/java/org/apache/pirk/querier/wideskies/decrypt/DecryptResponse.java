@@ -139,7 +139,7 @@ public class DecryptResponse
 
       // Create the runnable and execute
       // selectorMaskMap and rElements are synchronized, pirWatchlist is copied, selectors is partitioned
-      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.copy(), embedSelectorMap);
+      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
       runnables.add(runDec);
       es.execute(runDec);
     }

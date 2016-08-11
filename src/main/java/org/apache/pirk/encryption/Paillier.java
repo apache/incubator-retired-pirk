@@ -144,8 +144,6 @@ public class Paillier implements Cloneable, Serializable
   public Paillier(int bitLengthInput, int certainty) throws PIRException
   {
     this(bitLengthInput, certainty, -1);
-
-    logger.info("Parameters = " + parametersToString());
   }
 
   /**

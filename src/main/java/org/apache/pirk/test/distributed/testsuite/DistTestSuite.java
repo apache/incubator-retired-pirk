@@ -20,6 +20,7 @@ package org.apache.pirk.test.distributed.testsuite;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -321,52 +322,32 @@ public class DistTestSuite
   }
 
   // Base method to perform query
-  @SuppressWarnings("unused")
-  public static ArrayList<QueryResponseJSON> performQuery(String queryType, ArrayList<String> selectors, FileSystem fs, boolean isSpark, int numThreads)
+  public static List<QueryResponseJSON> performQuery(String queryType, ArrayList<String> selectors, FileSystem fs, boolean isSpark, int numThreads)
       throws Exception
   {
     logger.info("performQuery: ");
 
     String queryInputDir = SystemConfiguration.getProperty(DistributedTestDriver.PIR_QUERY_INPUT_DIR);
     String outputFile = SystemConfiguration.getProperty(DistributedTestDriver.OUTPUT_DIRECTORY_PROPERTY);
-    Path outputFilePath = new Path(outputFile);
-    if (fs.exists(outputFilePath))
-    {
-      fs.delete(new Path(outputFile), true);
-    }
+    fs.delete(new Path(outputFile), true);  // Ensure old output does not exist.
+
     SystemConfiguration.setProperty("pir.queryInput", queryInputDir);
     SystemConfiguration.setProperty("pir.outputFile", outputFile);
     SystemConfiguration.setProperty("pir.numReduceTasks", "1");
     SystemConfiguration.setProperty("pir.stopListFile", SystemConfiguration.getProperty(DistributedTestDriver.PIR_STOPLIST_FILE));
-
-    ArrayList<QueryResponseJSON> results;
 
     // Create the temp result file
     File fileFinalResults = File.createTempFile("finalResultsFile", ".txt");
     fileFinalResults.deleteOnExit();
     logger.info("fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    boolean embedSelector = false;
-    if (SystemConfiguration.getBooleanProperty("pirTest.embedSelector", false))
-    {
-      embedSelector = true;
-    }
-
-    boolean useExpLookupTable = false;
-    if (SystemConfiguration.getBooleanProperty("pirTest.useExpLookupTable", false))
-    {
-      useExpLookupTable = true;
-    }
-
-    boolean useHDFSExpLookupTable = false;
-    if (SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false))
-    {
-      useHDFSExpLookupTable = true;
-    }
+    boolean embedSelector = SystemConfiguration.getBooleanProperty("pirTest.embedSelector", false);
+    boolean useExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useExpLookupTable", false);
+    boolean useHDFSExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false);
 
     // Set the necessary objects
-    QueryInfo queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
-        queryType, queryType + "_" + BaseTests.queryNum, BaseTests.paillierBitSize, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
+    QueryInfo queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
+        queryType, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);
 
@@ -463,7 +444,7 @@ public class DistTestSuite
 
     // Read in results
     logger.info("Reading in and checking results");
-    results = TestUtils.readResultsFile(fileFinalResults);
+    List<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
 
     // Reset data and query schema properties
     SystemConfiguration.setProperty("data.schemas", dataSchemaProp);

@@ -237,7 +237,7 @@ public class ComputeResponseTool extends Configured implements Tool
     logger.info("Creating expTable");
 
     // The split location for the interim calculations, delete upon completion
-    Path splitDir = new Path("/tmp/splits-" + queryInfo.getQueryNum());
+    Path splitDir = new Path("/tmp/splits-" + queryInfo.getIdentifier());
     if (fs.exists(splitDir))
     {
       fs.delete(splitDir, true);
@@ -263,7 +263,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Run the job to generate the expTable
     // Job jobExp = new Job(mrConfig.getConfig(), "pirExp-" + pirWL.getWatchlistNum());
-    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getQueryNum());
+    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getIdentifier());
 
     jobExp.setSpeculativeExecution(false);
     jobExp.getConfiguration().set("mapreduce.map.speculative", "false");
