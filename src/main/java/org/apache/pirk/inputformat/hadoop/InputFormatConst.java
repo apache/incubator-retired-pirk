@@ -18,8 +18,10 @@
  */
 package org.apache.pirk.inputformat.hadoop;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Constants class for allowed input format types
@@ -30,5 +32,6 @@ public class InputFormatConst
 
   public static final String ES = "elasticsearch";
 
-  public static final ArrayList<String> ALLOWED_FORMATS = new ArrayList<>(Arrays.asList(BASE_FORMAT, ES));
+  public static final Set<String> ALLOWED_FORMATS = Collections.unmodifiableSet(
+      new HashSet<>(Arrays.asList(BASE_FORMAT, ES)));
 }

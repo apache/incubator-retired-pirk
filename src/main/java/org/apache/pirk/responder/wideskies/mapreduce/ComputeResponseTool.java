@@ -247,7 +247,7 @@ public class ComputeResponseTool extends Configured implements Tool
     ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
-    int elementsPerSplit = (int) Math.floor(queryElements.size() / numSplits);
+    int elementsPerSplit = queryElements.size() / numSplits;  // Integral division.
     logger.info("numSplits = " + numSplits + " elementsPerSplit = " + elementsPerSplit);
     for (int i = 0; i < numSplits; ++i)
     {
@@ -320,17 +320,17 @@ public class ComputeResponseTool extends Configured implements Tool
         logger.info("fstat.getPath().getName().toString() = " + fstat.getPath().getName());
         try
         {
-          InputStreamReader isr = new InputStreamReader(fs.open(fstat.getPath()));
-          BufferedReader br = new BufferedReader(isr);
-          String line;
-          while ((line = br.readLine()) != null)
+          try (BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(fstat.getPath()))))
           {
-            String[] rowValTokens = line.split(","); // form is element_index,reducerNumber
-            String fileName = fstat.getPath().getParent() + "/" + FileConst.EXP + "-r-" + rowValTokens[1];
-            logger.info("fileName = " + fileName);
-            expFileTable.put(Integer.parseInt(rowValTokens[0]), fileName);
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+              String[] rowValTokens = line.split(","); // form is element_index,reducerNumber
+              String fileName = fstat.getPath().getParent() + "/" + FileConst.EXP + "-r-" + rowValTokens[1];
+              logger.info("fileName = " + fileName);
+              expFileTable.put(Integer.parseInt(rowValTokens[0]), fileName);
+            }
           }
-
         } catch (Exception e)
         {
           e.printStackTrace();

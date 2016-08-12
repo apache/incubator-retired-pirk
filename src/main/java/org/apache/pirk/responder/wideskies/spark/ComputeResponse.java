@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.MapWritable;
@@ -230,6 +231,11 @@ public class ComputeResponse
     {
       inputRDD = readDataES();
     }
+    else
+    {
+      throw new PIRException("Unknown data input format " + dataInputFormat);
+    }
+
     performQuery(inputRDD);
   }
 
@@ -380,10 +386,11 @@ public class ComputeResponse
     Map<Long,BigInteger> encColResults = encColRDD.collectAsMap();
     logger.debug("encColResults.size() = " + encColResults.size());
 
-    for (long colVal : encColResults.keySet())
+    for (Entry<Long,BigInteger> entry : encColResults.entrySet())
     {
-      response.addElement((int) colVal, encColResults.get(colVal));
-      logger.debug("colNum = " + colVal + " column = " + encColResults.get(colVal).toString());
+      int colVal = entry.getKey().intValue();
+      response.addElement(colVal, entry.getValue());
+      logger.debug("colNum = " + colVal + " column = " + entry.getValue().toString());
     }
 
     try

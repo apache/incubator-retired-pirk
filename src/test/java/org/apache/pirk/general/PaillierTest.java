@@ -19,6 +19,7 @@
 package org.apache.pirk.general;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.math.BigInteger;
@@ -79,12 +80,12 @@ public class PaillierTest
   }
 
   @Test
-  @SuppressWarnings("unused")
   public void testPIRExceptions()
   {
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(2), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p,q < 3");
     } catch (PIRException ignore)
     {}
@@ -92,6 +93,7 @@ public class PaillierTest
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(3), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p < 3");
     } catch (PIRException ignore)
     {}
@@ -99,6 +101,7 @@ public class PaillierTest
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(3), BigInteger.valueOf(2), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for q < 3");
     } catch (PIRException ignore)
     {}
@@ -106,6 +109,7 @@ public class PaillierTest
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(7), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p = q");
     } catch (PIRException ignore)
     {}
@@ -113,6 +117,7 @@ public class PaillierTest
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(8), BigInteger.valueOf(7), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p not prime");
     } catch (PIRException ignore)
     {}
@@ -120,6 +125,7 @@ public class PaillierTest
     try
     {
       Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(10), 128);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for q not prime");
     } catch (PIRException ignore)
     {}
@@ -128,6 +134,7 @@ public class PaillierTest
     {
       int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
       Paillier paillier = new Paillier(3072, systemPrimeCertainty - 10);
+      assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for certainty less than system default of " + systemPrimeCertainty);
     } catch (PIRException ignore)
     {}
@@ -136,6 +143,7 @@ public class PaillierTest
     {
       Paillier pailler = new Paillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N);
+      assertNotNull(encM1);
       fail("Paillier encryption did not throw PIRException for message m = N");
     } catch (PIRException ignore)
     {}
@@ -144,6 +152,7 @@ public class PaillierTest
     {
       Paillier pailler = new Paillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N.add(BigInteger.TEN));
+      assertNotNull(encM1);
       fail("Paillier encryption did not throw PIRException for message m > N");
     } catch (PIRException ignore)
     {}
@@ -151,6 +160,7 @@ public class PaillierTest
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength);
+      assertNotNull(pailler);
       fail("Paillier constructor did not throw PIRException for ensureBitSet = bitLength");
     } catch (PIRException ignore)
     {}
@@ -158,6 +168,7 @@ public class PaillierTest
     try
     {
       Paillier pailler = new Paillier(bitLength, 128, bitLength + 1);
+      assertNotNull(pailler);
       fail("Paillier constructor did not throw PIRException for ensureBitSet > bitLength");
     } catch (PIRException ignore)
     {}

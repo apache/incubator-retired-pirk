@@ -46,14 +46,12 @@ public class FinalResponseReducer extends Reducer<LongWritable,Text,LongWritable
   private Response response = null;
   private String outputFile = null;
   private HadoopFileSystemStore storage = null;
-  private QueryInfo queryInfo = null;
 
   @Override
   public void setup(Context ctx) throws IOException, InterruptedException
   {
     super.setup(ctx);
 
-    Text outputValue = new Text();
     mos = new MultipleOutputs<>(ctx);
 
     FileSystem fs = FileSystem.newInstance(ctx.getConfiguration());
