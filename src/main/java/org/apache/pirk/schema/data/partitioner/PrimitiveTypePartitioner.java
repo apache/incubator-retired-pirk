@@ -350,59 +350,33 @@ public class PrimitiveTypePartitioner implements DataPartitioner
 
   private byte[] shortToBytes(short value)
   {
-    return new byte[] {
-        (byte) (value >> 8),
-        (byte) value};
+    return new byte[] {(byte) (value >> 8), (byte) value};
   }
 
   private short bytesToShort(byte[] bytes)
   {
-    return (short)(
-        bytes[0] << 8 |
-        bytes[1] & 0xff);
+    return (short) (bytes[0] << 8 | bytes[1] & 0xff);
   }
 
   private byte[] intToBytes(int value)
   {
-    return new byte[] {
-        (byte) (value >> 24), 
-        (byte) (value >> 16), 
-        (byte) (value >> 8), 
-        (byte) value};
+    return new byte[] {(byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value};
   }
-  
+
   private int bytesToInt(byte[] bytes)
   {
-    return
-        (bytes[0] << 24) |
-        (bytes[1] & 0xff) << 16 |
-        (bytes[2] & 0xff) << 8 |
-        (bytes[3] & 0xff);
+    return (bytes[0] << 24) | (bytes[1] & 0xff) << 16 | (bytes[2] & 0xff) << 8 | (bytes[3] & 0xff);
   }
-  
+
   private byte[] longToBytes(long value)
   {
-    return new byte[] {
-        (byte) (value >> 56),
-        (byte) (value >> 48),
-        (byte) (value >> 40),
-        (byte) (value >> 32),
-        (byte) (value >> 24),
-        (byte) (value >> 16),
-        (byte) (value >> 8),
-        (byte) value};
+    return new byte[] {(byte) (value >> 56), (byte) (value >> 48), (byte) (value >> 40), (byte) (value >> 32), (byte) (value >> 24), (byte) (value >> 16),
+        (byte) (value >> 8), (byte) value};
   }
-  
+
   private long bytesToLong(byte[] bytes)
   {
-    return
-         (long)bytes[0] << 56 |
-        ((long)bytes[1] & 0xff) << 48 |
-        ((long)bytes[2] & 0xff) << 40 |
-        ((long)bytes[3] & 0xff) << 32 |
-        ((long)bytes[4] & 0xff) << 24 |
-        ((long)bytes[5] & 0xff) << 16 |
-        ((long)bytes[6] & 0xff) << 8 |
-         (long)bytes[7] & 0xff;
+    return (long) bytes[0] << 56 | ((long) bytes[1] & 0xff) << 48 | ((long) bytes[2] & 0xff) << 40 | ((long) bytes[3] & 0xff) << 32
+        | ((long) bytes[4] & 0xff) << 24 | ((long) bytes[5] & 0xff) << 16 | ((long) bytes[6] & 0xff) << 8 | (long) bytes[7] & 0xff;
   }
 }

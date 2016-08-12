@@ -144,8 +144,8 @@ public class PartitionUtilsTest
 
     partsByte = primitivePartitioner.toPartitions("12", PrimitiveTypePartitioner.BYTE);
     assertEquals(1, partsByte.size());
-    assertEquals((byte)12, primitivePartitioner.fromPartitions(partsByte, 0, PrimitiveTypePartitioner.BYTE));
-    
+    assertEquals((byte) 12, primitivePartitioner.fromPartitions(partsByte, 0, PrimitiveTypePartitioner.BYTE));
+
     ArrayList<BigInteger> partsByteMax = primitivePartitioner.toPartitions(Byte.MAX_VALUE, PrimitiveTypePartitioner.BYTE);
     assertEquals(1, partsByteMax.size());
     assertEquals(Byte.MAX_VALUE, primitivePartitioner.fromPartitions(partsByteMax, 0, PrimitiveTypePartitioner.BYTE));
@@ -165,12 +165,12 @@ public class PartitionUtilsTest
 
     partsShort = primitivePartitioner.toPartitions("32767", PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShort.size());
-    assertEquals((short)32767, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
-    
+    assertEquals((short) 32767, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
+
     partsShort = primitivePartitioner.toPartitions((short) -42, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShort.size());
     assertEquals((short) -42, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
-    
+
     ArrayList<BigInteger> partsShortMax = primitivePartitioner.toPartitions(Short.MAX_VALUE, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShortMax.size());
     assertEquals(Short.MAX_VALUE, primitivePartitioner.fromPartitions(partsShortMax, 0, PrimitiveTypePartitioner.SHORT));
@@ -238,12 +238,12 @@ public class PartitionUtilsTest
     partsChar = primitivePartitioner.toPartitions(charTest, PrimitiveTypePartitioner.CHAR);
     assertEquals(2, partsChar.size());
     assertEquals(charTest, primitivePartitioner.fromPartitions(partsChar, 0, PrimitiveTypePartitioner.CHAR));
-    
+
     charTest = '\uFEFF';
     partsChar = primitivePartitioner.toPartitions(charTest, PrimitiveTypePartitioner.CHAR);
     assertEquals(2, partsChar.size());
     assertEquals(charTest, primitivePartitioner.fromPartitions(partsChar, 0, PrimitiveTypePartitioner.CHAR));
-    
+
     ArrayList<BigInteger> partsCharMax = primitivePartitioner.toPartitions(Character.MAX_VALUE, PrimitiveTypePartitioner.CHAR);
     assertEquals(2, partsCharMax.size());
     assertEquals(Character.MAX_VALUE, primitivePartitioner.fromPartitions(partsCharMax, 0, PrimitiveTypePartitioner.CHAR));
