@@ -20,6 +20,7 @@ package org.apache.pirk.schema.data.partitioner;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.pirk.utils.SystemConfiguration;
@@ -34,9 +35,9 @@ public class IPDataPartitioner implements DataPartitioner
   private static final long serialVersionUID = 1L;
 
   @Override
-  public ArrayList<BigInteger> toPartitions(Object object, String type)
+  public List<BigInteger> toPartitions(Object object, String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>(4);
 
     String[] octets = ((String) object).split("\\.");
     for (String oct : octets)
@@ -50,7 +51,7 @@ public class IPDataPartitioner implements DataPartitioner
   @Override
   public Object fromPartitions(List<BigInteger> parts, int partsIndex, String type)
   {
-    Object element;
+    String element;
 
     element = parts.get(partsIndex).toString() + "." + parts.get(partsIndex + 1).toString() + "." + parts.get(partsIndex + 2).toString() + "."
         + parts.get(partsIndex + 3).toString();
@@ -65,24 +66,18 @@ public class IPDataPartitioner implements DataPartitioner
   }
 
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type)
+  public List<BigInteger> getPaddedPartitions(String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
-
-    for (int i = 0; i < 4; ++i)
-    {
-      parts.add(BigInteger.ZERO);
-    }
-    return parts;
+    return Arrays.asList(BigInteger.ZERO, BigInteger.ZERO, BigInteger.ZERO, BigInteger.ZERO);
   }
 
   /**
    * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
    */
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type)
+  public List<BigInteger> arrayToPartitions(List<?> elementList, String type)
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>();
 
     int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
     for (int i = 0; i < numArrayElementsToReturn; ++i)
