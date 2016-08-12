@@ -91,6 +91,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
       } catch (IOException e)
       {
         e.printStackTrace();
+        throw e;
       }
       ComputeEncryptedRow.loadCacheFromHDFS(fs, query.getExpFile(rowIndex), query);
     }

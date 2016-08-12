@@ -21,6 +21,7 @@ package org.apache.pirk.schema.response;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.hadoop.io.Text;
@@ -70,6 +71,7 @@ public class QueryResponseJSON implements Serializable
     if (queryInfo == null)
     {
       logger.info("queryInfo is null");
+      throw new NullPointerException("queryInfo is null");
     }
 
     QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
@@ -187,9 +189,9 @@ public class QueryResponseJSON implements Serializable
 
   public void setAllFields(HashMap<String,String> dataMap)
   {
-    for (String key : dataMap.keySet())
+    for (Entry<String,String> entry : dataMap.entrySet())
     {
-      setMapping(key, dataMap.get(key));
+      setMapping(entry.getKey(), entry.getValue());
     }
   }
 

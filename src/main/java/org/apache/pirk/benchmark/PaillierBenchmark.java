@@ -66,7 +66,7 @@ public class PaillierBenchmark
 
       } catch (PIRException e)
       {
-        System.out.printf("Couldn't build pallier object!\n");
+        System.out.printf("Couldn't build pallier object!%n");
       }
 
       r1 = BigInteger.valueOf(3);

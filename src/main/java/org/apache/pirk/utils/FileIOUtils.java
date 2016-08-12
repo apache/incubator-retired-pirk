@@ -96,12 +96,9 @@ public class FileIOUtils
       return null;
     }
 
-    try
+    // create buffered reader
+    try (BufferedReader br = new BufferedReader(new FileReader(file)))
     {
-      // create buffered reader
-      FileReader fr = new FileReader(file);
-      BufferedReader br = new BufferedReader(fr);
-
       // read through the file, line by line
       String line;
       while ((line = br.readLine()) != null)
@@ -112,7 +109,6 @@ public class FileIOUtils
           collection.add(item);
         }
       }
-
     } catch (Exception e)
     {
       logger.error("unable to read file");
