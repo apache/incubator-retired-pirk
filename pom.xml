@@ -76,7 +76,6 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
-
 	</repositories>
 
 	<properties>
