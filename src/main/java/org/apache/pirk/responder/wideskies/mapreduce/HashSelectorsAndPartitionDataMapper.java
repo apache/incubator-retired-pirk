@@ -141,6 +141,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
       {
         logger.error("Error in partitioning data element value = " + StringUtils.mapWritableToString(value));
         e.printStackTrace();
+        throw new RuntimeException(e);
       }
 
       keyOut.set(returnTuple._1);

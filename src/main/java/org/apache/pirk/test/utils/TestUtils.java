@@ -76,22 +76,23 @@ public class TestUtils
   {
     Process proc = p.start();
 
-    BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-    BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-    // Read the output from the command
-    logger.info("Standard output of the command:\n");
-    String s;
-    while ((s = stdInput.readLine()) != null)
+    try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream())))
     {
-      logger.info(s);
-    }
+      // Read the output from the command
+      logger.info("Standard output of the command:\n");
+      String s;
+      while ((s = stdInput.readLine()) != null)
+      {
+        logger.info(s);
+      }
 
-    // Read any errors from the attempted command
-    logger.info("Standard error of the command (if any):\n");
-    while ((s = stdError.readLine()) != null)
-    {
-      logger.info(s);
+      // Read any errors from the attempted command
+      logger.info("Standard error of the command (if any):\n");
+      while ((s = stdError.readLine()) != null)
+      {
+        logger.info(s);
+      }
     }
   }
 

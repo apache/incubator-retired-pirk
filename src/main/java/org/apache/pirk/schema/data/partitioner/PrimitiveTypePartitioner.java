@@ -18,12 +18,11 @@
  */
 package org.apache.pirk.schema.data.partitioner;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.util.ByteArrayBuffer;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -48,22 +47,18 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   public static final String CHAR = "char";
   public static final String STRING = "string";
 
-  // Default constructor
-  public PrimitiveTypePartitioner()
-  {}
-
   /**
    * Splits the given BigInteger into partitions given by the partitionSize
    *
    */
-  public static ArrayList<BigInteger> partitionBits(BigInteger value, int partitionSize, BigInteger mask) throws Exception
+  public static List<BigInteger> partitionBits(BigInteger value, int partitionSize, BigInteger mask) throws PIRException
   {
     if (mask.bitLength() != partitionSize)
     {
-      throw new Exception("mask.bitLength() " + mask.bitLength() + " != partitionSize = " + partitionSize);
+      throw new PIRException("mask.bitLength() " + mask.bitLength() + " != partitionSize = " + partitionSize);
     }
 
-    ArrayList<BigInteger> partitions = new ArrayList<>();
+    List<BigInteger> partitions = new ArrayList<>();
     if (value.bitLength() < partitionSize)
     {
       partitions.add(value);
@@ -73,11 +68,10 @@ public class PrimitiveTypePartitioner implements DataPartitioner
       int bitLength = value.bitLength();
       mask = mask.shiftLeft(bitLength - partitionSize); // shift left for big endian partitioning
 
-      BigInteger result;
       int partNum = 0;
       for (int i = 0; i < bitLength; i += partitionSize)
       {
-        result = value.and(mask);
+        BigInteger result = value.and(mask);
 
         int shiftSize = bitLength - (partNum + 1) * partitionSize;
         if (shiftSize < 0) // partitionSize does not divide bitLength, the remaining bits do not need shifting
@@ -164,67 +158,74 @@ public class PrimitiveTypePartitioner implements DataPartitioner
     switch (type)
     {
       case BYTE:
-        BigInteger bInt = parts.get(partsIndex);
-        element = Byte.valueOf(bInt.toString());
+        element = parts.get(partsIndex).byteValueExact();
         break;
       case SHORT:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getShort();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = bytesToShort(bytes);
         break;
       }
       case INT:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getInt();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = bytesToInt(bytes);
         break;
       }
       case LONG:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getLong();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = bytesToLong(bytes);
         break;
       }
       case FLOAT:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getFloat();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = Float.intBitsToFloat(bytesToInt(bytes));
         break;
       }
       case DOUBLE:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getDouble();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = Double.longBitsToDouble(bytesToLong(bytes));
         break;
       }
       case CHAR:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = ByteBuffer.wrap(bytes).getChar();
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        element = (char) bytesToShort(bytes);
         break;
       }
       case STRING:
       {
-        byte[] bytes = appendBytes(parts, partsIndex, getNumPartitions(type));
-        element = new String(bytes).trim(); // this should remove 0 padding added for partitioning underflowing strings
+        byte[] bytes = partsToBytes(parts, partsIndex, type);
+        try
+        {
+          // This should remove 0 padding added for partitioning underflowing strings.
+          element = new String(bytes, "UTF-8").trim();
+        } catch (UnsupportedEncodingException e)
+        {
+          // UTF-8 is a required encoding.
+          throw new RuntimeException(e);
+        }
         break;
       }
       default:
         throw new PIRException("type = " + type + " not recognized!");
     }
+
     return element;
   }
 
-  private byte[] appendBytes(List<BigInteger> parts, int partsIndex, int numParts)
+  private byte[] partsToBytes(List<BigInteger> parts, int partsIndex, String type) throws PIRException
   {
-    ByteArrayBuffer buf = new ByteArrayBuffer(numParts);
+    int numParts = getNumPartitions(type);
+    byte[] result = new byte[numParts];
     for (int i = 0; i < numParts; ++i)
     {
-      byte partByte = parts.get(partsIndex + i).byteValue();
-      buf.append(partByte);
+      result[i] = parts.get(partsIndex + i).byteValue();
     }
-
-    return buf.buffer();
+    return result;
   }
 
   /**
@@ -236,107 +237,69 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   {
     ArrayList<BigInteger> parts = new ArrayList<>();
 
-    int numParts = getNumPartitions(type);
+    byte[] bytes = new byte[0];
+
     switch (type)
     {
       case BYTE:
-        if (obj instanceof String)
-        {
-          parts.add(new BigInteger(ByteBuffer.allocate(1).put(Byte.parseByte((String) obj)).array()));
-        }
-        else
-        {
-          parts.add(new BigInteger(ByteBuffer.allocate(1).put((byte) obj).array()));
-        }
+        byte value = obj instanceof String ? Byte.parseByte((String) obj) : (byte) obj;
+        bytes = new byte[] {value};
+        break;
+      case CHAR:
+        char cvalue = obj instanceof String ? ((String) obj).charAt(0) : (char) obj;
+        bytes = shortToBytes((short) cvalue);
+        break;
+      case SHORT:
+        short svalue = obj instanceof String ? Short.parseShort((String) obj) : (short) obj;
+        bytes = shortToBytes(svalue);
+        break;
+      case INT:
+        int ivalue = obj instanceof String ? Integer.parseInt((String) obj) : (int) obj;
+        bytes = intToBytes(ivalue);
+        break;
+      case LONG:
+        long lvalue = obj instanceof String ? Long.parseLong((String) obj) : (long) obj;
+        bytes = longToBytes(lvalue);
+        break;
+      case FLOAT:
+        float fvalue = obj instanceof String ? Float.parseFloat((String) obj) : (float) obj;
+        bytes = intToBytes(Float.floatToRawIntBits(fvalue));
+        break;
+      case DOUBLE:
+        double dvalue = obj instanceof String ? Double.parseDouble((String) obj) : (double) obj;
+        bytes = longToBytes(Double.doubleToRawLongBits(dvalue));
         break;
       case STRING:
-        byte[] stringBytes = ((String) obj).getBytes();
-        for (int i = 0; i < numParts; ++i)
+        byte[] stringBytes;
+        try
+        {
+          stringBytes = ((String) obj).getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+          // UTF-8 is a required encoding.
+          throw new RuntimeException(e);
+        }
+        for (int i = 0; i < getNumPartitions(STRING); ++i)
         {
           if (i < stringBytes.length)
           {
-            parts.add(new BigInteger(ByteBuffer.allocate(1).put(stringBytes[i]).array()));
+            parts.add(BigInteger.valueOf((long) stringBytes[i] & 0xFF));
           }
           else
           {
-            parts.add(new BigInteger(ByteBuffer.allocate(1).put(Byte.parseByte("0")).array()));
+            parts.add(BigInteger.ZERO);
           }
         }
         break;
       default:
-        // Extract the byte array
-        byte[] bytes = new byte[0];
-        switch (type)
-        {
-          case SHORT:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putShort(Short.parseShort((String) obj)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putShort((short) obj).array();
-            }
-            break;
-          case INT:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putInt(Integer.parseInt((String) obj)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putInt((int) obj).array();
-            }
-            break;
-          case LONG:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putLong(Long.parseLong((String) obj)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putLong((long) obj).array();
-            }
-            break;
-          case FLOAT:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putFloat(Float.parseFloat((String) obj)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putFloat((float) obj).array();
-            }
-            break;
-          case DOUBLE:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putDouble(Double.parseDouble((String) obj)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putDouble((double) obj).array();
-            }
-            break;
-          case CHAR:
-            if (obj instanceof String)
-            {
-              bytes = ByteBuffer.allocate(numParts).putChar(((String) obj).charAt(0)).array();
-            }
-            else
-            {
-              bytes = ByteBuffer.allocate(numParts).putChar((char) obj).array();
-            }
-            break;
-        }
+        throw new PIRException("type = " + type + " not recognized!");
+    }
 
-        // Add bytes to parts ArrayList
-        for (byte b : bytes)
-        {
-          // Make sure that BigInteger treats the byte as 'unsigned' literal
-          parts.add(BigInteger.valueOf((long) b & 0xFF));
-        }
-        break;
+    // Add any bytes to parts list.
+    for (byte b : bytes)
+    {
+      // Make sure that BigInteger treats the byte as 'unsigned' literal
+      parts.add(BigInteger.valueOf((long) b & 0xFF));
     }
 
     return parts;
@@ -346,53 +309,14 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Method to get an empty set of partitions by data type - used for padding return array values
    */
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws PIRException
+  public List<BigInteger> getPaddedPartitions(String type) throws PIRException
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
-
     int numParts = getNumPartitions(type);
-    switch (type)
-    {
-      case BYTE:
-        parts.add(new BigInteger(ByteBuffer.allocate(1).put(Byte.parseByte("0")).array()));
-        break;
-      case STRING:
-        for (int i = 0; i < numParts; ++i)
-        {
-          parts.add(new BigInteger(ByteBuffer.allocate(1).put(Byte.parseByte("0")).array()));
-        }
-        break;
-      default:
-        // Extract the byte array
-        byte[] bytes = new byte[0];
-        switch (type)
-        {
-          case SHORT:
-            bytes = ByteBuffer.allocate(numParts).putShort(Short.parseShort("0")).array();
-            break;
-          case INT:
-            bytes = ByteBuffer.allocate(numParts).putInt(Integer.parseInt("0")).array();
-            break;
-          case LONG:
-            bytes = ByteBuffer.allocate(numParts).putLong(Long.parseLong("0")).array();
-            break;
-          case FLOAT:
-            bytes = ByteBuffer.allocate(numParts).putFloat(Float.parseFloat("0")).array();
-            break;
-          case DOUBLE:
-            bytes = ByteBuffer.allocate(numParts).putDouble(Double.parseDouble("0")).array();
-            break;
-          case CHAR:
-            bytes = ByteBuffer.allocate(numParts).putChar('0').array();
-            break;
-        }
 
-        // Add bytes to parts ArrayList
-        for (byte b : bytes)
-        {
-          parts.add(new BigInteger(ByteBuffer.allocate(1).put(b).array()));
-        }
-        break;
+    List<BigInteger> parts = new ArrayList<>(numParts);
+    for (int i = 0; i < numParts; i++)
+    {
+      parts.add(BigInteger.ZERO);
     }
     return parts;
   }
@@ -414,11 +338,45 @@ public class PrimitiveTypePartitioner implements DataPartitioner
         parts.addAll(toPartitions(elementList.get(i), type));
       }
       else
-      // pad with encryptions of zero
       {
+        // Pad with encryptions of zero.
         parts.addAll(getPaddedPartitions(type));
       }
     }
     return parts;
+  }
+
+  // Helpers to return the given numbers in network byte order representation.
+
+  private byte[] shortToBytes(short value)
+  {
+    return new byte[] {(byte) (value >> 8), (byte) value};
+  }
+
+  private short bytesToShort(byte[] bytes)
+  {
+    return (short) (bytes[0] << 8 | bytes[1] & 0xff);
+  }
+
+  private byte[] intToBytes(int value)
+  {
+    return new byte[] {(byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value};
+  }
+
+  private int bytesToInt(byte[] bytes)
+  {
+    return (bytes[0] << 24) | (bytes[1] & 0xff) << 16 | (bytes[2] & 0xff) << 8 | (bytes[3] & 0xff);
+  }
+
+  private byte[] longToBytes(long value)
+  {
+    return new byte[] {(byte) (value >> 56), (byte) (value >> 48), (byte) (value >> 40), (byte) (value >> 32), (byte) (value >> 24), (byte) (value >> 16),
+        (byte) (value >> 8), (byte) value};
+  }
+
+  private long bytesToLong(byte[] bytes)
+  {
+    return (long) bytes[0] << 56 | ((long) bytes[1] & 0xff) << 48 | ((long) bytes[2] & 0xff) << 40 | ((long) bytes[3] & 0xff) << 32
+        | ((long) bytes[4] & 0xff) << 24 | ((long) bytes[5] & 0xff) << 16 | ((long) bytes[6] & 0xff) << 8 | (long) bytes[7] & 0xff;
   }
 }
