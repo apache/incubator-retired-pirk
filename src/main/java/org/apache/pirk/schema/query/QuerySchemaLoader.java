@@ -300,7 +300,7 @@ public class QuerySchemaLoader
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
   {
-    HashSet<String> filteredNamesSet = new HashSet<>();
+    Set<String> filteredNamesSet = new HashSet<>();
 
     NodeList filterNamesList = doc.getElementsByTagName("filterNames");
     if (filterNamesList.getLength() != 0)
@@ -311,7 +311,6 @@ public class QuerySchemaLoader
       }
 
       // Extract element names from the list.
-      Element foo = (Element) filterNamesList.item(0);
       NodeList filterNList = ((Element) filterNamesList.item(0)).getElementsByTagName("name");
       for (int i = 0; i < filterNList.getLength(); i++)
       {

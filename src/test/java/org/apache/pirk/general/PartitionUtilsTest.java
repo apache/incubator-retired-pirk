@@ -151,7 +151,7 @@ public class PartitionUtilsTest
     SystemConfiguration.setProperty("pir.stringBits", stringBits);
 
     // Test short
-    short shortTest = new Short("2456");
+    short shortTest = Short.valueOf("2456");
     ArrayList<BigInteger> partsShort = primitivePartitioner.toPartitions(shortTest, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShort.size());
     assertEquals(shortTest, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
