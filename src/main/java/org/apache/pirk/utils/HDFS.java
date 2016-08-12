@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -138,10 +139,9 @@ public class HDFS
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fs.create(filePath, true)));
 
       // write each element on a new line
-      for (String key : sortedMap.keySet())
+      for (Entry<String,Integer> entry : sortedMap.entrySet())
       {
-        bw.write(key + "," + sortedMap.get(key));
-        // bw.write(key);
+        bw.write(entry.getKey() + "," + entry.getValue());
         bw.newLine();
       }
       bw.close();
@@ -166,20 +166,14 @@ public class HDFS
 
   public static ArrayList<String> readFile(FileSystem fs, Path path)
   {
-
     ArrayList<String> rv = new ArrayList<>();
-    try
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(path))))
     {
-
-      InputStreamReader isr = new InputStreamReader(fs.open(path));
-      BufferedReader br = new BufferedReader(isr);
-
       String line;
       while ((line = br.readLine()) != null)
       {
         rv.add(line);
       }
-
     } catch (Exception e)
     {
       e.printStackTrace();
@@ -190,13 +184,9 @@ public class HDFS
 
   public static HashSet<String> readFileHashSet(FileSystem fs, Path path)
   {
-
     HashSet<String> rv = new HashSet<>();
-    try
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(path))))
     {
-      InputStreamReader isr = new InputStreamReader(fs.open(path));
-      BufferedReader br = new BufferedReader(isr);
-
       String line;
       while ((line = br.readLine()) != null)
       {

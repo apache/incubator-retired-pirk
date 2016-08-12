@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -170,7 +171,7 @@ public class Query implements Serializable, Storable
     // multithreaded case
     {
       ExecutorService es = Executors.newCachedThreadPool();
-      int elementsPerThread = (int) (Math.floor(queryElements.size() / numThreads));
+      int elementsPerThread = queryElements.size() / numThreads; // Integral division.
 
       ArrayList<ExpTableRunnable> runnables = new ArrayList<>();
       for (int i = 0; i < numThreads; ++i)
@@ -199,6 +200,10 @@ public class Query implements Serializable, Storable
       // Allow threads to complete
       es.shutdown(); // previously submitted tasks are executed, but no new tasks will be accepted
       boolean finished = es.awaitTermination(1, TimeUnit.DAYS); // waits until all tasks complete or until the specified timeout
+      if (!finished)
+      {
+        throw new InterruptedException("Operation timed out.");
+      }
 
       // Pull all decrypted elements and add to resultMap
       for (ExpTableRunnable runner : runnables)
@@ -207,9 +212,9 @@ public class Query implements Serializable, Storable
         expTable.putAll(expValues);
       }
       logger.debug("expTable.size() = " + expTable.keySet().size() + " NSqaured = " + NSquared.intValue() + " = " + NSquared.toString());
-      for (BigInteger key : expTable.keySet())
+      for (Entry<BigInteger,HashMap<Integer,BigInteger>> entry : expTable.entrySet())
       {
-        logger.debug("expTable for key = " + key.toString() + " = " + expTable.get(key).size());
+        logger.debug("expTable for key = " + entry.getKey().toString() + " = " + entry.getValue().size());
       }
     }
   }
