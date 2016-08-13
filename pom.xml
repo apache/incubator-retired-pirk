@@ -11,14 +11,13 @@
 	License for the specific language governing permissions and ~ limitations 
 	under the License. -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>apache-pirk</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>Apache Pirk (incubating) Project</name>
@@ -60,7 +59,7 @@
 		<connection>scm:git:git://git.apache.org/incubator-pirk.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-pirk.git</developerConnection>
 		<url>https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git</url>
-		<tag>HEAD</tag>
+		<tag>apache-pirk-0.0.1</tag>
 	</scm>
 
 	<issueManagement>
@@ -453,11 +452,9 @@
 								<shadedClassifierName>exe</shadedClassifierName>
 								<minimizeJar>true</minimizeJar>
 								<transformers>
-									<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									</transformer>
-									<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 									</transformer>
 								</transformers>
 								<filters>
