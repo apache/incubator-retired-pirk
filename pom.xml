@@ -11,8 +11,7 @@
 	License for the specific language governing permissions and ~ limitations 
 	under the License. -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 
@@ -76,8 +75,28 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
-
+		<repository>
+			<id>repository.apache.org</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>repository.apache.org</id>
+			<name>Apache Repository</name>
+			<layout>default</layout>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -433,11 +452,9 @@
 								<shadedClassifierName>exe</shadedClassifierName>
 								<minimizeJar>true</minimizeJar>
 								<transformers>
-									<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									</transformer>
-									<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 									</transformer>
 								</transformers>
 								<filters>
@@ -523,7 +540,7 @@
 					<version>2.5.1</version>
 					<configuration>
 						<useReleaseProfile>true</useReleaseProfile>
-						<releaseProfiles>apache-release</releaseProfiles>
+						<releaseProfiles>signed_release</releaseProfiles>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<goals>deploy</goals>
 						<tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
