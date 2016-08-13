@@ -17,7 +17,7 @@
 
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>apache-pirk</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Apache Pirk (incubating) Project</name>
@@ -59,7 +59,7 @@
 		<connection>scm:git:git://git.apache.org/incubator-pirk.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-pirk.git</developerConnection>
 		<url>https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git</url>
-		<tag>apache-pirk-0.0.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
