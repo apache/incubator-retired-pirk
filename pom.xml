@@ -75,7 +75,17 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
-
+		<repository>
+			<id>apache-repo</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/repositories/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 
 	<properties>
@@ -520,7 +530,7 @@
 					<version>2.5.1</version>
 					<configuration>
 						<useReleaseProfile>true</useReleaseProfile>
-						<releaseProfiles>apache-release</releaseProfiles>
+						<releaseProfiles>signed_release</releaseProfiles>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<goals>deploy</goals>
 						<tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
