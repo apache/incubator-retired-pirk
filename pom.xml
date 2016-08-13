@@ -17,7 +17,7 @@
 
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>apache-pirk</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Apache Pirk (incubating) Project</name>
@@ -78,7 +78,7 @@
 		<repository>
 			<id>repository.apache.org</id>
 			<name>Apache Repository</name>
-			<url>https://repository.apache.org/content/repositories/releases</url>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -93,7 +93,7 @@
 			<id>repository.apache.org</id>
 			<name>Apache Repository</name>
 			<layout>default</layout>
-			<url>https://repository.apache.org/content/repositories/releases</url>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
 			<uniqueVersion>false</uniqueVersion>
 		</repository>
 	</distributionManagement>
