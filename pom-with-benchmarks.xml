@@ -93,11 +93,17 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<scala.version>2.10.4</scala.version>
 		<jmh.version>1.11.3</jmh.version>
+		<junit.version>4.12</junit.version>
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
 		<javac.target>1.7</javac.target>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
