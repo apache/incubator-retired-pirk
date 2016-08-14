@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Runnable class for multithreaded PIR encryption
- *
  */
 public class EncryptQueryRunnable implements Runnable
 {
@@ -55,7 +54,7 @@ public class EncryptQueryRunnable implements Runnable
     start = startInput;
     stop = stopInput;
 
-    encryptedValues = new TreeMap<Integer,BigInteger>();
+    encryptedValues = new TreeMap<>();
   }
 
   /**

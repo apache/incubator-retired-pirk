@@ -53,7 +53,7 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
   @Override
   public Iterable<Tuple2<Integer,String>> call(Iterator<Tuple2<Integer,Iterable<Tuple2<Integer,BigInteger>>>> iter) throws Exception
   {
-    ArrayList<Tuple2<Integer,String>> keyFileList = new ArrayList<Tuple2<Integer,String>>();
+    ArrayList<Tuple2<Integer,String>> keyFileList = new ArrayList<>();
 
     FileSystem fs = FileSystem.get(new Configuration());
 
@@ -73,7 +73,7 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
       int queryHash = expTuple._1;
 
       // Record the queryHash -> fileName
-      keyFileList.add(new Tuple2<Integer,String>(queryHash, fileName));
+      keyFileList.add(new Tuple2<>(queryHash, fileName));
 
       // Write the partition elements to the corresponding exp table file
       // each line: queryHash,<power>-<element^power mod N^2>

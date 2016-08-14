@@ -383,7 +383,7 @@ public class QueryParserUtils
             }
             else if (!(value).equals(itemTokens[1])) // Single value match
             {
-              logger.debug("We do not have a single value match: stringValue " + (String) value + " != itemTokens[1] = " + itemTokens[1]);
+              logger.debug("We do not have a single value match: stringValue " + value + " != itemTokens[1] = " + itemTokens[1]);
               satisfiesQuery = false;
             }
           }

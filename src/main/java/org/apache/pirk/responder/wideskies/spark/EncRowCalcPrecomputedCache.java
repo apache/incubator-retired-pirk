@@ -41,7 +41,6 @@ public class EncRowCalcPrecomputedCache implements
   private static final Logger logger = LoggerFactory.getLogger(EncRowCalcPrecomputedCache.class);
 
   private Accumulators accum = null;
-  private BroadcastVars bVars = null;
 
   Query query = null;
 
@@ -53,12 +52,11 @@ public class EncRowCalcPrecomputedCache implements
   public EncRowCalcPrecomputedCache(Accumulators accumIn, BroadcastVars bvIn)
   {
     accum = accumIn;
-    bVars = bvIn;
 
-    query = bVars.getQuery();
+    query = bvIn.getQuery();
 
-    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bvIn.getLimitHitsPerSelector();
+    maxHitsPerSelector = bvIn.getMaxHitsPerSelector();
 
     expTable = new HashMap<>();
 

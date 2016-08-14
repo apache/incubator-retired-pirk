@@ -222,18 +222,17 @@ public class ComputeResponse
   {
     logger.info("Performing query: ");
 
-    JavaRDD<MapWritable> inputRDD = null;
-    if (dataInputFormat.equals(InputFormatConst.BASE_FORMAT))
+    JavaRDD<MapWritable> inputRDD;
+    switch (dataInputFormat)
     {
-      inputRDD = readData();
-    }
-    else if (dataInputFormat.equals(InputFormatConst.ES))
-    {
-      inputRDD = readDataES();
-    }
-    else
-    {
-      throw new PIRException("Unknown data input format " + dataInputFormat);
+      case InputFormatConst.BASE_FORMAT:
+        inputRDD = readData();
+        break;
+      case InputFormatConst.ES:
+        inputRDD = readDataES();
+        break;
+      default:
+        throw new PIRException("Unknown data input format " + dataInputFormat);
     }
 
     performQuery(inputRDD);
@@ -243,7 +242,7 @@ public class ComputeResponse
    * Method to read in the data from an allowed input format, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaRDD<MapWritable> readData() throws ClassNotFoundException, Exception
+  public JavaRDD<MapWritable> readData() throws Exception
   {
     logger.info("Reading data ");
 
