@@ -148,7 +148,201 @@
           
           <h1 class="title">Making a Release</h1>
           
-          <p>Information regarding how to make a release for Apache Pirk coming soon!</p>
+          <p>This is a guide to making a release of Apache Pirk (incubating). Please follow the steps below.</p>
+
+<ol>
+  <li><a href="#preliminaries">Preliminaries</a>
+    <ul>
+      <li><a href="#apache-release-documentation">Apache Release Documentation</a></li>
+      <li><a href="#code-signing-key">Code Signing Key</a></li>
+      <li><a href="#prepare-your-maven-settings">Prepare Your Maven Settings</a></li>
+      <li><a href="#ensure-jira-issues-are-appropriately-tagged-for-the-release">Ensure JIRA Issues are Appropriately Tagged for the Release</a></li>
+    </ul>
+  </li>
+  <li><a href="#create-the-release-candidate">Create the Release Candidate</a>
+    <ul>
+      <li><a href="#create-the-candidate-release-branch">Create the Candidate Release Branch</a></li>
+      <li><a href="#create-the-candidate-release-artifacts">Create the Candidate Release Artifacts</a></li>
+      <li><a href="#validate-the-release-candidate">Validate the Release Candidate</a></li>
+      <li><a href="#close-the-staging-repository">Close the Staging Repository</a></li>
+      <li><a href="#how-to-roll-back-a-release-candidate">How to Roll Back a Release Candidate</a></li>
+    </ul>
+  </li>
+  <li><a href="#vote-on-the-release">Vote on the Release</a></li>
+  <li><a href="#publish-the-release">Publish the Release</a></li>
+  <li><a href="#update-the-website">Update the Website</a></li>
+</ol>
+
+<h2 id="preliminaries">Preliminaries</h2>
+
+<h3 id="apache-release-documentation">Apache Release Documentation</h3>
+
+<p>The ASF release documentation, including the incubator release documentation, can be found here:</p>
+
+<ul>
+  <li><a href="http://www.apache.org/dev/release-publishing">Apache Release Guide</a></li>
+  <li><a href="http://www.apache.org/dev/release.html">Apache Release Policy</a></li>
+  <li><a href="http://incubator.apache.org/guides/releasemanagement.html">Apache Incubator Release Guidelines</a></li>
+  <li><a href="http://incubator.apache.org/incubation/Incubation_Policy.html#Releases">Apache Incubator Release Policy</a></li>
+  <li><a href="http://www.apache.org/dev/publishing-maven-artifacts.html">Maven Release Info</a></li>
+</ul>
+
+<h3 id="code-signing-key">Code Signing Key</h3>
+
+<p>Create a code signing gpg key for release signing; use <code class="highlighter-rouge">&lt;your Apache ID&gt;@apache.org</code> for your primary ID for the code signing key. See the <a href="https://www.apache.org/dev/release-signing">Apache Release Signing documentation</a> for futher information.</p>
+
+<ul>
+  <li>Add your code signing key to your Apache ID <a href="https://id.apache.org/">here</a></li>
+  <li>Publish it to a <a href="http://www.apache.org/dev/release-signing.html#keyserver">public key server</a> such as the <a href="http://pgp.mit.edu/">MIT key server</a>.</li>
+  <li>Add it to the Pirk <a href="https://github.com/apache/incubator-pirk/blob/master/KEYS">KEYS file</a>.</li>
+</ul>
+
+<h3 id="prepare-your-maven-settings">Prepare Your Maven Settings</h3>
+
+<p>Make sure that your Maven settings.xml file contains the following:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;settings&gt;
+   &lt;profiles&gt;
+         &lt;profile&gt;
+           &lt;id&gt;signed_release&lt;/id&gt;
+           &lt;properties&gt;
+               &lt;mavenExecutorId&gt;forked-path&lt;/mavenExecutorId&gt;
+               &lt;gpg.keyname&gt;yourKeyName&lt;/gpg.keyname&gt;
+               &lt;gpg.passphrase&gt;yourKeyPassword&lt;/gpg.passphrase&gt;
+           &lt;/properties&gt;
+       &lt;/profile&gt;
+ &lt;/profiles&gt;
+  &lt;servers&gt;
+    	&lt;server&gt;
+      		&lt;id&gt;apache.releases.https&lt;/id&gt;
+      		&lt;username&gt;yourApacheID&lt;/username&gt;
+     		&lt;password&gt;yourApachePassword&lt;/password&gt;
+   		 &lt;/server&gt;
+         &lt;server&gt;
+             &lt;id&gt;repository.apache.org&lt;/id&gt;
+             &lt;username&gt;yourApacheID&lt;/username&gt;
+             &lt;password&gt;yourApachePassword&lt;/password&gt;
+         &lt;/server&gt;
+  &lt;/servers&gt;
+&lt;/settings&gt;
+</code></pre>
+</div>
+
+<h3 id="ensure-jira-issues-are-appropriately-tagged-for-the-release">Ensure JIRA Issues are Appropriately Tagged for the Release</h3>
+
+<p>Ensure that all Pirk JIRA issues that are addressed in this release are marked with the release version in the ‘FixVersion’ field of the issue.</p>
+
+<h2 id="create-the-release-candidate">Create the Release Candidate</h2>
+
+<h3 id="create-the-candidate-release-branch">Create the Candidate Release Branch</h3>
+
+<p>Create a branch off of master with its name equal to the release version. For example, if the candidate release version is 0.0.1, create a branch called 0.0.1.</p>
+
+<h3 id="create-the-candidate-release-artifacts">Create the Candidate Release Artifacts</h3>
+
+<p>Check out the candidate release branch.</p>
+
+<p>Ensure that the application builds and all in-memory tests pass via <code class="highlighter-rouge">mvn clean install</code>.</p>
+
+<p>Perform the following to generate and stage the artifacts:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">mvn clean release:clean</code></li>
+  <li><code class="highlighter-rouge">mvn release:prepare -Psigned_release -Darguments="-DskipTests"</code>
+    <ul>
+      <li>You will be promted to answer the following questions:</li>
+      <li>What is the release version for “Apache Pirk (incubating) Project”? <em>Answer:</em> <code class="highlighter-rouge">&lt;new release version&gt;-incubating</code></li>
+      <li>What is SCM release tag or label for “Apache Pirk (incubating) Project”? <em>Answer:</em> Accept the default</li>
+      <li>What is the new development version for “Apache Pirk (incubating) Project”? <em>Answer:</em> Accept the default</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">mvn -Psigned_release release:perform -Darguments="-DskipTests"</code>
+    <ul>
+      <li>This command will generate the artifacts and push them to the <a href="https://repository.apache.org/#stagingRepositories">Nexus repo</a>. If you would like to perform a dry run first (without pushing the artifacts to the repo), add the arg <code class="highlighter-rouge">-DdryRun=true</code></li>
+    </ul>
+  </li>
+</ol>
+
+<p>The candidate release artifacts can be found in the <a href="https://repository.apache.org/#stagingRepositories">Nexus staging repo</a>. Log in with your Apache creds; the candidate release artifacts are found in <code class="highlighter-rouge">orgapachepirk-1001</code>.</p>
+
+<p>The candidate artifacts can also be found in the <code class="highlighter-rouge">target</code> folder of your local branch.</p>
+
+<h3 id="validate-the-release-candidate">Validate the Release Candidate</h3>
+
+<p>As per the Apache documentation, verify that the release candidate artifacts satisfy the following:</p>
+
+<ul>
+  <li>Checksums and PGP signatures are valid</li>
+  <li>Build is successful including automated tests</li>
+  <li>DISCLAIMER is correct, filenames include “incubating”</li>
+  <li>Top-level LICENSE and NOTICE are correct. See:
+    <ul>
+      <li><a href="http://www.apache.org/dev/release.html#license">LICENSE file requirements</a></li>
+      <li><a href="http://www.apache.org/dev/release.html#notice-content">NOTICE file requirements</a></li>
+    </ul>
+  </li>
+  <li>All source files have license headers where appropriate, RAT checks pass</li>
+  <li>The provenance of all source files is clear (ASF or software grants)</li>
+  <li>Dependencies licenses are ok as per http://apache.org/legal/</li>
+  <li>Release consists of source code only, no binaries</li>
+</ul>
+
+<h3 id="close-the-staging-repository">Close the Staging Repository</h3>
+
+<p>If the release candidate appears to pass the validation checklist, close the staging repository in Nexus by selecting the staging repository <code class="highlighter-rouge">orgapachepirk-1001</code> and clicking on the ‘Close’ icon.</p>
+
+<p>Nexus will now run through a series of checksum and signature validations.</p>
+
+<p><em>If the checks pass</em>, Nexus will close the repository and give a URL to the closed staging repo (which contains the candidate artifacts). Send this URL to folks in the voting email so that they can find the staged candidate release artifacts.</p>
+
+<p><em>If the checks do not pass</em>, drop the staging repo by clicking the ‘Drop’ icon, follow the instructions on how to <a href="#how-to-roll-back-a-release-candidate">roll back the release candidate</a>, fix the issues, and start over with <a href="#create-the-candidate-release-artifacts">creating the candidate artifacts</a>.</p>
+
+<h3 id="how-to-roll-back-a-release-candidate">How to Roll Back a Release Candidate</h3>
+
+<p>A release candidate must be rolled back in Nexus and locally.</p>
+
+<p>To roll back the release candidate in Nexus, drop the staging repo by clicking the ‘Drop’ icon.</p>
+
+<p>To roll back the release locally in your candidate relesae branch:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">mvn -Psigned_release versions:set -DnewVersion=&lt;previous release version&gt;-Snapshot</code></li>
+  <li><code class="highlighter-rouge">mvn -Psigned_release versions:commit</code></li>
+  <li><code class="highlighter-rouge">git commit</code> to commit the new pom version</li>
+  <li><code class="highlighter-rouge">git push --delete apache &lt;tagname&gt;</code> to delete the remote github tag</li>
+  <li><code class="highlighter-rouge">git tag -d &lt;tagname&gt;</code> to deletes the local tag</li>
+</ol>
+
+<h2 id="vote-on-the-release">Vote on the Release</h2>
+
+<p>To vote on a candidate release, send an email to the <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#064;&#112;&#105;&#114;&#107;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#105;&#110;&#099;&#117;&#098;&#097;&#116;&#111;&#114;&#046;&#111;&#114;&#103;">dev list</a> with subject <code class="highlighter-rouge">[VOTE]: Pirk &lt;release version&gt; Release</code> and a body along the lines of:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>This is the vote for &lt;release version&gt; of Apache Pirk (incubating).
+
+The vote will run for at least 72 hours and will close on &lt;closing date&gt;.
+
+The artifacts can be downloaded here: https://repository.apache.org/content/repositories/orgapachepirk-1001
+
+All JIRAs completed for this release are tagged with 'FixVersion = &lt;release version&gt;'. You can view them here: &lt;insert link to the JIRA search results for FixVersion = release version&gt;
+
+The artifacts have been signed with Key : &lt;ID of signing key&gt;
+
+Please vote accordingly:
+
+[ ] +1, accept RC as the official &lt;release version&gt; release 
+[ ] +0, I don't care either way,
+[ ] -1, do not accept RC as the official &lt;release version&gt; release because...
+</code></pre>
+</div>
+
+<h2 id="publish-the-release">Publish the Release</h2>
+
+<h2 id="update-the-website">Update the Website</h2>
+
+<p>Add the current release link to the <a href="/downloads">Downloads page</a>.</p>
+
+<p>Update the javadocs.</p>
+
 
         </div>
 
