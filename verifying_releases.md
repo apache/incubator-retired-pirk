@@ -16,7 +16,7 @@ Pirk contains unit and integration tests which can be automatically run via Mave
 
 Additionally, Pirk contains multiple distributed tests which must be run and must pass on a live cluster:
 
-	hadoop jar <pirkJar> test.distributed.DistributedTestDriver -j <full path to pirkJar>
+	hadoop jar <pirkJar> org.apache.pirk.test.distributed.DistributedTestDriver -j <full path to pirkJar>
 
 
 ## Foundation Level Requirements ##
