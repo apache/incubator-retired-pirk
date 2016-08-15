@@ -59,7 +59,7 @@ public class PaillierBenchmark
     @Setup(org.openjdk.jmh.annotations.Level.Trial)
     public void setUp()
     {
-      int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "100"));
+      int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 100);
       try
       {
         paillier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);

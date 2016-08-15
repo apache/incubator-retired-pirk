@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<!-- ~ Licensed to the Apache Software Foundation (ASF) under one or more 
+	~ contributor license agreements. See the NOTICE file distributed with ~ 
+	this work for additional information regarding copyright ownership. ~ The 
+	ASF licenses this file to You under the Apache License, Version 2.0 ~ (the 
+	"License"); you may not use this file except in compliance with ~ the License. 
+	You may obtain a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 
+	~ ~ Unless required by applicable law or agreed to in writing, software ~ 
+	distributed under the License is distributed on an "AS IS" BASIS, ~ WITHOUT 
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ~ See the 
+	License for the specific language governing permissions and ~ limitations 
+	under the License. -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.apache</groupId>
+		<artifactId>apache</artifactId>
+		<version>18</version>
+	</parent>
 
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>apache-pirk</artifactId>
@@ -81,6 +80,17 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>repository.apache.org</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 
 		<!-- This repository is TEMPORARY while we pilot additions to JNA-GMP -->
 		<!-- before we do a pull request and wait for Square to do a release  -->
@@ -94,6 +104,16 @@
 		</repository>
 
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>repository.apache.org</id>
+			<name>Apache Repository</name>
+			<layout>default</layout>
+			<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -210,9 +230,9 @@
 					<groupId>commons-net</groupId>
 				</exclusion>
 				<exclusion>
-                  <groupId>org.apache.hive</groupId>
-                  <artifactId>hive-service</artifactId>
-              	</exclusion>
+					<groupId>org.apache.hive</groupId>
+					<artifactId>hive-service</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
@@ -224,6 +244,18 @@
 				<exclusion>
 					<groupId>org.apache.storm</groupId>
 					<artifactId>storm-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-local</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-hadoop</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -352,6 +384,39 @@
 					</executions>
 				</plugin>
 
+				<!-- Coverage analysis for tests -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.7.5.201505241946</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+							<configuration>
+								<output>file</output>
+								<dumpOnExit>true</dumpOnExit>
+							</configuration>
+						</execution>
+						<execution>
+							<id>report</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Report jacoco coverage to coveralls.io -->
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>4.1.0</version>
+				</plugin>
+
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -417,14 +482,18 @@
 								<shadedClassifierName>exe</shadedClassifierName>
 								<minimizeJar>true</minimizeJar>
 								<transformers>
-									<transformer
-											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									</transformer>
-									<transformer
-											implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 									</transformer>
 								</transformers>
 								<filters>
+									<filter>
+										<artifact>org.tachyonproject:*</artifact>
+										<includes>
+											<include>org/tachyonproject/**</include>
+										</includes>
+									</filter>
 									<filter>
 										<artifact>*:*</artifact>
 										<excludes>
@@ -437,13 +506,13 @@
 							</configuration>
 						</execution>
 
-						<!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+						<!-- in the version with benchmarks (pom-with-benchmarks.xml), this 
 							is where that <execution></execution> lives -->
 
 					</executions>
 				</plugin>
 
-				<!--This plugin's configuration is used to store Eclipse m2e settings
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -468,27 +537,27 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore/>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
-								    <pluginExecutionFilter>
-								        <groupId>
-								            org.apache.rat
-								        </groupId>
-								        <artifactId>
-								            apache-rat-plugin
-								        </artifactId>
-								        <versionRange>
-								            [0.11,)
-								        </versionRange>
-								        <goals>
-								            <goal>check</goal>
-								        </goals>
-								    </pluginExecutionFilter>
-								    <action>
-								        <ignore/>
-								    </action>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.rat
+										</groupId>
+										<artifactId>
+											apache-rat-plugin
+										</artifactId>
+										<versionRange>
+											[0.11,)
+										</versionRange>
+										<goals>
+											<goal>check</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
@@ -501,7 +570,7 @@
 					<version>2.5.1</version>
 					<configuration>
 						<useReleaseProfile>true</useReleaseProfile>
-						<releaseProfiles>apache-release</releaseProfiles>
+						<releaseProfiles>signed_release</releaseProfiles>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<goals>deploy</goals>
 						<tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
@@ -538,12 +607,13 @@
 
 	<profiles>
 		<profile>
-			<!-- Performs execution of Integration Tests using the Maven FailSafe Plugin. The view of integration tests in this context
-			are those tests interfacing with external sources and services requiring additional resources or credentials that cannot
-			be explicitly provided. -->
+			<!-- Performs execution of Integration Tests using the Maven FailSafe 
+				Plugin. The view of integration tests in this context are those tests interfacing 
+				with external sources and services requiring additional resources or credentials 
+				that cannot be explicitly provided. -->
 			<id>integration-tests</id>
 			<build>
-			<plugins>
+				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
@@ -560,12 +630,12 @@
 			</build>
 		</profile>
 		<profile>
-			<!-- Checks style and licensing requirements. This is a good idea to run
-			for contributions and for the release process. While it would be nice to
-			run always these plugins can considerably slow the build and have proven
-			to create unstable builds in our multi-module project and when building using
-			multiple threads. The stability issues seen with Checkstyle in multi-module
-			builds include false-positives and false negatives. -->
+			<!-- Checks style and licensing requirements. This is a good idea to run 
+				for contributions and for the release process. While it would be nice to 
+				run always these plugins can considerably slow the build and have proven 
+				to create unstable builds in our multi-module project and when building using 
+				multiple threads. The stability issues seen with Checkstyle in multi-module 
+				builds include false-positives and false negatives. -->
 			<id>contrib-check</id>
 			<build>
 				<plugins>
@@ -597,12 +667,11 @@
 			</build>
 		</profile>
 		<profile>
-			<!-- This profile will disable DocLint which performs strict
-				JavaDoc processing which was introduced in JDK 8. These are technically errors
-				in the JavaDoc which we need to eventually address. However, if a release
-				is performed using JDK 8, the JavaDoc generation would fail. By activating
-				this profile when running on JDK 8 we can ensure the JavaDocs continue to
-				generate successfully -->
+			<!-- This profile will disable DocLint which performs strict JavaDoc processing 
+				which was introduced in JDK 8. These are technically errors in the JavaDoc 
+				which we need to eventually address. However, if a release is performed using 
+				JDK 8, the JavaDoc generation would fail. By activating this profile when 
+				running on JDK 8 we can ensure the JavaDocs continue to generate successfully -->
 			<id>disable-doclint</id>
 			<activation>
 				<jdk>1.8</jdk>

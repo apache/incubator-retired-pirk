@@ -24,10 +24,7 @@ import java.util.HashMap;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
@@ -37,41 +34,29 @@ public class Querier implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
-  private static final Logger logger = LoggerFactory.getLogger(Querier.class);
-
-  private QueryInfo queryInfo = null;
-
   private Query query = null; // contains the query vectors and functionality
 
   private Paillier paillier = null; // Paillier encryption functionality
 
-  private ArrayList<String> selectors = null; // selectors for the watchlist
+  private ArrayList<String> selectors = null; // selectors
 
   // map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
   private HashMap<Integer,String> embedSelectorMap = null;
 
-  public Querier(QueryInfo queryInfoInput, ArrayList<String> selectorsInput, Paillier paillierInput, Query pirQueryInput,
-      HashMap<Integer,String> embedSelectorMapInput)
+  public Querier(ArrayList<String> selectorsInput, Paillier paillierInput, Query queryInput, HashMap<Integer,String> embedSelectorMapInput)
   {
-    queryInfo = queryInfoInput;
-
     selectors = selectorsInput;
 
     paillier = paillierInput;
 
-    query = pirQueryInput;
+    query = queryInput;
 
     embedSelectorMap = embedSelectorMapInput;
   }
 
-  public QueryInfo getPirWatchlist()
-  {
-    return queryInfo;
-  }
-
-  public Query getPirQuery()
+  public Query getQuery()
   {
     return query;
   }

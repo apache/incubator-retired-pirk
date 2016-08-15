@@ -23,16 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Class to parse a date in ISO86091 format
  * 
  */
 public class ISO8601DateParser
 {
-  private static final Logger logger = LoggerFactory.getLogger(ISO8601DateParser.class);
 
   static
   {
@@ -41,34 +37,36 @@ public class ISO8601DateParser
 
   private static SimpleDateFormat format;
 
-  private static void init()
+  private static synchronized void init()
   {
     format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     format.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 
-  public static String parseDate(String date)
+  public static synchronized String parseDate(String date)
   {
     try
     {
       return format.parse(date).getTime() + "";
     } catch (Exception ignore)
-    {}
+    {
+      // Empty
+    }
 
     return null;
   }
 
-  public static Date getDate(String isoDate) throws ParseException
+  public static synchronized Date getDate(String isoDate) throws ParseException
   {
     return format.parse(isoDate);
   }
 
-  public static long getLongDate(String isoDate) throws ParseException
+  public static synchronized long getLongDate(String isoDate) throws ParseException
   {
     return format.parse(isoDate).getTime();
   }
 
-  public static String fromLongDate(long dateLongFormat)
+  public static synchronized String fromLongDate(long dateLongFormat)
   {
     Date date = new Date(dateLongFormat);
     return format.format(date);

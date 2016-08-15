@@ -70,21 +70,22 @@ public class ComputeEncryptedRow
     logger.info("Loading cache from hdfsFileName = " + hdfsFileName);
 
     Path expPath = new Path(hdfsFileName);
-    InputStreamReader isr = new InputStreamReader(fs.open(expPath));
-    BufferedReader br = new BufferedReader(isr);
-    String line;
-    while ((line = br.readLine()) != null) // form: element_hash,<exponent>-<element^exponent mod N^2>
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(expPath))))
     {
-      String[] rowValTokens = line.split(",");
-      BigInteger base = query.getQueryElement(Integer.parseInt(rowValTokens[0]));
+      String line;
+      while ((line = br.readLine()) != null) // form: element_hash,<exponent>-<element^exponent mod N^2>
+      {
+        String[] rowValTokens = line.split(",");
+        BigInteger base = query.getQueryElement(Integer.parseInt(rowValTokens[0]));
 
-      String[] expMod = rowValTokens[1].split("-");
-      BigInteger exponent = new BigInteger(expMod[0]);
-      BigInteger value = new BigInteger(expMod[1]);
+        String[] expMod = rowValTokens[1].split("-");
+        BigInteger exponent = new BigInteger(expMod[0]);
+        BigInteger value = new BigInteger(expMod[1]);
 
-      // Cache: <<base,exponent,NSquared>, base^exponent mod N^2>
-      Tuple3<BigInteger,BigInteger,BigInteger> key = new Tuple3<>(base, exponent, query.getNSquared());
-      expCache.put(key, value);
+        // Cache: <<base,exponent,NSquared>, base^exponent mod N^2>
+        Tuple3<BigInteger,BigInteger,BigInteger> key = new Tuple3<>(base, exponent, query.getNSquared());
+        expCache.put(key, value);
+      }
     }
   }
 

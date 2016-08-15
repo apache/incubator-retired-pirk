@@ -131,7 +131,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     query = new HadoopFileSystemStore(fs).recall(queryInputDir, Query.class);
     queryInfo = query.getQueryInfo();
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -225,9 +225,9 @@ public class ComputeResponseTool extends Configured implements Tool
     queryInputDir = SystemConfiguration.getProperty("pir.queryInput");
     stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
 
-    useHDFSLookupTable = SystemConfiguration.getProperty("pir.useHDFSLookupTable").equals("true");
+    useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 
-    numReduceTasks = Integer.parseInt(SystemConfiguration.getProperty("pir.numReduceTasks", "1"));
+    numReduceTasks = SystemConfiguration.getIntProperty("pir.numReduceTasks", 1);
   }
 
   private boolean computeExpTable() throws IOException, ClassNotFoundException, InterruptedException
@@ -237,7 +237,7 @@ public class ComputeResponseTool extends Configured implements Tool
     logger.info("Creating expTable");
 
     // The split location for the interim calculations, delete upon completion
-    Path splitDir = new Path("/tmp/splits-" + queryInfo.getQueryNum());
+    Path splitDir = new Path("/tmp/splits-" + queryInfo.getIdentifier());
     if (fs.exists(splitDir))
     {
       fs.delete(splitDir, true);
@@ -246,8 +246,8 @@ public class ComputeResponseTool extends Configured implements Tool
     TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
     ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
 
-    int numSplits = Integer.parseInt(SystemConfiguration.getProperty("pir.expCreationSplits", "100"));
-    int elementsPerSplit = (int) Math.floor(queryElements.size() / numSplits);
+    int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
+    int elementsPerSplit = queryElements.size() / numSplits; // Integral division.
     logger.info("numSplits = " + numSplits + " elementsPerSplit = " + elementsPerSplit);
     for (int i = 0; i < numSplits; ++i)
     {
@@ -263,7 +263,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Run the job to generate the expTable
     // Job jobExp = new Job(mrConfig.getConfig(), "pirExp-" + pirWL.getWatchlistNum());
-    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getQueryNum());
+    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getIdentifier());
 
     jobExp.setSpeculativeExecution(false);
     jobExp.getConfiguration().set("mapreduce.map.speculative", "false");
@@ -289,7 +289,7 @@ public class ComputeResponseTool extends Configured implements Tool
     jobExp.setMapOutputValueClass(Text.class);
 
     // Set the reducer and output params
-    int numExpLookupPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numExpLookupPartitions", "100"));
+    int numExpLookupPartitions = SystemConfiguration.getIntProperty("pir.numExpLookupPartitions", 100);
     jobExp.setNumReduceTasks(numExpLookupPartitions);
     jobExp.setReducerClass(ExpTableReducer.class);
 
@@ -320,17 +320,17 @@ public class ComputeResponseTool extends Configured implements Tool
         logger.info("fstat.getPath().getName().toString() = " + fstat.getPath().getName());
         try
         {
-          InputStreamReader isr = new InputStreamReader(fs.open(fstat.getPath()));
-          BufferedReader br = new BufferedReader(isr);
-          String line;
-          while ((line = br.readLine()) != null)
+          try (BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(fstat.getPath()))))
           {
-            String[] rowValTokens = line.split(","); // form is element_index,reducerNumber
-            String fileName = fstat.getPath().getParent() + "/" + FileConst.EXP + "-r-" + rowValTokens[1];
-            logger.info("fileName = " + fileName);
-            expFileTable.put(Integer.parseInt(rowValTokens[0]), fileName);
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+              String[] rowValTokens = line.split(","); // form is element_index,reducerNumber
+              String fileName = fstat.getPath().getParent() + "/" + FileConst.EXP + "-r-" + rowValTokens[1];
+              logger.info("fileName = " + fileName);
+              expFileTable.put(Integer.parseInt(rowValTokens[0]), fileName);
+            }
           }
-
         } catch (Exception e)
         {
           e.printStackTrace();

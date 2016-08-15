@@ -73,7 +73,7 @@ public class Responder
     queryInfo = query.getQueryInfo();
     queryType = queryInfo.getQueryType();
 
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }

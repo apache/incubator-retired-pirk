@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.MapWritable;
@@ -135,7 +136,7 @@ public class ComputeResponse
 
     queryInput = SystemConfiguration.getProperty("pir.queryInput");
     String stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
-    useModExpJoin = SystemConfiguration.getProperty("pir.useModExpJoin", "false").equals("true");
+    useModExpJoin = SystemConfiguration.getBooleanProperty("pir.useModExpJoin", false);
 
     logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery
         + " esResource = " + esResource);
@@ -175,7 +176,7 @@ public class ComputeResponse
     bVars.setQueryInfo(queryInfo);
 
     QuerySchema qSchema = null;
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -191,19 +192,18 @@ public class ComputeResponse
     // Set the local cache flag
     bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));
 
-    useHDFSLookupTable = SystemConfiguration.getProperty("pir.useHDFSLookupTable").equals("true");
+    useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 
     // Set the hit limit variables
     bVars.setLimitHitsPerSelector(Boolean.valueOf(SystemConfiguration.getProperty("pir.limitHitsPerSelector")));
     bVars.setMaxHitsPerSelector(Integer.parseInt(SystemConfiguration.getProperty("pir.maxHitsPerSelector")));
 
     // Set the number of data and column multiplication partitions
-    String numDataPartsString = SystemConfiguration.getProperty("pir.numDataPartitions", "1000");
-    numDataPartitions = Integer.parseInt(numDataPartsString);
-    numColMultPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numColMultPartitions", numDataPartsString));
+    numDataPartitions = SystemConfiguration.getIntProperty("pir.numDataPartitions", 1000);
+    numColMultPartitions = SystemConfiguration.getIntProperty("pir.numColMultPartitions", numDataPartitions);
 
     // Whether or not we are performing a reduceByKey or a groupByKey->reduce for column multiplication
-    colMultReduceByKey = SystemConfiguration.getProperty("pir.colMultReduceByKey", "false").equals("true");
+    colMultReduceByKey = SystemConfiguration.getBooleanProperty("pir.colMultReduceByKey", false);
 
     // Set the expDir
     bVars.setExpDir(outputDirExp);
@@ -231,6 +231,11 @@ public class ComputeResponse
     {
       inputRDD = readDataES();
     }
+    else
+    {
+      throw new PIRException("Unknown data input format " + dataInputFormat);
+    }
+
     performQuery(inputRDD);
   }
 
@@ -381,10 +386,11 @@ public class ComputeResponse
     Map<Long,BigInteger> encColResults = encColRDD.collectAsMap();
     logger.debug("encColResults.size() = " + encColResults.size());
 
-    for (long colVal : encColResults.keySet())
+    for (Entry<Long,BigInteger> entry : encColResults.entrySet())
     {
-      response.addElement((int) colVal, encColResults.get(colVal));
-      logger.debug("colNum = " + colVal + " column = " + encColResults.get(colVal).toString());
+      int colVal = entry.getKey().intValue();
+      response.addElement(colVal, entry.getValue());
+      logger.debug("colNum = " + colVal + " column = " + entry.getValue().toString());
     }
 
     try

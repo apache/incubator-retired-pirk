@@ -21,6 +21,7 @@ package org.apache.pirk.schema.response;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.hadoop.io.Text;
@@ -57,9 +58,6 @@ public class QueryResponseJSON implements Serializable
   public static final String QUERY_ID = "query_id"; // query ID that generated the notification
   public static final Text QUERY_ID_TEXT = new Text(QUERY_ID);
 
-  public static final String QUERY_NAME = "query_name"; // name of the query that generated the notification
-  public static final Text QUERY_NAME_TEXT = new Text(QUERY_NAME);
-
   public static final String SELECTOR = "match"; // tag for selector that generated the hit
   public static final Text SELECTOR_TEXT = new Text(SELECTOR);
 
@@ -73,6 +71,7 @@ public class QueryResponseJSON implements Serializable
     if (queryInfo == null)
     {
       logger.info("queryInfo is null");
+      throw new NullPointerException("queryInfo is null");
     }
 
     QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
@@ -190,9 +189,9 @@ public class QueryResponseJSON implements Serializable
 
   public void setAllFields(HashMap<String,String> dataMap)
   {
-    for (String key : dataMap.keySet())
+    for (Entry<String,String> entry : dataMap.entrySet())
     {
-      setMapping(key, dataMap.get(key));
+      setMapping(entry.getKey(), entry.getValue());
     }
   }
 
@@ -203,8 +202,7 @@ public class QueryResponseJSON implements Serializable
   public void setGeneralQueryResponseFields(QueryInfo queryInfo)
   {
     jsonObj.put(EVENT_TYPE, queryInfo.getQueryType());
-    jsonObj.put(QUERY_ID, queryInfo.getQueryNum());
-    jsonObj.put(QUERY_NAME, queryInfo.getQueryName());
+    jsonObj.put(QUERY_ID, queryInfo.getIdentifier().toString());
   }
 
   @Override

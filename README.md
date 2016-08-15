@@ -18,9 +18,11 @@ limitations under the License.
 <img alt="Apache Pirk" class="img-responsive" src="contrib/pirkImage.png" width="350"/>
 --
 
+--
+
 [![Build Status](https://api.travis-ci.org/apache/incubator-pirk.svg?branch=master)](https://travis-ci.org/apache/incubator-pirk?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/apache/incubator-pirk/badge.svg?branch=master)](https://coveralls.io/github/apache/incubator-pirk?branch=master)
---
+
 
 [Apache Pirk (incubating)](http://pirk.incubator.apache.org/) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
 
@@ -39,7 +41,7 @@ For convenience, the following POM files are included:
 
 Pirk may be built with a specific pom file via ‘mvn package -f ’
 
-Dependencies can be found in the pom.xml file and include [Apache Hadoop](http://hadoop.apache.org/), [Apache Spark](http://spark.apache.org/),  and [Elasticsearch](https://github.com/elastic/elasticsearch). Currently, Pirk may be utilized in a distributed Hadoop/MapReduce or Spark framework as well as in standalone mode.
+Dependencies can be found in the pom.xml file and include [Apache Hadoop](http://hadoop.apache.org/), [Apache Spark](http://spark.apache.org/), and [Elasticsearch](https://github.com/elastic/elasticsearch). Currently, Pirk may be utilized in a distributed Hadoop/MapReduce or Spark framework as well as in standalone mode.
 
 If you are a User, please check out the [For Users](http://pirk.incubator.apache.org/for_users) section of the Pirk website.
 

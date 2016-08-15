@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -119,7 +120,7 @@ public class DecryptResponse
     {
       numThreads = selectors.size();
     }
-    int elementsPerThread = (int) (Math.floor(selectors.size() / numThreads));
+    int elementsPerThread = selectors.size() / numThreads; // Integral division.
 
     ArrayList<DecryptResponseRunnable> runnables = new ArrayList<>();
     for (int i = 0; i < numThreads; ++i)
@@ -139,7 +140,7 @@ public class DecryptResponse
 
       // Create the runnable and execute
       // selectorMaskMap and rElements are synchronized, pirWatchlist is copied, selectors is partitioned
-      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.copy(), embedSelectorMap);
+      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
       runnables.add(runDec);
       es.execute(runDec);
     }
@@ -183,10 +184,9 @@ public class DecryptResponse
   {
     FileOutputStream fout = new FileOutputStream(new File(filename));
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (String selector : resultMap.keySet())
+    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
     {
-      ArrayList<QueryResponseJSON> hits = resultMap.get(selector);
-      for (QueryResponseJSON hitJSON : hits)
+      for (QueryResponseJSON hitJSON : entry.getValue())
       {
         bw.write(hitJSON.getJSONString());
         bw.newLine();
@@ -203,10 +203,9 @@ public class DecryptResponse
   {
     FileOutputStream fout = new FileOutputStream(file);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (String selector : resultMap.keySet())
+    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
     {
-      ArrayList<QueryResponseJSON> hits = resultMap.get(selector);
-      for (QueryResponseJSON hitJSON : hits)
+      for (QueryResponseJSON hitJSON : entry.getValue())
       {
         bw.write(hitJSON.getJSONString());
         bw.newLine();

@@ -61,7 +61,7 @@ public class DecryptResponseRunnable implements Runnable
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
 
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       if ((qSchema = queryInfo.getQuerySchema()) == null)
       {
@@ -146,6 +146,7 @@ public class DecryptResponseRunnable implements Runnable
           } catch (Exception e)
           {
             e.printStackTrace();
+            throw new RuntimeException(e);
           }
           qrJOSN.setMapping(selectorName, selector);
           logger.debug("selector = " + selector + " qrJOSN = " + qrJOSN.getJSONString());
