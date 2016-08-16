@@ -18,15 +18,6 @@
  */
 package org.apache.pirk.test.utils;
 
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.QuerySchema;
@@ -39,6 +30,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.junit.Assert.fail;
 
 /**
  * Class to hold the base functional distributed tests
@@ -65,14 +65,14 @@ public class BaseTests
     testDNSHostnameQuery(dataElements, null, false, false, numThreads, testFalsePositive);
   }
 
-  public static void testDNSHostnameQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
+  public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
       throws Exception
   {
     testDNSHostnameQuery(dataElements, fs, isSpark, isDistributed, numThreads, false);
   }
 
   // Query for the watched hostname occurred; ; watched value type: hostname (String)
-  public static void testDNSHostnameQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads,
+  public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads,
       boolean testFalsePositive) throws Exception
   {
     logger.info("Running testDNSHostnameQuery(): ");
@@ -197,7 +197,7 @@ public class BaseTests
   }
 
   // The watched IP address was detected in the response to a query; watched value type: IP address (String)
-  public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
+  public static void testDNSIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     logger.info("Running testDNSIPQuery(): ");
 
@@ -270,7 +270,7 @@ public class BaseTests
   }
 
   // A query that returned an nxdomain response was made for the watched hostname; watched value type: hostname (String)
-  public static void testDNSNXDOMAINQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
+  public static void testDNSNXDOMAINQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
       throws Exception
   {
     logger.info("Running testDNSNXDOMAINQuery(): ");
@@ -334,7 +334,7 @@ public class BaseTests
   }
 
   // Query for responses from watched srcIPs
-  public static void testSRCIPQuery(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
+  public static void testSRCIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     logger.info("Running testSRCIPQuery(): ");
 
@@ -406,7 +406,7 @@ public class BaseTests
   }
 
   // Query for responses from watched srcIPs
-  public static void testSRCIPQueryNoFilter(ArrayList<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
+  public static void testSRCIPQueryNoFilter(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
       throws Exception
   {
     logger.info("Running testSRCIPQueryNoFilter(): ");

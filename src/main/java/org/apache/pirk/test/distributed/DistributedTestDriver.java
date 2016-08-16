@@ -19,6 +19,7 @@
 package org.apache.pirk.test.distributed;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -69,7 +70,7 @@ public class DistributedTestDriver
     logger.info("jarFile = " + jarFile);
     SystemConfiguration.setProperty("jarFile", jarFile);
 
-    ArrayList<JSONObject> dataElements = initialize(fs);
+    List<JSONObject> dataElements = initialize(fs);
 
     // Pull off the properties and reset upon completion
     String dataSchemasProp = SystemConfiguration.getProperty("data.schemas", "none");
@@ -85,9 +86,9 @@ public class DistributedTestDriver
   /**
    * Create all inputs
    */
-  public static ArrayList<JSONObject> initialize(FileSystem fs) throws Exception
+  public static List<JSONObject> initialize(FileSystem fs) throws Exception
   {
-    ArrayList<JSONObject> dataElements = Inputs.createPIRJSONInput(fs);
+    List<JSONObject> dataElements = Inputs.createPIRJSONInput(fs);
 
     String localStopListFile = Inputs.createPIRStopList(fs, true);
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
@@ -100,7 +101,7 @@ public class DistributedTestDriver
   /**
    * Execute Tests
    */
-  public static void test(FileSystem fs, DistributedTestCLI cli, ArrayList<JSONObject> pirDataElements) throws Exception
+  public static void test(FileSystem fs, DistributedTestCLI cli, List<JSONObject> pirDataElements) throws Exception
   {
     if (cli.run("1:J"))
     {

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Note that the hash key is specific to the query. If we have hash collisions over our selector set, we will append integers to the key starting with 0 until
  * we no longer have collisions
- * 
  */
 public class QueryInfo implements Serializable, Cloneable
 {
@@ -61,7 +60,7 @@ public class QueryInfo implements Serializable, Cloneable
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
 
-  QuerySchema qSchema = null;
+  private QuerySchema qSchema = null;
 
   public QueryInfo(int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
       boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
