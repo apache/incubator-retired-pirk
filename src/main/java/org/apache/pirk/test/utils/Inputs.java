@@ -260,13 +260,12 @@ public class Inputs
   /**
    * Creates PIR JSON input and writes to hdfs
    */
-  @SuppressWarnings("unchecked")
-  public static ArrayList<JSONObject> createPIRJSONInput(FileSystem fs)
+  public static List<JSONObject> createPIRJSONInput(FileSystem fs)
   {
     String inputJSONFile = SystemConfiguration.getProperty(DistributedTestDriver.JSON_PIR_INPUT_FILE_PROPERTY);
     logger.info("PIR JSON input being created at " + inputJSONFile);
 
-    ArrayList<JSONObject> dataElementsJSON = createJSONDataElements();
+    List<JSONObject> dataElementsJSON = createJSONDataElements();
 
     HDFS.writeFile(dataElementsJSON, fs, inputJSONFile, true);
     logger.info("PIR JSON input successfully created!");

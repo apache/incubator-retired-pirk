@@ -48,8 +48,7 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   public static final String STRING = "string";
 
   /**
-   * Splits the given BigInteger into partitions given by the partitionSize
-   *
+   * Splits the given BigInteger into partitions given by the partitionSize.
    */
   public static List<BigInteger> partitionBits(BigInteger value, int partitionSize, BigInteger mask) throws PIRException
   {
@@ -90,12 +89,20 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   }
 
   /**
-   * Method to form a BigInteger bit mask for the given partitionSize
-   * 
+   * Returns a <code>BigInteger</code> bit mask for the given partitionSize.
    */
   public static BigInteger formBitMask(int partitionSize)
   {
-    return BigInteger.valueOf(2).pow(partitionSize).subtract(BigInteger.ONE);
+    BigInteger mask;
+    if (partitionSize < 32)
+    {
+      mask = BigInteger.valueOf((1 << partitionSize) - 1);
+    }
+    else
+    {
+      mask = BigInteger.valueOf(2).pow(partitionSize).subtract(BigInteger.ONE);
+    }
+    return mask;
   }
 
   /**
@@ -229,13 +236,12 @@ public class PrimitiveTypePartitioner implements DataPartitioner
   }
 
   /**
-   * 
-   * Partitions an object to an ArrayList of BigInteger values, currently represents an 8-bit partitioning
+   * Partitions an object to a List of BigInteger values, currently represents an 8-bit partitioning
    */
   @Override
-  public ArrayList<BigInteger> toPartitions(Object obj, String type) throws PIRException
+  public List<BigInteger> toPartitions(Object obj, String type) throws PIRException
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>();
 
     byte[] bytes = new byte[0];
 
@@ -325,9 +331,9 @@ public class PrimitiveTypePartitioner implements DataPartitioner
    * Create partitions for an array of the same type of elements - used when a data value field is an array and we wish to encode these into the return value
    */
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
+  public List<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>();
 
     int numArrayElementsToReturn = SystemConfiguration.getIntProperty("pir.numReturnArrayElements", 1);
     for (int i = 0; i < numArrayElementsToReturn; ++i)
