@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -41,7 +42,7 @@ import scala.Tuple2;
  * Emits {@code <colNum, colVal>}
  *
  */
-public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<ArrayList<BigInteger>>>,Long,BigInteger>
+public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<List<BigInteger>>>,Long,BigInteger>
 {
   private static final long serialVersionUID = 1L;
 
@@ -73,9 +74,9 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   }
 
   @Override
-  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Iterable<ArrayList<BigInteger>>> hashDocTuple) throws Exception
+  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Iterable<List<BigInteger>>> hashDocTuple) throws Exception
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
+    List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);
@@ -98,7 +99,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
     // long startTime = System.currentTimeMillis();
 
     // Compute the encrypted row elements for a query from extracted data partitions
-    ArrayList<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowBI(hashDocTuple._2, query, rowIndex, limitHitsPerSelector,
+    List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowBI(hashDocTuple._2, query, rowIndex, limitHitsPerSelector,
         maxHitsPerSelector, useLocalCache);
 
     // long endTime = System.currentTimeMillis();

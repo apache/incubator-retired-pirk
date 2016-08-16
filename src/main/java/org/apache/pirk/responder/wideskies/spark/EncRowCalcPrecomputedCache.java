@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
@@ -34,7 +35,7 @@ import scala.Tuple2;
  * Functionality for computing the encrypted rows using a pre-computed, passed in modular exponentiation lookup table
  */
 public class EncRowCalcPrecomputedCache implements
-    PairFlatMapFunction<Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<ArrayList<BigInteger>>>>,Long,BigInteger>
+    PairFlatMapFunction<Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>>,Long,BigInteger>
 {
   private static final long serialVersionUID = 1L;
 
@@ -64,10 +65,10 @@ public class EncRowCalcPrecomputedCache implements
   }
 
   @Override
-  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<ArrayList<BigInteger>>>> hashDocTuple)
+  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>> hashDocTuple)
       throws Exception
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
+    List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);
@@ -80,13 +81,13 @@ public class EncRowCalcPrecomputedCache implements
       expTable.put(entry._1, entry._2);
     }
 
-    Iterable<ArrayList<BigInteger>> dataPartitions = hashDocTuple._2._2;
+    Iterable<List<BigInteger>> dataPartitions = hashDocTuple._2._2;
 
     // logger.debug("Encrypting row = " + rowIndex);
     // long startTime = System.currentTimeMillis();
 
     // Compute the encrypted row elements for a query from extracted data partitions
-    ArrayList<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowCacheInput(dataPartitions, expTable, rowIndex, limitHitsPerSelector,
+    List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowCacheInput(dataPartitions, expTable, rowIndex, limitHitsPerSelector,
         maxHitsPerSelector);
 
     // long endTime = System.currentTimeMillis();

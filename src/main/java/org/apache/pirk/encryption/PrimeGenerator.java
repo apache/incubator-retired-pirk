@@ -55,6 +55,8 @@ public class PrimeGenerator
 {
   private static final Logger logger = LoggerFactory.getLogger(PrimeGenerator.class);
 
+  private static final BigDecimal SQRT_2 = BigDecimal.valueOf(Math.sqrt(2));
+  
   private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<>();
   private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<>();
 
@@ -88,7 +90,7 @@ public class PrimeGenerator
       BigInteger lowerBound;
       if (!lowerBoundCache.containsKey(bitLength))
       {
-        lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
+        lowerBound = SQRT_2.multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
         lowerBoundCache.put(bitLength, lowerBound);
       }
       else
@@ -149,7 +151,7 @@ public class PrimeGenerator
       BigInteger lowerBound;
       if (!lowerBoundCache.containsKey(bitLength))
       {
-        lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
+        lowerBound = SQRT_2.multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
         lowerBoundCache.put(bitLength, lowerBound);
       }
       else

@@ -21,6 +21,7 @@ package org.apache.pirk.querier.wideskies;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
@@ -37,14 +38,14 @@ public class Querier implements Serializable, Storable
 
   private Paillier paillier = null; // Paillier encryption functionality
 
-  private ArrayList<String> selectors = null; // selectors
+  private List<String> selectors = null; // selectors
 
   // map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
   private HashMap<Integer,String> embedSelectorMap = null;
 
-  public Querier(ArrayList<String> selectorsInput, Paillier paillierInput, Query queryInput, HashMap<Integer,String> embedSelectorMapInput)
+  public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, HashMap<Integer,String> embedSelectorMapInput)
   {
     selectors = selectorsInput;
 
@@ -65,7 +66,7 @@ public class Querier implements Serializable, Storable
     return paillier;
   }
 
-  public ArrayList<String> getSelectors()
+  public List<String> getSelectors()
   {
     return selectors;
   }
