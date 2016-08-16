@@ -93,9 +93,13 @@ public class OutputBolt extends BaseRichBolt
 
     totalFlushSigs = ((Long) map.get(StormConstants.ENCCOLMULTBOLT_PARALLELISM_KEY)).intValue();
     outputFile = (String) map.get(StormConstants.OUTPUT_FILE_KEY);
+
     hdfs = (boolean) map.get(StormConstants.USE_HDFS);
+    logger.info("output databolt hdfs = " + map.get(StormConstants.USE_HDFS));
+
     if (hdfs)
     {
+      hdfsUri = (String) map.get(StormConstants.HDFS_URI_KEY);
       try
       {
         FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());

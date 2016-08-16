@@ -83,6 +83,7 @@ public class EncRowCalcBolt extends BaseRichBolt
   {
     outputCollector = coll;
     setQuery(map);
+    logger.info("partition databolt hdfs = " + map.get(StormConstants.USE_HDFS));
 
     maxHitsPerSelector = (Long) map.get(StormConstants.MAX_HITS_PER_SEL_KEY);
     limitHitsPerSelector = (Boolean) map.get(StormConstants.LIMIT_HITS_PER_SEL_KEY);

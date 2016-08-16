@@ -20,8 +20,12 @@ package org.apache.pirk.responder.wideskies.storm;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -30,6 +34,7 @@ import org.apache.storm.tuple.Tuple;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.Map;
 
@@ -67,7 +72,8 @@ public class StormUtils
       }
     } catch (Exception e)
     {
-      logger.warn("Unable to initalize query info.", e);
+      logger.error("Unable to initalize query info.", e);
+      throw new RuntimeException(e);
     }
     return query;
   }
@@ -96,6 +102,53 @@ public class StormUtils
 
     return query;
   }
+
+  /***
+   * Initialize data and query schema. Conf requires values for USE_HDFS, HDFS_URI_KEY, DSCHEMA_KEY, and QSCHEMA_KEY
+   * @param conf
+   */
+  public static void initializeSchemas(Map conf, String id)
+  {
+    SystemConfiguration.setProperty("data.schemas", (String) conf.get(StormConstants.DSCHEMA_KEY));
+    SystemConfiguration.setProperty("query.schemas", (String) conf.get(StormConstants.QSCHEMA_KEY));
+
+    try
+    {
+      boolean hdfs = (boolean) conf.get(StormConstants.USE_HDFS);
+      logger.info("id = " + id + " hdfs = " + hdfs + " -- " + conf.get(StormConstants.HDFS_URI_KEY));
+      if (hdfs)
+      {
+        String hdfsUri = (String) conf.get(StormConstants.HDFS_URI_KEY);
+        FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
+        try
+        {
+          RemoteIterator<LocatedFileStatus> iter = fs.listFiles(new Path("/tmp/user08/pir_storm"), false);
+          while(iter.hasNext())
+          {
+            logger.info("listing - " + iter.next().getPath().toUri());
+          }
+        }
+        catch (FileNotFoundException e)
+        {
+          logger.warn("/tmp/user08/pir_storm not found ", e);
+        }
+        logger.info("starting dataschemaloader hdfs");
+        DataSchemaLoader.initialize(true, fs);
+        QuerySchemaLoader.initialize(true, fs);
+      }
+      else
+      {
+        logger.info("starting dataschemaloader local");
+        DataSchemaLoader.initialize();
+        QuerySchemaLoader.initialize();
+      }
+    } catch (Exception e)
+    {
+      logger.error("Failed to initialize schema files.", e);
+      throw new RuntimeException(e);
+    }
+  }
+
 
   protected static boolean isTickTuple(Tuple tuple)
   {

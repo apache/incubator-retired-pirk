@@ -69,6 +69,9 @@ public class PirkHashScheme extends StringScheme implements Scheme
     {
       parser = new JSONParser();
       queryInfo = new QueryInfo((Map) conf.get(StormConstants.QUERY_INFO_KEY));
+
+      StormUtils.initializeSchemas(conf, "hashScheme");
+
       if ((boolean) conf.get(StormConstants.ALLOW_ADHOC_QSCHEMAS_KEY))
       {
         qSchema = queryInfo.getQuerySchema();

@@ -19,6 +19,7 @@
 package org.apache.pirk.schema.data;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -29,7 +30,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.utils.PIRException;
@@ -96,10 +99,26 @@ public class DataSchemaLoader
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
+    logger.info("In initialize " + hdfs + " dSchemas = " + fs.makeQualified(new Path(dataSchemas)));
     if (dataSchemas.equals("none"))
     {
+      logger.info("no dataschemas");
       return;
     }
+
+    try
+    {
+      RemoteIterator<LocatedFileStatus> iter = fs.listFiles(new Path("/tmp/user08/pir_storm"), false);
+      while(iter.hasNext())
+      {
+        logger.info("listing - " + iter.next().getPath().toUri());
+      }
+    }
+    catch (FileNotFoundException e)
+    {
+      logger.warn("/tmp/user08/pir_storm not found ", e);
+    }
+
 
     String[] dataSchemaFiles = dataSchemas.split(",");
     for (String schemaFile : dataSchemaFiles)
@@ -111,13 +130,13 @@ public class DataSchemaLoader
       InputStream is;
       if (hdfs)
       {
-        is = fs.open(new Path(schemaFile));
         logger.info("hdfs: filePath = " + schemaFile);
+        is = fs.open(fs.makeQualified(new Path(schemaFile)));
       }
       else
       {
-        is = new FileInputStream(schemaFile);
         logger.info("localFS: inputFile = " + schemaFile);
+        is = new FileInputStream(schemaFile);
       }
 
       try

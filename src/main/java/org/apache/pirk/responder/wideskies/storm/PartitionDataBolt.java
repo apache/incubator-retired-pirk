@@ -70,9 +70,10 @@ public class PartitionDataBolt extends BaseBasicBolt
     queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
     queryType = queryInfo.getQueryType();
     embedSelector = queryInfo.getEmbedSelector();
+    logger.info("partition databolt hdfs = " + map.get(StormConstants.USE_HDFS));
+    StormUtils.initializeSchemas(map, "partition");
     try
     {
-      //StormUtils.initializeSchemas(map);
       if ((boolean) map.get(StormConstants.ALLOW_ADHOC_QSCHEMAS_KEY))
       {
         qSchema = queryInfo.getQuerySchema();
@@ -83,7 +84,7 @@ public class PartitionDataBolt extends BaseBasicBolt
       }
     } catch (Exception e)
     {
-      logger.error("Unable to initialize schemas in HashBolt. ", e);
+      logger.error("Unable to initialize schemas in PartitionDataBolt. ", e);
     }
 
     json = new JSONObject();

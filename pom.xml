@@ -88,10 +88,11 @@
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
 		<javac.target>1.8</javac.target>
 		<slf4j.version>1.7.21</slf4j.version>
-		<log4j2.version>2.6.2</log4j2.version>
+		<log4j2.version>2.1</log4j2.version>
 		<junit.version>4.12</junit.version>
 		<log4j.configuration>log4j2.xml</log4j.configuration>
 		<hadoop.version>2.7.2</hadoop.version>
+		<spark.version>1.6.1</spark.version>
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
 		<storm.version>1.0.1</storm.version>
@@ -133,6 +134,10 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.curator</groupId>
+					<artifactId>curator-client</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -171,7 +176,8 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.11</artifactId>
-			<version>1.6.1</version>
+			<version>${spark.version}</version>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -314,19 +320,26 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.6.2</version>
+			<version>${log4j2.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.6.2</version>
+			<version>${log4j2.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
-			<version>2.10.4</version>
+			<version>${scala.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.caliper/caliper -->
+		<dependency>
+			<groupId>com.google.caliper</groupId>
+			<artifactId>caliper</artifactId>
+			<version>1.0-beta-2</version>
 		</dependency>
 
 	</dependencies>
