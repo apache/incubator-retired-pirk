@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -87,7 +88,7 @@ public class DecryptResponse
     QueryInfo queryInfo = response.getQueryInfo();
 
     Paillier paillier = querier.getPaillier();
-    ArrayList<String> selectors = querier.getSelectors();
+    List<String> selectors = querier.getSelectors();
     HashMap<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
 
     // Perform decryption on the encrypted columns

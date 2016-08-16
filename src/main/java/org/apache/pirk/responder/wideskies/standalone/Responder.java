@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.pirk.encryption.ModPowAbstraction;
@@ -170,7 +171,7 @@ public class Responder
   {
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, jsonData, queryInfo.getEmbedSelector());
+    List<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, jsonData, queryInfo.getEmbedSelector());
 
     // Pull the necessary elements
     int rowIndex = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);

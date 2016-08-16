@@ -39,9 +39,7 @@ public class KeyedHash
    */
   public static int hash(String key, int bitSize, String input)
   {
-    String concat = key + input;
-
-    int fullHash = Math.abs(concat.hashCode());
+    int fullHash = (key + input).hashCode();
 
     // Take only the lower bitSize-many bits of the resultant hash
     int bitLimitedHash = fullHash;
@@ -61,10 +59,9 @@ public class KeyedHash
   {
     int bitLimitedHash;
 
-    MessageDigest md;
     try
     {
-      md = MessageDigest.getInstance(hashType);
+      MessageDigest md = MessageDigest.getInstance(hashType);
       byte[] array = md.digest(input.getBytes());
 
       int hashInt = fromByteArray(array);

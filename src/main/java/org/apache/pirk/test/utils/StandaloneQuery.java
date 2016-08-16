@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class StandaloneQuery
   String testQuerySchemaName = "testQuerySchema";
 
   // Base method to perform the query
-  public static List<QueryResponseJSON> performStandaloneQuery(ArrayList<JSONObject> dataElements, String queryType, ArrayList<String> selectors,
+  public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors,
       int numThreads, boolean testFalsePositive) throws IOException, InterruptedException, PIRException
   {
     logger.info("Performing watchlisting: ");

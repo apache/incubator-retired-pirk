@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -331,10 +332,10 @@ public class ComputeResponse
 
     // Extract the selectors for each dataElement based upon the query type
     // and perform a keyed hash of the selectors
-    JavaPairRDD<Integer,ArrayList<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(accum, bVars));
+    JavaPairRDD<Integer,List<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(accum, bVars));
 
     // Group by hashed selector (row) -- can combine with the line above, separating for testing and benchmarking...
-    JavaPairRDD<Integer,Iterable<ArrayList<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();
+    JavaPairRDD<Integer,Iterable<List<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();
 
     // Calculate the encrypted row values for each row, emit <colNum, colVal> for each row
     JavaPairRDD<Long,BigInteger> encRowRDD;
@@ -347,7 +348,7 @@ public class ComputeResponse
       JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations = ComputeExpLookupTable.computeExpTable(sc, fs, bVars, query, queryInput,
           outputDirExp, useModExpJoin);
 
-      JavaPairRDD<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<ArrayList<BigInteger>>>> encMapDataJoin = expCalculations.join(selectorGroupRDD);
+      JavaPairRDD<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>> encMapDataJoin = expCalculations.join(selectorGroupRDD);
 
       // Calculate the encrypted row values for each row, emit <colNum, colVal> for each row
       encRowRDD = encMapDataJoin.flatMapToPair(new EncRowCalcPrecomputedCache(accum, bVars));

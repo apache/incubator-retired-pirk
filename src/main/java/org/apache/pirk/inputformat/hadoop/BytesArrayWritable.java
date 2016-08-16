@@ -21,8 +21,8 @@ package org.apache.pirk.inputformat.hadoop;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.BytesWritable;
@@ -60,7 +60,7 @@ public class BytesArrayWritable extends ArrayWritable
   /**
    * Constructor for use when underlying array will be ByteWritable representations of BigInteger objects
    */
-  public BytesArrayWritable(ArrayList<BigInteger> elements)
+  public BytesArrayWritable(List<BigInteger> elements)
   {
     super(BytesWritable.class);
 
