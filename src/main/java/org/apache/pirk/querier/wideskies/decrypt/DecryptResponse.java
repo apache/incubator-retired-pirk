@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform PIR decryption
- * 
  */
 public class DecryptResponse
 {
@@ -81,7 +80,7 @@ public class DecryptResponse
    * D^k_r = D^k_r,0 || D^k_r,1 || ... || D^k_r,(numPartitionsPerDataElement - 1)
    * <p>
    * where D^k_r,l = Y_{r*numPartitionsPerDataElement + l} & (2^{r*numPartitionsPerDataElement} * (2^numBitsPerDataElement - 1))
-   * 
+   *
    */
   public void decrypt(int numThreads) throws InterruptedException, PIRException
   {
@@ -104,7 +103,7 @@ public class DecryptResponse
     BigInteger twoBI = BigInteger.valueOf(2);
     for (String selector : selectors)
     {
-      resultMap.put(selector, new ArrayList<QueryResponseJSON>());
+      resultMap.put(selector, new ArrayList<>());
 
       // 2^{selectorNum*dataPartitionBitSize}(2^{dataPartitionBitSize} - 1)
       BigInteger mask = twoBI.pow(selectorNum * dataPartitionBitSize).multiply((twoBI.pow(dataPartitionBitSize).subtract(BigInteger.ONE)));

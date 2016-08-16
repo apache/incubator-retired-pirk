@@ -45,7 +45,7 @@ public class QuerySchema implements Serializable
 
   // Element names from the data schema to include in the response.
   // Order matters for packing/unpacking.
-  private final List<String> elementNames = new ArrayList<String>();
+  private final List<String> elementNames = new ArrayList<>();
 
   // Name of class to use in data filtering.
   private final String filterTypeName;

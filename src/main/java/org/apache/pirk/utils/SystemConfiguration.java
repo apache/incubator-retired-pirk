@@ -90,7 +90,7 @@ public class SystemConfiguration
    * 
    * @param propertyName
    *          The name of the requested string property value.
-   * @param defaultvalue
+   * @param defaultValue
    *          The value to return if the property is undefined.
    * @return The value of the requested property, or the default value if the property is undefined.
    */
@@ -127,7 +127,7 @@ public class SystemConfiguration
    */
   public static boolean getBooleanProperty(String propertyName, boolean defaultValue)
   {
-    return (isSetTrue(propertyName)) ? true : defaultValue;
+    return (isSetTrue(propertyName)) || defaultValue;
   }
 
   /**
@@ -237,7 +237,7 @@ public class SystemConfiguration
   {
     if (file.exists())
     {
-      try (InputStream stream = new FileInputStream(file);)
+      try (InputStream stream = new FileInputStream(file))
       {
         logger.info("Loading properties file '" + file.getAbsolutePath() + "'");
         props.load(stream);

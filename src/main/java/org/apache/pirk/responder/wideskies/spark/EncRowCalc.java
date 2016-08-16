@@ -48,7 +48,6 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   private static final Logger logger = LoggerFactory.getLogger(EncRowCalc.class);
 
   private Accumulators accum = null;
-  private BroadcastVars bVars = null;
 
   private Query query = null;
   private QueryInfo queryInfo = null;
@@ -60,16 +59,15 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
   public EncRowCalc(Accumulators accumIn, BroadcastVars bvIn)
   {
     accum = accumIn;
-    bVars = bvIn;
 
-    query = bVars.getQuery();
-    queryInfo = bVars.getQueryInfo();
-    if (bVars.getUseLocalCache().equals("true"))
+    query = bvIn.getQuery();
+    queryInfo = bvIn.getQueryInfo();
+    if (bvIn.getUseLocalCache().equals("true"))
     {
       useLocalCache = true;
     }
-    limitHitsPerSelector = bVars.getLimitHitsPerSelector();
-    maxHitsPerSelector = bVars.getMaxHitsPerSelector();
+    limitHitsPerSelector = bvIn.getLimitHitsPerSelector();
+    maxHitsPerSelector = bvIn.getMaxHitsPerSelector();
 
     logger.info("Initialized EncRowCalc - limitHitsPerSelector = " + limitHitsPerSelector + " maxHitsPerSelector = " + maxHitsPerSelector);
   }
@@ -84,7 +82,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<A
 
     if (queryInfo.getUseHDFSExpLookupTable())
     {
-      FileSystem fs = null;
+      FileSystem fs;
       try
       {
         fs = FileSystem.get(new Configuration());

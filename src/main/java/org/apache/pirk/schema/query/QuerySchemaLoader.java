@@ -96,7 +96,7 @@ public class QuerySchemaLoader
   /**
    * Initializes the static {@link QuerySchemaRegistry} with a list of query schema names.
    * 
-   * @throws Exception
+   * @throws Exception - failed to initialize
    */
   public static void initialize() throws Exception
   {
@@ -111,7 +111,7 @@ public class QuerySchemaLoader
    *          If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
-   * @throws Exception
+   * @throws Exception - failed to initialize
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
@@ -223,7 +223,7 @@ public class QuerySchemaLoader
       if (nNode.getNodeType() == Node.ELEMENT_NODE)
       {
         // Pull the name
-        String queryElementName = ((Element) nNode).getFirstChild().getNodeValue().trim();
+        String queryElementName = nNode.getFirstChild().getNodeValue().trim();
         if (!dataSchema.containsElement(queryElementName))
         {
           throw new PIRException("dataSchema = " + dataSchemaName + " does not contain requested element name = " + queryElementName);
@@ -318,7 +318,7 @@ public class QuerySchemaLoader
         if (nNode.getNodeType() == Node.ELEMENT_NODE)
         {
           // Pull the name and add to the set.
-          String name = ((Element) nNode).getFirstChild().getNodeValue().trim();
+          String name = nNode.getFirstChild().getNodeValue().trim();
           filteredNamesSet.add(name);
 
           logger.info("filterName = " + name);

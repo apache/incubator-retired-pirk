@@ -43,21 +43,15 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
 
   private static final Logger logger = LoggerFactory.getLogger(HashSelectorsAndPartitionData.class);
 
-  Accumulators accum = null;
-  BroadcastVars bVars = null;
-
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
   private DataSchema dSchema = null;
 
   public HashSelectorsAndPartitionData(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = accumIn;
-    bVars = bvIn;
-
-    queryInfo = bVars.getQueryInfo();
-    qSchema = bVars.getQuerySchema();
-    dSchema = bVars.getDataSchema();
+    queryInfo = bvIn.getQueryInfo();
+    qSchema = bvIn.getQuerySchema();
+    dSchema = bvIn.getDataSchema();
 
     logger.info("Initialized HashSelectorsAndPartitionData");
   }
