@@ -139,7 +139,7 @@ public class Paillier implements Cloneable, Serializable
    * <p>
    * The probability that the new BigInteger values represents primes will exceed (1 - (1/2)^certainty). The execution time of this constructor is proportional
    * to the value of this parameter.
-   * 
+   *
    */
   public Paillier(int bitLengthInput, int certainty) throws PIRException
   {
@@ -153,7 +153,7 @@ public class Paillier implements Cloneable, Serializable
    * <p>
    * The probability that the new BigInteger values represents primes will exceed (1 - (1/2)^certainty). The execution time of this constructor is proportional
    * to the value of this parameter.
-   * 
+   *
    */
   public Paillier(int bitLengthInput, int certainty, int ensureBitSet) throws PIRException
   {
@@ -243,14 +243,15 @@ public class Paillier implements Cloneable, Serializable
     NSquared = N.multiply(N);
 
     // lambda(N) = lcm(p-1,q-1)
-    lambdaN = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE)).divide(p.subtract(BigInteger.ONE).gcd(q.subtract(BigInteger.ONE)));
+    lambdaN = IntegerMathAbstraction.exactDivide( p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE)),
+                                                  IntegerMathAbstraction.gcd(p.subtract(BigInteger.ONE), q.subtract(BigInteger.ONE)));
 
     w = IntegerMathAbstraction.modInverse(lambdaN, N); // lambda(N)^-1 mod N
   }
 
   /**
    * Encrypt - generate r
-   * 
+   *
    */
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
@@ -266,7 +267,7 @@ public class Paillier implements Cloneable, Serializable
 
   /**
    * Encrypt - use provided r
-   * 
+   *
    */
   public BigInteger encrypt(BigInteger m, BigInteger r) throws PIRException
   {
@@ -279,7 +280,7 @@ public class Paillier implements Cloneable, Serializable
     BigInteger term1 = (m.multiply(N).add(BigInteger.ONE)).mod(NSquared);
     BigInteger term2 = IntegerMathAbstraction.modPow(r, N, NSquared);
 
-    return (term1.multiply(term2)).mod(NSquared);
+    return IntegerMathAbstraction.modularMultiply(term1, term2, NSquared);
   }
 
   /**
@@ -289,9 +290,9 @@ public class Paillier implements Cloneable, Serializable
   {
     // w = lambda(N)^-1 mod N; x = c^(lambda(N)) mod N^2; y = (x-1)/N; d = yw mod N
     BigInteger x = IntegerMathAbstraction.modPow(c, lambdaN, NSquared);
-    BigInteger y = (x.subtract(BigInteger.ONE)).divide(N);
+    BigInteger y = IntegerMathAbstraction.exactDivide(x.subtract(BigInteger.ONE), N);
 
-    return (y.multiply(w)).mod(N);
+    return IntegerMathAbstraction.modularMultiply(y, w, N);
   }
 
   private String parametersToString()

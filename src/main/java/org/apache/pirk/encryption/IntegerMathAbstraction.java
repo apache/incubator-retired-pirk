@@ -31,7 +31,8 @@ import com.squareup.jnagmp.Gmp;
 public final class IntegerMathAbstraction
 {
 
-  private static boolean useGMPForModPow, useGMPConstantTimeMethods, useGMPmodularMultiply, useGMPmodularInverse;
+  private static boolean useGMPmodPow, useGMPConstantTimeMethods, useGMPmodularMultiply, 
+    useGMPmodularInverse, useGMPgcd, useGMPexactDivide;
 
   static
   {
@@ -45,10 +46,12 @@ public final class IntegerMathAbstraction
    */
   public static void reloadConfiguration()
   {
-    useGMPForModPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
+    useGMPmodPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
     useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
     useGMPmodularMultiply = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
     useGMPmodularInverse = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
+    useGMPgcd = SystemConfiguration.getProperty("paillier.useGMPForGCD").equals("true");
+    useGMPexactDivide = SystemConfiguration.getProperty("paillier.useGMPForExactDivide").equals("true");
   }
 
   /**
@@ -59,13 +62,16 @@ public final class IntegerMathAbstraction
    * <p>
    * These values can be reloaded by invoking static method {@code IntegerMathAbstraction.reloadConfiguration()}
    *
-   * @return The result of modPow
+   * @param base
+   * @param exponent
+   * @param modulus
+   * @return ({@code base}^{@code exponent}) mod {@code modulus}
    */
   public static BigInteger modPow(BigInteger base, BigInteger exponent, BigInteger modulus)
   {
     BigInteger result;
 
-    if (useGMPForModPow)
+    if (useGMPmodPow)
     {
       if (useGMPConstantTimeMethods)
       {
@@ -96,6 +102,19 @@ public final class IntegerMathAbstraction
     return result;
   }
 
+  /**
+   * Performs modPow: ({@code base}^{@code exponent}) mod {@code modulus}
+   * <p>
+   * This method uses the values of {@code paillier.useGMPForModPow} and {@code paillier.GMPConstantTimeMode}
+   * as they were when the class was loaded to decide which implementation of modPow to invoke.
+   * <p>
+   * These values can be reloaded by invoking static method {@code IntegerMathAbstraction.reloadConfiguration()}
+   *
+   * @param base 
+   * @param exponent
+   * @param modulus
+   * @return ({@code base}^{@code exponent}) mod {@code modulus}
+   */
   public static BigInteger modPow(long base, BigInteger exponent, BigInteger modulus)
   {
     return modPow(BigInteger.valueOf(base), exponent, modulus);
@@ -130,6 +149,16 @@ public final class IntegerMathAbstraction
     return result;
   }
 
+  /**
+   * Performs ({@code dividend} ^ -1) mod {@code modulus}
+   * <p>
+   * This method uses the value of {@code paillier.useGMPForModularInverse} as it was set
+   * when the class was loaded to decide which implementation of modular inversion to invoke.
+   *
+   * @param dividend
+   * @param modulus
+   * @return ({@code dividend} ^ -1) mod {@code modulus}
+   */
   public static BigInteger modInverse(BigInteger dividend, BigInteger modulus)
   {
     BigInteger result;
@@ -141,6 +170,63 @@ public final class IntegerMathAbstraction
     else
     {
       result = dividend.modInverse(modulus);
+    }
+
+    return result;
+  }
+
+  /**
+   * Performs {@code dividend / divisor}
+   * <p>
+   * <b>NOTE:</b> This method  is only guaranteed to returns correct answers when the result of 
+   * {@code dividend / divisor} will have <b>no remainder</b>. Put another way, do not use this method if 
+   * {@code dividend mod divisor != 0}. Using this method inappropriately may result in wildly incorrect
+   * answers. This behavior descends from the optimizations in GMP's {@code mpz_divexact}.
+   * <p>
+   * This method uses the value of {@code paillier.useGMPForExactDivide} as it was set
+   * when the class was loaded to decide which implementation of exact divide to invoke.
+   *
+   * @param dividend
+   * @param divisor
+   * @return {@code dividend} / {@code divisor}
+   */
+  public static BigInteger exactDivide(BigInteger dividend, BigInteger divisor)
+  {
+    BigInteger result;
+
+    if (useGMPexactDivide)
+    {
+      result = Gmp.exactDivide(dividend, divisor);
+    }
+    else 
+    {
+      result = dividend.divide(divisor);
+    }
+
+    return result;
+  }
+
+  /**
+   * Calculates the Greatest Common Divisor of {@code value1} and {@code value2}
+   * <p>
+   * This method uses the value of {@code paillier.useGMPForGCD} as it was set
+   * when the class was loaded to decide which implementation of modular inversion to invoke.
+   *
+   * @param value1
+   * @param value2
+   * @return gcd(value1, value2)
+   */
+  public static BigInteger gcd(BigInteger value1, BigInteger value2)
+  {
+    BigInteger result;
+
+    if (useGMPgcd)
+    {
+      result = Gmp.gcd(value1, value2);
+    }
+    else 
+    {
+      result = value1.gcd(value2);
     }
 
     return result;
