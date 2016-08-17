@@ -26,6 +26,8 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform PIR decryption
- * 
  */
 public class DecryptResponse
 {
@@ -80,14 +81,14 @@ public class DecryptResponse
    * D^k_r = D^k_r,0 || D^k_r,1 || ... || D^k_r,(numPartitionsPerDataElement - 1)
    * <p>
    * where D^k_r,l = Y_{r*numPartitionsPerDataElement + l} & (2^{r*numPartitionsPerDataElement} * (2^numBitsPerDataElement - 1))
-   * 
+   *
    */
   public void decrypt(int numThreads) throws InterruptedException, PIRException
   {
     QueryInfo queryInfo = response.getQueryInfo();
 
     Paillier paillier = querier.getPaillier();
-    ArrayList<String> selectors = querier.getSelectors();
+    List<String> selectors = querier.getSelectors();
     HashMap<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
 
     // Perform decryption on the encrypted columns
@@ -103,7 +104,7 @@ public class DecryptResponse
     BigInteger twoBI = BigInteger.valueOf(2);
     for (String selector : selectors)
     {
-      resultMap.put(selector, new ArrayList<QueryResponseJSON>());
+      resultMap.put(selector, new ArrayList<>());
 
       // 2^{selectorNum*dataPartitionBitSize}(2^{dataPartitionBitSize} - 1)
       BigInteger mask = twoBI.pow(selectorNum * dataPartitionBitSize).multiply((twoBI.pow(dataPartitionBitSize).subtract(BigInteger.ONE)));
@@ -119,7 +120,7 @@ public class DecryptResponse
     {
       numThreads = selectors.size();
     }
-    int elementsPerThread = (int) (Math.floor(selectors.size() / numThreads));
+    int elementsPerThread = selectors.size() / numThreads; // Integral division.
 
     ArrayList<DecryptResponseRunnable> runnables = new ArrayList<>();
     for (int i = 0; i < numThreads; ++i)
@@ -139,7 +140,7 @@ public class DecryptResponse
 
       // Create the runnable and execute
       // selectorMaskMap and rElements are synchronized, pirWatchlist is copied, selectors is partitioned
-      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.copy(), embedSelectorMap);
+      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
       runnables.add(runDec);
       es.execute(runDec);
     }
@@ -183,10 +184,9 @@ public class DecryptResponse
   {
     FileOutputStream fout = new FileOutputStream(new File(filename));
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (String selector : resultMap.keySet())
+    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
     {
-      ArrayList<QueryResponseJSON> hits = resultMap.get(selector);
-      for (QueryResponseJSON hitJSON : hits)
+      for (QueryResponseJSON hitJSON : entry.getValue())
       {
         bw.write(hitJSON.getJSONString());
         bw.newLine();
@@ -203,10 +203,9 @@ public class DecryptResponse
   {
     FileOutputStream fout = new FileOutputStream(file);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (String selector : resultMap.keySet())
+    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
     {
-      ArrayList<QueryResponseJSON> hits = resultMap.get(selector);
-      for (QueryResponseJSON hitJSON : hits)
+      for (QueryResponseJSON hitJSON : entry.getValue())
       {
         bw.write(hitJSON.getJSONString());
         bw.newLine();

@@ -46,7 +46,7 @@ public class FileIOUtils
 
   public static ArrayList<String> readToArrayList(String filepath)
   {
-    return (ArrayList<String>) read(filepath, new ArrayList<String>(), new Callable<String>()
+    return (ArrayList<String>) read(filepath, new ArrayList<>(), new Callable<String>()
     {
       @Override
       public String call(String line)
@@ -58,12 +58,12 @@ public class FileIOUtils
 
   public static ArrayList<String> readToArrayList(String filepath, Callable<String> function)
   {
-    return (ArrayList<String>) read(filepath, new ArrayList<String>(), function);
+    return (ArrayList<String>) read(filepath, new ArrayList<>(), function);
   }
 
   public static HashSet<String> readToHashSet(String filepath)
   {
-    return (HashSet<String>) read(filepath, new HashSet<String>(), new Callable<String>()
+    return (HashSet<String>) read(filepath, new HashSet<>(), new Callable<String>()
     {
       @Override
       public String call(String line)
@@ -75,7 +75,7 @@ public class FileIOUtils
 
   public static HashSet<String> readToHashSet(String filepath, Callable<String> function)
   {
-    return (HashSet<String>) read(filepath, new HashSet<String>(), function);
+    return (HashSet<String>) read(filepath, new HashSet<>(), function);
   }
 
   public static AbstractCollection<String> read(String filepath, AbstractCollection<String> collection, Callable<String> function)
@@ -96,12 +96,9 @@ public class FileIOUtils
       return null;
     }
 
-    try
+    // create buffered reader
+    try (BufferedReader br = new BufferedReader(new FileReader(file)))
     {
-      // create buffered reader
-      FileReader fr = new FileReader(file);
-      BufferedReader br = new BufferedReader(fr);
-
       // read through the file, line by line
       String line;
       while ((line = br.readLine()) != null)
@@ -112,7 +109,6 @@ public class FileIOUtils
           collection.add(item);
         }
       }
-
     } catch (Exception e)
     {
       logger.error("unable to read file");

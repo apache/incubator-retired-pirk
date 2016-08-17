@@ -95,15 +95,15 @@ public class Paillier implements Cloneable, Serializable
     }
   }
 
-  BigInteger p = null; // large prime
-  BigInteger q = null; // large prime
-  BigInteger N = null; // N=pq, RSA modulus
+  private BigInteger p = null; // large prime
+  private BigInteger q = null; // large prime
+  private BigInteger N = null; // N=pq, RSA modulus
 
-  BigInteger NSquared = null; // NSquared = N^2
-  BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1), Carmichael function of N
-  BigInteger w = null; // lambda(N)^-1 mod N
+  private BigInteger NSquared = null; // NSquared = N^2
+  private BigInteger lambdaN = null; // lambda(N) = lcm(p-1,q-1), Carmichael function of N
+  private BigInteger w = null; // lambda(N)^-1 mod N
 
-  int bitLength = 0; // bit length of the modulus N
+  private int bitLength = 0; // bit length of the modulus N
 
   /**
    * Constructor with all parameters p,q, and bitLengthInput specified
@@ -116,7 +116,7 @@ public class Paillier implements Cloneable, Serializable
     bitLength = bitLengthInput;
 
     // Verify the prime conditions are satisfied
-    int primeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
+    int primeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
     BigInteger three = BigInteger.valueOf(3);
     if ((pInput.compareTo(three) < 0) || (qInput.compareTo(three) < 0) || pInput.equals(qInput) || !pInput.isProbablePrime(primeCertainty)
         || !qInput.isProbablePrime(primeCertainty))
@@ -139,13 +139,11 @@ public class Paillier implements Cloneable, Serializable
    * <p>
    * The probability that the new BigInteger values represents primes will exceed (1 - (1/2)^certainty). The execution time of this constructor is proportional
    * to the value of this parameter.
-   * 
+   *
    */
   public Paillier(int bitLengthInput, int certainty) throws PIRException
   {
     this(bitLengthInput, certainty, -1);
-
-    logger.info("Parameters = " + parametersToString());
   }
 
   /**
@@ -155,13 +153,13 @@ public class Paillier implements Cloneable, Serializable
    * <p>
    * The probability that the new BigInteger values represents primes will exceed (1 - (1/2)^certainty). The execution time of this constructor is proportional
    * to the value of this parameter.
-   * 
+   *
    */
   public Paillier(int bitLengthInput, int certainty, int ensureBitSet) throws PIRException
   {
     bitLength = bitLengthInput;
 
-    int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "128"));
+    int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
     if (certainty < systemPrimeCertainty)
     {
       throw new PIRException("Input certainty = " + certainty + " is less than allowed system lower bound = " + systemPrimeCertainty);
@@ -252,7 +250,7 @@ public class Paillier implements Cloneable, Serializable
 
   /**
    * Encrypt - generate r
-   * 
+   *
    */
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
@@ -268,7 +266,7 @@ public class Paillier implements Cloneable, Serializable
 
   /**
    * Encrypt - use provided r
-   * 
+   *
    */
   public BigInteger encrypt(BigInteger m, BigInteger r) throws PIRException
   {

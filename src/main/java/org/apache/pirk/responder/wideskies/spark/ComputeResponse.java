@@ -21,7 +21,9 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.MapWritable;
@@ -135,7 +137,7 @@ public class ComputeResponse
 
     queryInput = SystemConfiguration.getProperty("pir.queryInput");
     String stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
-    useModExpJoin = SystemConfiguration.getProperty("pir.useModExpJoin", "false").equals("true");
+    useModExpJoin = SystemConfiguration.getBooleanProperty("pir.useModExpJoin", false);
 
     logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery
         + " esResource = " + esResource);
@@ -175,7 +177,7 @@ public class ComputeResponse
     bVars.setQueryInfo(queryInfo);
 
     QuerySchema qSchema = null;
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -191,19 +193,18 @@ public class ComputeResponse
     // Set the local cache flag
     bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));
 
-    useHDFSLookupTable = SystemConfiguration.getProperty("pir.useHDFSLookupTable").equals("true");
+    useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 
     // Set the hit limit variables
     bVars.setLimitHitsPerSelector(Boolean.valueOf(SystemConfiguration.getProperty("pir.limitHitsPerSelector")));
     bVars.setMaxHitsPerSelector(Integer.parseInt(SystemConfiguration.getProperty("pir.maxHitsPerSelector")));
 
     // Set the number of data and column multiplication partitions
-    String numDataPartsString = SystemConfiguration.getProperty("pir.numDataPartitions", "1000");
-    numDataPartitions = Integer.parseInt(numDataPartsString);
-    numColMultPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numColMultPartitions", numDataPartsString));
+    numDataPartitions = SystemConfiguration.getIntProperty("pir.numDataPartitions", 1000);
+    numColMultPartitions = SystemConfiguration.getIntProperty("pir.numColMultPartitions", numDataPartitions);
 
     // Whether or not we are performing a reduceByKey or a groupByKey->reduce for column multiplication
-    colMultReduceByKey = SystemConfiguration.getProperty("pir.colMultReduceByKey", "false").equals("true");
+    colMultReduceByKey = SystemConfiguration.getBooleanProperty("pir.colMultReduceByKey", false);
 
     // Set the expDir
     bVars.setExpDir(outputDirExp);
@@ -222,15 +223,19 @@ public class ComputeResponse
   {
     logger.info("Performing query: ");
 
-    JavaRDD<MapWritable> inputRDD = null;
-    if (dataInputFormat.equals(InputFormatConst.BASE_FORMAT))
+    JavaRDD<MapWritable> inputRDD;
+    switch (dataInputFormat)
     {
-      inputRDD = readData();
+      case InputFormatConst.BASE_FORMAT:
+        inputRDD = readData();
+        break;
+      case InputFormatConst.ES:
+        inputRDD = readDataES();
+        break;
+      default:
+        throw new PIRException("Unknown data input format " + dataInputFormat);
     }
-    else if (dataInputFormat.equals(InputFormatConst.ES))
-    {
-      inputRDD = readDataES();
-    }
+
     performQuery(inputRDD);
   }
 
@@ -238,7 +243,7 @@ public class ComputeResponse
    * Method to read in the data from an allowed input format, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaRDD<MapWritable> readData() throws ClassNotFoundException, Exception
+  public JavaRDD<MapWritable> readData() throws Exception
   {
     logger.info("Reading data ");
 
@@ -327,10 +332,10 @@ public class ComputeResponse
 
     // Extract the selectors for each dataElement based upon the query type
     // and perform a keyed hash of the selectors
-    JavaPairRDD<Integer,ArrayList<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(accum, bVars));
+    JavaPairRDD<Integer,List<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(accum, bVars));
 
     // Group by hashed selector (row) -- can combine with the line above, separating for testing and benchmarking...
-    JavaPairRDD<Integer,Iterable<ArrayList<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();
+    JavaPairRDD<Integer,Iterable<List<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();
 
     // Calculate the encrypted row values for each row, emit <colNum, colVal> for each row
     JavaPairRDD<Long,BigInteger> encRowRDD;
@@ -343,7 +348,7 @@ public class ComputeResponse
       JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations = ComputeExpLookupTable.computeExpTable(sc, fs, bVars, query, queryInput,
           outputDirExp, useModExpJoin);
 
-      JavaPairRDD<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<ArrayList<BigInteger>>>> encMapDataJoin = expCalculations.join(selectorGroupRDD);
+      JavaPairRDD<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>> encMapDataJoin = expCalculations.join(selectorGroupRDD);
 
       // Calculate the encrypted row values for each row, emit <colNum, colVal> for each row
       encRowRDD = encMapDataJoin.flatMapToPair(new EncRowCalcPrecomputedCache(accum, bVars));
@@ -381,10 +386,11 @@ public class ComputeResponse
     Map<Long,BigInteger> encColResults = encColRDD.collectAsMap();
     logger.debug("encColResults.size() = " + encColResults.size());
 
-    for (long colVal : encColResults.keySet())
+    for (Entry<Long,BigInteger> entry : encColResults.entrySet())
     {
-      response.addElement((int) colVal, encColResults.get(colVal));
-      logger.debug("colNum = " + colVal + " column = " + encColResults.get(colVal).toString());
+      int colVal = entry.getKey().intValue();
+      response.addElement(colVal, entry.getValue());
+      logger.debug("colNum = " + colVal + " column = " + entry.getValue().toString());
     }
 
     try

@@ -18,13 +18,6 @@
  */
 package org.apache.pirk.responder.wideskies.standalone;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.TreeMap;
-
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -39,6 +32,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Class to perform stand alone responder functionalities
@@ -59,8 +60,6 @@ public class Responder
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
 
-  private String queryType = null;
-
   private Response response = null;
 
   private TreeMap<Integer,BigInteger> columns = null; // the column values for the PIR calculations
@@ -71,9 +70,9 @@ public class Responder
   {
     query = queryInput;
     queryInfo = query.getQueryInfo();
-    queryType = queryInfo.getQueryType();
+    String queryType = queryInfo.getQueryType();
 
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -170,7 +169,7 @@ public class Responder
   {
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, jsonData, queryInfo.getEmbedSelector());
+    List<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, jsonData, queryInfo.getEmbedSelector());
 
     // Pull the necessary elements
     int rowIndex = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);

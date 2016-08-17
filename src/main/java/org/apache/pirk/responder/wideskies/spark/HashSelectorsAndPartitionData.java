@@ -20,6 +20,7 @@ package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -37,14 +38,11 @@ import scala.Tuple2;
  * output {@code <hash(selector), dataPartitions>}
  *
  */
-public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,Integer,ArrayList<BigInteger>>
+public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,Integer,List<BigInteger>>
 {
   private static final long serialVersionUID = 1L;
 
   private static final Logger logger = LoggerFactory.getLogger(HashSelectorsAndPartitionData.class);
-
-  Accumulators accum = null;
-  BroadcastVars bVars = null;
 
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
@@ -52,24 +50,17 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
 
   public HashSelectorsAndPartitionData(Accumulators accumIn, BroadcastVars bvIn)
   {
-    accum = accumIn;
-    bVars = bvIn;
-
-    queryInfo = bVars.getQueryInfo();
-    qSchema = bVars.getQuerySchema();
-    dSchema = bVars.getDataSchema();
+    queryInfo = bvIn.getQueryInfo();
+    qSchema = bvIn.getQuerySchema();
+    dSchema = bvIn.getDataSchema();
 
     logger.info("Initialized HashSelectorsAndPartitionData");
   }
 
   @Override
-  public Tuple2<Integer,ArrayList<BigInteger>> call(MapWritable doc) throws Exception
+  public Tuple2<Integer,List<BigInteger>> call(MapWritable doc) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
-
     // Extract the selector, compute the hash, and partition the data element according to query type
-    returnTuple = HashSelectorAndPartitionData.hashSelectorAndFormPartitionsBigInteger(doc, qSchema, dSchema, queryInfo);
-
-    return returnTuple;
+    return HashSelectorAndPartitionData.hashSelectorAndFormPartitionsBigInteger(doc, qSchema, dSchema, queryInfo);
   }
 }

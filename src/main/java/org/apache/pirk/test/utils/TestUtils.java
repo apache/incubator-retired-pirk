@@ -76,22 +76,23 @@ public class TestUtils
   {
     Process proc = p.start();
 
-    BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-    BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-    // Read the output from the command
-    logger.info("Standard output of the command:\n");
-    String s;
-    while ((s = stdInput.readLine()) != null)
+    try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream())))
     {
-      logger.info(s);
-    }
+      // Read the output from the command
+      logger.info("Standard output of the command:\n");
+      String s;
+      while ((s = stdInput.readLine()) != null)
+      {
+        logger.info(s);
+      }
 
-    // Read any errors from the attempted command
-    logger.info("Standard error of the command (if any):\n");
-    while ((s = stdError.readLine()) != null)
-    {
-      logger.info(s);
+      // Read any errors from the attempted command
+      logger.info("Standard error of the command (if any):\n");
+      while ((s = stdError.readLine()) != null)
+      {
+        logger.info(s);
+      }
     }
   }
 
@@ -267,14 +268,11 @@ public class TestUtils
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
    */
-  public static ArrayList<QueryResponseJSON> readResultsFile(File file)
+  public static List<QueryResponseJSON> readResultsFile(File file)
   {
-    ArrayList<QueryResponseJSON> results = new ArrayList<>();
-    try
+    List<QueryResponseJSON> results = new ArrayList<>();
+    try (BufferedReader br = new BufferedReader(new FileReader(file)))
     {
-      FileReader fr = new FileReader(file);
-      BufferedReader br = new BufferedReader(fr);
-
       String line;
       while ((line = br.readLine()) != null)
       {

@@ -18,14 +18,14 @@
  */
 package org.apache.pirk.encryption;
 
+import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Random;
-
-import org.apache.pirk.utils.SystemConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to generate the primes used in the Paillier cryptosystem
@@ -55,10 +55,12 @@ public class PrimeGenerator
 {
   private static final Logger logger = LoggerFactory.getLogger(PrimeGenerator.class);
 
+  private static final BigDecimal SQRT_2 = BigDecimal.valueOf(Math.sqrt(2));
+  
   private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<>();
   private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<>();
 
-  private static boolean additionalChecksEnabled = SystemConfiguration.getProperty("pallier.FIPSPrimeGenerationChecks").equals("true");
+  private static boolean additionalChecksEnabled = SystemConfiguration.isSetTrue("pallier.FIPSPrimeGenerationChecks");
 
   /**
    * Method to generate a single prime
@@ -88,7 +90,7 @@ public class PrimeGenerator
       BigInteger lowerBound;
       if (!lowerBoundCache.containsKey(bitLength))
       {
-        lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
+        lowerBound = SQRT_2.multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
         lowerBoundCache.put(bitLength, lowerBound);
       }
       else
@@ -149,7 +151,7 @@ public class PrimeGenerator
       BigInteger lowerBound;
       if (!lowerBoundCache.containsKey(bitLength))
       {
-        lowerBound = BigDecimal.valueOf(Math.sqrt(2)).multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
+        lowerBound = SQRT_2.multiply(BigDecimal.valueOf(2).pow((bitLength / 2) - 1)).toBigInteger();
         lowerBoundCache.put(bitLength, lowerBound);
       }
       else

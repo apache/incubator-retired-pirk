@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.storm;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -62,7 +63,7 @@ public class PartitionDataBolt extends BaseBasicBolt
   private boolean splitPartitions;
 
   private JSONObject json;
-  private ArrayList<BigInteger> partitions;
+  private List<BigInteger> partitions;
 
   @Override
   public void prepare(Map map, TopologyContext context)

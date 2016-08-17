@@ -133,7 +133,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
     if (passFilter)
     {
       // Extract the selector, compute the hash, and partition the data element according to query type
-      Tuple2<Integer,BytesArrayWritable> returnTuple = null;
+      Tuple2<Integer,BytesArrayWritable> returnTuple;
       try
       {
         returnTuple = HashSelectorAndPartitionData.hashSelectorAndFormPartitions(value, qSchema, dSchema, queryInfo);
@@ -141,6 +141,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
       {
         logger.error("Error in partitioning data element value = " + StringUtils.mapWritableToString(value));
         e.printStackTrace();
+        throw new RuntimeException(e);
       }
 
       keyOut.set(returnTuple._1);

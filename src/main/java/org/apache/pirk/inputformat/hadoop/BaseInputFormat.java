@@ -23,7 +23,7 @@ import org.apache.hadoop.mapreduce.InputFormat;
 /**
  * All input formats used must extend this class
  * <p>
- * MapWritable{@code<K,V>} should be of the form MapWritable{@code<Text,Writable>}
+ * MapWritable{@code <K,V>} should be of the form MapWritable{@code <Text,Writable>}
  * <p>
  * If V is an array type, it must be of the form ArrayWritable
  *

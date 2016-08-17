@@ -21,6 +21,7 @@ package org.apache.pirk.querier.wideskies.encrypt;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -56,14 +57,14 @@ public class EncryptQuery
 
   private Paillier paillier = null; // Paillier encryption functionality
 
-  private ArrayList<String> selectors = null; // selectors for the query
+  private List<String> selectors = null; // selectors for the query
 
   // Map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
   private HashMap<Integer,String> embedSelectorMap = null;
 
-  public EncryptQuery(QueryInfo queryInfoInput, ArrayList<String> selectorsInput, Paillier paillierInput)
+  public EncryptQuery(QueryInfo queryInfoInput, List<String> selectorsInput, Paillier paillierInput)
   {
     queryInfo = queryInfoInput;
 
@@ -94,7 +95,7 @@ public class EncryptQuery
     return querier;
   }
 
-  public ArrayList<String> getSelectors()
+  public List<String> getSelectors()
   {
     return selectors;
   }
@@ -115,7 +116,7 @@ public class EncryptQuery
    */
   public void encrypt() throws InterruptedException, PIRException
   {
-    int numThreads = Integer.parseInt(SystemConfiguration.getProperty("numThreads", "1"));
+    int numThreads = SystemConfiguration.getIntProperty("numThreads", 1);
     encrypt(numThreads);
   }
 
@@ -158,7 +159,7 @@ public class EncryptQuery
     }
 
     // Set the Querier object
-    querier = new Querier(queryInfo, selectors, paillier, query, embedSelectorMap);
+    querier = new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
   private HashMap<Integer,Integer> computeSelectorQueryVecMap()

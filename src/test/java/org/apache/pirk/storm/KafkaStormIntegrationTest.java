@@ -65,10 +65,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 @Category(IntegrationTest.class)
 public class KafkaStormIntegrationTest
@@ -117,8 +114,8 @@ public class KafkaStormIntegrationTest
     // Create encrypted file
     localStopListFile = Inputs.createPIRStopList(null, false);
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
-    // SystemConfiguration.setProperty("data.schemas", Inputs.DATA_SCHEMA_FILE_LOCALFS);
-    // SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
+    //SystemConfiguration.setProperty("data.schemas", Inputs.DATA_SCHEMA_FILE_LOCALFS);
+    //SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
     Inputs.createSchemaFiles(StopListFilter.class.getName());
 
     // Perform encryption. Set queryInfo, nSquared, fileQuery, and fileQuerier
@@ -135,7 +132,7 @@ public class KafkaStormIntegrationTest
     performDecryption();
 
     // check results
-    ArrayList<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
+    List<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
     BaseTests.checkDNSHostnameQueryResults(results, false, 7, false, Inputs.createJSONDataElements());
 
   }
@@ -274,8 +271,8 @@ public class KafkaStormIntegrationTest
 
     nSquared = paillier.getNSquared();
 
-    queryInfo = new QueryInfo(BaseTests.queryNum, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
-        queryType, queryType + "_" + BaseTests.queryNum, paillier.getBitLength(), false, true, false);
+    queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
+        queryType, false, true, false);
 
     // Perform the encryption
     logger.info("Performing encryption of the selectors - forming encrypted query vectors:");

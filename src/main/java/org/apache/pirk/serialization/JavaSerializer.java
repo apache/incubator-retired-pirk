@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *******************************************************************************/
+ */
 package org.apache.pirk.serialization;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class JavaSerializer extends SerializationService
   /**
    * Stores the given object on the given stream using Java serialization.
    * 
-   * @param stream
+   * @param outputStream
    *          The stream on which to store the object.
    * @param obj
    *          The object to be stored.
@@ -38,27 +38,26 @@ public class JavaSerializer extends SerializationService
    *           If a problem occurs storing the object on the given stream.
    */
 
-  public void write(OutputStream stream, Storable obj) throws IOException
+  public void write(OutputStream outputStream, Storable obj) throws IOException
   {
-    ObjectOutputStream oos = new ObjectOutputStream(stream);
+    ObjectOutputStream oos = new ObjectOutputStream(outputStream);
     oos.writeObject(obj);
   }
 
   /**
    * Read an object from the given stream of the given type.
    * 
-   * @param stream
+   * @param inputStream
    *          The stream from which to read the object.
-   * @param type
+   * @param classType
    *          The type of object being retrieved.
    * @throws IOException
    *           If a problem occurs reading the object from the stream.
    */
   @SuppressWarnings("unchecked")
-  public <T> T read(InputStream stream, Class<T> type) throws IOException
+  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
   {
-    ObjectInputStream oin = new ObjectInputStream(stream);
-    try
+    try (ObjectInputStream oin = new ObjectInputStream(inputStream))
     {
       return (T) oin.readObject();
     } catch (ClassNotFoundException e)

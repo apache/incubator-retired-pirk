@@ -42,7 +42,7 @@ public class SystemConfiguration
 {
   private static final Logger logger = LoggerFactory.getLogger(SystemConfiguration.class);
 
-  private static final Properties props;
+  private static final Properties props = new Properties();
 
   /**
    * By default, these files should be found on the root of the classpath
@@ -55,34 +55,30 @@ public class SystemConfiguration
 
   static
   {
-    props = new Properties();
     initialize();
   }
 
   public static void initialize()
   {
+    props.clear();
+
     // First try to load the default properties file
-    loadPropsFromStream(DEFAULT_PROPERTY_FILE);
+    loadPropsFromResource(DEFAULT_PROPERTY_FILE);
 
     // Try to load props from the querier and responder property files, if they exist
-    loadPropsFromStream(QUERIER_PROPERTIES_FILE);
-    loadPropsFromStream(RESPONDER_PROPERTIES_FILE);
+    loadPropsFromResource(QUERIER_PROPERTIES_FILE);
+    loadPropsFromResource(RESPONDER_PROPERTIES_FILE);
 
     // Try to load the local properties files, if they exists
     loadPropsFromDir(getProperty(LOCAL_PROPERTIES_DIR));
   }
 
   /**
-   * Clear the properties
-   */
-  public static void clearProperties()
-  {
-    props.clear();
-  }
-
-  /**
-   * Gets the specified property; returns null if the property isn't found.
+   * Gets the specified property; returns <code>null</code> if the property isn't found.
    * 
+   * @param propertyName
+   *          The name of the requested property.
+   * @return The value of the property, or <code>null</code> if the property cannot be found.
    */
   public static String getProperty(String propertyName)
   {
@@ -90,8 +86,13 @@ public class SystemConfiguration
   }
 
   /**
-   * Gets the specified property; returns the defaultValue if the property isn't found.
+   * Gets the specified property as a <code>String</code>, or the default value if the property isn't found.
    * 
+   * @param propertyName
+   *          The name of the requested string property value.
+   * @param defaultValue
+   *          The value to return if the property is undefined.
+   * @return The value of the requested property, or the default value if the property is undefined.
    */
   public static String getProperty(String propertyName, String defaultValue)
   {
@@ -99,51 +100,110 @@ public class SystemConfiguration
   }
 
   /**
-   * Set a property
+   * Gets the specified property as an <code>int</code>, or the default value if the property isn't found.
+   * 
+   * @param propertyName
+   *          The name of the requested int property value.
+   * @param defaultValue
+   *          The value to return if the property is undefined.
+   * @return The value of the requested property, or the default value if the property is undefined.
+   * @throws NumberFormatException
+   *           If the property does not contain a parsable <code>int</code> value.
+   */
+  public static int getIntProperty(String propertyName, int defaultValue)
+  {
+    String value = props.getProperty(propertyName);
+    return (value == null) ? defaultValue : Integer.parseInt(value);
+  }
+
+  /**
+   * Gets the specified property as a <code>boolean</code>, or the default value if the property isn't defined.
+   * 
+   * @param propertyName
+   *          The name of the requested boolean property value.
+   * @param defaultValue
+   *          The value to return if the property is undefined.
+   * @return <code>true</code> if the property is defined and has the value "true", otherwise <code>defaultValue</code>.
+   */
+  public static boolean getBooleanProperty(String propertyName, boolean defaultValue)
+  {
+    return (isSetTrue(propertyName)) || defaultValue;
+  }
+
+  /**
+   * Returns <code>true</code> iff the specified boolean property value is "true".
+   * <p>
+   * If the property is not found, or it's value is not "true" then the method will return <code>false</code>.
+   * 
+   * @param propertyName
+   *          The name of the requested boolean property value.
+   * @return <code>true</code> if the property is defined and has the value "true", otherwise <code>false</code>.
+   */
+  public static boolean isSetTrue(String propertyName)
+  {
+    String value = props.getProperty(propertyName);
+    return "true".equals(value);
+  }
+
+  /**
+   * Sets the property to the given value.
+   * <p>
+   * Any previous values stored at the same property name are replaced.
+   * 
+   * @param propertyName
+   *          The name of the property to set.
+   * @param value
+   *          The property value.
    */
   public static void setProperty(String propertyName, String value)
   {
     props.setProperty(propertyName, value);
   }
 
+  /**
+   * Returns true iff the given property name is defined.
+   * 
+   * @param propertyName
+   *          The property name to test.
+   * @return <code>true</code> if the property is found in the configuration, or <code>false</code> otherwise.
+   */
   public static boolean hasProperty(String propertyName)
   {
     return props.containsKey(propertyName);
   }
 
   /**
-   * Append a property via a comma separated list
+   * Appends a property via a comma separated list
    * <p>
-   * If the property does not exist, it adds it
+   * If the property does not exist, it adds it.
+   * 
+   * @param propertyName
+   *          The property whose value is to be appended with the given value.
+   * @param value
+   *          The value to be stored, or appended to the current value.
    */
-  public static void appendProperty(String property, String propToAdd)
+  public static void appendProperty(String propertyName, String value)
   {
-    String value = props.getProperty(property);
+    String oldValue = props.getProperty(propertyName);
 
-    if (value != null && !value.equals("none"))
+    if (oldValue != null && !oldValue.equals("none"))
     {
-      value += "," + propToAdd;
+      oldValue += "," + value;
     }
     else
     {
-      value = propToAdd;
+      oldValue = value;
     }
-    props.setProperty(property, value);
+    props.setProperty(propertyName, oldValue);
   }
 
   /**
-   * Reset all properties to the default values
-   */
-  public static void resetProperties()
-  {
-    clearProperties();
-    initialize();
-  }
-
-  /**
-   * Loads the properties from local properties file in the specified directory
+   * Loads the properties from local properties file in the specified directory.
    * <p>
-   * Only files ending in '.properties' will be loaded
+   * All files ending in '.properties' will be loaded. The new properties are added to the current system configuration.
+   * 
+   * @param dirName
+   *          The directory to search for the new properties files.
    */
   public static void loadPropsFromDir(String dirName)
   {
@@ -166,17 +226,21 @@ public class SystemConfiguration
   }
 
   /**
-   * Loads the properties from the specified file
+   * Loads the properties from the specified file.
+   * <p>
+   * The new properties are added to the current system configuration.
+   * 
+   * @param file
+   *          The properties file containing the system properties to add.
    */
   public static void loadPropsFromFile(File file)
   {
     if (file.exists())
     {
-      try (InputStream stream = new FileInputStream(file);)
+      try (InputStream stream = new FileInputStream(file))
       {
         logger.info("Loading properties file '" + file.getAbsolutePath() + "'");
         props.load(stream);
-        stream.close();
       } catch (IOException e)
       {
         logger.error("Problem loading properties file '" + file.getAbsolutePath() + "'");
@@ -190,9 +254,14 @@ public class SystemConfiguration
   }
 
   /**
-   * Loads the properties from the specified file on the classpath
+   * Loads the properties from the specified resource on the current classloader.
+   * <p>
+   * The new properties are added to the current system configuration.
+   * 
+   * @param name
+   *          The name of the resource defining the properties.
    */
-  public static void loadPropsFromStream(String name)
+  public static void loadPropsFromResource(String name)
   {
     try (InputStream stream = SystemConfiguration.class.getClassLoader().getResourceAsStream(name))
     {
@@ -200,7 +269,6 @@ public class SystemConfiguration
       {
         logger.info("Loading file '" + name + "'");
         props.load(stream);
-        stream.close();
       }
       else
       {

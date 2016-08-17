@@ -20,7 +20,6 @@ package org.apache.pirk.schema.data.partitioner;
 
 import java.math.BigInteger;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pirk.utils.ISO8601DateParser;
@@ -35,15 +34,10 @@ public class ISO8601DatePartitioner implements DataPartitioner
 {
   private static final long serialVersionUID = 1L;
 
-  private PrimitiveTypePartitioner ptp = null;
-
-  public ISO8601DatePartitioner()
-  {
-    ptp = new PrimitiveTypePartitioner();
-  }
+  private final PrimitiveTypePartitioner ptp = new PrimitiveTypePartitioner();
 
   @Override
-  public ArrayList<BigInteger> toPartitions(Object object, String type) throws PIRException
+  public List<BigInteger> toPartitions(Object object, String type) throws PIRException
   {
     long dateLongFormat;
     try
@@ -58,7 +52,7 @@ public class ISO8601DatePartitioner implements DataPartitioner
   }
 
   @Override
-  public Object fromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type) throws PIRException
+  public Object fromPartitions(List<BigInteger> parts, int partsIndex, String type) throws PIRException
   {
     long dateLongFormat = (long) ptp.fromPartitions(parts, partsIndex, PrimitiveTypePartitioner.LONG);
 
@@ -72,13 +66,13 @@ public class ISO8601DatePartitioner implements DataPartitioner
   }
 
   @Override
-  public ArrayList<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
+  public List<BigInteger> arrayToPartitions(List<?> elementList, String type) throws PIRException
   {
     return ptp.arrayToPartitions(elementList, PrimitiveTypePartitioner.LONG);
   }
 
   @Override
-  public ArrayList<BigInteger> getPaddedPartitions(String type) throws PIRException
+  public List<BigInteger> getPaddedPartitions(String type) throws PIRException
   {
     return ptp.getPaddedPartitions(PrimitiveTypePartitioner.LONG);
   }

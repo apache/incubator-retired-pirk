@@ -19,7 +19,7 @@
 package org.apache.pirk.responder.wideskies.common;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
@@ -42,11 +42,9 @@ public class HashSelectorAndPartitionData
 {
   private static final Logger logger = LoggerFactory.getLogger(HashSelectorAndPartitionData.class);
 
-  public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitionsBigInteger(MapWritable dataElement, QuerySchema qSchema, DataSchema dSchema,
+  public static Tuple2<Integer,List<BigInteger>> hashSelectorAndFormPartitionsBigInteger(MapWritable dataElement, QuerySchema qSchema, DataSchema dSchema,
       QueryInfo queryInfo) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
-
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryType(dataElement, qSchema, dSchema);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
@@ -54,18 +52,14 @@ public class HashSelectorAndPartitionData
 
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
+    List<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
 
-    returnTuple = new Tuple2<>(hash, hitValPartitions);
-
-    return returnTuple;
+    return new Tuple2<>(hash, hitValPartitions);
   }
 
   public static Tuple2<Integer,BytesArrayWritable> hashSelectorAndFormPartitions(MapWritable dataElement, QuerySchema qSchema, DataSchema dSchema,
       QueryInfo queryInfo) throws Exception
   {
-    Tuple2<Integer,BytesArrayWritable> returnTuple;
-
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryType(dataElement, qSchema, dSchema);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
@@ -73,18 +67,14 @@ public class HashSelectorAndPartitionData
 
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
+    List<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(dataElement, qSchema, dSchema, queryInfo.getEmbedSelector());
     BytesArrayWritable bAW = new BytesArrayWritable(hitValPartitions);
 
-    returnTuple = new Tuple2<>(hash, bAW);
-
-    return returnTuple;
+    return new Tuple2<>(hash, bAW);
   }
 
-  public static Tuple2<Integer,ArrayList<BigInteger>> hashSelectorAndFormPartitions(JSONObject json, QueryInfo queryInfo, QuerySchema qSchema) throws Exception
+  public static Tuple2<Integer,List<BigInteger>> hashSelectorAndFormPartitions(JSONObject json, QueryInfo queryInfo, QuerySchema qSchema) throws Exception
   {
-    Tuple2<Integer,ArrayList<BigInteger>> returnTuple;
-
     // Pull the selector based on the query type
     String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, json);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
@@ -92,10 +82,8 @@ public class HashSelectorAndPartitionData
 
     // Extract the data bits based on the query type
     // Partition by the given partitionSize
-    ArrayList<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, json, queryInfo.getEmbedSelector());
+    List<BigInteger> hitValPartitions = QueryUtils.partitionDataElement(qSchema, json, queryInfo.getEmbedSelector());
 
-    returnTuple = new Tuple2<>(hash, hitValPartitions);
-
-    return returnTuple;
+    return new Tuple2<>(hash, hitValPartitions);
   }
 }

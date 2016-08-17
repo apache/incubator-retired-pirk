@@ -58,14 +58,19 @@ public class FilterFactory
         }
         else
         {
-          FileReader fr = new FileReader(new File(stopListFile));
-          br = new BufferedReader(fr);
+          br = new BufferedReader(new FileReader(new File(stopListFile)));
         }
 
-        String qLine;
-        while ((qLine = br.readLine()) != null)
+        try
         {
-          stopList.add(qLine);
+          String qLine;
+          while ((qLine = br.readLine()) != null)
+          {
+            stopList.add(qLine);
+          }
+        } finally
+        {
+          br.close();
         }
 
         obj = new StopListFilter(filteredElementNames, stopList);

@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PirkTopology
 {
+  //public static DocumentBuilderImpl dbi = null;
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PirkTopology.class);
 
   private static final String kafkaClientId = SystemConfiguration.getProperty("kafka.clientId", "KafkaSpout");

@@ -35,39 +35,38 @@ public class QuerierProps
   private static final Logger logger = LoggerFactory.getLogger(QuerierProps.class);
 
   // General properties
-  public static final String ACTION = "querier.action";
-  public static final String INPUTFILE = "querier.inputFile";
+  static final String ACTION = "querier.action";
+  static final String INPUTFILE = "querier.inputFile";
   public static final String OUTPUTFILE = "querier.outputFile";
-  public static final String QUERYTYPE = "querier.queryType";
-  public static final String NUMTHREADS = "querier.numThreads";
+  static final String QUERYTYPE = "querier.queryType";
+  static final String NUMTHREADS = "querier.numThreads";
 
   // Encryption properties
-  public static final String HASHBITSIZE = "querier.hashBitSize";
-  public static final String HASHKEY = "querier.hashKey";
-  public static final String DATAPARTITIONSIZE = "querier.dataPartitionBitSize";
-  public static final String PAILLIERBITSIZE = "querier.paillierBitSize";
-  public static final String BITSET = "querier.bitSet";
-  public static final String CERTAINTY = "querier.certainty";
-  public static final String QUERYNAME = "querier.queryName";
-  public static final String QUERYSCHEMAS = "querier.querySchemas";
-  public static final String DATASCHEMAS = "querier.dataSchemas";
-  public static final String EMBEDSELECTOR = "querier.embedSelector";
-  public static final String USEMEMLOOKUPTABLE = "querier.memLookupTable";
-  public static final String USEHDFSLOOKUPTABLE = "querier.useHDFSLookupTable";
-  public static final String SR_ALGORITHM = "pallier.secureRandom.algorithm";
-  public static final String SR_PROVIDER = "pallier.secureRandom.provider";
-  public static final String EMBEDQUERYSCHEMA = "pir.embedQuerySchema";
+  static final String HASHBITSIZE = "querier.hashBitSize";
+  static final String HASHKEY = "querier.hashKey";
+  static final String DATAPARTITIONSIZE = "querier.dataPartitionBitSize";
+  static final String PAILLIERBITSIZE = "querier.paillierBitSize";
+  static final String BITSET = "querier.bitSet";
+  static final String CERTAINTY = "querier.certainty";
+  static final String QUERYSCHEMAS = "querier.querySchemas";
+  static final String DATASCHEMAS = "querier.dataSchemas";
+  static final String EMBEDSELECTOR = "querier.embedSelector";
+  static final String USEMEMLOOKUPTABLE = "querier.memLookupTable";
+  static final String USEHDFSLOOKUPTABLE = "querier.useHDFSLookupTable";
+  static final String SR_ALGORITHM = "pallier.secureRandom.algorithm";
+  static final String SR_PROVIDER = "pallier.secureRandom.provider";
+  static final String EMBEDQUERYSCHEMA = "pir.embedQuerySchema";
 
   // Decryption properties
-  public static final String QUERIERFILE = "querier.querierFile";
+  static final String QUERIERFILE = "querier.querierFile";
 
-  public static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
-      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYNAME, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE,
-      SR_ALGORITHM, SR_PROVIDER);
+  static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
+      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM,
+      SR_PROVIDER);
 
   /**
    * Validates the querier properties
-   * 
+   *
    */
   public static boolean validateQuerierProperties()
   {
@@ -148,12 +147,6 @@ public class QuerierProps
       if (!SystemConfiguration.hasProperty(CERTAINTY))
       {
         logger.info("For action='encrypt': Must have the option " + CERTAINTY);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(QUERYNAME))
-      {
-        logger.info("For action='encrypt': Must have the option " + QUERYNAME);
         valid = false;
       }
 
