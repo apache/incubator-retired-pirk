@@ -20,11 +20,8 @@ package org.apache.pirk.schema.response;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.hadoop.io.Text;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
@@ -53,13 +50,10 @@ public class QueryResponseJSON implements Serializable
   private QueryInfo queryInfo = null;
 
   public static final String EVENT_TYPE = "event_type"; // notification type the matched the record
-  public static final Text EVENT_TYPE_TEXT = new Text(EVENT_TYPE);
 
   public static final String QUERY_ID = "query_id"; // query ID that generated the notification
-  public static final Text QUERY_ID_TEXT = new Text(QUERY_ID);
 
   public static final String SELECTOR = "match"; // tag for selector that generated the hit
-  public static final Text SELECTOR_TEXT = new Text(SELECTOR);
 
   /**
    * Constructor with data schema checking
@@ -117,22 +111,6 @@ public class QueryResponseJSON implements Serializable
     return queryInfo;
   }
 
-  // Create empty JSON object based on the DataSchema
-  @SuppressWarnings("unchecked")
-  private void initialize()
-  {
-    Set<String> schemaStringRep = dSchema.getNonArrayElements();
-    for (String key : schemaStringRep)
-    {
-      jsonObj.put(key, "");
-    }
-    Set<String> schemaListRep = dSchema.getArrayElements();
-    for (String key : schemaListRep)
-    {
-      jsonObj.put(key, new ArrayList<>());
-    }
-  }
-
   /**
    * Add a <key,value> pair to the response object; checks the data schema if this QueryResponseJSON object was instantiated with schema checking (with a
    * QueryInfo object)
@@ -185,14 +163,6 @@ public class QueryResponseJSON implements Serializable
   public void setSelector(Object val)
   {
     jsonObj.put(SELECTOR, val);
-  }
-
-  public void setAllFields(HashMap<String,String> dataMap)
-  {
-    for (Entry<String,String> entry : dataMap.entrySet())
-    {
-      setMapping(entry.getKey(), entry.getValue());
-    }
   }
 
   /**

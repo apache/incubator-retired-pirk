@@ -270,8 +270,8 @@ public class QuerySchemaLoader
    * @param stream
    *          The input stream.
    * @return A Document representing the XML document.
-   * @throws IOException
-   * @throws PIRException
+   * @throws IOException - failed to read input
+   * @throws PIRException - file could not be parsed
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -296,7 +296,7 @@ public class QuerySchemaLoader
    * @param doc
    *          An XML document specifying names upon which we will filter the query.
    * @return The set of names upon which we will filter the query.
-   * @throws PIRException
+   * @throws PIRException - Filter lists not found
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
   {
@@ -338,7 +338,7 @@ public class QuerySchemaLoader
    * @param tagName
    *          The name of the tag we wish to extract from the {@code doc}
    * @return The text content of the tag.
-   * @throws PIRException
+   * @throws PIRException - XML Document is Empty
    */
   private String extractValue(Document doc, String tagName) throws PIRException
   {
@@ -360,8 +360,8 @@ public class QuerySchemaLoader
    * @param filteredElementNames
    *          The set of names of elements of the data schema up which the filter will act.
    * @return An instantiation of the filter, set up to filter upon the specified names.
-   * @throws IOException
-   * @throws PIRException
+   * @throws IOException - failed to read input
+   * @throws PIRException - File could not be instantiated
    */
   private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
   {

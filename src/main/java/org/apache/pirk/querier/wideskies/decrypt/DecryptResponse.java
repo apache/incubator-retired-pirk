@@ -20,18 +20,21 @@ package org.apache.pirk.querier.wideskies.decrypt;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -48,19 +51,19 @@ import org.slf4j.LoggerFactory;
 public class DecryptResponse
 {
   private static final Logger logger = LoggerFactory.getLogger(DecryptResponse.class);
+  
+  private static final BigInteger TWO_BI = BigInteger.valueOf(2);
 
-  private Response response = null;
+  private final Response response;
 
-  private Querier querier = null;
+  private final Querier querier;
 
-  private HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
+  private final Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
 
   public DecryptResponse(Response responseInput, Querier querierInput)
   {
     response = responseInput;
     querier = querierInput;
-
-    resultMap = new HashMap<>();
   }
 
   /**
@@ -89,25 +92,24 @@ public class DecryptResponse
 
     Paillier paillier = querier.getPaillier();
     List<String> selectors = querier.getSelectors();
-    HashMap<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
+    Map<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
 
     // Perform decryption on the encrypted columns
-    ArrayList<BigInteger> rElements = decryptElements(response.getResponseElements(), paillier);
+    List<BigInteger> rElements = decryptElements(response.getResponseElements(), paillier);
     logger.debug("rElements.size() = " + rElements.size());
 
     // Pull the necessary parameters
     int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
 
     // Initialize the result map and masks-- removes initialization checks from code below
-    HashMap<String,BigInteger> selectorMaskMap = new HashMap<>();
+    Map<String,BigInteger> selectorMaskMap = new HashMap<>();
     int selectorNum = 0;
-    BigInteger twoBI = BigInteger.valueOf(2);
     for (String selector : selectors)
     {
       resultMap.put(selector, new ArrayList<>());
 
       // 2^{selectorNum*dataPartitionBitSize}(2^{dataPartitionBitSize} - 1)
-      BigInteger mask = twoBI.pow(selectorNum * dataPartitionBitSize).multiply((twoBI.pow(dataPartitionBitSize).subtract(BigInteger.ONE)));
+      BigInteger mask = TWO_BI.pow(selectorNum * dataPartitionBitSize).multiply((TWO_BI.pow(dataPartitionBitSize).subtract(BigInteger.ONE)));
       logger.debug("selector = " + selector + " mask = " + mask.toString(2));
       selectorMaskMap.put(selector, mask);
 
@@ -122,7 +124,7 @@ public class DecryptResponse
     }
     int elementsPerThread = selectors.size() / numThreads; // Integral division.
 
-    ArrayList<DecryptResponseRunnable> runnables = new ArrayList<>();
+    List<Future<Map<String,List<QueryResponseJSON>>>> futures = new ArrayList<>();
     for (int i = 0; i < numThreads; ++i)
     {
       // Grab the range of the thread and create the corresponding partition of selectors
@@ -139,34 +141,30 @@ public class DecryptResponse
       }
 
       // Create the runnable and execute
-      // selectorMaskMap and rElements are synchronized, pirWatchlist is copied, selectors is partitioned
-      DecryptResponseRunnable runDec = new DecryptResponseRunnable(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
-      runnables.add(runDec);
-      es.execute(runDec);
-    }
-
-    // Allow threads to complete
-    es.shutdown(); // previously submitted tasks are executed, but no new tasks will be accepted
-    boolean finished = es.awaitTermination(1, TimeUnit.DAYS); // waits until all tasks complete or until the specified timeout
-
-    if (!finished)
-    {
-      throw new PIRException("Decryption threads did not finish in the alloted time");
+      DecryptResponseRunnable<Map<String,List<QueryResponseJSON>>> runDec = new DecryptResponseRunnable<>(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
+      futures.add(es.submit(runDec));
     }
 
     // Pull all decrypted elements and add to resultMap
-    for (DecryptResponseRunnable runner : runnables)
+    try
     {
-      HashMap<String,ArrayList<QueryResponseJSON>> decValues = runner.getResultMap();
-      resultMap.putAll(decValues);
+      for (Future<Map<String,List<QueryResponseJSON>>> future : futures)
+      {
+        resultMap.putAll(future.get(1, TimeUnit.DAYS));
+      }
+    } catch (TimeoutException | ExecutionException e)
+    {
+      throw new PIRException("Exception in decryption threads.", e);
     }
+    
+    es.shutdown();
   }
 
   // Method to perform basic decryption of each raw response element - does not
   // extract and reconstruct the data elements
-  private ArrayList<BigInteger> decryptElements(TreeMap<Integer,BigInteger> elements, Paillier paillier)
+  private List<BigInteger> decryptElements(TreeMap<Integer,BigInteger> elements, Paillier paillier)
   {
-    ArrayList<BigInteger> decryptedElements = new ArrayList<>();
+    List<BigInteger> decryptedElements = new ArrayList<>();
 
     for (BigInteger encElement : elements.values())
     {
@@ -182,17 +180,17 @@ public class DecryptResponse
    */
   public void writeResultFile(String filename) throws IOException
   {
-    FileOutputStream fout = new FileOutputStream(new File(filename));
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filename))))
     {
-      for (QueryResponseJSON hitJSON : entry.getValue())
+      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
       {
-        bw.write(hitJSON.getJSONString());
-        bw.newLine();
+        for (QueryResponseJSON hitJSON : entry.getValue())
+        {
+          bw.write(hitJSON.getJSONString());
+          bw.newLine();
+        }
       }
     }
-    bw.close();
   }
 
   /**
@@ -201,16 +199,16 @@ public class DecryptResponse
    */
   public void writeResultFile(File file) throws IOException
   {
-    FileOutputStream fout = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file)))
     {
-      for (QueryResponseJSON hitJSON : entry.getValue())
+      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
       {
-        bw.write(hitJSON.getJSONString());
-        bw.newLine();
+        for (QueryResponseJSON hitJSON : entry.getValue())
+        {
+          bw.write(hitJSON.getJSONString());
+          bw.newLine();
+        }
       }
     }
-    bw.close();
   }
 }
