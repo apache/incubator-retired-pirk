@@ -21,6 +21,8 @@ package org.apache.pirk.querier.wideskies.decrypt;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
@@ -28,7 +30,6 @@ import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
-import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,36 +43,25 @@ public class DecryptResponseRunnable implements Runnable
 {
   private static final Logger logger = LoggerFactory.getLogger(DecryptResponseRunnable.class);
 
-  private HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
+  private final Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
+  private final List<BigInteger> rElements;
+  private final TreeMap<Integer,String> selectors;
+  private final Map<String,BigInteger> selectorMaskMap;
+  private final QueryInfo queryInfo;
 
-  private ArrayList<BigInteger> rElements = null;
-  private TreeMap<Integer,String> selectors = null;
-  private HashMap<String,BigInteger> selectorMaskMap = null;
-  private QueryInfo queryInfo = null;
-  private QuerySchema qSchema = null;
+  private final Map<Integer,String> embedSelectorMap;
 
-  private HashMap<Integer,String> embedSelectorMap = null;
-
-  public DecryptResponseRunnable(ArrayList<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, HashMap<String,BigInteger> selectorMaskMapInput,
-      QueryInfo queryInfoInput, HashMap<Integer,String> embedSelectorMapInput)
+  public DecryptResponseRunnable(List<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, Map<String,BigInteger> selectorMaskMapInput,
+      QueryInfo queryInfoInput, Map<Integer,String> embedSelectorMapInput)
   {
     rElements = rElementsInput;
     selectors = selectorsInput;
     selectorMaskMap = selectorMaskMapInput;
     queryInfo = queryInfoInput;
     embedSelectorMap = embedSelectorMapInput;
-
-    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
-    {
-      if ((qSchema = queryInfo.getQuerySchema()) == null)
-      {
-        qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
-      }
-    }
-    resultMap = new HashMap<>();
   }
 
-  public HashMap<String,ArrayList<QueryResponseJSON>> getResultMap()
+  public Map<String,List<QueryResponseJSON>> getResultMap()
   {
     return resultMap;
   }
@@ -165,7 +155,7 @@ public class DecryptResponseRunnable implements Runnable
           }
           if (addHit)
           {
-            ArrayList<QueryResponseJSON> selectorHitList = resultMap.get(selector);
+            List<QueryResponseJSON> selectorHitList = resultMap.get(selector);
             selectorHitList.add(qrJOSN);
             resultMap.put(selector, selectorHitList);
 

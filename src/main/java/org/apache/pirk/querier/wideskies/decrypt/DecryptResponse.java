@@ -20,13 +20,13 @@ package org.apache.pirk.querier.wideskies.decrypt;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -49,18 +49,16 @@ public class DecryptResponse
 {
   private static final Logger logger = LoggerFactory.getLogger(DecryptResponse.class);
 
-  private Response response = null;
+  private final Response response;
 
-  private Querier querier = null;
+  private final Querier querier;
 
-  private HashMap<String,ArrayList<QueryResponseJSON>> resultMap = null; // selector -> ArrayList of hits
+  private final Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
 
   public DecryptResponse(Response responseInput, Querier querierInput)
   {
     response = responseInput;
     querier = querierInput;
-
-    resultMap = new HashMap<>();
   }
 
   /**
@@ -157,8 +155,7 @@ public class DecryptResponse
     // Pull all decrypted elements and add to resultMap
     for (DecryptResponseRunnable runner : runnables)
     {
-      HashMap<String,ArrayList<QueryResponseJSON>> decValues = runner.getResultMap();
-      resultMap.putAll(decValues);
+      resultMap.putAll(runner.getResultMap());
     }
   }
 
@@ -182,17 +179,17 @@ public class DecryptResponse
    */
   public void writeResultFile(String filename) throws IOException
   {
-    FileOutputStream fout = new FileOutputStream(new File(filename));
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filename))))
     {
-      for (QueryResponseJSON hitJSON : entry.getValue())
+      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
       {
-        bw.write(hitJSON.getJSONString());
-        bw.newLine();
+        for (QueryResponseJSON hitJSON : entry.getValue())
+        {
+          bw.write(hitJSON.getJSONString());
+          bw.newLine();
+        }
       }
     }
-    bw.close();
   }
 
   /**
@@ -201,16 +198,16 @@ public class DecryptResponse
    */
   public void writeResultFile(File file) throws IOException
   {
-    FileOutputStream fout = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fout));
-    for (Entry<String,ArrayList<QueryResponseJSON>> entry : resultMap.entrySet())
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file)))
     {
-      for (QueryResponseJSON hitJSON : entry.getValue())
+      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
       {
-        bw.write(hitJSON.getJSONString());
-        bw.newLine();
+        for (QueryResponseJSON hitJSON : entry.getValue())
+        {
+          bw.write(hitJSON.getJSONString());
+          bw.newLine();
+        }
       }
     }
-    bw.close();
   }
 }
