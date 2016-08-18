@@ -67,7 +67,7 @@
 			<id>mvn-public</id>
 			<url>http://mvnrepository.com/artifact</url>
 			<snapshots>
-				<updatePolicy>always</updatePolicy>
+				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 		</repository>
 		

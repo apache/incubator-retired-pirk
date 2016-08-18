@@ -28,6 +28,16 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.pirk.encryption.IntegerMathAbstraction.exactDivide;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.gcd;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.mod;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.modInverse;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.modPow;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.modularMultiply;
+import static org.apache.pirk.encryption.IntegerMathAbstraction.multiply;
+
+
+
 /**
  * Implementation of the Paillier cryptosystem
  * <p>
@@ -127,7 +137,7 @@ public class Paillier implements Cloneable, Serializable
     p = pInput;
     q = qInput;
 
-    N = p.multiply(q);
+    N = multiply(p,q);
 
     setDerivativeElements();
 
@@ -235,18 +245,18 @@ public class Paillier implements Cloneable, Serializable
     p = pq[0];
     q = pq[1];
 
-    N = p.multiply(q);
+    N = multiply(p, q);
   }
 
   private void setDerivativeElements()
   {
-    NSquared = N.multiply(N);
+    NSquared = multiply(N, N);
 
     // lambda(N) = lcm(p-1,q-1)
-    lambdaN = IntegerMathAbstraction.exactDivide( p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE)),
-                                                  IntegerMathAbstraction.gcd(p.subtract(BigInteger.ONE), q.subtract(BigInteger.ONE)));
+    lambdaN = exactDivide( multiply(p.subtract(BigInteger.ONE), q.subtract(BigInteger.ONE)),
+                                                  gcd(p.subtract(BigInteger.ONE), q.subtract(BigInteger.ONE)));
 
-    w = IntegerMathAbstraction.modInverse(lambdaN, N); // lambda(N)^-1 mod N
+    w = modInverse(lambdaN, N); // lambda(N)^-1 mod N
   }
 
   /**
@@ -256,10 +266,10 @@ public class Paillier implements Cloneable, Serializable
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
     // Generate a random value r in (Z/NZ)*
-    BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
-    while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO))
+    BigInteger r = mod(new BigInteger(bitLength, secureRandom), N);
+    while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || mod(r, p).equals(BigInteger.ZERO) || mod(r, q).equals(BigInteger.ZERO))
     {
-      r = (new BigInteger(bitLength, secureRandom)).mod(N);
+      r = mod(new BigInteger(bitLength, secureRandom), N);
     }
 
     return encrypt(m, r);
@@ -277,10 +287,10 @@ public class Paillier implements Cloneable, Serializable
     }
 
     // E(m) = (1 + mN)r^N mod N^2 = (((1+mN) mod N^2) * (r^N mod N^2)) mod N^2
-    BigInteger term1 = (m.multiply(N).add(BigInteger.ONE)).mod(NSquared);
-    BigInteger term2 = IntegerMathAbstraction.modPow(r, N, NSquared);
+    BigInteger term1 = mod(multiply(m, N).add(BigInteger.ONE), NSquared);
+    BigInteger term2 = modPow(r, N, NSquared);
 
-    return IntegerMathAbstraction.modularMultiply(term1, term2, NSquared);
+    return modularMultiply(term1, term2, NSquared);
   }
 
   /**
@@ -289,10 +299,10 @@ public class Paillier implements Cloneable, Serializable
   public BigInteger decrypt(BigInteger c)
   {
     // w = lambda(N)^-1 mod N; x = c^(lambda(N)) mod N^2; y = (x-1)/N; d = yw mod N
-    BigInteger x = IntegerMathAbstraction.modPow(c, lambdaN, NSquared);
-    BigInteger y = IntegerMathAbstraction.exactDivide(x.subtract(BigInteger.ONE), N);
+    BigInteger x = modPow(c, lambdaN, NSquared);
+    BigInteger y = exactDivide(x.subtract(BigInteger.ONE), N);
 
-    return IntegerMathAbstraction.modularMultiply(y, w, N);
+    return modularMultiply(y, w, N);
   }
 
   private String parametersToString()

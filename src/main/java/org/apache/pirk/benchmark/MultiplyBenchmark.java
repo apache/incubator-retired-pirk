@@ -36,15 +36,15 @@ import org.slf4j.LoggerFactory;
 
 import java.security.SecureRandom;
 
-public class GCDBenchmark
+public class MultiplyBenchmark
 {
-  private static final Logger logger = LoggerFactory.getLogger(GCDBenchmark.class);
+  private static final Logger logger = LoggerFactory.getLogger(MultiplyBenchmark.class);
 
   private static final SecureRandom rand = new SecureRandom();
 
   private static final int FACTOR_SIZE = 3074;
 
-  @State(Scope.Benchmark) public static class GCDBenchmarkState
+  @State(Scope.Benchmark) public static class MultiplyBenchmarkState
   {
     BigInteger value1 = null;
     BigInteger value2 = null;
@@ -55,9 +55,8 @@ public class GCDBenchmark
     @Setup(org.openjdk.jmh.annotations.Level.Trial) public void setUp()
     {
       // Create two very large numbers with a common factor.
-      BigInteger common = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
-      value1 = common.multiply(getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2));
-      value2 = common.multiply(getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2));
+      value1 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
+      value2 = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
     }
   }
 
@@ -71,14 +70,14 @@ public class GCDBenchmark
     return toReturn;
   }
 
-  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(GCDBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(MultiplyBenchmarkState allState)
   {
-    SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "true");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      IntegerMathAbstraction.gcd(allState.value1, allState.value2);
+      IntegerMathAbstraction.multiply(allState.value1, allState.value2);
     } catch (Exception e)
     {
       logger.error("Exception in testWithGMP!\n" + e);
@@ -86,14 +85,14 @@ public class GCDBenchmark
     }
   }
 
-  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(GCDBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(MultiplyBenchmarkState allState)
   {
-    SystemConfiguration.setProperty("paillier.useGMPForGCD", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "false");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.value1.gcd(allState.value2);
+      allState.value1.multiply(allState.value2);
     } catch (Exception e)
     {
       logger.error("Exception in testWithoutGMP!\n" + e);

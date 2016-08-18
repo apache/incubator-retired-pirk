@@ -85,6 +85,8 @@ public class PaillierBenchmark
     SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
     SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "true");
     SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "true");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
@@ -107,6 +109,8 @@ public class PaillierBenchmark
     SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
     SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "true");
     SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "true");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
@@ -128,6 +132,8 @@ public class PaillierBenchmark
     SystemConfiguration.setProperty("paillier.useGMPForGCD", "false");
     SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "false");
     SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "false");
     IntegerMathAbstraction.reloadConfiguration();
 
     try

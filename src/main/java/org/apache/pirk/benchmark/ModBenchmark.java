@@ -36,28 +36,36 @@ import org.slf4j.LoggerFactory;
 
 import java.security.SecureRandom;
 
-public class GCDBenchmark
+public class ModBenchmark
 {
-  private static final Logger logger = LoggerFactory.getLogger(GCDBenchmark.class);
+  private static final Logger logger = LoggerFactory.getLogger(ModBenchmark.class);
 
   private static final SecureRandom rand = new SecureRandom();
 
-  private static final int FACTOR_SIZE = 3074;
+  private static final int MODULUS_SIZE = 3074;
+  private static final int FACTOR_SIZE = MODULUS_SIZE * 2;
 
-  @State(Scope.Benchmark) public static class GCDBenchmarkState
+  @State(Scope.Benchmark) public static class ModBenchmarkState
   {
-    BigInteger value1 = null;
-    BigInteger value2 = null;
+    BigInteger dividend = null;
+    BigInteger modulus = null;
 
     /**
      * This sets up the state for the two separate benchmarks
      */
     @Setup(org.openjdk.jmh.annotations.Level.Trial) public void setUp()
     {
-      // Create two very large numbers with a common factor.
-      BigInteger common = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
-      value1 = common.multiply(getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2));
-      value2 = common.multiply(getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2));
+      int systemPrimeCertainty = Integer.parseInt(SystemConfiguration.getProperty("pir.primeCertainty", "100"));
+      try
+      {
+        // Create a large modulus and a much larger dividend
+        dividend = getRandomBigIntegerWithBitSet(FACTOR_SIZE, FACTOR_SIZE - 2);
+        modulus = new Paillier(MODULUS_SIZE, systemPrimeCertainty, MODULUS_SIZE - 2).getNSquared();
+      } catch (PIRException e)
+      {
+        System.out.printf("Couldn't build paillier object!\n");
+      }
+      
     }
   }
 
@@ -71,14 +79,14 @@ public class GCDBenchmark
     return toReturn;
   }
 
-  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(GCDBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(ModBenchmarkState allState)
   {
-    SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      IntegerMathAbstraction.gcd(allState.value1, allState.value2);
+      IntegerMathAbstraction.mod(allState.dividend, allState.modulus);
     } catch (Exception e)
     {
       logger.error("Exception in testWithGMP!\n" + e);
@@ -86,14 +94,14 @@ public class GCDBenchmark
     }
   }
 
-  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(GCDBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(ModBenchmarkState allState)
   {
-    SystemConfiguration.setProperty("paillier.useGMPForGCD", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "false");
     IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.value1.gcd(allState.value2);
+      allState.dividend.mod(allState.modulus);
     } catch (Exception e)
     {
       logger.error("Exception in testWithoutGMP!\n" + e);
