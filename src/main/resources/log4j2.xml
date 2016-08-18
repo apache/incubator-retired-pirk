@@ -40,9 +40,9 @@
 		<Logger name="org.apache.hadoop.hbase" level="info" additivity="false"/>
 		<Logger name="org.apache.hadoop.hbase.zookeeper" level="warn" additivity="false"/>
 		<Logger name="org.apache.zookeeper" level="error" additivity="false"/>
-		<Root level="info">
-			<AppenderRef ref="STDOUT"/>
-			<AppenderRef ref="RollingFile"/>
+		<Root level="debug">
+			<AppenderRef ref="STDOUT" level="debug"/>
+			<AppenderRef ref="RollingFile" level="debug"/>
 		</Root>
 	</Loggers>
 
