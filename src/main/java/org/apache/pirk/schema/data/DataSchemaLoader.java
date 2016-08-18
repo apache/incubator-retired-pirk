@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
-
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,7 +71,7 @@ public class DataSchemaLoader
 {
   private static final Logger logger = LoggerFactory.getLogger(DataSchemaLoader.class);
 
-  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
+  private static Set<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
       PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG, PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE,
       PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
 
@@ -211,8 +211,8 @@ public class DataSchemaLoader
    * @param stream
    *          The input stream.
    * @return A {@link Document} representing the XML document.
-   * @throws IOException
-   * @throws PIRException
+   * @throws IOException - Failed to read schema file
+   * @throws PIRException - Schema description is invalid
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -238,7 +238,7 @@ public class DataSchemaLoader
    *          A data schema element node.
    * @param schema
    *          The data schema
-   * @throws PIRException
+   * @throws PIRException - Schema description is invalid
    */
   private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
   {
@@ -293,9 +293,9 @@ public class DataSchemaLoader
    *
    * @param typeName
    *          The type name to check.
-   * @throws PIRException
+   * @throws PIRException -
    */
-  void validateIsPrimitiveType(String typeName) throws PIRException
+  private void validateIsPrimitiveType(String typeName) throws PIRException
   {
     if (!allowedPrimitiveJavaTypes.contains(typeName.toLowerCase()))
     {
@@ -311,9 +311,9 @@ public class DataSchemaLoader
    * @param partitionerTypeName
    *          The name of the {@link DataPartitioner} subclass to instantiate.
    * @return An instance of the named {@link DataPartitioner} subclass.
-   * @throws PIRException
+   * @throws PIRException -
    */
-  DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
+  private DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
     Object obj;
     try

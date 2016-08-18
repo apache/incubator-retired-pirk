@@ -27,8 +27,6 @@ import org.apache.hadoop.io.MapWritable;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.utils.StopListUtils;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Filter class to filter data elements based upon a stoplist applied to specified field elements
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
 public class StopListFilter implements DataFilter
 {
   private static final long serialVersionUID = 1L;
-
-  private static final Logger logger = LoggerFactory.getLogger(StopListFilter.class);
 
   private Set<String> filterSet = null;
   private Set<String> stopList = null;
@@ -68,12 +64,15 @@ public class StopListFilter implements DataFilter
           elementArray = Arrays.asList(((ArrayWritable) dataElement.get(dSchema.getTextName(filterName))).toStrings());
         }
 
-        for (String element : elementArray)
+        if (elementArray != null && elementArray.size() > 0)
         {
-          passFilter = StopListUtils.checkElement(element, stopList);
-          if (!passFilter)
+          for (String element : elementArray)
           {
-            break;
+            passFilter = StopListUtils.checkElement(element, stopList);
+            if (!passFilter)
+            {
+              break;
+            }
           }
         }
       }
