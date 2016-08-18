@@ -38,7 +38,7 @@ import java.security.SecureRandom;
 
 public class ModularMultiplyBenchmark
 {
-  private static final Logger logger = LoggerFactory.getLogger(PaillierBenchmark.class);
+  private static final Logger logger = LoggerFactory.getLogger(ModularMultiplyBenchmark.class);
 
   private static final SecureRandom rand = new SecureRandom();
 

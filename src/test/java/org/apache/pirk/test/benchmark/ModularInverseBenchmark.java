@@ -38,7 +38,7 @@ import java.security.SecureRandom;
 
 public class ModularInverseBenchmark
 {
-  private static final Logger logger = LoggerFactory.getLogger(PaillierBenchmark.class);
+  private static final Logger logger = LoggerFactory.getLogger(ModularInverseBenchmark.class);
   // Since the results of this are only used for benchmarking and not for any actual
   // encryption we do not care if the results are any good.
   private static final SecureRandom rand = new SecureRandom();
