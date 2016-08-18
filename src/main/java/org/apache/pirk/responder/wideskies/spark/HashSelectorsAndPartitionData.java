@@ -19,7 +19,6 @@
 package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.hadoop.io.MapWritable;
@@ -30,7 +29,6 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 /**
@@ -48,7 +46,7 @@ public class HashSelectorsAndPartitionData implements PairFunction<MapWritable,I
   private QuerySchema qSchema = null;
   private DataSchema dSchema = null;
 
-  public HashSelectorsAndPartitionData(Accumulators accumIn, BroadcastVars bvIn)
+  public HashSelectorsAndPartitionData(BroadcastVars bvIn)
   {
     queryInfo = bvIn.getQueryInfo();
     qSchema = bvIn.getQuerySchema();
