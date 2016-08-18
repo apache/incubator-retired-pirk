@@ -89,13 +89,13 @@
 	</repositories>
 
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<scala.version>2.10.4</scala.version>
 		<jmh.version>1.11.3</jmh.version>
 		<junit.version>4.12</junit.version>
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
-		<javac.target>1.7</javac.target>
+		<javac.target>1.8</javac.target>
 	</properties>
 
 	<dependencies>
