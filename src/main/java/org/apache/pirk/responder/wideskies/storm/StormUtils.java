@@ -115,30 +115,15 @@ public class StormUtils
     try
     {
       boolean hdfs = (boolean) conf.get(StormConstants.USE_HDFS);
-      logger.info("id = " + id + " hdfs = " + hdfs + " -- " + conf.get(StormConstants.HDFS_URI_KEY));
       if (hdfs)
       {
         String hdfsUri = (String) conf.get(StormConstants.HDFS_URI_KEY);
         FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
-        try
-        {
-          RemoteIterator<LocatedFileStatus> iter = fs.listFiles(new Path("/tmp/user08/pir_storm"), false);
-          while(iter.hasNext())
-          {
-            logger.info("listing - " + iter.next().getPath().toUri());
-          }
-        }
-        catch (FileNotFoundException e)
-        {
-          logger.warn("/tmp/user08/pir_storm not found ", e);
-        }
-        logger.info("starting dataschemaloader hdfs");
         DataSchemaLoader.initialize(true, fs);
         QuerySchemaLoader.initialize(true, fs);
       }
       else
       {
-        logger.info("starting dataschemaloader local");
         DataSchemaLoader.initialize();
         QuerySchemaLoader.initialize();
       }

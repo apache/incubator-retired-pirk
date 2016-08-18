@@ -115,12 +115,8 @@ public class DataSchemaLoader
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
-    logger.info("dataSchemas = " + dataSchemas);
-    logger.info("fs is null " + (fs ==null));
-    //logger.info("In initialize " + hdfs + " dSchemas = " + fs.makeQualified(new Path(dataSchemas)));
     if (dataSchemas.equals("none"))
     {
-      logger.info("no dataschemas");
       return;
     }
 
