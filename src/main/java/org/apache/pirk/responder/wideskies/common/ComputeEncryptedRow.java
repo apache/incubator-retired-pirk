@@ -234,8 +234,8 @@ public class ComputeEncryptedRow
    * Emits {@code Tuple2<<colNum, colVal>>}
    * 
    */
-  public static List<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<List<BigInteger>> dataPartitionsIter,
-      HashMap<Integer,BigInteger> cache, int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
+  public static List<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<List<BigInteger>> dataPartitionsIter, HashMap<Integer,BigInteger> cache,
+      int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
   {
     List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
