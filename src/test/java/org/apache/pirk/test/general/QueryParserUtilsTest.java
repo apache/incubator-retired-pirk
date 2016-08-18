@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.general;
+package org.apache.pirk.test.general;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
