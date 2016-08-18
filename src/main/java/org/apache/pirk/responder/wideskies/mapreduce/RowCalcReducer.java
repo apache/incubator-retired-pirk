@@ -18,10 +18,6 @@
  */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -39,8 +35,11 @@ import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Reducer class to calculate the encrypted rows of the encrypted query
@@ -121,7 +120,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
     }
 
     // Compute the encrypted row elements for a query from extracted data partitions
-    ArrayList<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRow(dataElementPartitions, query, rowIndex.get(), limitHitsPerSelector,
+    List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRow(dataElementPartitions, query, rowIndex.get(), limitHitsPerSelector,
         maxHitsPerSelector, useLocalCache);
 
     // Emit <colNum, colVal>

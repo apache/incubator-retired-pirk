@@ -329,6 +329,11 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 			</plugin>
 
@@ -459,8 +464,20 @@
 					<version>3.0.1</version>
 					<configuration>
 						<excludes>
-							<exclude>org/apache/pirk/benchmark/**</exclude>
-							<exclude>org/openjdk/jmh/**</exclude>
+							<exclude>*/openjdk/**</exclude>
+							<exclude>generated-sources/**</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.0.1</version>
+					<configuration>
+						<excludes>
+							<exclude>*/openjdk/**</exclude>
+							<exclude>generated-sources/**</exclude>
 						</excludes>
 					</configuration>
 				</plugin>

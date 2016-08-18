@@ -16,15 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.general;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+package org.apache.pirk.test.general;
 
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
@@ -34,6 +26,13 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Class to functionally test the bit conversion utils
@@ -47,15 +46,23 @@ public class PartitionUtilsTest
   {
     logger.info("Starting testMask: ");
 
-    BigInteger mask = PrimitiveTypePartitioner.formBitMask(4); // 1111
+    assertEquals(0, PrimitiveTypePartitioner.formBitMask(0).intValue());
 
-    assertEquals(mask.intValue(), 15);
+    assertEquals(0b000000000000001, PrimitiveTypePartitioner.formBitMask(1).intValue());
+    assertEquals(0b000000000001111, PrimitiveTypePartitioner.formBitMask(4).intValue());
+    assertEquals(0b000000001111111, PrimitiveTypePartitioner.formBitMask(7).intValue());
+    assertEquals(0b111111111111111, PrimitiveTypePartitioner.formBitMask(15).intValue());
+    
+    assertEquals(new BigInteger("FFFFF", 16), PrimitiveTypePartitioner.formBitMask(20));
+    assertEquals(new BigInteger("FFFFFFFF", 16), PrimitiveTypePartitioner.formBitMask(32));
+    assertEquals(new BigInteger("3FFFFFFFFFF", 16), PrimitiveTypePartitioner.formBitMask(42));
+    assertEquals(new BigInteger("7FFFFFFFFFFFFFFF", 16), PrimitiveTypePartitioner.formBitMask(63));
 
     logger.info("Successfully completed testMask");
   }
 
   @Test
-  public void testPartitionBits()
+  public void testPartitionBits() throws PIRException
   {
     logger.info("Starting testPartitionBits: ");
 
@@ -65,52 +72,29 @@ public class PartitionUtilsTest
     BigInteger mask4 = PrimitiveTypePartitioner.formBitMask(4); // 1111
     BigInteger mask8 = PrimitiveTypePartitioner.formBitMask(8); // 11111111
 
-    try
-    {
-      List<BigInteger> partitions = PrimitiveTypePartitioner.partitionBits(value, 4, mask4);
+    List<BigInteger> partitions = PrimitiveTypePartitioner.partitionBits(value, 4, mask4);
+    assertEquals(2, partitions.size());
+    assertEquals(0b1111, partitions.get(0).intValue());
+    assertEquals(0b0101, partitions.get(1).intValue());
 
-      assertEquals(2, partitions.size());
-      assertEquals(partitions.get(0).intValue(), 15); // 1111
-      assertEquals(partitions.get(1).intValue(), 5); // 0101
+    partitions = PrimitiveTypePartitioner.partitionBits(value2, 4, mask4);
+    assertEquals(3, partitions.size());
+    assertEquals(0b1111, partitions.get(0).intValue()); 
+    assertEquals(0b0101, partitions.get(1).intValue());
+    assertEquals(0b0011, partitions.get(2).intValue());
 
-    } catch (Exception e)
-    {
-      fail(e.toString());
-    }
-
-    try
-    {
-      List<BigInteger> partitions = PrimitiveTypePartitioner.partitionBits(value2, 4, mask4);
-
-      assertEquals(3, partitions.size());
-      assertEquals(partitions.get(0).intValue(), 15); // 1111
-      assertEquals(partitions.get(1).intValue(), 5); // 0101
-      assertEquals(partitions.get(2).intValue(), 3); // 11
-
-    } catch (Exception e)
-    {
-      fail(e.toString());
-    }
-    try
-    {
-      List<BigInteger> partitions = PrimitiveTypePartitioner.partitionBits(value, 8, mask8);
-
-      assertEquals(1, partitions.size());
-      assertEquals(partitions.get(0).intValue(), 245);
-
-    } catch (Exception e)
-    {
-      fail(e.toString());
-    }
+    partitions = PrimitiveTypePartitioner.partitionBits(value, 8, mask8);
+    assertEquals(1, partitions.size());
+    assertEquals(0b11110101, partitions.get(0).intValue());
 
     try
     {
-      List<BigInteger> partitions = PrimitiveTypePartitioner.partitionBits(value, 4, mask8);
-
+      partitions = PrimitiveTypePartitioner.partitionBits(value, 4, mask8);
       fail("BitConversionUtils.partitionBits did not throw error for mismatched partitionSize and mask size");
-
     } catch (Exception ignore)
-    {}
+    {
+      // Expected.
+    }
 
     logger.info("Successfully completed testPartitionBits");
   }
@@ -138,7 +122,7 @@ public class PartitionUtilsTest
 
     // Test byte
     byte bTest = Byte.parseByte("10");
-    ArrayList<BigInteger> partsByte = primitivePartitioner.toPartitions(bTest, PrimitiveTypePartitioner.BYTE);
+    List<BigInteger> partsByte = primitivePartitioner.toPartitions(bTest, PrimitiveTypePartitioner.BYTE);
     assertEquals(1, partsByte.size());
     assertEquals(bTest, primitivePartitioner.fromPartitions(partsByte, 0, PrimitiveTypePartitioner.BYTE));
 
@@ -146,7 +130,7 @@ public class PartitionUtilsTest
     assertEquals(1, partsByte.size());
     assertEquals((byte) 12, primitivePartitioner.fromPartitions(partsByte, 0, PrimitiveTypePartitioner.BYTE));
 
-    ArrayList<BigInteger> partsByteMax = primitivePartitioner.toPartitions(Byte.MAX_VALUE, PrimitiveTypePartitioner.BYTE);
+    List<BigInteger> partsByteMax = primitivePartitioner.toPartitions(Byte.MAX_VALUE, PrimitiveTypePartitioner.BYTE);
     assertEquals(1, partsByteMax.size());
     assertEquals(Byte.MAX_VALUE, primitivePartitioner.fromPartitions(partsByteMax, 0, PrimitiveTypePartitioner.BYTE));
 
@@ -159,7 +143,7 @@ public class PartitionUtilsTest
 
     // Test short
     short shortTest = Short.valueOf("2456");
-    ArrayList<BigInteger> partsShort = primitivePartitioner.toPartitions(shortTest, PrimitiveTypePartitioner.SHORT);
+    List<BigInteger> partsShort = primitivePartitioner.toPartitions(shortTest, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShort.size());
     assertEquals(shortTest, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
 
@@ -171,13 +155,13 @@ public class PartitionUtilsTest
     assertEquals(2, partsShort.size());
     assertEquals((short) -42, primitivePartitioner.fromPartitions(partsShort, 0, PrimitiveTypePartitioner.SHORT));
 
-    ArrayList<BigInteger> partsShortMax = primitivePartitioner.toPartitions(Short.MAX_VALUE, PrimitiveTypePartitioner.SHORT);
+    List<BigInteger> partsShortMax = primitivePartitioner.toPartitions(Short.MAX_VALUE, PrimitiveTypePartitioner.SHORT);
     assertEquals(2, partsShortMax.size());
     assertEquals(Short.MAX_VALUE, primitivePartitioner.fromPartitions(partsShortMax, 0, PrimitiveTypePartitioner.SHORT));
 
     // Test int
     int intTest = Integer.parseInt("-5789");
-    ArrayList<BigInteger> partsInt = primitivePartitioner.toPartitions(intTest, PrimitiveTypePartitioner.INT);
+    List<BigInteger> partsInt = primitivePartitioner.toPartitions(intTest, PrimitiveTypePartitioner.INT);
     assertEquals(4, partsInt.size());
     assertEquals(intTest, primitivePartitioner.fromPartitions(partsInt, 0, PrimitiveTypePartitioner.INT));
 
@@ -189,23 +173,23 @@ public class PartitionUtilsTest
     assertEquals(4, partsInt.size());
     assertEquals(1386681237, primitivePartitioner.fromPartitions(partsInt, 0, PrimitiveTypePartitioner.INT));
 
-    ArrayList<BigInteger> partsIntMax = primitivePartitioner.toPartitions(Integer.MAX_VALUE, PrimitiveTypePartitioner.INT);
+    List<BigInteger> partsIntMax = primitivePartitioner.toPartitions(Integer.MAX_VALUE, PrimitiveTypePartitioner.INT);
     assertEquals(4, partsIntMax.size());
     assertEquals(Integer.MAX_VALUE, primitivePartitioner.fromPartitions(partsIntMax, 0, PrimitiveTypePartitioner.INT));
 
     // Test long
     long longTest = Long.parseLong("56789");
-    ArrayList<BigInteger> partsLong = primitivePartitioner.toPartitions(longTest, PrimitiveTypePartitioner.LONG);
+    List<BigInteger> partsLong = primitivePartitioner.toPartitions(longTest, PrimitiveTypePartitioner.LONG);
     assertEquals(8, partsLong.size());
     assertEquals(longTest, primitivePartitioner.fromPartitions(partsLong, 0, PrimitiveTypePartitioner.LONG));
 
-    ArrayList<BigInteger> partsLongMax = primitivePartitioner.toPartitions(Long.MAX_VALUE, PrimitiveTypePartitioner.LONG);
+    List<BigInteger> partsLongMax = primitivePartitioner.toPartitions(Long.MAX_VALUE, PrimitiveTypePartitioner.LONG);
     assertEquals(8, partsLongMax.size());
     assertEquals(Long.MAX_VALUE, primitivePartitioner.fromPartitions(partsLongMax, 0, PrimitiveTypePartitioner.LONG));
 
     // Test float
     float floatTest = Float.parseFloat("567.77");
-    ArrayList<BigInteger> partsFloat = primitivePartitioner.toPartitions(floatTest, PrimitiveTypePartitioner.FLOAT);
+    List<BigInteger> partsFloat = primitivePartitioner.toPartitions(floatTest, PrimitiveTypePartitioner.FLOAT);
     assertEquals(4, partsFloat.size());
     assertEquals(floatTest, primitivePartitioner.fromPartitions(partsFloat, 0, PrimitiveTypePartitioner.FLOAT));
 
@@ -213,23 +197,23 @@ public class PartitionUtilsTest
     assertEquals(4, partsFloat.size());
     assertEquals(-99.99f, primitivePartitioner.fromPartitions(partsFloat, 0, PrimitiveTypePartitioner.FLOAT));
 
-    ArrayList<BigInteger> partsFloatMax = primitivePartitioner.toPartitions(Float.MAX_VALUE, PrimitiveTypePartitioner.FLOAT);
+    List<BigInteger> partsFloatMax = primitivePartitioner.toPartitions(Float.MAX_VALUE, PrimitiveTypePartitioner.FLOAT);
     assertEquals(4, partsFloatMax.size());
     assertEquals(Float.MAX_VALUE, primitivePartitioner.fromPartitions(partsFloatMax, 0, PrimitiveTypePartitioner.FLOAT));
 
     // Test double
     double doubleTest = Double.parseDouble("567.77");
-    ArrayList<BigInteger> partsDouble = primitivePartitioner.toPartitions(doubleTest, PrimitiveTypePartitioner.DOUBLE);
+    List<BigInteger> partsDouble = primitivePartitioner.toPartitions(doubleTest, PrimitiveTypePartitioner.DOUBLE);
     assertEquals(8, partsDouble.size());
     assertEquals(doubleTest, primitivePartitioner.fromPartitions(partsDouble, 0, PrimitiveTypePartitioner.DOUBLE));
 
-    ArrayList<BigInteger> partsDoubleMax = primitivePartitioner.toPartitions(Double.MAX_VALUE, PrimitiveTypePartitioner.DOUBLE);
+    List<BigInteger> partsDoubleMax = primitivePartitioner.toPartitions(Double.MAX_VALUE, PrimitiveTypePartitioner.DOUBLE);
     assertEquals(8, partsDoubleMax.size());
     assertEquals(Double.MAX_VALUE, primitivePartitioner.fromPartitions(partsDoubleMax, 0, PrimitiveTypePartitioner.DOUBLE));
 
     // Test char
     char charTest = 'b';
-    ArrayList<BigInteger> partsChar = primitivePartitioner.toPartitions(charTest, PrimitiveTypePartitioner.CHAR);
+    List<BigInteger> partsChar = primitivePartitioner.toPartitions(charTest, PrimitiveTypePartitioner.CHAR);
     assertEquals(2, partsChar.size());
     assertEquals(charTest, primitivePartitioner.fromPartitions(partsChar, 0, PrimitiveTypePartitioner.CHAR));
 
@@ -244,7 +228,7 @@ public class PartitionUtilsTest
     assertEquals(2, partsChar.size());
     assertEquals(charTest, primitivePartitioner.fromPartitions(partsChar, 0, PrimitiveTypePartitioner.CHAR));
 
-    ArrayList<BigInteger> partsCharMax = primitivePartitioner.toPartitions(Character.MAX_VALUE, PrimitiveTypePartitioner.CHAR);
+    List<BigInteger> partsCharMax = primitivePartitioner.toPartitions(Character.MAX_VALUE, PrimitiveTypePartitioner.CHAR);
     assertEquals(2, partsCharMax.size());
     assertEquals(Character.MAX_VALUE, primitivePartitioner.fromPartitions(partsCharMax, 0, PrimitiveTypePartitioner.CHAR));
 
@@ -269,7 +253,7 @@ public class PartitionUtilsTest
   {
     PrimitiveTypePartitioner ptp = new PrimitiveTypePartitioner();
 
-    ArrayList<BigInteger> partsString = ptp.toPartitions(testString, PrimitiveTypePartitioner.STRING);
+    List<BigInteger> partsString = ptp.toPartitions(testString, PrimitiveTypePartitioner.STRING);
     int numParts = Integer.parseInt(SystemConfiguration.getProperty("pir.stringBits")) / 8;
     assertEquals(numParts, partsString.size());
 

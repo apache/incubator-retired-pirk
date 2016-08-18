@@ -35,6 +35,6 @@ public interface DataFilter extends Serializable
    * <p>
    * Returns true if we are to filter out the element, false otherwise
    */
-  public boolean filterDataElement(MapWritable dataElement, DataSchema dSchema);
+  boolean filterDataElement(MapWritable dataElement, DataSchema dSchema);
 
 }

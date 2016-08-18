@@ -44,7 +44,7 @@ public class ResponderCLI
 
   /**
    * Create and parse allowable options
-   * 
+   *
    */
   public ResponderCLI(String[] args)
   {
@@ -80,7 +80,7 @@ public class ResponderCLI
 
   /**
    * Determine if an option was provided by the user via the CLI
-   * 
+   *
    * @param option
    *          - the option of interest
    * @return true if option was provided, false otherwise
@@ -92,7 +92,7 @@ public class ResponderCLI
 
   /**
    * Obtain the argument of the option provided by the user via the CLI
-   * 
+   *
    * @param option
    *          - the option of interest
    * @return value of the argument of the option
@@ -104,12 +104,12 @@ public class ResponderCLI
 
   /**
    * Method to parse and validate the options provided
-   * 
+   *
    * @return - true if valid, false otherwise
    */
   private boolean parseOptions()
   {
-    boolean valid = true;
+    boolean valid;
 
     // If we have a local.querier.properties file specified, load it
     if (hasOption(LOCALPROPFILE))
@@ -136,7 +136,7 @@ public class ResponderCLI
 
   /**
    * Create the options available for the DistributedTestDriver
-   * 
+   *
    * @return Apache's CLI Options object
    */
   private Options createOptions()

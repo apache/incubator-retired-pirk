@@ -58,7 +58,7 @@ public class DistTestSuite
 
   // This method also tests all non-query specific configuration options/properties
   // for the MapReduce version of PIR
-  public static void testJSONInputMR(FileSystem fs, ArrayList<JSONObject> dataElements) throws Exception
+  public static void testJSONInputMR(FileSystem fs, List<JSONObject> dataElements) throws Exception
   {
     logger.info("Starting testJSONInputMR");
 
@@ -151,7 +151,7 @@ public class DistTestSuite
     logger.info("Completed testJSONInputMR");
   }
 
-  public static void testESInputMR(FileSystem fs, ArrayList<JSONObject> dataElements) throws Exception
+  public static void testESInputMR(FileSystem fs, List<JSONObject> dataElements) throws Exception
   {
     logger.info("Starting testESInputMR");
 
@@ -190,7 +190,7 @@ public class DistTestSuite
     logger.info("Completed testESInputMR");
   }
 
-  public static void testJSONInputSpark(FileSystem fs, ArrayList<JSONObject> dataElements) throws Exception
+  public static void testJSONInputSpark(FileSystem fs, List<JSONObject> dataElements) throws Exception
   {
     logger.info("Starting testJSONInputSpark");
 
@@ -282,7 +282,7 @@ public class DistTestSuite
     logger.info("Completed testJSONInputSpark");
   }
 
-  public static void testESInputSpark(FileSystem fs, ArrayList<JSONObject> dataElements) throws Exception
+  public static void testESInputSpark(FileSystem fs, List<JSONObject> dataElements) throws Exception
   {
     logger.info("Starting testESInputSpark");
 

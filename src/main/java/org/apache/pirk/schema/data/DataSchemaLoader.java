@@ -93,7 +93,7 @@ public class DataSchemaLoader
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of available data schema names.
    * 
-   * @throws Exception
+   * @throws Exception - failed to initialize
    */
   public static void initialize() throws Exception
   {
@@ -108,7 +108,7 @@ public class DataSchemaLoader
    *          If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
-   * @throws Exception
+   * @throws Exception - failed to initialize
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {

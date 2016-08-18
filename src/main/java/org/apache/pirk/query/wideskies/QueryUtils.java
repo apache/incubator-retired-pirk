@@ -18,12 +18,6 @@
  */
 package org.apache.pirk.query.wideskies;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
@@ -34,12 +28,19 @@ import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.KeyedHash;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.elasticsearch.hadoop.mr.WritableArrayWritable;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class for helper methods to perform the encrypted query
@@ -51,7 +52,7 @@ public class QueryUtils
   /**
    * Method to convert the given BigInteger raw data element partitions to a QueryResponseJSON object based upon the given queryType
    */
-  public static QueryResponseJSON extractQueryResponseJSON(QueryInfo queryInfo, QuerySchema qSchema, ArrayList<BigInteger> parts) throws Exception
+  public static QueryResponseJSON extractQueryResponseJSON(QueryInfo queryInfo, QuerySchema qSchema, List<BigInteger> parts) throws PIRException
   {
     QueryResponseJSON qrJSON = new QueryResponseJSON(queryInfo);
 
@@ -103,9 +104,9 @@ public class QueryUtils
   /**
    * Method to convert the given data element given by the JSONObject data element into the extracted BigInteger partitions based upon the given queryType
    */
-  public static ArrayList<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws Exception
+  public static List<BigInteger> partitionDataElement(QuerySchema qSchema, JSONObject jsonData, boolean embedSelector) throws PIRException
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>();
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
 
     // Add the embedded selector to the parts
@@ -164,10 +165,10 @@ public class QueryUtils
   /**
    * Method to convert the given data element given by the MapWritable data element into the extracted BigInteger partitions based upon the given queryType
    */
-  public static ArrayList<BigInteger> partitionDataElement(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema, boolean embedSelector)
-      throws Exception
+  public static List<BigInteger> partitionDataElement(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema, boolean embedSelector)
+      throws PIRException
   {
-    ArrayList<BigInteger> parts = new ArrayList<>();
+    List<BigInteger> parts = new ArrayList<>();
 
     logger.debug("queryType = " + qSchema.getSchemaName());
 
@@ -232,7 +233,7 @@ public class QueryUtils
   /**
    * Method to convert the given selector into the extracted BigInteger partitions
    */
-  public static List<BigInteger> embeddedSelectorToPartitions(String selector, String type, DataPartitioner partitioner) throws Exception
+  public static List<BigInteger> embeddedSelectorToPartitions(String selector, String type, DataPartitioner partitioner) throws PIRException
   {
     List<BigInteger> parts;
 
@@ -255,7 +256,7 @@ public class QueryUtils
    * Method get the embedded selector from a given selector
    * 
    */
-  public static String getEmbeddedSelector(String selector, String type, DataPartitioner partitioner) throws Exception
+  public static String getEmbeddedSelector(String selector, String type, DataPartitioner partitioner) throws PIRException
   {
     String embeddedSelector;
 
@@ -276,7 +277,7 @@ public class QueryUtils
   /**
    * Reconstructs the String version of the embedded selector from its partitions
    */
-  public static String getEmbeddedSelectorFromPartitions(ArrayList<BigInteger> parts, int partsIndex, String type, Object partitioner) throws Exception
+  public static String getEmbeddedSelectorFromPartitions(List<BigInteger> parts, int partsIndex, String type, Object partitioner) throws PIRException
   {
     String embeddedSelector;
 
@@ -339,7 +340,7 @@ public class QueryUtils
 
     if (dSchema.isArrayElement(fieldName))
     {
-      ArrayList<String> elementArray = StringUtils.jsonArrayStringToArrayList(dataMap.get(fieldName).toString());
+      List<String> elementArray = StringUtils.jsonArrayStringToArrayList(dataMap.get(fieldName).toString());
       selector = elementArray.get(0);
     }
     else
@@ -350,12 +351,12 @@ public class QueryUtils
   }
 
   // For debug
-  private static void printParts(ArrayList<BigInteger> parts)
+  private static void printParts(List<BigInteger> parts)
   {
     int i = 0;
     for (BigInteger part : parts)
     {
-      logger.debug("parts(" + i + ") = " + parts.get(i).intValue() + " parts bits = " + parts.get(i).toString(2));
+      logger.debug("parts(" + i + ") = " + part.intValue() + " parts bits = " + part.toString(2));
       ++i;
     }
   }
