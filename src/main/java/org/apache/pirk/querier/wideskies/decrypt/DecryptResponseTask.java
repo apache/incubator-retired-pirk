@@ -24,12 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
+import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +41,10 @@ import org.slf4j.LoggerFactory;
  * NOTE: rElements and selectorMaskMap are joint access objects, for now
  *
  */
-public class DecryptResponseRunnable implements Runnable
+class DecryptResponseRunnable<V> implements Callable<Map<String,List<QueryResponseJSON>>>
 {
   private static final Logger logger = LoggerFactory.getLogger(DecryptResponseRunnable.class);
 
-  private final Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
   private final List<BigInteger> rElements;
   private final TreeMap<Integer,String> selectors;
   private final Map<String,BigInteger> selectorMaskMap;
@@ -61,13 +62,8 @@ public class DecryptResponseRunnable implements Runnable
     embedSelectorMap = embedSelectorMapInput;
   }
 
-  public Map<String,List<QueryResponseJSON>> getResultMap()
-  {
-    return resultMap;
-  }
-
   @Override
-  public void run()
+  public Map<String,List<QueryResponseJSON>> call() throws PIRException
   {
     // Pull the necessary parameters
     int dataPartitionBitSize = queryInfo.getDataPartitionBitSize();
@@ -76,19 +72,18 @@ public class DecryptResponseRunnable implements Runnable
     QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
     String selectorName = qSchema.getSelectorName();
 
-    // Initialize - removes checks below
+    // Result is a map of (selector -> List of hits).
+    Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>();
     for (String selector : selectors.values())
     {
       resultMap.put(selector, new ArrayList<QueryResponseJSON>());
     }
 
-    logger.debug("numResults = " + rElements.size() + " numPartitionsPerDataElement = " + numPartitionsPerDataElement);
-
     // Pull the hits for each selector
-    int hits = 0;
     int maxHitsPerSelector = rElements.size() / numPartitionsPerDataElement; // Max number of data hits in the response elements for a given selector
-    logger.debug("numHits = " + maxHitsPerSelector);
-    while (hits < maxHitsPerSelector)
+    logger.debug("numResults = " + rElements.size() + " numPartitionsPerDataElement = " + numPartitionsPerDataElement + " maxHits = " + maxHitsPerSelector);
+
+    for (int hits = 0; hits < maxHitsPerSelector; hits++)
     {
       int selectorIndex = selectors.firstKey();
       while (selectorIndex <= selectors.lastKey())
@@ -96,10 +91,9 @@ public class DecryptResponseRunnable implements Runnable
         String selector = selectors.get(selectorIndex);
         logger.debug("selector = " + selector);
 
-        ArrayList<BigInteger> parts = new ArrayList<>();
-        int partNum = 0;
+        List<BigInteger> parts = new ArrayList<>();
         boolean zeroElement = true;
-        while (partNum < numPartitionsPerDataElement)
+        for (int partNum = 0; partNum < numPartitionsPerDataElement; partNum++)
         {
           BigInteger part = (rElements.get(hits * numPartitionsPerDataElement + partNum)).and(selectorMaskMap.get(selector)); // pull off the correct bits
 
@@ -114,14 +108,7 @@ public class DecryptResponseRunnable implements Runnable
 
           logger.debug("partNum = " + partNum + " part = " + part.intValue());
 
-          if (zeroElement)
-          {
-            if (!part.equals(BigInteger.ZERO))
-            {
-              zeroElement = false;
-            }
-          }
-          ++partNum;
+          zeroElement = zeroElement && part.equals(BigInteger.ZERO);
         }
 
         logger.debug("parts.size() = " + parts.size());
@@ -129,15 +116,7 @@ public class DecryptResponseRunnable implements Runnable
         if (!zeroElement)
         {
           // Convert biHit to the appropriate QueryResponseJSON object, based on the queryType
-          QueryResponseJSON qrJOSN = null;
-          try
-          {
-            qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, qSchema, parts);
-          } catch (Exception e)
-          {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-          }
+          QueryResponseJSON qrJOSN = QueryUtils.extractQueryResponseJSON(queryInfo, qSchema, parts);
           qrJOSN.setMapping(selectorName, selector);
           logger.debug("selector = " + selector + " qrJOSN = " + qrJOSN.getJSONString());
 
@@ -166,7 +145,8 @@ public class DecryptResponseRunnable implements Runnable
 
         ++selectorIndex;
       }
-      ++hits;
     }
+
+    return resultMap;
   }
 }
