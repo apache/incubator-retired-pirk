@@ -48,23 +48,23 @@ public class ResponderProps
   public static final String ESQUERY = "pir.esQuery";
   public static final String BASEINPUTFORMAT = "pir.baseInputFormat";
   public static final String STOPLISTFILE = "pir.stopListFile";
-  public static final String NUMREDUCETASKS = "pir.numReduceTasks";
-  public static final String USELOCALCACHE = "pir.useLocalCache";
-  public static final String LIMITHITSPERSELECTOR = "pir.limitHitsPerSelector";
-  public static final String MAXHITSPERSELECTOR = "pir.maxHitsPerSelector";
-  public static final String MAPMEMORY = "mapreduce.map.memory.mb";
-  public static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
-  public static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
-  public static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
   public static final String QUERYSCHEMAS = "responder.querySchemas";
   public static final String DATASCHEMAS = "responder.dataSchemas";
   public static final String NUMEXPLOOKUPPARTS = "pir.numExpLookupPartitions";
-  public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
-  public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
+  public static final String USELOCALCACHE = "pir.useLocalCache";
+  public static final String LIMITHITSPERSELECTOR = "pir.limitHitsPerSelector";
+  public static final String MAXHITSPERSELECTOR = "pir.maxHitsPerSelector";
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
   public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
-  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  static final String NUMREDUCETASKS = "pir.numReduceTasks";
+  static final String MAPMEMORY = "mapreduce.map.memory.mb";
+  static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
+  static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
+  static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
+  static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
+  static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
+  static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
 
   static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
       BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
@@ -75,7 +75,7 @@ public class ResponderProps
    * Validates the responder properties
    * 
    */
-  public static boolean validateResponderProperties()
+  static boolean validateResponderProperties()
   {
     boolean valid = true;
 

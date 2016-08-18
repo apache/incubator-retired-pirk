@@ -24,8 +24,6 @@ import java.util.TreeMap;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the encrypted response elements for the PIR query
@@ -37,8 +35,6 @@ public class Response implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
-  private static final Logger logger = LoggerFactory.getLogger(Response.class);
-
   private QueryInfo queryInfo = null; // holds all query info
 
   private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
@@ -46,7 +42,6 @@ public class Response implements Serializable, Storable
   public Response(QueryInfo queryInfoInput)
   {
     queryInfo = queryInfoInput;
-
     responseElements = new TreeMap<>();
   }
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.test.serialization;
+package org.apache.pirk.serialization;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +25,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
-import org.apache.pirk.serialization.JavaSerializer;
-import org.apache.pirk.serialization.JsonSerializer;
-import org.apache.pirk.serialization.Storable;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;

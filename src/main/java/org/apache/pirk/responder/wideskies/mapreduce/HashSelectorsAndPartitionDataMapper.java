@@ -19,7 +19,6 @@
 package org.apache.pirk.responder.wideskies.mapreduce;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.IntWritable;
@@ -42,7 +41,6 @@ import org.apache.pirk.utils.StringUtils;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 /**
@@ -58,9 +56,6 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
 
   private IntWritable keyOut = null;
 
-  HashSet<String> stopList = null;
-
-  private Query query = null;
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
   private DataSchema dSchema = null;
@@ -79,7 +74,7 @@ public class HashSelectorsAndPartitionDataMapper extends Mapper<Text,MapWritable
 
     // Can make this so that it reads multiple queries at one time...
     String queryDir = ctx.getConfiguration().get("pirMR.queryInputDir");
-    query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
+    Query query = new HadoopFileSystemStore(fs).recall(queryDir, Query.class);
     queryInfo = query.getQueryInfo();
 
     try
