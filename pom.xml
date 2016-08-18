@@ -350,9 +350,7 @@
 							<exclude>docs/*</exclude> <!-- Exclude docs -->
 							<exclude>logs/*</exclude> <!-- Exclude logs -->
 							<exclude>**/m2.conf</exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
-							<exclude>src/main/resources/META-INF/bin-license-notice/licenses/*</exclude> <!-- Exclude licenses files -->
-							<exclude>src/main/resources/META-INF/bin-license-notice/*</exclude>
-							<exclude>src/main/resources/META-INF/*</exclude>  
+							<exclude>src/main/resources/META-INF/**</exclude>  
 						</excludes>
 					</configuration>
 					<dependencies>
