@@ -451,7 +451,7 @@
 					<version>3.0.1</version>
 					<configuration>
 						<excludes>
-							<exclude>org/apache/pirk/benchmark/**</exclude>
+							<exclude>org/apache/pirk/test/benchmark/**</exclude>
 							<exclude>*/openjdk/**</exclude>
 							<exclude>generated-sources/**</exclude>
 						</excludes>
@@ -464,7 +464,7 @@
 					<version>3.0.1</version>
 					<configuration>
 						<excludes>
-							<exclude>org/apache/pirk/benchmark/**</exclude>
+							<exclude>org/apache/pirk/test/benchmark/**</exclude>
 							<exclude>*/openjdk/**</exclude>
 							<exclude>generated-sources/**</exclude>
 						</excludes>
