@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.pirk.benchmark;
+package org.apache.pirk.test.benchmark;
 
 import java.io.IOException;
 
