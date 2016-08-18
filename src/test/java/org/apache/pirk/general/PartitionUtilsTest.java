@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.test.general;
+package org.apache.pirk.general;
 
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
