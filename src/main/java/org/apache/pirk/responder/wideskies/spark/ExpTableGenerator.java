@@ -20,25 +20,21 @@ package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 /**
  * Class to generate the query element modular exponentiations
  * <p>
- * 
+ *
  */
 public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tuple2<Integer,BigInteger>>
 {
   private static final long serialVersionUID = 1L;
-
-  private static final Logger logger = LoggerFactory.getLogger(ExpTableGenerator.class);
 
   Query query = null;
   private BigInteger NSquared = null;
@@ -46,7 +42,6 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
 
   public ExpTableGenerator(BroadcastVars bbVarsIn)
   {
-
     query = bbVarsIn.getQuery();
     NSquared = query.getNSquared();
 
@@ -58,7 +53,7 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
   public Iterable<Tuple2<Integer,Tuple2<Integer,BigInteger>>> call(Integer queryHashKey) throws Exception
   {
     // queryHashKey -> <<power>,<element^power mod N^2>>
-    ArrayList<Tuple2<Integer,Tuple2<Integer,BigInteger>>> modExp = new ArrayList<>();
+    List<Tuple2<Integer,Tuple2<Integer,BigInteger>>> modExp = new ArrayList<>();
 
     BigInteger element = query.getQueryElement(queryHashKey);
     for (int i = 0; i <= maxValue; ++i)

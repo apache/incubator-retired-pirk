@@ -96,7 +96,8 @@ public class QuerySchemaLoader
   /**
    * Initializes the static {@link QuerySchemaRegistry} with a list of query schema names.
    * 
-   * @throws Exception - failed to initialize
+   * @throws Exception
+   *           - failed to initialize
    */
   public static void initialize() throws Exception
   {
@@ -111,7 +112,8 @@ public class QuerySchemaLoader
    *          If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
-   * @throws Exception - failed to initialize
+   * @throws Exception
+   *           - failed to initialize
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
@@ -271,7 +273,9 @@ public class QuerySchemaLoader
    *          The input stream.
    * @return A Document representing the XML document.
    * @throws IOException
+   *           - failed to read input
    * @throws PIRException
+   *           - file could not be parsed
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -297,6 +301,7 @@ public class QuerySchemaLoader
    *          An XML document specifying names upon which we will filter the query.
    * @return The set of names upon which we will filter the query.
    * @throws PIRException
+   *           - Filter lists not found
    */
   private Set<String> extractFilteredElementNames(Document doc) throws PIRException
   {
@@ -339,6 +344,7 @@ public class QuerySchemaLoader
    *          The name of the tag we wish to extract from the {@code doc}
    * @return The text content of the tag.
    * @throws PIRException
+   *           - XML Document is Empty
    */
   private String extractValue(Document doc, String tagName) throws PIRException
   {
@@ -361,7 +367,9 @@ public class QuerySchemaLoader
    *          The set of names of elements of the data schema up which the filter will act.
    * @return An instantiation of the filter, set up to filter upon the specified names.
    * @throws IOException
+   *           - failed to read input
    * @throws PIRException
+   *           - File could not be instantiated
    */
   private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
   {

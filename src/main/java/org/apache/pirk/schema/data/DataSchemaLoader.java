@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
-
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -73,7 +73,7 @@ public class DataSchemaLoader
 {
   private static final Logger logger = LoggerFactory.getLogger(DataSchemaLoader.class);
 
-  private static HashSet<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
+  private static Set<String> allowedPrimitiveJavaTypes = new HashSet<>(Arrays.asList(PrimitiveTypePartitioner.BYTE, PrimitiveTypePartitioner.SHORT,
       PrimitiveTypePartitioner.INT, PrimitiveTypePartitioner.LONG, PrimitiveTypePartitioner.FLOAT, PrimitiveTypePartitioner.DOUBLE,
       PrimitiveTypePartitioner.CHAR, PrimitiveTypePartitioner.STRING));
 
@@ -95,7 +95,8 @@ public class DataSchemaLoader
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of available data schema names.
    * 
-   * @throws Exception - failed to initialize
+   * @throws Exception
+   *           - failed to initialize
    */
   public static void initialize() throws Exception
   {
@@ -110,7 +111,8 @@ public class DataSchemaLoader
    *          If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
-   * @throws Exception - failed to initialize
+   * @throws Exception
+   *           - failed to initialize
    */
   public static void initialize(boolean hdfs, FileSystem fs) throws Exception
   {
@@ -214,7 +216,9 @@ public class DataSchemaLoader
    *          The input stream.
    * @return A {@link Document} representing the XML document.
    * @throws IOException
+   *           - Failed to read schema file
    * @throws PIRException
+   *           - Schema description is invalid
    */
   private Document parseXMLDocument(InputStream stream) throws IOException, PIRException
   {
@@ -241,6 +245,7 @@ public class DataSchemaLoader
    * @param schema
    *          The data schema
    * @throws PIRException
+   *           - Schema description is invalid
    */
   private void extractElementNode(Element eElement, DataSchema schema) throws PIRException
   {
@@ -296,8 +301,9 @@ public class DataSchemaLoader
    * @param typeName
    *          The type name to check.
    * @throws PIRException
+   *           -
    */
-  void validateIsPrimitiveType(String typeName) throws PIRException
+  private void validateIsPrimitiveType(String typeName) throws PIRException
   {
     if (!allowedPrimitiveJavaTypes.contains(typeName.toLowerCase()))
     {
@@ -314,8 +320,9 @@ public class DataSchemaLoader
    *          The name of the {@link DataPartitioner} subclass to instantiate.
    * @return An instance of the named {@link DataPartitioner} subclass.
    * @throws PIRException
+   *           -
    */
-  DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
+  private DataPartitioner instantiatePartitioner(String partitionerTypeName) throws PIRException
   {
     Object obj;
     try

@@ -31,7 +31,6 @@ import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 /**
@@ -95,15 +94,9 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
       ComputeEncryptedRow.loadCacheFromHDFS(fs, query.getExpFile(rowIndex), query);
     }
 
-    // logger.debug("Encrypting row = " + rowIndex);
-    // long startTime = System.currentTimeMillis();
-
     // Compute the encrypted row elements for a query from extracted data partitions
     List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowBI(hashDocTuple._2, query, rowIndex, limitHitsPerSelector,
         maxHitsPerSelector, useLocalCache);
-
-    // long endTime = System.currentTimeMillis();
-    // logger.debug("Completed encrypting row = " + rowIndex + " duration = " + (endTime-startTime));
 
     returnPairs.addAll(encRowValues);
 

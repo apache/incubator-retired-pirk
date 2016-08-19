@@ -20,7 +20,6 @@ package org.apache.pirk.responder.wideskies.spark;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,7 +63,7 @@ import scala.Tuple2;
  * <p>
  * - Even if rdd.count() calls are embedded in logger.debug statements, they are computed by Spark. Thus, they are commented out in the code below - uncomment
  * for rdd.count() debug
- * 
+ *
  */
 public class ComputeResponse
 {
@@ -316,7 +315,7 @@ public class ComputeResponse
 
   /**
    * Method to perform the query given an input RDD of MapWritables
-   * 
+   *
    */
   public void performQuery(JavaRDD<MapWritable> inputRDD) throws PIRException
   {
@@ -332,7 +331,7 @@ public class ComputeResponse
 
     // Extract the selectors for each dataElement based upon the query type
     // and perform a keyed hash of the selectors
-    JavaPairRDD<Integer,List<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(accum, bVars));
+    JavaPairRDD<Integer,List<BigInteger>> selectorHashToDocRDD = inputRDD.mapToPair(new HashSelectorsAndPartitionData(bVars));
 
     // Group by hashed selector (row) -- can combine with the line above, separating for testing and benchmarking...
     JavaPairRDD<Integer,Iterable<List<BigInteger>>> selectorGroupRDD = selectorHashToDocRDD.groupByKey();

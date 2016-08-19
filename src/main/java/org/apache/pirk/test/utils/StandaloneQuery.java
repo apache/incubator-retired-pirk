@@ -56,8 +56,8 @@ public class StandaloneQuery
   String testQuerySchemaName = "testQuerySchema";
 
   // Base method to perform the query
-  public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors,
-      int numThreads, boolean testFalsePositive) throws IOException, InterruptedException, PIRException
+  public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors, int numThreads,
+      boolean testFalsePositive) throws IOException, InterruptedException, PIRException
   {
     logger.info("Performing watchlisting: ");
 
