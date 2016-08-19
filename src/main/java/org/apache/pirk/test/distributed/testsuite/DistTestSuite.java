@@ -167,7 +167,7 @@ public class DistTestSuite
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
     SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:0");
-    SystemConfiguration.setProperty("pir.esResource", SystemConfiguration.getProperty(DistributedTestDriver.ES_PIR_INPUT_RESOURCE_PROPERTY));
+    SystemConfiguration.setProperty("pir.esResource", SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_RESOURCE_PROPERTY));
 
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
@@ -298,7 +298,7 @@ public class DistTestSuite
     // Set up ES configs
     SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
     SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:0");
-    SystemConfiguration.setProperty("pir.esResource", SystemConfiguration.getProperty(DistributedTestDriver.ES_PIR_INPUT_RESOURCE_PROPERTY));
+    SystemConfiguration.setProperty("pir.esResource", SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_RESOURCE_PROPERTY));
 
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");

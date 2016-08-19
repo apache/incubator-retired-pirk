@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for parsing the command line options for the QuerierDriver
  */
-public class QuerierDriverCLI
+public class QuerierCLI
 {
-  private static final Logger logger = LoggerFactory.getLogger(QuerierDriverCLI.class);
+  private static final Logger logger = LoggerFactory.getLogger(QuerierCLI.class);
 
   private Options cliOptions = null;
   private CommandLine commandLine = null;
@@ -46,7 +46,7 @@ public class QuerierDriverCLI
    * Create and parse allowable options
    * 
    */
-  public QuerierDriverCLI(String[] args)
+  public QuerierCLI(String[] args)
   {
     // Create the command line options
     cliOptions = createOptions();
