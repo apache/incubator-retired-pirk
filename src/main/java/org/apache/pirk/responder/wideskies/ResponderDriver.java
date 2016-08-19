@@ -25,6 +25,7 @@ import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
+import org.apache.pirk.responder.wideskies.storm.PirkTopology;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -64,6 +65,13 @@ public class ResponderDriver
       FileSystem fs = FileSystem.get(new Configuration());
       ComputeResponse computeResponse = new ComputeResponse(fs);
       computeResponse.performQuery();
+    }
+    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("storm"))
+    {
+      logger.info("Launching Storm PirkTopology:");
+
+      PirkTopology.runPirkTopology();
+
     }
     else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("standalone"))
     {

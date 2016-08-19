@@ -114,23 +114,20 @@ public class KafkaStormIntegrationTest
     // Create encrypted file
     localStopListFile = Inputs.createPIRStopList(null, false);
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
-    //SystemConfiguration.setProperty("data.schemas", Inputs.DATA_SCHEMA_FILE_LOCALFS);
-    //SystemConfiguration.setProperty("query.schemas", Inputs.DNS_HOSTNAME_QUERY_FILE);
     Inputs.createSchemaFiles(StopListFilter.class.getName());
 
     // Perform encryption. Set queryInfo, nSquared, fileQuery, and fileQuerier
     performEncryption();
     SystemConfiguration.setProperty("pir.queryInput", fileQuery.getAbsolutePath());
 
+    // Run topology
+    SystemConfiguration.setProperty("storm.splitPartitions", "false");
+    SystemConfiguration.setProperty("storm.saltColumns", "true");
     responderFile = File.createTempFile("responderFile", ".txt");
     SystemConfiguration.setProperty("pir.outputFile", responderFile.getAbsolutePath());
-
-    // Run topology
     runTopology();
-
     // decrypt results
     performDecryption();
-
     // check results
     List<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
     BaseTests.checkDNSHostnameQueryResults(results, false, 7, false, Inputs.createJSONDataElements());

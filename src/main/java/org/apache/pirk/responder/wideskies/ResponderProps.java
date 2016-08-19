@@ -21,6 +21,8 @@ package org.apache.pirk.responder.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
@@ -66,10 +68,45 @@ public class ResponderProps
   static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
   static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
 
-  static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
+  // Storm parameters
+  // hdfs
+  static final String HDFSURI = "hdfs.uri";
+  static final String USEHDFS = "hdfs.use";
+  // kafka
+  static final String KAFKATOPIC = "kafka.topic";
+  static final String KAFKACLIENTID = "kafka.clientId";
+  static final String KAFKAZK = "kafka.zk";
+  static final String KAFKAFORCEFROMSTART = "kafka.forceFromStart";
+  // pirk topo
+  static final String STORMTOPONAME = "storm.topoName";
+  static final String STORMWORKERS = "storm.workers";
+  static final String STORMNUMACKERS = "storm.numAckers";
+  static final String STORMRECEIVEBUFFERS = "storm.executor.receiveBufferSize";
+  static final String STORMSENDBUFFERS = "storm.executor.sendBufferSize";
+  static final String STORMTRANSFERBUFFERS = "storm.executor.transferBufferSize";
+  static final String STORMMAXSPOUTPENDING = "storm.maxSpoutPending";
+  static final String STORMHEAPMEMORY = "storm.worker.heapMemory";
+  static final String STORMCHILDOPTS = "storm.worker.childOpts";
+  static final String STORMMAXWORKERHEAP = "storm.maxWorkerHeapMemory";
+  static final String STORMCOMPONENTONHEAP = "storm.componentOnheapMem";
+  static final String STORMSPOUTPAR = "storm.spout.parallelism";
+  static final String STORMPARTITIONDATABOLTPAR = "storm.partitiondata.parallelism";
+  static final String STORMENCROWCALCBOLTPAR = "storm.encrowcalcbolt.parallelism";
+  static final String STORMENCCOLMULTBOLTPAR = "storm.enccolmultbolt.parallelism";
+  static final String STORMFLUSHFREQUENCY = "storm.encrowcalcbolt.ticktuple";
+  static final String STORMSPLITPARTITIONS = "storm.splitPartitions";
+  static final String STORMSALTCOLUMNS = "storm.saltColumns";
+  static final String STORMNUMROWDIVS = "storm.rowDivs";
+
+  static final String[] STORMPROPS = new String[]{HDFSURI, USEHDFS, KAFKATOPIC, KAFKACLIENTID, KAFKAZK, KAFKAFORCEFROMSTART, STORMTOPONAME, STORMWORKERS,
+      STORMNUMACKERS, STORMRECEIVEBUFFERS, STORMSENDBUFFERS, STORMTRANSFERBUFFERS, STORMMAXSPOUTPENDING, STORMHEAPMEMORY, STORMCHILDOPTS, STORMMAXWORKERHEAP,
+      STORMCOMPONENTONHEAP, STORMSPOUTPAR, STORMPARTITIONDATABOLTPAR, STORMENCROWCALCBOLTPAR, STORMENCCOLMULTBOLTPAR, STORMFLUSHFREQUENCY, STORMSPLITPARTITIONS,
+      STORMSALTCOLUMNS, STORMNUMROWDIVS};
+
+  static final List<String> PROPSLIST = Arrays.asList((String[]) ArrayUtils.addAll(new String[]{PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
       BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
       REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
-      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS);
+      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS}, STORMPROPS));
 
   /**
    * Validates the responder properties
@@ -88,7 +125,7 @@ public class ResponderProps
     }
 
     String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("standalone"))
+    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("storm") && !platform.equals("standalone"))
     {
       logger.info("Unsupported platform: " + platform);
       valid = false;
