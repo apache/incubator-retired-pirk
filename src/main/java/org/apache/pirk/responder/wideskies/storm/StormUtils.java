@@ -20,9 +20,6 @@ package org.apache.pirk.responder.wideskies.storm;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocatedFileStatus;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
@@ -33,8 +30,6 @@ import org.apache.storm.Constants;
 import org.apache.storm.tuple.Tuple;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.Map;
 
@@ -105,6 +100,7 @@ public class StormUtils
 
   /***
    * Initialize data and query schema. Conf requires values for USE_HDFS, HDFS_URI_KEY, DSCHEMA_KEY, and QSCHEMA_KEY
+   * 
    * @param conf
    */
   public static void initializeSchemas(Map conf, String id)
@@ -133,7 +129,6 @@ public class StormUtils
       throw new RuntimeException(e);
     }
   }
-
 
   protected static boolean isTickTuple(Tuple tuple)
   {

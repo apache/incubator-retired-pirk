@@ -95,7 +95,6 @@ public class OutputBolt extends BaseRichBolt
     outputFile = (String) map.get(StormConstants.OUTPUT_FILE_KEY);
 
     hdfs = (boolean) map.get(StormConstants.USE_HDFS);
-    logger.info("output databolt hdfs = " + map.get(StormConstants.USE_HDFS));
 
     if (hdfs)
     {
@@ -138,7 +137,7 @@ public class OutputBolt extends BaseRichBolt
       // Wait till all EncColMultBolts have been flushed
       if (flushCounter == totalFlushSigs)
       {
-        logger.info("TimeToFlush reached - outputting response file with columns.size = " + resultsMap.keySet().size());
+        logger.info("TimeToFlush reached - outputting response to " + outputFile + " with columns.size = " + resultsMap.keySet().size());
         try
         {
           String timestamp = (new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date())).toString();

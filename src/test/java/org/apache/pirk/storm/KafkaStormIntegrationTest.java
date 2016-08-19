@@ -26,6 +26,7 @@ import kafka.utils.ZkUtils;
 
 import org.I0Itec.zkclient.ZkClient;
 
+import org.I0Itec.zkclient.ZkConnection;
 import org.apache.commons.io.FileUtils;
 import org.apache.curator.test.TestingServer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -76,14 +77,13 @@ public class KafkaStormIntegrationTest
 
   private static TestingServer zookeeperLocalCluster;
   private static KafkaServer kafkaLocalBroker;
+  private static ZkClient zkClient;
 
   private static final String topic = "pirk_test_topic";
   private static final String kafkaTmpDir = "/tmp/kafka";
 
   private static File fileQuery;
-  private static File responderFile;
   private static File fileQuerier;
-  private static File fileFinalResults;
   private static String localStopListFile;
 
   private QueryInfo queryInfo;
@@ -92,17 +92,14 @@ public class KafkaStormIntegrationTest
   @Test
   public void testKafkaStormIntegration() throws Exception
   {
-    //SystemConfiguration.setProperty("storm.splitPartitions", "true");
-    SystemConfiguration.setProperty("storm.splitPartitions", "false");
-    SystemConfiguration.setProperty("storm.saltColumns", "true");
-    SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "true");
     SystemConfiguration.getProperty("pir.maxHitsPerSelector", "10");
     SystemConfiguration.setProperty("storm.spout.parallelism", "1");
     SystemConfiguration.setProperty("storm.hashbolt.parallelism", "1");
     SystemConfiguration.setProperty("storm.encrowcalcbolt.parallelism", "2");
     SystemConfiguration.setProperty("storm.enccolmultbolt.parallelism", "2");
-    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "16");
+    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "4");
+    SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("hdfs.use", "false");
 
     startZookeeper();
@@ -120,29 +117,58 @@ public class KafkaStormIntegrationTest
     performEncryption();
     SystemConfiguration.setProperty("pir.queryInput", fileQuery.getAbsolutePath());
 
-    // Run topology
+    KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
+    loadTestData(producer);
+
+
+    logger.info("Test (splitPartitions,saltColumns) = (true,true)");
+    SystemConfiguration.setProperty("storm.splitPartitions", "true");
+    SystemConfiguration.setProperty("storm.saltColumns", "true");
+    runTest();
+
+    logger.info("Test (splitPartitions,saltColumns) = (true,false)");
+    SystemConfiguration.setProperty("storm.splitPartitions", "true");
+    SystemConfiguration.setProperty("storm.saltColumns", "false");
+    runTest();
+
+    logger.info("Test (splitPartitions,saltColumns) = (false,true)");
     SystemConfiguration.setProperty("storm.splitPartitions", "false");
     SystemConfiguration.setProperty("storm.saltColumns", "true");
-    responderFile = File.createTempFile("responderFile", ".txt");
-    SystemConfiguration.setProperty("pir.outputFile", responderFile.getAbsolutePath());
-    runTopology();
+    runTest();
+
+    logger.info("Test (splitPartitions,saltColumns) = (false,false)");
+    SystemConfiguration.setProperty("storm.splitPartitions", "false");
+    SystemConfiguration.setProperty("storm.saltColumns", "false");
+    runTest();
+  }
+
+  private void runTest() throws Exception
+  {
+    File responderFile = File.createTempFile("responderFile", ".txt");
+    logger.info("Starting topology.");
+    runTopology(responderFile);
+
     // decrypt results
-    performDecryption();
+    logger.info("Decrypting results. " + responderFile.length());
+    File fileFinalResults = performDecryption(responderFile);
+
     // check results
     List<QueryResponseJSON> results = TestUtils.readResultsFile(fileFinalResults);
     BaseTests.checkDNSHostnameQueryResults(results, false, 7, false, Inputs.createJSONDataElements());
 
+    responderFile.deleteOnExit();
+    fileFinalResults.deleteOnExit();
   }
 
-  private void runTopology() throws Exception
+  private void runTopology(File responderFile) throws Exception
   {
     MkClusterParam mkClusterParam = new MkClusterParam();
     // The test sometimes fails because of timing issues when more than 1 supervisor set.
     mkClusterParam.setSupervisors(1);
 
-    // Need to do this another way that is not dependent on timing...
-    // probably use "withSimulatedTimeLocalCluster", but I can't get it to work how I want it to.
+    // Maybe using "withSimulatedTimeLocalCluster" would be better to avoid worrying about timing.
     Config conf = PirkTopology.createStormConf();
+    conf.put(StormConstants.OUTPUT_FILE_KEY, responderFile.getAbsolutePath());
     conf.put(StormConstants.N_SQUARED_KEY, nSquared.toString());
     conf.put(StormConstants.QUERY_INFO_KEY, queryInfo.toMap());
     // conf.setDebug(true);
@@ -165,14 +191,11 @@ public class KafkaStormIntegrationTest
       {
         iLocalCluster.submitTopology("pirk_integration_test", config, topology);
         logger.info("Pausing for setup.");
-        Thread.sleep(4000);
-        KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
-        loadTestData(producer);
-        Thread.sleep(12000);
-
-        // EncRowCalcBolt.latch.await();
+        //Thread.sleep(4000);
+        //KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
+        //loadTestData(producer);
+        Thread.sleep(6000);
         OutputBolt.latch.await();
-        Thread.sleep(4000);
         logger.info("Finished...");
       }
     };
@@ -181,10 +204,9 @@ public class KafkaStormIntegrationTest
   private SpoutConfig setUpTestKafkaSpout(Config conf)
   {
     ZkHosts zkHost = new ZkHosts(zookeeperLocalCluster.getConnectString());
+
     SpoutConfig kafkaConfig = new SpoutConfig(zkHost, topic, "/pirk_test_root", "pirk_integr_test_spout");
-    //kafkaConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
     kafkaConfig.scheme = new SchemeAsMultiScheme(new PirkHashScheme(conf));
-    //kafkaConfig.scheme = new SchemeAsMultiScheme(new HashMessageMetadataScheme(queryInfo));
     logger.info("KafkaConfig initialized...");
 
     return kafkaConfig;
@@ -215,15 +237,16 @@ public class KafkaStormIntegrationTest
     kafkaLocalBroker = new KafkaServer(kafkaConfig, new SystemTime(), scala.Option.apply("kafkaThread"));
     kafkaLocalBroker.startup();
 
-    ZkClient zkClient = new ZkClient(zookeeperLocalCluster.getConnectString(), 60000, 60000, ZKStringSerializer$.MODULE$);
-    ZkUtils zkUtils = ZkUtils.apply(zookeeperLocalCluster.getConnectString(), 60000, 60000, false);
+    zkClient = new ZkClient(zookeeperLocalCluster.getConnectString(), 60000, 60000, ZKStringSerializer$.MODULE$);
+    ZkUtils zkUtils = new ZkUtils(zkClient, new ZkConnection(zookeeperLocalCluster.getConnectString()), false);
+    //ZkUtils zkUtils = ZkUtils.apply(zookeeperLocalCluster.getConnectString(), 60000, 60000, false);
     AdminUtils.createTopic(zkUtils, topic, 1, 1, new Properties());
-    zkClient.close();
   }
 
   @AfterClass
   public static void tearDown() throws Exception
   {
+    zkClient.close();
     kafkaLocalBroker.shutdown();
     zookeeperLocalCluster.stop();
 
@@ -231,8 +254,6 @@ public class KafkaStormIntegrationTest
 
     fileQuery.delete();
     fileQuerier.delete();
-    responderFile.delete();
-    fileFinalResults.delete();
 
     new File(localStopListFile).delete();
   }
@@ -260,7 +281,7 @@ public class KafkaStormIntegrationTest
 
   private void performEncryption() throws Exception
   {
-    //ArrayList<String> selectors = BaseTests.selectorsDomain;
+    // ArrayList<String> selectors = BaseTests.selectorsDomain;
     ArrayList<String> selectors = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
     String queryType = Inputs.DNS_HOSTNAME_QUERY;
 
@@ -268,8 +289,8 @@ public class KafkaStormIntegrationTest
 
     nSquared = paillier.getNSquared();
 
-    queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
-        queryType, false, true, false);
+    queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize, queryType,
+        false, true, false);
 
     // Perform the encryption
     logger.info("Performing encryption of the selectors - forming encrypted query vectors:");
@@ -285,12 +306,12 @@ public class KafkaStormIntegrationTest
     localStore.store(fileQuery, encryptQuery.getQuery());
   }
 
-  private void performDecryption() throws Exception
+  private File performDecryption(File responseFile) throws Exception
   {
-    fileFinalResults = File.createTempFile("finalFileResults", ".txt");
+    File finalResults = File.createTempFile("finalFileResults", ".txt");
     String querierFilePath = fileQuerier.getAbsolutePath();
-    String responseFilePath = responderFile.getAbsolutePath();
-    String outputFile = fileFinalResults.getAbsolutePath();
+    String responseFilePath = responseFile.getAbsolutePath();
+    String outputFile = finalResults.getAbsolutePath();
     int numThreads = 1;
 
     Response response = localStore.recall(responseFilePath, Response.class);
@@ -300,6 +321,7 @@ public class KafkaStormIntegrationTest
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);
     decryptResponse.decrypt(numThreads);
     decryptResponse.writeResultFile(outputFile);
+    return finalResults;
   }
 
 }

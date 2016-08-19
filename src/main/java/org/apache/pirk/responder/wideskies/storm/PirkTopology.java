@@ -68,8 +68,7 @@ public class PirkTopology
     String zkRoot = "/" + kafkaTopic + "_pirk_storm";
     BrokerHosts zkHosts = new ZkHosts(brokerZk);
     SpoutConfig kafkaConfig = new SpoutConfig(zkHosts, kafkaTopic, zkRoot, kafkaClientId);
-    if (forceFromStart)
-      kafkaConfig.ignoreZkOffsets = true;
+    kafkaConfig.ignoreZkOffsets = forceFromStart;
 
     // Create conf
     logger.info("Retrieving Query and generating Storm conf.");
