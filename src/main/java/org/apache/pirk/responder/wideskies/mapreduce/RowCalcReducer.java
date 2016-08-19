@@ -18,6 +18,10 @@
  */
 package org.apache.pirk.responder.wideskies.mapreduce;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
+
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -35,11 +39,8 @@ import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Tuple2;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
+import scala.Tuple2;
 
 /**
  * Reducer class to calculate the encrypted rows of the encrypted query
