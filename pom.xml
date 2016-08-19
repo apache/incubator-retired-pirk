@@ -572,7 +572,6 @@
 							<configuration>
 								<shadedArtifactAttached>true</shadedArtifactAttached>
 								<shadedClassifierName>exe</shadedClassifierName>
-								<minimizeJar>true</minimizeJar>
 								<transformers>
 									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									</transformer>
@@ -580,30 +579,6 @@
 									</transformer>
 								</transformers>
 								<filters>
-									<filter>
-										<artifact>org.tachyonproject:*</artifact>
-										<includes>
-											<include>org/tachyonproject/**</include>
-										</includes>
-									</filter>
-									<filter>
-										<artifact>org.apache.hadoop:hadoop-common:*</artifact>
-										<includes>
-											<include>org/apache/**</include>
-										</includes>
-									</filter>
-									<filter>
-										<artifact>org.apache.htrace:htrace-core:*</artifact>
-										<includes>
-										    <include>org/apache/htrace/**</include>
-										</includes>
-									</filter>
-									<filter>
-										<artifact>org.apache.logging.log4j:log4j-core:*</artifact>
-										<includes>
-											<include>org/apache/logging/**</include>
-										</includes>
-									</filter>
 									<filter>
 										<artifact>*:*</artifact>
 										<excludes>
