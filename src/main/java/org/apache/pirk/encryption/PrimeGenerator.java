@@ -56,7 +56,7 @@ public class PrimeGenerator
   private static final Logger logger = LoggerFactory.getLogger(PrimeGenerator.class);
 
   private static final BigDecimal SQRT_2 = BigDecimal.valueOf(Math.sqrt(2));
-  
+
   private static final HashMap<Integer,BigInteger> lowerBoundCache = new HashMap<>();
   private static final HashMap<Integer,BigInteger> minimumDifferenceCache = new HashMap<>();
 

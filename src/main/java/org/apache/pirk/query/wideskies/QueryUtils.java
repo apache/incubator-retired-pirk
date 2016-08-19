@@ -165,8 +165,7 @@ public class QueryUtils
   /**
    * Method to convert the given data element given by the MapWritable data element into the extracted BigInteger partitions based upon the given queryType
    */
-  public static List<BigInteger> partitionDataElement(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema, boolean embedSelector)
-      throws PIRException
+  public static List<BigInteger> partitionDataElement(MapWritable dataMap, QuerySchema qSchema, DataSchema dSchema, boolean embedSelector) throws PIRException
   {
     List<BigInteger> parts = new ArrayList<>();
 
