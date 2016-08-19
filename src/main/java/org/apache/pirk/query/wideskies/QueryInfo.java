@@ -100,38 +100,29 @@ public class QueryInfo implements Serializable, Cloneable
 
   public QueryInfo(Map queryInfoMap)
   {
-    // Seemed that the Storm Config would serialize the map as a json and read back in with numeric values as longs.
-    // So had to cast as a long and call .intValue. However, this didn't work in the PirkHashScheme and had to try
-    // the normal way of doing it as well.
+    // The Storm Config serializes the map as a json and reads back in with numeric values as longs.
+    // So numerics need to be cast as a long and call .intValue. However, in PirkHashScheme the map contains ints.
+    identifier = UUID.fromString((String) queryInfoMap.get("uuid"));
+    queryType = (String) queryInfoMap.get("queryType");
+    hashKey = (String) queryInfoMap.get("hashKey");
+    useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
+    useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
+    embedSelector = (boolean) queryInfoMap.get("embedSelector");
     try
     {
-      identifier = UUID.fromString((String) queryInfoMap.get("uuid"));
-      queryType = (String) queryInfoMap.get("queryType");
       numSelectors = ((Long) queryInfoMap.get("numSelectors")).intValue();
       hashBitSize = ((Long) queryInfoMap.get("hashBitSize")).intValue();
-      hashKey = (String) queryInfoMap.get("hashKey");
       numBitsPerDataElement = ((Long) queryInfoMap.get("numBitsPerDataElement")).intValue();
       numPartitionsPerDataElement = ((Long) queryInfoMap.get("numPartitionsPerDataElement")).intValue();
       dataPartitionBitSize = ((Long) queryInfoMap.get("dataPartitionsBitSize")).intValue();
-      useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
-      useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
-      embedSelector = (boolean) queryInfoMap.get("embedSelector");
     } catch (ClassCastException e)
     {
-      identifier = UUID.fromString((String) queryInfoMap.get("uuid"));
-      queryType = (String) queryInfoMap.get("queryType");
       numSelectors = (int) queryInfoMap.get("numSelectors");
       hashBitSize = (int) queryInfoMap.get("hashBitSize");
-      hashKey = (String) queryInfoMap.get("hashKey");
       numBitsPerDataElement = (int) queryInfoMap.get("numBitsPerDataElement");
       numPartitionsPerDataElement = (int) queryInfoMap.get("numPartitionsPerDataElement");
       dataPartitionBitSize = (int) queryInfoMap.get("dataPartitionsBitSize");
-      useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
-      useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
-      embedSelector = (boolean) queryInfoMap.get("embedSelector");
-
     }
-
   }
 
   public UUID getIdentifier()
@@ -191,7 +182,7 @@ public class QueryInfo implements Serializable, Cloneable
 
   public Map toMap()
   {
-    HashMap<String,Object> queryInfo = new HashMap<String,Object>();
+    Map<String,Object> queryInfo = new HashMap<String,Object>();
     queryInfo.put("uuid", identifier.toString());
     queryInfo.put("queryType", queryType);
     queryInfo.put("numSelectors", numSelectors);

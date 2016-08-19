@@ -31,10 +31,7 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Bolt class to perform the encrypted row calculation
@@ -68,15 +65,15 @@ public class EncRowCalcBolt extends BaseRichBolt
   // These are the main data structures used here.
   private HashMap<Integer,Integer> hitsByRow = new HashMap<Integer,Integer>();
   private HashMap<Integer,Integer> colIndexByRow = new HashMap<Integer,Integer>();
-  private ArrayList<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<Tuple2<Long,BigInteger>>();
-  private ArrayList<BigInteger> dataArray = new ArrayList<>();
+  private List<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<Tuple2<Long,BigInteger>>();
+  private List<BigInteger> dataArray = new ArrayList<>();
 
   private int numEndSigs = 0;
 
   // These buffered values are used in the case when a session has been ejected, but the SESSION_END signal has not been received
   // yet from the next bolt.
   private boolean buffering = false;
-  private ArrayList<Tuple2<Long,BigInteger>> bufferedValues = new ArrayList<Tuple2<Long,BigInteger>>();
+  private List<Tuple2<Long,BigInteger>> bufferedValues = new ArrayList<Tuple2<Long,BigInteger>>();
 
   @Override
   public void prepare(Map map, TopologyContext topologyContext, OutputCollector coll)
@@ -164,7 +161,7 @@ public class EncRowCalcBolt extends BaseRichBolt
    * @param tuple
    * @return
    */
-  private ArrayList<Tuple2<Long,BigInteger>> processTupleFromPartitionDataBolt(Tuple tuple)
+  private List<Tuple2<Long,BigInteger>> processTupleFromPartitionDataBolt(Tuple tuple)
   {
     matrixElements.clear();
     int rowIndex = tuple.getIntegerByField(StormConstants.HASH_FIELD);
@@ -210,7 +207,7 @@ public class EncRowCalcBolt extends BaseRichBolt
     return matrixElements;
   }
 
-  private void emitTuples(ArrayList<Tuple2<Long,BigInteger>> matrixElements)
+  private void emitTuples(List<Tuple2<Long,BigInteger>> matrixElements)
   {
     // saltColumns distributes the column multiplication done in the next bolt EncColMultBolt to avoid hotspotting.
     if (saltColumns)

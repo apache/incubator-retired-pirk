@@ -326,10 +326,10 @@ public class ComputeEncryptedRow
    * <p/>
    * Emits {@code Tuple2<<colNum, colVal>>}
    */
-  public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(ArrayList<BigInteger> dataPartitions, Query query, int rowIndex, int colIndex)
+  public static List<Tuple2<Long,BigInteger>> computeEncRow(List<BigInteger> dataPartitions, Query query, int rowIndex, int colIndex)
       throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
 
     // Pull the corresponding encrypted row query
     BigInteger rowQuery = query.getQueryElement(rowIndex);
@@ -364,9 +364,9 @@ public class ComputeEncryptedRow
     return returnPairs;
   }
 
-  public static ArrayList<Tuple2<Long,BigInteger>> computeEncRow(BigInteger part, Query query, int rowIndex, int colIndex) throws IOException
+  public static List<Tuple2<Long,BigInteger>> computeEncRow(BigInteger part, Query query, int rowIndex, int colIndex) throws IOException
   {
-    ArrayList<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
+    List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<Tuple2<Long,BigInteger>>();
 
     // Pull the corresponding encrypted row query
     BigInteger rowQuery = query.getQueryElement(rowIndex);

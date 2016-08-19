@@ -98,7 +98,7 @@ public class KafkaStormIntegrationTest
     SystemConfiguration.setProperty("storm.hashbolt.parallelism", "1");
     SystemConfiguration.setProperty("storm.encrowcalcbolt.parallelism", "2");
     SystemConfiguration.setProperty("storm.enccolmultbolt.parallelism", "2");
-    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "4");
+    SystemConfiguration.setProperty("storm.encrowcalcbolt.ticktuple", "8");
     SystemConfiguration.setProperty("storm.rowDivs", "2");
     SystemConfiguration.setProperty("hdfs.use", "false");
 
@@ -194,7 +194,7 @@ public class KafkaStormIntegrationTest
         //Thread.sleep(4000);
         //KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
         //loadTestData(producer);
-        Thread.sleep(6000);
+        Thread.sleep(10000);
         OutputBolt.latch.await();
         logger.info("Finished...");
       }

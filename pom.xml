@@ -120,6 +120,7 @@
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
 		<storm.version>1.0.1</storm.version>
+		<kafka.version>0.9.0.1</kafka.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
 		<jackson.version>2.8.1</jackson.version>
@@ -305,7 +306,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.10</artifactId>
-			<version>0.9.0.1</version>
+			<version>${kafka.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>log4j</groupId>
