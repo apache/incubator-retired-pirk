@@ -18,16 +18,16 @@
  */
 package org.apache.pirk.inputformat.hadoop;
 
-import org.apache.hadoop.io.ArrayWritable;
-import org.apache.hadoop.io.BytesWritable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.hadoop.io.ArrayWritable;
+import org.apache.hadoop.io.BytesWritable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ArrayWritable class with ByteWritable entries
