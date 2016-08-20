@@ -95,6 +95,54 @@ public class ModularMultiplyBenchmark
     }
   }
 
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithBigIntegerMulGMPMod(ModularMultiplyBenchmarkState allState)
+  {
+    SystemConfiguration.setProperty("paillier.useGMPForMul", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    IntegerMathAbstraction.reloadConfiguration();
+
+    try
+    {
+      IntegerMathAbstraction.mod(IntegerMathAbstraction.multiply(allState.factor1, allState.factor2), allState.modulus);
+    } catch (Exception e)
+    {
+      logger.error("Exception in testWithBigIntegerMulGMPMod!\n" + e);
+      System.exit(1);
+    }
+  }
+
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMPMulBigIntegerMod(ModularMultiplyBenchmarkState allState)
+  {
+    SystemConfiguration.setProperty("paillier.useGMPForMul", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "false");
+    IntegerMathAbstraction.reloadConfiguration();
+
+    try
+    {
+      IntegerMathAbstraction.mod(IntegerMathAbstraction.multiply(allState.factor1, allState.factor2), allState.modulus);
+    } catch (Exception e)
+    {
+      logger.error("Exception in testWithGMPMulBigIntegerMod!\n" + e);
+      System.exit(1);
+    }
+  }
+
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMPSeparateCalls(ModularMultiplyBenchmarkState allState)
+  {
+    SystemConfiguration.setProperty("paillier.useGMPForMul", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    IntegerMathAbstraction.reloadConfiguration();
+
+    try
+    {
+      IntegerMathAbstraction.mod(IntegerMathAbstraction.multiply(allState.factor1, allState.factor2), allState.modulus);
+    } catch (Exception e)
+    {
+      logger.error("Exception in testWithGMPSeparateCalls!\n" + e);
+      System.exit(1);
+    }
+  }
+
   @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithoutGMP(ModularMultiplyBenchmarkState allState)
   {
     SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "false");

@@ -46,18 +46,19 @@ public final class IntegerMathAbstraction
    */
   public static void reloadConfiguration()
   {
-    useGMPmodPow = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
+    useGMPmodPow              = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
     useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
-    useGMPmodularMultiply = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
-    useGMPmodularInverse = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
-    useGMPgcd = SystemConfiguration.getProperty("paillier.useGMPForGCD").equals("true");
-    useGMPexactDivide = SystemConfiguration.getProperty("paillier.useGMPForExactDivide").equals("true");
-    useGMPmultiply = SystemConfiguration.getProperty("paillier.useGMPForMultiply").equals("true");
-    useGMPmod = SystemConfiguration.getProperty("paillier.useGMPForMod").equals("true");
+    useGMPmodularMultiply     = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
+    useGMPmodularInverse      = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
+    useGMPgcd                 = SystemConfiguration.getProperty("paillier.useGMPForGCD").equals("true");
+    useGMPexactDivide         = SystemConfiguration.getProperty("paillier.useGMPForExactDivide").equals("true");
+    useGMPmultiply            = SystemConfiguration.getProperty("paillier.useGMPForMultiply").equals("true");
+    useGMPmod                 = SystemConfiguration.getProperty("paillier.useGMPForMod").equals("true");
+
   }
 
   /**
-   * Performs modPow: ({@code base}^{@code exponent}) mod {@code modulus}
+   * Performs modPow: {@code (factor1 ^ factor2) mod modulus}
    * <p>
    * This method uses the values of {@code paillier.useGMPForModPow} and {@code paillier.GMPConstantTimeMode}
    * as they were when the class was loaded to decide which implementation of modPow to invoke.
@@ -67,7 +68,7 @@ public final class IntegerMathAbstraction
    * @param base
    * @param exponent
    * @param modulus
-   * @return ({@code base}^{@code exponent}) mod {@code modulus}
+   * @return {@code (factor1 ^ factor2) mod modulus}
    */
   public static BigInteger modPow(BigInteger base, BigInteger exponent, BigInteger modulus)
   {
@@ -105,7 +106,7 @@ public final class IntegerMathAbstraction
   }
 
   /**
-   * Performs modPow: ({@code base}^{@code exponent}) mod {@code modulus}
+   * Performs modPow: {@code (factor1 ^ factor2) mod modulus}
    * <p>
    * This method uses the values of {@code paillier.useGMPForModPow} and {@code paillier.GMPConstantTimeMode}
    * as they were when the class was loaded to decide which implementation of modPow to invoke.
@@ -115,7 +116,7 @@ public final class IntegerMathAbstraction
    * @param base
    * @param exponent
    * @param modulus
-   * @return ({@code base}^{@code exponent}) mod {@code modulus}
+   * @return {@code (factor1 ^ factor2) mod modulus}
    */
   public static BigInteger modPow(long base, BigInteger exponent, BigInteger modulus)
   {
@@ -123,7 +124,7 @@ public final class IntegerMathAbstraction
   }
 
   /**
-   * Performs modular multiply: ({@code factor1}*{@code factor2}) mod {@code modulus}
+   * Performs modular multiply: {@code (factor1 * factor2) mod modulus}
    * <p>
    * This method uses the value of {@code paillier.useGMPForModularMultiply} as it was set
    * when the class was loaded to decide which implementation of modular multiplication to invoke.
@@ -132,8 +133,8 @@ public final class IntegerMathAbstraction
    *
    * @param factor1 the first factor to the multiplication
    * @param factor2 the second factor to the multiplication
-   * @param modulus the modulus to be applied to ({@code factor1}*{@code factor2})
-   * @return ({@code factor1}*{@code factor2}) mod {@code modulus}
+   * @param modulus the modulus to be applied to ({@code factor1 * factor2})
+   * @return {@code (factor1 * factor2) mod modulus}
    */
   public static BigInteger modularMultiply(BigInteger factor1, BigInteger factor2, BigInteger modulus)
   {
