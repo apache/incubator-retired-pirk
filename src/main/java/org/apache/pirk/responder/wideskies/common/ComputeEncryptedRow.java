@@ -18,19 +18,6 @@
  */
 package org.apache.pirk.responder.wideskies.common;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.pirk.encryption.IntegerMathAbstraction;
-import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
-import org.apache.pirk.query.wideskies.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import scala.Tuple2;
-import scala.Tuple3;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,6 +26,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
+import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
+import org.apache.pirk.query.wideskies.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import scala.Tuple2;
+import scala.Tuple3;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * Class to compute the encrypted row elements for a query from extracted data partitions
@@ -234,8 +236,8 @@ public class ComputeEncryptedRow
    * Emits {@code Tuple2<<colNum, colVal>>}
    * 
    */
-  public static List<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<List<BigInteger>> dataPartitionsIter,
-      HashMap<Integer,BigInteger> cache, int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
+  public static List<Tuple2<Long,BigInteger>> computeEncRowCacheInput(Iterable<List<BigInteger>> dataPartitionsIter, HashMap<Integer,BigInteger> cache,
+      int rowIndex, boolean limitHitsPerSelector, int maxHitsPerSelector) throws IOException
   {
     List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 

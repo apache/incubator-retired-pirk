@@ -18,7 +18,6 @@
  */
 package org.apache.pirk.test.distributed;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
@@ -42,11 +41,9 @@ public class DistributedTestDriver
   private static final Logger logger = LoggerFactory.getLogger(DistributedTestDriver.class);
 
   // Input
-  public static final String JSON_PIR_INPUT_FILE_PROPERTY = "test.pir.inputJSONFile";
-  public static final String ES_PIR_INPUT_INDEX_PROPERTY = "test.pir.es.index";
-  public static final String PIR_QUERY_INPUT_DIR = "test.pir.queryInputDir";
-  public static final String PIR_STOPLIST_FILE = "test.pir.stopListFile";
-  public static final String ES_PIR_INPUT_RESOURCE_PROPERTY = "test.pir.es.resource";
+  public static final String JSON_PIR_INPUT_FILE_PROPERTY = "test.inputJSONFile";
+  public static final String PIR_QUERY_INPUT_DIR = "test.queryInputDir";
+  public static final String PIR_STOPLIST_FILE = "test.stopListFile";
 
   // Elastic Search
   public static final String ES_INPUT_NODES_PROPERTY = "es.nodes";
@@ -88,9 +85,9 @@ public class DistributedTestDriver
    */
   public static List<JSONObject> initialize(FileSystem fs) throws Exception
   {
-    List<JSONObject> dataElements = Inputs.createPIRJSONInput(fs);
+    List<JSONObject> dataElements = Inputs.createJSONInput(fs);
 
-    String localStopListFile = Inputs.createPIRStopList(fs, true);
+    String localStopListFile = Inputs.createStopList(fs, true);
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
 
     Inputs.createSchemaFiles(fs, true, StopListFilter.class.getName());
@@ -109,7 +106,7 @@ public class DistributedTestDriver
     }
     if (cli.run("1:E") || cli.run("1:ES"))
     {
-      Inputs.createPIRESInput();
+      Inputs.createESInput();
       if (cli.run("1:E"))
       {
         DistTestSuite.testESInputMR(fs, pirDataElements);

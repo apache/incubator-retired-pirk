@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 public class DecryptResponse
 {
   private static final Logger logger = LoggerFactory.getLogger(DecryptResponse.class);
-  
+
   private static final BigInteger TWO_BI = BigInteger.valueOf(2);
 
   private final Response response;
@@ -141,7 +141,8 @@ public class DecryptResponse
       }
 
       // Create the runnable and execute
-      DecryptResponseRunnable<Map<String,List<QueryResponseJSON>>> runDec = new DecryptResponseRunnable<>(rElements, selectorsPartition, selectorMaskMap, queryInfo.clone(), embedSelectorMap);
+      DecryptResponseRunnable<Map<String,List<QueryResponseJSON>>> runDec = new DecryptResponseRunnable<>(rElements, selectorsPartition, selectorMaskMap,
+          queryInfo.clone(), embedSelectorMap);
       futures.add(es.submit(runDec));
     }
 
@@ -156,7 +157,7 @@ public class DecryptResponse
     {
       throw new PIRException("Exception in decryption threads.", e);
     }
-    
+
     es.shutdown();
   }
 

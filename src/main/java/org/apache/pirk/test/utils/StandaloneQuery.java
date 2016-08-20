@@ -18,6 +18,13 @@
  */
 package org.apache.pirk.test.utils;
 
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierConst;
@@ -38,13 +45,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.junit.Assert.fail;
-
 public class StandaloneQuery
 {
   private static final Logger logger = LoggerFactory.getLogger(StandaloneQuery.class);
@@ -56,8 +56,8 @@ public class StandaloneQuery
   String testQuerySchemaName = "testQuerySchema";
 
   // Base method to perform the query
-  public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors,
-      int numThreads, boolean testFalsePositive) throws IOException, InterruptedException, PIRException
+  public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors, int numThreads,
+      boolean testFalsePositive) throws IOException, InterruptedException, PIRException
   {
     logger.info("Performing watchlisting: ");
 

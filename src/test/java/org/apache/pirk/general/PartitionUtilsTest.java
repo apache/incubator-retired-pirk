@@ -18,6 +18,13 @@
  */
 package org.apache.pirk.general;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.pirk.schema.data.partitioner.IPDataPartitioner;
 import org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
@@ -26,13 +33,6 @@ import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Class to functionally test the bit conversion utils
@@ -52,7 +52,7 @@ public class PartitionUtilsTest
     assertEquals(0b000000000001111, PrimitiveTypePartitioner.formBitMask(4).intValue());
     assertEquals(0b000000001111111, PrimitiveTypePartitioner.formBitMask(7).intValue());
     assertEquals(0b111111111111111, PrimitiveTypePartitioner.formBitMask(15).intValue());
-    
+
     assertEquals(new BigInteger("FFFFF", 16), PrimitiveTypePartitioner.formBitMask(20));
     assertEquals(new BigInteger("FFFFFFFF", 16), PrimitiveTypePartitioner.formBitMask(32));
     assertEquals(new BigInteger("3FFFFFFFFFF", 16), PrimitiveTypePartitioner.formBitMask(42));
@@ -79,7 +79,7 @@ public class PartitionUtilsTest
 
     partitions = PrimitiveTypePartitioner.partitionBits(value2, 4, mask4);
     assertEquals(3, partitions.size());
-    assertEquals(0b1111, partitions.get(0).intValue()); 
+    assertEquals(0b1111, partitions.get(0).intValue());
     assertEquals(0b0101, partitions.get(1).intValue());
     assertEquals(0b0011, partitions.get(2).intValue());
 

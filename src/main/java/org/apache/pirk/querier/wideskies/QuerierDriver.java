@@ -102,7 +102,7 @@ public class QuerierDriver implements Serializable
     String querierFile = null;
 
     // Parse the args
-    QuerierDriverCLI qdriverCLI = new QuerierDriverCLI(args);
+    QuerierCLI qdriverCLI = new QuerierCLI(args);
 
     // Set the variables
     action = SystemConfiguration.getProperty(QuerierProps.ACTION);
