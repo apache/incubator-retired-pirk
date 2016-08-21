@@ -201,3 +201,62 @@
    See the License for the specific language governing permissions and
    limitations under the License.
    
+   
+=======================================================================
+Apache Pirk (incubating) Subcomponents:
+
+The Apache Pirk project contains subcomponents with separate copyright
+notices and license terms. Your use of the source code for the these
+subcomponents is subject to the terms and conditions of the following
+licenses.
+
+
+========================================================================
+BSD-style licenses
+========================================================================
+
+The following components are provided under a BSD-style license. See project link for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+	(BSD License) AntLR Parser Generator (antlr:antlr:2.7.7 - http://www.antlr.org/)
+	(New BSD License) Kryo (com.esotericsoftware.kryo:kryo:2.21 - http://code.google.com/p/kryo/)
+	(New BSD License) MinLog (com.esotericsoftware.minlog:minlog:1.2 - http://code.google.com/p/minlog/)
+	(New BSD License) ReflectASM (com.esotericsoftware.reflectasm:reflectasm:1.07 - http://code.google.com/p/reflectasm/)
+	(New BSD license) Protocol Buffer Java API (com.google.protobuf:protobuf-java:2.5.0 - http://code.google.com/p/protobuf)
+	(BSD) JSch (com.jcraft:jsch:0.1.42 - http://www.jcraft.com/jsch/)
+	(BSD) ParaNamer Core (com.thoughtworks.paranamer:paranamer:2.3 - http://paranamer.codehaus.org/paranamer)
+	(BSD) Automaton (dk.brics.automaton:automaton:1.11-8 - http://www.brics.dk/automaton/)
+    (BSD) JLine (jline:jline:1.0 - http://jline.sourceforge.net)
+    (The New BSD License) Py4J (net.sf.py4j:py4j:0.9 - http://www.py4j.org/)
+    (BSD license) ANTLR ST4 4.0.4 (org.antlr:ST4:4.0.4 - http://www.stringtemplate.org)
+    (BSD license) ANTLR StringTemplate (org.antlr:stringtemplate:3.2.1 - http://www.stringtemplate.org)
+    (New BSD License) Commons Compiler (org.codehaus.janino:commons-compiler:2.7.8 - http://docs.codehaus.org/display/JANINO/Home/commons-compiler)
+    (New BSD License) Janino (org.codehaus.janino:janino:2.7.8 - http://docs.codehaus.org/display/JANINO/Home/janino)
+    (The BSD 3-Clause License) leveldbjni-all (org.fusesource.leveldbjni:leveldbjni-all:1.8 - http://leveldbjni.fusesource.org/leveldbjni-all)
+    (New BSD License) Hamcrest Core (org.hamcrest:hamcrest-core:1.3 - https://github.com/hamcrest/JavaHamcrest)
+    (BSD 3-Clause) Scala Compiler (org.scala-lang:scala-compiler:2.11.0 - http://www.scala-lang.org/)
+    (BSD 3-Clause) Scala Library (org.scala-lang:scala-library:2.11.7 - http://www.scala-lang.org/)
+    (BSD 3-Clause) Scala Compiler (org.scala-lang:scala-reflect:2.11.2 - http://www.scala-lang.org/)
+    (BSD 3-Clause) Scalap (org.scala-lang:scalap:2.11.0 - http://www.scala-lang.org/)
+    (BSD 3-clause) scala-parser-combinators (org.scala-lang.modules:scala-parser-combinators_2.11:1.0.1 - http://www.scala-lang.org/)
+    (BSD 3-clause) scala-xml (org.scala-lang.modules:scala-xml_2.11:1.0.1 - http://www.scala-lang.org/)
+    (The BSD License) xmlenc Library (xmlenc:xmlenc:0.52 - http://xmlenc.sourceforge.net)
+    (BSD) Antlr 3.4 Runtime (org.antlr:antlr-runtime:3.4 - http://www.antlr.org)
+    (BSD) ASM Core (asm:asm:3.1 - http://asm.objectweb.org/asm/)
+    (BSD) HSQLDB (hsqldb:hsqldb:1.8.0.10 - http://hsqldb.org/)
+
+========================================================================
+MIT licenses
+========================================================================
+
+The following components are provided under the MIT License. See project link for details.
+The text of each license is also included at licenses/LICENSE-[project].txt.
+
+	 (MIT License) pyrolite (net.razorvine:pyrolite:4.9 - https://github.com/irmen/Pyrolite)
+     (The MIT License) JOpt Simple (net.sf.jopt-simple:jopt-simple:4.6 - http://pholser.github.com/jopt-simple)
+     (MIT License) JCL 1.1.1 implemented over SLF4J (org.slf4j:jcl-over-slf4j:1.7.10 - http://www.slf4j.org)
+     (MIT License) JUL to SLF4J bridge (org.slf4j:jul-to-slf4j:1.7.10 - http://www.slf4j.org)
+     (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.21 - http://www.slf4j.org)
+     
+
+    
