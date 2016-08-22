@@ -17,6 +17,7 @@ This is a guide to making a release of Apache Pirk (incubating). Please follow t
 * [Validate the Release Candidate](#validate-the-release-candidate)
 * [Close the Staging Repository](#close-the-staging-repository)
 * [How to Roll Back a Release Candidate](#how-to-roll-back-a-release-candidate)
+* [Generate the Release Notes](#generate-the-release-notes)
 3. [Vote on the Release](#vote-on-the-release)
 4. [Publish the Release](#publish-the-release)
 5. [Update the Website](#update-the-website)
@@ -99,9 +100,11 @@ Perform the following to generate and stage the artifacts:
 3. `mvn -Psigned_release release:perform -Darguments="-DskipTests"`
 * This command will generate the artifacts and push them to the [Nexus repo](https://repository.apache.org/#stagingRepositories). If you would like to perform a dry run first (without pushing the artifacts to the repo), add the arg `-DdryRun=true`
 
-The candidate release artifacts can be found in the [Nexus staging repo](https://repository.apache.org/#stagingRepositories). Log in with your Apache creds; the candidate release artifacts are found in `orgapachepirk-1001`.
+The candidate release artifacts can be found in the [Nexus staging repo](https://repository.apache.org/#stagingRepositories). Log in with your Apache creds; the candidate release artifacts are found in `orgapachepirk-1001` (the appended number may be different).
 
 The candidate artifacts can also be found in the `target` folder of your local branch.
+
+NOTE: If you are performing a source-only release, please remove all artifacts from the staging repo except for the .zip file containing the source and the javadocs jar file. In the Nexus GUI, you can right click on each artifact to be deleted and then select 'Delete'.
 
 ### Validate the Release Candidate ###
 
@@ -110,13 +113,14 @@ As per the Apache documentation, verify that the release candidate artifacts sat
 * Checksums and PGP signatures are valid
 * Build is successful including automated tests
 * DISCLAIMER is correct, filenames include "incubating"
-* Top-level LICENSE and NOTICE are correct. See:
+* Top-level LICENSE and NOTICE are correct and dependency licenses are acceptable. See:
 	* [LICENSE file requirements](http://www.apache.org/dev/release.html#license)
+	* [LICENSE requirements for distribution artifacts with multiple licenses](http://www.apache.org/dev/release.html#distributing-code-under-several-licenses)
 	* [NOTICE file requirements](http://www.apache.org/dev/release.html#notice-content)
+	* [Apache Legal](http://apache.org/legal/)
+	* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
 * All source files have license headers where appropriate, RAT checks pass
 * The provenance of all source files is clear (ASF or software grants)
-* Dependencies licenses are ok as per http://apache.org/legal/
-* Release consists of source code only, no binaries
 
 ### Close the Staging Repository ###
 
@@ -126,7 +130,7 @@ Nexus will now run through a series of checksum and signature validations.
 
 *If the checks pass*, Nexus will close the repository and give a URL to the closed staging repo (which contains the candidate artifacts). Send this URL to folks in the voting email so that they can find the staged candidate release artifacts.
 
-*If the checks do not pass*, drop the staging repo by clicking the 'Drop' icon, follow the instructions on how to [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts).
+*If the checks do not pass*, follow the instructions on how to [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts).
 
 
 ### How to Roll Back a Release Candidate ###
@@ -144,6 +148,12 @@ To roll back the release locally in your candidate relesae branch:
 5. `git tag -d <tagname>` to deletes the local tag
 
 
+### Generate the Release Notes ###
+
+To generate the release notes within via [Pirk JIRA](https://issues.apache.org/jira/browse/PIRK), follow the instructions found [here](https://confluence.atlassian.com/jira061/jira-administrator-s-guide/project-management/managing-versions/creating-release-notes).
+
+Include the link to the release notes in the voting email. 
+
 ## Vote on the Release ##
 
 To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.apache.incubator.org) with subject `[VOTE]: Pirk <release version> Release` and a body along the lines of: 
@@ -152,16 +162,15 @@ To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.
 	
 	The vote will run for at least 72 hours and will close on <closing date>.
 	
-	The artifacts can be downloaded here: https://repository.apache.org/content/repositories/orgapachepirk-1001
+	The artifacts can be downloaded here: https://repository.apache.org/content/repositories/<repository name>
 	
-	All JIRAs completed for this release are tagged with 'FixVersion = <release version>'. You can view them here: <insert link to the JIRA search results for FixVersion = release version>
+	All JIRAs completed for this release are tagged with 'FixVersion = <release version>'. You can view them here: <insert link to the JIRA release notes>
 	
 	The artifacts have been signed with Key : <ID of signing key>
 	
 	Please vote accordingly:
 	
 	[ ] +1, accept RC as the official <release version> release 
-	[ ] +0, I don't care either way,
 	[ ] -1, do not accept RC as the official <release version> release because...
 
 
