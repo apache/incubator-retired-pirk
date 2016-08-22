@@ -2,7 +2,7 @@
 *****************************************************
 Summary
 -------
-Generated at: 2016-08-13T22:11:28-04:00
+Generated at: 2016-08-21T11:55:54-04:00
 
 Notes: 3
 Binaries: 5
@@ -421,14 +421,14 @@ Generated files do not require license headers.
   AL    src/main/java/org/apache/pirk/inputformat/hadoop/json/JSONRecordReader.java
   AL    src/main/java/org/apache/pirk/inputformat/hadoop/TextArrayWritable.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponse.java
-  AL    src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponseRunnable.java
+  AL    src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponseTask.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQuery.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQueryRunnable.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/ExpTableRunnable.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/Querier.java
+  AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierCLI.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierConst.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierDriver.java
-  AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierDriverCLI.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierProps.java
   AL    src/main/java/org/apache/pirk/query/wideskies/Query.java
   AL    src/main/java/org/apache/pirk/query/wideskies/QueryInfo.java

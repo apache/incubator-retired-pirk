@@ -26,7 +26,6 @@ org/apache/pirk/querier/wideskies/encrypt/ExpTableRunnable.class
 org/apache/pirk/benchmark/PaillierBenchmark$PaillierBenchmarkState.class
 org/apache/pirk/benchmark/BenchmarkDriver.class
 org/apache/pirk/benchmark/generated/PaillierBenchmark_testWithGMPConstantTime_jmhTest.class
-org/apache/pirk/querier/wideskies/QuerierDriverCLI.class
 org/apache/pirk/querier/wideskies/encrypt/EncryptQueryRunnable.class
 org/apache/pirk/inputformat/hadoop/InputFormatConst.class
 org/apache/pirk/responder/wideskies/ResponderDriver.class
@@ -61,6 +60,7 @@ org/apache/pirk/responder/wideskies/spark/BroadcastVars.class
 org/apache/pirk/inputformat/hadoop/json/JSONInputFormatBase.class
 org/apache/pirk/responder/wideskies/mapreduce/MRStats.class
 org/apache/pirk/test/distributed/DistributedTestDriver.class
+org/apache/pirk/querier/wideskies/QuerierCLI.class
 org/apache/pirk/test/utils/StandaloneQuery.class
 org/apache/pirk/benchmark/generated/PaillierBenchmark_PaillierBenchmarkState_jmhType_B3.class
 org/apache/pirk/querier/wideskies/QuerierDriver.class

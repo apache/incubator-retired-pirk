@@ -1,13 +1,11 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/common/ComputeEncryptedRow.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/inputformat/hadoop/json/JSONInputFormat.java
-/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponseRunnable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/partitioner/DataPartitioner.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/BroadcastVars.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/standalone/Responder.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/test/utils/Inputs.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/query/filter/DataFilter.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/query/QuerySchemaRegistry.java
-/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/QuerierDriverCLI.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/serialization/LocalFileSystemStore.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/DataSchemaRegistry.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/serialization/JavaSerializer.java
@@ -54,6 +52,7 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQuery.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/serialization/Storable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/test/utils/BaseTests.java
+/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponseTask.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/KeyedHash.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/PIRException.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/common/HashSelectorAndPartitionData.java
@@ -87,6 +86,7 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/mapreduce/ExpTableReducer.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/serialization/JsonSerializer.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/serialization/HadoopFileSystemStore.java
+/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/QuerierCLI.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/inputformat/hadoop/TextArrayWritable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/query/QuerySchema.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/utils/EpochDateParser.java

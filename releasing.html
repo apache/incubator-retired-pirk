@@ -166,6 +166,7 @@
       <li><a href="#validate-the-release-candidate">Validate the Release Candidate</a></li>
       <li><a href="#close-the-staging-repository">Close the Staging Repository</a></li>
       <li><a href="#how-to-roll-back-a-release-candidate">How to Roll Back a Release Candidate</a></li>
+      <li><a href="#generate-the-release-notes">Generate the Release Notes</a></li>
     </ul>
   </li>
   <li><a href="#vote-on-the-release">Vote on the Release</a></li>
@@ -263,9 +264,11 @@
   </li>
 </ol>
 
-<p>The candidate release artifacts can be found in the <a href="https://repository.apache.org/#stagingRepositories">Nexus staging repo</a>. Log in with your Apache creds; the candidate release artifacts are found in <code class="highlighter-rouge">orgapachepirk-1001</code>.</p>
+<p>The candidate release artifacts can be found in the <a href="https://repository.apache.org/#stagingRepositories">Nexus staging repo</a>. Log in with your Apache creds; the candidate release artifacts are found in <code class="highlighter-rouge">orgapachepirk-1001</code> (the appended number may be different).</p>
 
 <p>The candidate artifacts can also be found in the <code class="highlighter-rouge">target</code> folder of your local branch.</p>
+
+<p>NOTE: If you are performing a source-only release, please remove all artifacts from the staging repo except for the .zip file containing the source and the javadocs jar file. In the Nexus GUI, you can right click on each artifact to be deleted and then select ‘Delete’.</p>
 
 <h3 id="validate-the-release-candidate">Validate the Release Candidate</h3>
 
@@ -275,16 +278,17 @@
   <li>Checksums and PGP signatures are valid</li>
   <li>Build is successful including automated tests</li>
   <li>DISCLAIMER is correct, filenames include “incubating”</li>
-  <li>Top-level LICENSE and NOTICE are correct. See:
+  <li>Top-level LICENSE and NOTICE are correct and dependency licenses are acceptable. See:
     <ul>
       <li><a href="http://www.apache.org/dev/release.html#license">LICENSE file requirements</a></li>
+      <li><a href="http://www.apache.org/dev/release.html#distributing-code-under-several-licenses">LICENSE requirements for distribution artifacts with multiple licenses</a></li>
       <li><a href="http://www.apache.org/dev/release.html#notice-content">NOTICE file requirements</a></li>
+      <li><a href="http://apache.org/legal/">Apache Legal</a></li>
+      <li><a href="http://www.apache.org/legal/resolved.html#category-a">Acceptable</a> and <a href="http://www.apache.org/legal/resolved.html#category-x">Unacceptable</a> Dependency Licenses</li>
     </ul>
   </li>
   <li>All source files have license headers where appropriate, RAT checks pass</li>
   <li>The provenance of all source files is clear (ASF or software grants)</li>
-  <li>Dependencies licenses are ok as per http://apache.org/legal/</li>
-  <li>Release consists of source code only, no binaries</li>
 </ul>
 
 <h3 id="close-the-staging-repository">Close the Staging Repository</h3>
@@ -295,7 +299,7 @@
 
 <p><em>If the checks pass</em>, Nexus will close the repository and give a URL to the closed staging repo (which contains the candidate artifacts). Send this URL to folks in the voting email so that they can find the staged candidate release artifacts.</p>
 
-<p><em>If the checks do not pass</em>, drop the staging repo by clicking the ‘Drop’ icon, follow the instructions on how to <a href="#how-to-roll-back-a-release-candidate">roll back the release candidate</a>, fix the issues, and start over with <a href="#create-the-candidate-release-artifacts">creating the candidate artifacts</a>.</p>
+<p><em>If the checks do not pass</em>, follow the instructions on how to <a href="#how-to-roll-back-a-release-candidate">roll back the release candidate</a>, fix the issues, and start over with <a href="#create-the-candidate-release-artifacts">creating the candidate artifacts</a>.</p>
 
 <h3 id="how-to-roll-back-a-release-candidate">How to Roll Back a Release Candidate</h3>
 
@@ -313,6 +317,12 @@
   <li><code class="highlighter-rouge">git tag -d &lt;tagname&gt;</code> to deletes the local tag</li>
 </ol>
 
+<h3 id="generate-the-release-notes">Generate the Release Notes</h3>
+
+<p>To generate the release notes within via <a href="https://issues.apache.org/jira/browse/PIRK">Pirk JIRA</a>, follow the instructions found <a href="https://confluence.atlassian.com/jira061/jira-administrator-s-guide/project-management/managing-versions/creating-release-notes">here</a>.</p>
+
+<p>Include the link to the release notes in the voting email.</p>
+
 <h2 id="vote-on-the-release">Vote on the Release</h2>
 
 <p>To vote on a candidate release, send an email to the <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#064;&#112;&#105;&#114;&#107;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#105;&#110;&#099;&#117;&#098;&#097;&#116;&#111;&#114;&#046;&#111;&#114;&#103;">dev list</a> with subject <code class="highlighter-rouge">[VOTE]: Pirk &lt;release version&gt; Release</code> and a body along the lines of:</p>
@@ -321,16 +331,15 @@
 
 The vote will run for at least 72 hours and will close on &lt;closing date&gt;.
 
-The artifacts can be downloaded here: https://repository.apache.org/content/repositories/orgapachepirk-1001
+The artifacts can be downloaded here: https://repository.apache.org/content/repositories/&lt;repository name&gt;
 
-All JIRAs completed for this release are tagged with 'FixVersion = &lt;release version&gt;'. You can view them here: &lt;insert link to the JIRA search results for FixVersion = release version&gt;
+All JIRAs completed for this release are tagged with 'FixVersion = &lt;release version&gt;'. You can view them here: &lt;insert link to the JIRA release notes&gt;
 
 The artifacts have been signed with Key : &lt;ID of signing key&gt;
 
 Please vote accordingly:
 
 [ ] +1, accept RC as the official &lt;release version&gt; release 
-[ ] +0, I don't care either way,
 [ ] -1, do not accept RC as the official &lt;release version&gt; release because...
 </code></pre>
 </div>
