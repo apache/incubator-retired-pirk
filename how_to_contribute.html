@@ -180,6 +180,14 @@
   <li>Modify the source code to add your awesome features; you will most likely be modifying the apache/incubator-pirk master branch (unless you are <a href="/website_updates">modifying the Pirk website</a>)</li>
   <li>Ensure that all unit and functional tests pass</li>
   <li>Ensure that your code follows the <a href="/for_developers#coding-standards">Pirk code standards</a></li>
+  <li>Ensure that any new third-party dependencies introduced in your code are accounted for in the appropriate license and notice files
+    <ul>
+      <li>Binary license and notice files for Pirk are contained in the <code class="highlighter-rouge">src/main/resources/META-INF/bin-license-notice</code> directory. Please update the <code class="highlighter-rouge">LICENSE-bin</code> and <code class="highlighter-rouge">NOTICE-bin</code> files as well as the <code class="highlighter-rouge">licenses</code> directory with any licenses and notices corresponding to all new third-party dependencies introduced in your code.</li>
+      <li><a href="http://www.apache.org/dev/release.html#distributing-code-under-several-licenses">LICENSE requirements for distribution artifacts with multiple licenses</a></li>
+      <li><a href="http://www.apache.org/dev/release.html#notice-content">NOTICE file requirements</a></li>
+      <li><a href="http://www.apache.org/legal/resolved.html#category-a">Acceptable</a> and <a href="http://www.apache.org/legal/resolved.html#category-x">Unacceptable</a> Dependency Licenses</li>
+    </ul>
+  </li>
   <li>Commit the changes to your local repository</li>
   <li>Push the code back up to your GitHub fork of apache/incubator-pirk</li>
   <li><a href="#github-pull-requests">Create a Pull Request</a> to the to <a href="https://github.com/apache/incubator-pirk">apache/incubator-pirk</a> repository on GitHub. Please include the corresponding JIRA issue number and description in the title of the pull request: PIRK-XXXX: &lt; JIRA-Issue-Description &gt;</li>

@@ -278,13 +278,24 @@
   <li>Checksums and PGP signatures are valid</li>
   <li>Build is successful including automated tests</li>
   <li>DISCLAIMER is correct, filenames include “incubating”</li>
-  <li>Top-level LICENSE and NOTICE are correct and dependency licenses are acceptable. See:
+  <li>LICENSE and NOTICE files are correct and dependency licenses are acceptable
     <ul>
-      <li><a href="http://www.apache.org/dev/release.html#license">LICENSE file requirements</a></li>
-      <li><a href="http://www.apache.org/dev/release.html#distributing-code-under-several-licenses">LICENSE requirements for distribution artifacts with multiple licenses</a></li>
-      <li><a href="http://www.apache.org/dev/release.html#notice-content">NOTICE file requirements</a></li>
-      <li><a href="http://apache.org/legal/">Apache Legal</a></li>
-      <li><a href="http://www.apache.org/legal/resolved.html#category-a">Acceptable</a> and <a href="http://www.apache.org/legal/resolved.html#category-x">Unacceptable</a> Dependency Licenses</li>
+      <li>LICENSE and NOTICE files at the root of the artifact directory must only reflect the contents of the artifact in which they are contained.</li>
+      <li>NOTE:
+        <ul>
+          <li>The LICENSE and NOTICE files contained at the root of the Apache Pirk code repository correspond to the source code only.</li>
+          <li>License and notice files corresponding to the binary distribution/artifacts of Apache Pirk are found in the <code class="highlighter-rouge">src/main/resources/META-INF/bin-license-notice</code> directory under <code class="highlighter-rouge">LICENSE-bin</code> and <code class="highlighter-rouge">NOTICE-bin</code>. The full licenses of third-party dependencies contained in Pirk’s binary artifacts are located in the  <code class="highlighter-rouge">licenses</code> directory.</li>
+        </ul>
+      </li>
+      <li>See:
+        <ul>
+          <li><a href="http://www.apache.org/dev/release.html#license">LICENSE file requirements</a></li>
+          <li><a href="http://www.apache.org/dev/release.html#distributing-code-under-several-licenses">LICENSE requirements for distribution artifacts with multiple licenses</a></li>
+          <li><a href="http://www.apache.org/dev/release.html#notice-content">NOTICE file requirements</a></li>
+          <li><a href="http://apache.org/legal/">Apache Legal</a></li>
+          <li><a href="http://www.apache.org/legal/resolved.html#category-a">Acceptable</a> and <a href="http://www.apache.org/legal/resolved.html#category-x">Unacceptable</a> Dependency Licenses</li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li>All source files have license headers where appropriate, RAT checks pass</li>
