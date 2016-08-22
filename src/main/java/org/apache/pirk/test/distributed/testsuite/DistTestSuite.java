@@ -393,7 +393,7 @@ public class DistTestSuite
     BaseTests.testDNSHostnameQuery(pirDataElements, fs, true, true, 1, false, true);
     BaseTests.testDNSIPQuery(pirDataElements, fs, true, true, 1, true);
     BaseTests.testSRCIPQuery(pirDataElements, fs, true, true, 3, true);
-    
+
     logger.info("Completed testESInputSparkStreaming");
   }
 
