@@ -113,12 +113,17 @@ As per the Apache documentation, verify that the release candidate artifacts sat
 * Checksums and PGP signatures are valid
 * Build is successful including automated tests
 * DISCLAIMER is correct, filenames include "incubating"
-* Top-level LICENSE and NOTICE are correct and dependency licenses are acceptable. See:
-	* [LICENSE file requirements](http://www.apache.org/dev/release.html#license)
-	* [LICENSE requirements for distribution artifacts with multiple licenses](http://www.apache.org/dev/release.html#distributing-code-under-several-licenses)
-	* [NOTICE file requirements](http://www.apache.org/dev/release.html#notice-content)
-	* [Apache Legal](http://apache.org/legal/)
-	* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
+* LICENSE and NOTICE files are correct and dependency licenses are acceptable
+	* LICENSE and NOTICE files at the root of the artifact directory must only reflect the contents of the artifact in which they are contained.  
+	* NOTE: 
+		* The LICENSE and NOTICE files contained at the root of the Apache Pirk code repository correspond to the source code only. 
+		* License and notice files corresponding to the binary distribution/artifacts of Apache Pirk are found in the `src/main/resources/META-INF/bin-license-notice` directory under `LICENSE-bin` and `NOTICE-bin`. The full licenses of third-party dependencies contained in Pirk's binary artifacts are located in the  `licenses` directory.
+	* See:
+		* [LICENSE file requirements](http://www.apache.org/dev/release.html#license)
+		* [LICENSE requirements for distribution artifacts with multiple licenses](http://www.apache.org/dev/release.html#distributing-code-under-several-licenses)
+		* [NOTICE file requirements](http://www.apache.org/dev/release.html#notice-content)
+		* [Apache Legal](http://apache.org/legal/)
+		* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
 * All source files have license headers where appropriate, RAT checks pass
 * The provenance of all source files is clear (ASF or software grants)
 

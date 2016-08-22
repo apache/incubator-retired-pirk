@@ -29,6 +29,11 @@ The general process for code contribution is as follows:
 3. Modify the source code to add your awesome features; you will most likely be modifying the apache/incubator-pirk master branch (unless you are [modifying the Pirk website]({{ site.baseurl }}/website_updates))
 4. Ensure that all unit and functional tests pass
 5. Ensure that your code follows the [Pirk code standards]({{ site.baseurl }}/for_developers#coding-standards)
+5. Ensure that any new third-party dependencies introduced in your code are accounted for in the appropriate license and notice files
+* Binary license and notice files for Pirk are contained in the `src/main/resources/META-INF/bin-license-notice` directory. Please update the `LICENSE-bin` and `NOTICE-bin` files as well as the `licenses` directory with any licenses and notices corresponding to all new third-party dependencies introduced in your code.
+* [LICENSE requirements for distribution artifacts with multiple licenses](http://www.apache.org/dev/release.html#distributing-code-under-several-licenses)
+* [NOTICE file requirements](http://www.apache.org/dev/release.html#notice-content)
+* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
 6. Commit the changes to your local repository
 7. Push the code back up to your GitHub fork of apache/incubator-pirk
 8. [Create a Pull Request](#github-pull-requests) to the to [apache/incubator-pirk](https://github.com/apache/incubator-pirk) repository on GitHub. Please include the corresponding JIRA issue number and description in the title of the pull request: PIRK-XXXX: < JIRA-Issue-Description >
