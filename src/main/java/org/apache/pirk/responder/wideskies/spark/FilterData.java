@@ -61,11 +61,7 @@ public class FilterData implements Function<MapWritable,Boolean>
     accum.incNumRecordsReceived(1);
 
     // Perform the filter
-    boolean passFilter = true;
-    if (filter != null)
-    {
-      passFilter = ((DataFilter) filter).filterDataElement(dataElement, dSchema);
-    }
+    boolean passFilter = ((DataFilter) filter).filterDataElement(dataElement, dSchema);
 
     if (passFilter)
     {

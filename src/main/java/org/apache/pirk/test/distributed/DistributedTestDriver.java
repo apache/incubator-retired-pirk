@@ -88,6 +88,7 @@ public class DistributedTestDriver
     List<JSONObject> dataElements = Inputs.createJSONInput(fs);
 
     String localStopListFile = Inputs.createStopList(fs, true);
+
     SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
 
     Inputs.createSchemaFiles(fs, true, StopListFilter.class.getName());
@@ -100,11 +101,30 @@ public class DistributedTestDriver
    */
   public static void test(FileSystem fs, DistributedTestCLI cli, List<JSONObject> pirDataElements) throws Exception
   {
+    // MapReduce JSON input
     if (cli.run("1:J"))
     {
       DistTestSuite.testJSONInputMR(fs, pirDataElements);
     }
-    if (cli.run("1:E") || cli.run("1:ES"))
+
+    // Spark with JSON input
+    if (cli.run("1:JS"))
+    {
+      DistTestSuite.testJSONInputSpark(fs, pirDataElements);
+    }
+
+    // Spark Streaming
+    if (cli.run("1:SS"))
+    {
+      DistTestSuite.testSparkStreaming(fs, pirDataElements);
+    }
+    if (cli.run("1:JSS"))
+    {
+      DistTestSuite.testJSONInputSparkStreaming(fs, pirDataElements);
+    }
+
+    // Elasticsearch input
+    if (cli.run("1:E") || cli.run("1:ES") || cli.run("1:ESS"))
     {
       Inputs.createESInput();
       if (cli.run("1:E"))
@@ -115,10 +135,10 @@ public class DistributedTestDriver
       {
         DistTestSuite.testESInputSpark(fs, pirDataElements);
       }
-    }
-    if (cli.run("1:JS"))
-    {
-      DistTestSuite.testJSONInputSpark(fs, pirDataElements);
+      if (cli.run("1:ESS"))
+      {
+        DistTestSuite.testESInputSparkStreaming(fs, pirDataElements);
+      }
     }
   }
 

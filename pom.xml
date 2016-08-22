@@ -118,9 +118,9 @@
 		<hadoop.version>2.7.2</hadoop.version>
 		<apache-commons.version>3.3</apache-commons.version>
 		<elasticsearch.version>2.3.3</elasticsearch.version>
+		<spark-streaming.version>2.0.0</spark-streaming.version>
 		<pirk.forkCount>1C</pirk.forkCount>
 		<pirk.reuseForks>true</pirk.reuseForks>
-		<jackson.version>2.8.1</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -248,6 +248,12 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
+			<version>${spark-streaming.version}</version>
+		</dependency>
+
 		<!-- Square's JNA GMP module -->
 		<dependency>
 			<groupId>com.squareup.jnagmp</groupId>
@@ -287,13 +293,6 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.6.2</version>
-		</dependency>
-
-		<!-- Jackson dependency -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -350,6 +349,7 @@
 							<exclude>docs/*</exclude> <!-- Exclude docs -->
 							<exclude>logs/*</exclude> <!-- Exclude logs -->
 							<exclude>**/m2.conf</exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
+							<exclude>src/main/resources/META-INF/**</exclude>  
 						</excludes>
 					</configuration>
 					<dependencies>

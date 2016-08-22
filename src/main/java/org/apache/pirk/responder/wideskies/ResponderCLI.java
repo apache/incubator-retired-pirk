@@ -363,6 +363,38 @@ public class ResponderCLI
     optionAllowEmbeddedQS.setType(String.class);
     options.addOption(optionAllowEmbeddedQS);
 
+    // batchSeconds - spark streaming
+    Option optionBatchSeconds = new Option("batchSeconds", ResponderProps.BATCHSECONDS, true,
+        "optional -- Number of seconds per batch in Spark Streaming; defaults to 30");
+    optionBatchSeconds.setRequired(false);
+    optionBatchSeconds.setArgName(ResponderProps.BATCHSECONDS);
+    optionBatchSeconds.setType(String.class);
+    options.addOption(optionBatchSeconds);
+
+    // windowLength - spark streaming
+    Option optionWindowLength = new Option("windowLength", ResponderProps.WINDOWLENGTH, true,
+        "optional -- Number of seconds per window in Spark Streaming; defaults to 60");
+    optionWindowLength.setRequired(false);
+    optionWindowLength.setArgName(ResponderProps.WINDOWLENGTH);
+    optionWindowLength.setType(String.class);
+    options.addOption(optionWindowLength);
+
+    // maxBatches - spark streaming
+    Option optionMaxBatches = new Option("maxBatches", ResponderProps.MAXBATCHES, true,
+        "optional -- Max batches to process in Spark Streaming; defaults to -1 - unlimited");
+    optionMaxBatches.setRequired(false);
+    optionMaxBatches.setArgName(ResponderProps.MAXBATCHES);
+    optionMaxBatches.setType(String.class);
+    options.addOption(optionMaxBatches);
+
+    // stopGracefully - spark streaming
+    Option optionStopGracefully = new Option("stopGracefully", ResponderProps.STOPGRACEFULLY, true,
+        "optional -- Whether or not to stop gracefully in Spark Streaming; defaults to false");
+    optionStopGracefully.setRequired(false);
+    optionStopGracefully.setArgName(ResponderProps.STOPGRACEFULLY);
+    optionStopGracefully.setType(String.class);
+    options.addOption(optionStopGracefully);
+
     return options;
   }
 

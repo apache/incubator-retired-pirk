@@ -62,9 +62,10 @@ public class StandaloneTest
 
     // Create the stoplist file
     stopListFileProp = SystemConfiguration.getProperty("pir.stopListFile");
-    SystemConfiguration.setProperty("pir.stopListFile", STOPLIST_FILE);
+
     String newSLFile = Inputs.createStopList(null, false);
     SystemConfiguration.setProperty("pir.stopListFile", newSLFile);
+
     logger.info("stopListFileProp = " + stopListFileProp + " new prop = " + SystemConfiguration.getProperty("pir.stopListFile"));
 
     // Create data and query schemas

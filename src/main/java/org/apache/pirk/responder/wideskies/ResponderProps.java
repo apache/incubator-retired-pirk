@@ -66,10 +66,17 @@ public class ResponderProps
   static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
   static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
 
+  // For Spark Streaming - optional
+  public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
+  public static final String WINDOWLENGTH = "pir.sparkstreaming.windowLength";
+  public static final String USEQUEUESTREAM = "pir.sparkstreaming.useQueueStream";
+  public static final String MAXBATCHES = "pir.sparkstreaming.maxBatches";
+  public static final String STOPGRACEFULLY = "spark.streaming.stopGracefullyOnShutdown";
+
   static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
       BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
       REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
-      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS);
+      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY);
 
   /**
    * Validates the responder properties
@@ -88,7 +95,7 @@ public class ResponderProps
     }
 
     String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("standalone"))
+    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("standalone"))
     {
       logger.info("Unsupported platform: " + platform);
       valid = false;
@@ -162,7 +169,7 @@ public class ResponderProps
       valid = false;
     }
 
-    // Parse optional properties with defaults
+    // Parse optional properties
 
     if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
     {
@@ -173,6 +180,8 @@ public class ResponderProps
     {
       SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
     }
+
+    // Parse optional properties with defaults
 
     if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
     {
@@ -207,6 +216,31 @@ public class ResponderProps
     if (!SystemConfiguration.hasProperty(USELOCALCACHE))
     {
       SystemConfiguration.setProperty(USELOCALCACHE, "true");
+    }
+
+    if (!SystemConfiguration.hasProperty(BATCHSECONDS))
+    {
+      SystemConfiguration.setProperty(BATCHSECONDS, "30");
+    }
+
+    if (!SystemConfiguration.hasProperty(WINDOWLENGTH))
+    {
+      SystemConfiguration.setProperty(WINDOWLENGTH, "30");
+    }
+
+    if (!SystemConfiguration.hasProperty(USEQUEUESTREAM))
+    {
+      SystemConfiguration.setProperty(USEQUEUESTREAM, "false");
+    }
+
+    if (!SystemConfiguration.hasProperty(MAXBATCHES))
+    {
+      SystemConfiguration.setProperty(MAXBATCHES, "-1");
+    }
+
+    if (!SystemConfiguration.hasProperty(STOPGRACEFULLY))
+    {
+      SystemConfiguration.setProperty(STOPGRACEFULLY, "false");
     }
 
     // Load the new local query and data schemas

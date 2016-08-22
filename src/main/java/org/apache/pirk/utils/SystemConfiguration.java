@@ -207,6 +207,7 @@ public class SystemConfiguration
    */
   public static void loadPropsFromDir(String dirName)
   {
+    logger.info("Loading properties from dirName = " + dirName);
     File[] directoryListing = new File(dirName).listFiles(new FilenameFilter()
     {
       @Override

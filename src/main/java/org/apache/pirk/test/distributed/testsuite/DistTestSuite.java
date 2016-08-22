@@ -80,13 +80,13 @@ public class DistTestSuite
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 1);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 1, false);
 
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");
     BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 2);
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2, false);
 
-    BaseTests.testSRCIPQueryNoFilter(dataElements, fs, false, true, 2);
+    BaseTests.testSRCIPQueryNoFilter(dataElements, fs, false, true, 2, false);
 
     // Test hit limits per selector
     SystemConfiguration.setProperty("pir.limitHitsPerSelector", "true");
@@ -97,8 +97,8 @@ public class DistTestSuite
 
     // Test the local cache for modular exponentiation
     SystemConfiguration.setProperty("pir.useLocalCache", "true");
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2);
-    BaseTests.testSRCIPQuery(dataElements, fs, false, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2, false);
+    BaseTests.testSRCIPQuery(dataElements, fs, false, true, 2, false);
     SystemConfiguration.setProperty("pir.useLocalCache", "false");
 
     // Change query for NXDOMAIN
@@ -114,7 +114,7 @@ public class DistTestSuite
     // In memory table
     SystemConfiguration.setProperty("pirTest.useHDFSExpLookupTable", "false");
     SystemConfiguration.setProperty("pirTest.useExpLookupTable", "true");
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2, false);
 
     // Create exp table in hdfs
     SystemConfiguration.setProperty("mapreduce.map.memory.mb", "10000");
@@ -126,7 +126,7 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pirTest.useExpLookupTable", "false");
     SystemConfiguration.setProperty("pir.expCreationSplits", "50");
     SystemConfiguration.setProperty("pir.numExpLookupPartitions", "150");
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2, false);
 
     // Reset exp properties
     SystemConfiguration.setProperty("pirTest.useHDFSExpLookupTable", "false");
@@ -172,12 +172,12 @@ public class DistTestSuite
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 1);
-    BaseTests.testSRCIPQuery(dataElements, fs, false, true, 2);
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 1);
+    BaseTests.testSRCIPQuery(dataElements, fs, false, true, 2, false);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 1, false);
 
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");
     BaseTests.testDNSHostnameQuery(dataElements, fs, false, true, 2);
-    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, false, true, 2, false);
 
     // Change query for NXDOMAIN
     SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:3");
@@ -215,14 +215,14 @@ public class DistTestSuite
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 1);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 1, false);
 
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");
     BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 2);
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2);
-    BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2, false);
+    BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2, false);
 
-    BaseTests.testSRCIPQueryNoFilter(dataElements, fs, true, true, 2);
+    BaseTests.testSRCIPQueryNoFilter(dataElements, fs, true, true, 2, false);
 
     // Test embedded QuerySchema
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
@@ -253,18 +253,18 @@ public class DistTestSuite
     // Test the local cache for modular exponentiation
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     SystemConfiguration.setProperty("pir.useLocalCache", "true");
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 3);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 3, false);
 
     // Test the join functionality for the modular exponentiation table
     SystemConfiguration.setProperty("pir.useModExpJoin", "true");
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 3);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 3, false);
     SystemConfiguration.setProperty("pir.useModExpJoin", "false");
 
     // Test file based exp lookup table for modular exponentiation
     SystemConfiguration.setProperty("pirTest.useHDFSExpLookupTable", "true");
     SystemConfiguration.setProperty("pir.expCreationSplits", "500");
     SystemConfiguration.setProperty("pir.numExpLookupPartitions", "150");
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2, false);
     SystemConfiguration.setProperty("pirTest.useHDFSExpLookupTable", "false");
 
     // Change query for NXDOMAIN
@@ -303,12 +303,12 @@ public class DistTestSuite
     // Run tests
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 1);
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 1);
-    BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 1, false);
+    BaseTests.testSRCIPQuery(dataElements, fs, true, true, 2, false);
 
     SystemConfiguration.setProperty("pirTest.embedSelector", "false");
     BaseTests.testDNSHostnameQuery(dataElements, fs, true, true, 2);
-    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2);
+    BaseTests.testDNSIPQuery(dataElements, fs, true, true, 2, false);
 
     // Change query for NXDOMAIN
     SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:3");
@@ -321,9 +321,87 @@ public class DistTestSuite
     logger.info("Completed testESInputSpark");
   }
 
+  public static void testSparkStreaming(FileSystem fs, List<JSONObject> pirDataElements) throws Exception
+  {
+    testJSONInputSparkStreaming(fs, pirDataElements);
+    testESInputSparkStreaming(fs, pirDataElements);
+  }
+
+  public static void testJSONInputSparkStreaming(FileSystem fs, List<JSONObject> pirDataElements) throws Exception
+  {
+    logger.info("Starting testJSONInputSparkStreaming");
+
+    SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
+    SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
+
+    SystemConfiguration.setProperty("pir.numColMultPartitions", "20");
+    SystemConfiguration.setProperty("pir.colMultReduceByKey", "false");
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+
+    SystemConfiguration.setProperty("pirTest.embedSelector", "true");
+
+    SystemConfiguration.setProperty("pir.sparkstreaming.batchSeconds", "30");
+    SystemConfiguration.setProperty("pir.sparkstreaming.windowLength", "60");
+    SystemConfiguration.setProperty("pir.sparkstreaming.useQueueStream", "true");
+    SystemConfiguration.setProperty("pir.sparkstreaming.maxBatches", "1");
+
+    SystemConfiguration.setProperty("spark.streaming.stopGracefullyOnShutdown", "false");
+
+    // Set up JSON configs
+    SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.BASE_FORMAT);
+    SystemConfiguration.setProperty("pir.inputData", SystemConfiguration.getProperty(DistributedTestDriver.JSON_PIR_INPUT_FILE_PROPERTY));
+    SystemConfiguration.setProperty("pir.baseQuery", "?q=rcode:0");
+
+    // Run tests
+    BaseTests.testDNSHostnameQuery(pirDataElements, fs, true, true, 1, false, true);
+    BaseTests.testDNSIPQuery(pirDataElements, fs, true, true, 1, true);
+    BaseTests.testSRCIPQuery(pirDataElements, fs, true, true, 3, true);
+    BaseTests.testSRCIPQueryNoFilter(pirDataElements, fs, true, true, 2, true);
+
+    logger.info("Completed testJSONInputSparkStreaming");
+  }
+
+  public static void testESInputSparkStreaming(FileSystem fs, List<JSONObject> pirDataElements) throws Exception
+  {
+    logger.info("Starting testESInputSparkStreaming");
+
+    SystemConfiguration.setProperty("pirTest.useHDFSExpLookupTable", "false");
+    SystemConfiguration.setProperty("pirTest.useExpLookupTable", "false");
+
+    SystemConfiguration.setProperty("pir.limitHitsPerSelector", "false");
+    SystemConfiguration.setProperty("pir.maxHitsPerSelector", "1000");
+
+    SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+    SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+
+    SystemConfiguration.setProperty("pir.sparkstreaming.batchSeconds", "30");
+    SystemConfiguration.setProperty("pir.sparkstreaming.windowLength", "60");
+    SystemConfiguration.setProperty("pir.sparkstreaming.useQueueStream", "true");
+    SystemConfiguration.setProperty("pir.sparkstreaming.maxBatches", "1");
+
+    SystemConfiguration.setProperty("spark.streaming.stopGracefullyOnShutdown", "false");
+
+    // Set up ES configs
+    SystemConfiguration.setProperty("pir.dataInputFormat", InputFormatConst.ES);
+    SystemConfiguration.setProperty("pir.esQuery", "?q=rcode:0");
+    SystemConfiguration.setProperty("pir.esResource", SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_RESOURCE_PROPERTY));
+
+    // Run tests
+    SystemConfiguration.setProperty("pirTest.embedSelector", "true");
+    BaseTests.testDNSHostnameQuery(pirDataElements, fs, true, true, 1, false, true);
+    BaseTests.testDNSIPQuery(pirDataElements, fs, true, true, 1, true);
+    BaseTests.testSRCIPQuery(pirDataElements, fs, true, true, 3, true);
+    
+    logger.info("Completed testESInputSparkStreaming");
+  }
+
   // Base method to perform query
-  public static List<QueryResponseJSON> performQuery(String queryType, ArrayList<String> selectors, FileSystem fs, boolean isSpark, int numThreads)
-      throws Exception
+  // TODO: This could be changed to pass in the platform instead of isSpark and isStreaming...
+  @SuppressWarnings("unused")
+  public static List<QueryResponseJSON> performQuery(String queryType, ArrayList<String> selectors, FileSystem fs, boolean isSpark, int numThreads,
+      boolean isStreaming) throws Exception
   {
     logger.info("performQuery: ");
 
@@ -379,11 +457,26 @@ public class DistTestSuite
     logger.info("Performing encrypted query:");
     if (isSpark)
     {
+      logger.info("spark.home = " + SystemConfiguration.getProperty("spark.home"));
+
       // Build args
       String inputFormat = SystemConfiguration.getProperty("pir.dataInputFormat");
       logger.info("inputFormat = " + inputFormat);
       ArrayList<String> args = new ArrayList<>();
-      args.add("-" + ResponderProps.PLATFORM + "=spark");
+      if (isStreaming)
+      {
+        logger.info("platform = sparkstreaming");
+        args.add("-" + ResponderProps.PLATFORM + "=sparkstreaming");
+        args.add("-" + ResponderProps.BATCHSECONDS + "=" + SystemConfiguration.getProperty("pir.sparkstreaming.batchSeconds", "30"));
+        args.add("-" + ResponderProps.WINDOWLENGTH + "=" + SystemConfiguration.getProperty("pir.sparkstreaming.windowLength", "60"));
+        args.add("-" + ResponderProps.MAXBATCHES + "=" + SystemConfiguration.getProperty("pir.sparkstreaming.maxBatches", "-1"));
+        args.add("-" + ResponderProps.STOPGRACEFULLY + "=" + SystemConfiguration.getProperty("spark.streaming.stopGracefullyOnShutdown", "false"));
+      }
+      else
+      {
+        logger.info("platform = spark");
+        args.add("-" + ResponderProps.PLATFORM + "=spark");
+      }
       args.add("-" + ResponderProps.DATAINPUTFORMAT + "=" + inputFormat);
       args.add("-" + ResponderProps.QUERYINPUT + "=" + SystemConfiguration.getProperty("pir.queryInput"));
       args.add("-" + ResponderProps.OUTPUTFILE + "=" + SystemConfiguration.getProperty("pir.outputFile"));
