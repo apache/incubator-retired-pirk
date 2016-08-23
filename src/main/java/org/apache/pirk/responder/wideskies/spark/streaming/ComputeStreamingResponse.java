@@ -154,13 +154,13 @@ public class ComputeStreamingResponse
         + " esResource = " + esResource);
 
     // Pull the batchSeconds and windowLength parameters
-    batchSeconds = Long.parseLong(SystemConfiguration.getProperty("pir.sparkstreaming.batchSeconds", "30"));
-    windowLength = Long.parseLong(SystemConfiguration.getProperty("pir.sparkstreaming.windowLength", "60"));
+    batchSeconds = SystemConfiguration.getLongProperty("pir.sparkstreaming.batchSeconds", 30);
+    windowLength = SystemConfiguration.getLongProperty("pir.sparkstreaming.windowLength", 60);
     if (windowLength % batchSeconds != 0)
     {
       throw new IllegalArgumentException("batchSeconds = " + batchSeconds + " must divide windowLength = " + windowLength);
     }
-    useQueueStream = SystemConfiguration.getProperty("pir.sparkstreaming.useQueueStream", "false").equals("false");
+    useQueueStream = SystemConfiguration.getBooleanProperty("pir.sparkstreaming.useQueueStream", false);
 
     // Set the necessary configurations
     SparkConf conf = new SparkConf().setAppName("SparkPIR").setMaster("yarn-cluster");
@@ -198,7 +198,7 @@ public class ComputeStreamingResponse
     // Set the output location
     bVars.setOutput(outputFile);
 
-    if (SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false").equals("true"))
+    if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
     }
@@ -212,25 +212,24 @@ public class ComputeStreamingResponse
     bVars.setDataSchema(dSchema);
 
     // Set the local cache flag
-    bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));
+    bVars.setUseLocalCache(SystemConfiguration.getBooleanProperty("pir.useLocalCache", true));
 
     // Set the hit limit variables
-    bVars.setLimitHitsPerSelector(Boolean.valueOf(SystemConfiguration.getProperty("pir.limitHitsPerSelector")));
-    bVars.setMaxHitsPerSelector(Integer.parseInt(SystemConfiguration.getProperty("pir.maxHitsPerSelector")));
+    bVars.setLimitHitsPerSelector(SystemConfiguration.getBooleanProperty("pir.limitHitsPerSelector", false));
+    bVars.setMaxHitsPerSelector(SystemConfiguration.getIntProperty("pir.maxHitsPerSelector", 100));
 
     // Set the number of data and column multiplication partitions
-    String numDataPartsString = SystemConfiguration.getProperty("pir.numDataPartitions", "1000");
-    numDataPartitions = Integer.parseInt(numDataPartsString);
-    numColMultPartitions = Integer.parseInt(SystemConfiguration.getProperty("pir.numColMultPartitions", numDataPartsString));
+    numDataPartitions = SystemConfiguration.getIntProperty("pir.numDataPartitions", 1000);
+    numColMultPartitions = SystemConfiguration.getIntProperty("pir.numColMultPartitions", numDataPartitions);
 
     // Whether or not we are performing a reduceByKey or a groupByKey->reduce for column multiplication
-    colMultReduceByKey = SystemConfiguration.getProperty("pir.colMultReduceByKey", "false").equals("true");
+    colMultReduceByKey = SystemConfiguration.getBooleanProperty("pir.colMultReduceByKey", false);
 
     // Set the expDir
     bVars.setExpDir(outputDirExp);
 
     // Set the maxBatches
-    int maxBatches = Integer.parseInt(SystemConfiguration.getProperty("pir.sparkstreaming.maxBatches", "-1"));
+    int maxBatches = SystemConfiguration.getIntProperty("pir.sparkstreaming.maxBatches", -1);
     logger.info("maxBatches = " + maxBatches);
     bVars.setMaxBatches(maxBatches);
   }

@@ -190,7 +190,7 @@ public class ComputeResponse
     bVars.setDataSchema(dSchema);
 
     // Set the local cache flag
-    bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));
+    bVars.setUseLocalCache(SystemConfiguration.getBooleanProperty("pir.useLocalCache", true));
 
     useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 

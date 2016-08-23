@@ -45,7 +45,7 @@ public class BroadcastVars implements Serializable
 
   private Broadcast<QuerySchema> querySchema = null;
 
-  private Broadcast<String> useLocalCache = null;
+  private Broadcast<Boolean> useLocalCache = null;
 
   private Broadcast<Boolean> limitHitsPerSelector = null;
 
@@ -112,12 +112,12 @@ public class BroadcastVars implements Serializable
     return dataSchema.getValue();
   }
 
-  public void setUseLocalCache(String useLocalCacheInput)
+  public void setUseLocalCache(Boolean useLocalCacheInput)
   {
     useLocalCache = jsc.broadcast(useLocalCacheInput);
   }
 
-  public String getUseLocalCache()
+  public Boolean getUseLocalCache()
   {
     return useLocalCache.getValue();
   }
