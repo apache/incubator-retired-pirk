@@ -189,7 +189,7 @@ public class EncryptQuery
         selectorQueryVecMapping.clear();
         hashKey = queryInfo.getHashKey() + ++keyCounter;
         logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
-        index = 0;
+        index = -1;
       }
     }
     return selectorQueryVecMapping;
