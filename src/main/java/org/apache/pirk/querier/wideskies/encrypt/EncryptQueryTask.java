@@ -19,8 +19,10 @@
 package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.math.BigInteger;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.utils.PIRException;
@@ -30,20 +32,18 @@ import org.slf4j.LoggerFactory;
 /**
  * Runnable class for multithreaded PIR encryption
  */
-public class EncryptQueryRunnable implements Runnable
+class EncryptQueryTask implements Callable<SortedMap<Integer,BigInteger>>
 {
-  private static final Logger logger = LoggerFactory.getLogger(EncryptQueryRunnable.class);
+  private static final Logger logger = LoggerFactory.getLogger(EncryptQueryTask.class);
 
-  private int dataPartitionBitSize = 0;
-  private int start = 0; // start of computing range for the runnable
-  private int stop = 0; // stop, inclusive, of the computing range for the runnable
+  private final int dataPartitionBitSize;
+  private final int start; // start of computing range for the runnable
+  private final int stop; // stop, inclusive, of the computing range for the runnable
 
-  private Paillier paillier = null;
-  private HashMap<Integer,Integer> selectorQueryVecMapping = null;
+  private final Paillier paillier;
+  private final Map<Integer,Integer> selectorQueryVecMapping;
 
-  private TreeMap<Integer,BigInteger> encryptedValues = null; // holds the ordered encrypted values to pull after thread computation is complete
-
-  public EncryptQueryRunnable(int dataPartitionBitSizeInput, Paillier paillierInput, HashMap<Integer,Integer> selectorQueryVecMappingInput, int startInput,
+  public EncryptQueryTask(int dataPartitionBitSizeInput, Paillier paillierInput, Map<Integer,Integer> selectorQueryVecMappingInput, int startInput,
       int stopInput)
   {
     dataPartitionBitSize = dataPartitionBitSizeInput;
@@ -53,37 +53,22 @@ public class EncryptQueryRunnable implements Runnable
 
     start = startInput;
     stop = stopInput;
-
-    encryptedValues = new TreeMap<>();
-  }
-
-  /**
-   * Method to get this runnables encrypted values
-   * <p>
-   * To be called once the thread computation is complete
-   */
-  public TreeMap<Integer,BigInteger> getEncryptedValues()
-  {
-    return encryptedValues;
   }
 
   @Override
-  public void run()
+  public SortedMap<Integer,BigInteger> call() throws PIRException
   {
+    // holds the ordered encrypted values to pull after thread computation is complete
+    SortedMap<Integer,BigInteger> encryptedValues = new TreeMap<>();
     for (int i = start; i <= stop; i++)
     {
       Integer selectorNum = selectorQueryVecMapping.get(i);
       BigInteger valToEnc = (selectorNum == null) ? BigInteger.ZERO : (BigInteger.valueOf(2)).pow(selectorNum * dataPartitionBitSize);
-      BigInteger encVal;
-      try
-      {
-        encVal = paillier.encrypt(valToEnc);
-      } catch (PIRException e)
-      {
-        throw new RuntimeException(e);
-      }
+      BigInteger encVal = paillier.encrypt(valToEnc);
       encryptedValues.put(i, encVal);
       logger.debug("selectorNum = " + selectorNum + " valToEnc = " + valToEnc + " envVal = " + encVal);
     }
+    
+    return encryptedValues;
   }
 }
