@@ -141,7 +141,7 @@ public class DecryptResponse
       }
 
       // Create the runnable and execute
-      DecryptResponseRunnable<Map<String,List<QueryResponseJSON>>> runDec = new DecryptResponseRunnable<>(rElements, selectorsPartition, selectorMaskMap,
+      DecryptResponseTask<Map<String,List<QueryResponseJSON>>> runDec = new DecryptResponseTask<>(rElements, selectorsPartition, selectorMaskMap,
           queryInfo.clone(), embedSelectorMap);
       futures.add(es.submit(runDec));
     }

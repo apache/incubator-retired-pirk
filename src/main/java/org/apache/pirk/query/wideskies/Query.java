@@ -20,16 +20,14 @@ package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.parquet.format.event.Consumers.Consumer;
 import org.apache.pirk.encryption.ModPowAbstraction;
-import org.apache.pirk.querier.wideskies.encrypt.ExpTableRunnable;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,31 +42,26 @@ public class Query implements Serializable, Storable
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  private QueryInfo qInfo = null; // holds all query info
+  private final QueryInfo qInfo; // holds all query info
 
-  private TreeMap<Integer,BigInteger> queryElements = null; // query elements - ordered on insertion
+  private final TreeMap<Integer,BigInteger> queryElements = new TreeMap<>(); // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  private HashMap<BigInteger,HashMap<Integer,BigInteger>> expTable = null;
+  private Map<BigInteger,Map<Integer,BigInteger>> expTable = new ConcurrentHashMap<>();
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  private HashMap<Integer,String> expFileBasedLookup = null;
+  private Map<Integer,String> expFileBasedLookup = new HashMap<>();
 
-  private BigInteger N = null; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
-  private BigInteger NSquared = null;
+  private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
+  private final BigInteger NSquared;
 
   public Query(QueryInfo queryInfoIn, BigInteger NInput)
   {
     qInfo = queryInfoIn;
     N = NInput;
     NSquared = N.pow(2);
-
-    queryElements = new TreeMap<>();
-    expTable = new HashMap<>();
-
-    expFileBasedLookup = new HashMap<>();
   }
 
   public QueryInfo getQueryInfo()
@@ -96,7 +89,7 @@ public class Query implements Serializable, Storable
     return NSquared;
   }
 
-  public HashMap<Integer,String> getExpFileBasedLookup()
+  public Map<Integer,String> getExpFileBasedLookup()
   {
     return expFileBasedLookup;
   }
@@ -106,27 +99,22 @@ public class Query implements Serializable, Storable
     return expFileBasedLookup.get(i);
   }
 
-  public void setExpFileBasedLookup(HashMap<Integer,String> expInput)
+  public void setExpFileBasedLookup(Map<Integer,String> expInput)
   {
     expFileBasedLookup = expInput;
   }
 
-  public HashMap<BigInteger,HashMap<Integer,BigInteger>> getExpTable()
+  public Map<BigInteger,Map<Integer,BigInteger>> getExpTable()
   {
     return expTable;
   }
 
-  public void setExpTable(HashMap<BigInteger,HashMap<Integer,BigInteger>> expTableInput)
+  public void setExpTable(Map<BigInteger,Map<Integer,BigInteger>> expTableInput)
   {
     expTable = expTableInput;
   }
 
-  public void addQueryElement(Integer index, BigInteger element)
-  {
-    queryElements.put(index, element);
-  }
-
-  public void addQueryElements(TreeMap<Integer,BigInteger> elements)
+  public void addQueryElements(SortedMap<Integer,BigInteger> elements)
   {
     queryElements.putAll(elements);
   }
@@ -136,87 +124,29 @@ public class Query implements Serializable, Storable
     return queryElements.containsValue(element);
   }
 
-  public void clearElements()
-  {
-    queryElements.clear();
-  }
-
   /**
    * This should be called after all query elements have been added in order to generate the expTable. For int exponentiation with BigIntegers, assumes that
    * dataPartitionBitSize < 32.
-   *
    */
-  public void generateExpTable(int numThreads) throws InterruptedException
+  public void generateExpTable()
   {
-    int dataPartitionBitSize = qInfo.getDataPartitionBitSize();
-    int maxValue = (int) Math.pow(2, dataPartitionBitSize) - 1;
+    int maxValue = (1 << qInfo.getDataPartitionBitSize()) - 1; // 2^partitionBitSize - 1
 
-    if (numThreads < 2)
+    queryElements.values().parallelStream().forEach(new Consumer<BigInteger>()
     {
-      for (BigInteger element : queryElements.values())
+      @Override
+      public void accept(BigInteger element)
       {
-        logger.debug("element = " + element.toString(2) + " maxValue = " + maxValue + " dataPartitionBitSize = " + dataPartitionBitSize);
-
-        HashMap<Integer,BigInteger> powMap = new HashMap<>(); // <power, element^power mod N^2>
+        Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
         for (int i = 0; i <= maxValue; ++i)
         {
           BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
-
           powMap.put(i, value);
         }
         expTable.put(element, powMap);
       }
-    }
-    else
-    // multithreaded case
-    {
-      ExecutorService es = Executors.newCachedThreadPool();
-      int elementsPerThread = queryElements.size() / numThreads; // Integral division.
-
-      ArrayList<ExpTableRunnable> runnables = new ArrayList<>();
-      for (int i = 0; i < numThreads; ++i)
-      {
-        // Grab the range of the thread and create the corresponding partition of selectors
-        int start = i * elementsPerThread;
-        int stop = start + elementsPerThread - 1;
-        if (i == (numThreads - 1))
-        {
-          stop = queryElements.size() - 1;
-        }
-        ArrayList<BigInteger> queryElementsPartition = new ArrayList<>();
-        for (int j = start; j <= stop; ++j)
-        {
-          queryElementsPartition.add(queryElements.get(j));
-        }
-
-        // Create the runnable and execute
-        // selectorMaskMap and rElements are synchronized, pirWatchlist is copied, selectors is partitioned
-        ExpTableRunnable pirExpRun = new ExpTableRunnable(dataPartitionBitSize, NSquared, queryElementsPartition);
-
-        runnables.add(pirExpRun);
-        es.execute(pirExpRun);
-      }
-
-      // Allow threads to complete
-      es.shutdown(); // previously submitted tasks are executed, but no new tasks will be accepted
-      boolean finished = es.awaitTermination(1, TimeUnit.DAYS); // waits until all tasks complete or until the specified timeout
-      if (!finished)
-      {
-        throw new InterruptedException("Operation timed out.");
-      }
-
-      // Pull all decrypted elements and add to resultMap
-      for (ExpTableRunnable runner : runnables)
-      {
-        HashMap<BigInteger,HashMap<Integer,BigInteger>> expValues = runner.getExpTable();
-        expTable.putAll(expValues);
-      }
-      logger.debug("expTable.size() = " + expTable.keySet().size() + " NSqaured = " + NSquared.intValue() + " = " + NSquared.toString());
-      for (Entry<BigInteger,HashMap<Integer,BigInteger>> entry : expTable.entrySet())
-      {
-        logger.debug("expTable for key = " + entry.getKey().toString() + " = " + entry.getValue().size());
-      }
-    }
+    });
+    logger.debug("expTable.size() = " + expTable.keySet().size() + " NSquared = " + NSquared.intValue() + " = " + NSquared.toString());
   }
 
   public BigInteger getExp(BigInteger value, int power)

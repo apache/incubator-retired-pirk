@@ -109,7 +109,7 @@ public class StandaloneTest
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, 1, false);
+    BaseTests.testDNSHostnameQuery(dataElements, 4, false);
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Run tests without using the embedded selector
