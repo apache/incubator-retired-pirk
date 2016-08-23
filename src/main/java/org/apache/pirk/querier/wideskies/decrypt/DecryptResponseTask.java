@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
  * NOTE: rElements and selectorMaskMap are joint access objects, for now
  *
  */
-class DecryptResponseRunnable<V> implements Callable<Map<String,List<QueryResponseJSON>>>
+class DecryptResponseTask<V> implements Callable<Map<String,List<QueryResponseJSON>>>
 {
-  private static final Logger logger = LoggerFactory.getLogger(DecryptResponseRunnable.class);
+  private static final Logger logger = LoggerFactory.getLogger(DecryptResponseTask.class);
 
   private final List<BigInteger> rElements;
   private final TreeMap<Integer,String> selectors;
@@ -52,7 +52,7 @@ class DecryptResponseRunnable<V> implements Callable<Map<String,List<QueryRespon
 
   private final Map<Integer,String> embedSelectorMap;
 
-  public DecryptResponseRunnable(List<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, Map<String,BigInteger> selectorMaskMapInput,
+  public DecryptResponseTask(List<BigInteger> rElementsInput, TreeMap<Integer,String> selectorsInput, Map<String,BigInteger> selectorMaskMapInput,
       QueryInfo queryInfoInput, Map<Integer,String> embedSelectorMapInput)
   {
     rElements = rElementsInput;

@@ -18,13 +18,20 @@
  */
 package org.apache.pirk.querier.wideskies.encrypt;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -49,13 +56,13 @@ public class EncryptQuery
 {
   private static final Logger logger = LoggerFactory.getLogger(EncryptQuery.class);
 
-  private QueryInfo queryInfo = null; // contains basic query information and functionality
+  private final QueryInfo queryInfo; // contains basic query information and functionality
 
   private Query query = null; // contains the query vectors
 
   private Querier querier = null; // contains the query vectors and encryption object
 
-  private Paillier paillier = null; // Paillier encryption functionality
+  private final Paillier paillier; // Paillier encryption functionality
 
   private List<String> selectors = null; // selectors for the query
 
@@ -134,7 +141,7 @@ public class EncryptQuery
     query = new Query(queryInfo, paillier.getN());
 
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
-    HashMap<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
+    Map<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
 
     // Form the embedSelectorMap
     populateEmbeddedSelectorMap();
@@ -153,22 +160,20 @@ public class EncryptQuery
     if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable())
     {
       logger.info("Starting expTable generation");
-
-      // This has to be reasonably multithreaded or it takes forever...
-      query.generateExpTable(Math.max(8, numThreads));
+      query.generateExpTable();
     }
 
     // Set the Querier object
     querier = new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
-  private HashMap<Integer,Integer> computeSelectorQueryVecMap()
+  private Map<Integer,Integer> computeSelectorQueryVecMap()
   {
     String hashKey = queryInfo.getHashKey();
     int keyCounter = 0;
     int numSelectors = selectors.size();
-    HashSet<Integer> hashes = new HashSet<>(numSelectors);
-    HashMap<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
+    Set<Integer> hashes = new HashSet<>(numSelectors);
+    Map<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
     for (int index = 0; index < numSelectors; index++)
     {
@@ -219,68 +224,54 @@ public class EncryptQuery
     }
   }
 
-  private void serialEncrypt(HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  private void serialEncrypt(Map<Integer,Integer> selectorQueryVecMapping) throws PIRException
   {
     int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
 
-    EncryptQueryRunnable runner = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, 0, numElements - 1);
-    runner.run();
-
-    query.addQueryElements(runner.getEncryptedValues());
+    EncryptQueryTask task = new EncryptQueryTask(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, 0, numElements - 1);
+    query.addQueryElements(task.call());
 
     logger.info("Completed serial creation of encrypted query vectors");
   }
 
-  private void parallelEncrypt(int numThreads, HashMap<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  private void parallelEncrypt(int numThreads, Map<Integer,Integer> selectorQueryVecMapping) throws InterruptedException, PIRException
   {
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
-    ArrayList<EncryptQueryRunnable> runnables = new ArrayList<>(numThreads);
+    List<Future<SortedMap<Integer,BigInteger>>> futures = new ArrayList<>(numThreads);
     int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
 
     // Split the work across the requested number of threads
     int elementsPerThread = numElements / numThreads;
     for (int i = 0; i < numThreads; ++i)
     {
-      // Grab the range of the thread
+      // Grab the range for this thread
       int start = i * elementsPerThread;
       int stop = start + elementsPerThread - 1;
-      if (i == (numThreads - 1))
+      if (i == numThreads - 1)
       {
         stop = numElements - 1;
       }
 
-      // Copy selectorQueryVecMapping so we don't have to synchronize - only has size = selectors.size()
-      HashMap<Integer,Integer> selectorQueryVecMappingCopy = new HashMap<>(selectorQueryVecMapping);
-
       // Create the runnable and execute
-      EncryptQueryRunnable runEnc = new EncryptQueryRunnable(queryInfo.getDataPartitionBitSize(), paillier.clone(), selectorQueryVecMappingCopy, start, stop);
-      runnables.add(runEnc);
-      es.execute(runEnc);
+      EncryptQueryTask runEnc = new EncryptQueryTask(queryInfo.getDataPartitionBitSize(), paillier.clone(), selectorQueryVecMapping, start, stop);
+      futures.add(es.submit(runEnc));
     }
 
-    // Allow threads to complete
-    es.shutdown(); // previously submitted tasks are executed, but no new tasks will be accepted
-    boolean finished = false;
+    // Pull all encrypted elements and add to resultMap
     try
     {
-      // waits until all tasks complete or until the specified timeout
-      finished = es.awaitTermination(1, TimeUnit.DAYS);
-    } catch (InterruptedException e)
+      for (Future<SortedMap<Integer,BigInteger>> future : futures)
+      {
+        query.addQueryElements(future.get(1, TimeUnit.DAYS));
+      }
+    } catch (TimeoutException | ExecutionException e)
     {
-      Thread.interrupted();
+      throw new PIRException("Exception in encryption threads.", e);
     }
 
-    if (!finished)
-    {
-      throw new PIRException("Encryption threads did not finish in the alloted time");
-    }
+    es.shutdown();
 
-    // Pull all encrypted elements and add to Query
-    for (EncryptQueryRunnable runner : runnables)
-    {
-      query.addQueryElements(runner.getEncryptedValues());
-    }
     logger.info("Completed parallel creation of encrypted query vectors");
   }
 }
