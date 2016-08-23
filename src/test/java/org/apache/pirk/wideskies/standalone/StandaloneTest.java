@@ -63,7 +63,7 @@ public class StandaloneTest
     // Create the stoplist file
     stopListFileProp = SystemConfiguration.getProperty("pir.stopListFile");
     SystemConfiguration.setProperty("pir.stopListFile", STOPLIST_FILE);
-    String newSLFile = Inputs.createPIRStopList(null, false);
+    String newSLFile = Inputs.createStopList(null, false);
     SystemConfiguration.setProperty("pir.stopListFile", newSLFile);
     logger.info("stopListFileProp = " + stopListFileProp + " new prop = " + SystemConfiguration.getProperty("pir.stopListFile"));
 
@@ -108,7 +108,7 @@ public class StandaloneTest
 
     SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
     SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
-    BaseTests.testDNSHostnameQuery(dataElements, 1, false);
+    BaseTests.testDNSHostnameQuery(dataElements, 4, false);
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     // Run tests without using the embedded selector

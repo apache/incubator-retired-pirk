@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
+
 import scala.Tuple2;
 
 /**

@@ -29,6 +29,7 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 /**

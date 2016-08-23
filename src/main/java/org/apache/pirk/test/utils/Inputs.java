@@ -108,7 +108,7 @@ public class Inputs
   {
     String esPIRIndex = SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_NODES_PROPERTY) + ":"
         + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_PORT_PROPERTY) + "/"
-        + SystemConfiguration.getProperty(DistributedTestDriver.ES_PIR_INPUT_INDEX_PROPERTY);
+        + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_INDEX_PROPERTY);
     logger.info("ES input being deleted at " + esPIRIndex);
 
     ProcessBuilder pDeletePIR = new ProcessBuilder("curl", "-XDELETE", esPIRIndex);
@@ -258,9 +258,9 @@ public class Inputs
   }
 
   /**
-   * Creates PIR JSON input and writes to hdfs
+   * Creates JSON input and writes to hdfs
    */
-  public static List<JSONObject> createPIRJSONInput(FileSystem fs)
+  public static List<JSONObject> createJSONInput(FileSystem fs)
   {
     String inputJSONFile = SystemConfiguration.getProperty(DistributedTestDriver.JSON_PIR_INPUT_FILE_PROPERTY);
     logger.info("PIR JSON input being created at " + inputJSONFile);
@@ -274,13 +274,13 @@ public class Inputs
   }
 
   /**
-   * Creates PIR Elasticsearch input
+   * Creates Elasticsearch input
    */
-  public static void createPIRESInput()
+  public static void createESInput()
   {
     String esTestIndex = SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_NODES_PROPERTY) + ":"
         + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_PORT_PROPERTY) + "/"
-        + SystemConfiguration.getProperty(DistributedTestDriver.ES_PIR_INPUT_INDEX_PROPERTY);
+        + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_INDEX_PROPERTY);
     String esType = SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_TYPE_PROPERTY);
     logger.info("ES input being created at " + esTestIndex + " with type " + esType);
 
@@ -388,11 +388,11 @@ public class Inputs
   }
 
   /**
-   * Creates PIR stoplist file
+   * Creates stoplist file
    */
-  public static String createPIRStopList(FileSystem fs, boolean hdfs) throws IOException, PIRException
+  public static String createStopList(FileSystem fs, boolean hdfs) throws IOException, PIRException
   {
-    logger.info("PIR stopList file being created");
+    logger.info("StopList file being created");
 
     List<String> elements = Arrays.asList("something.else.on.stoplist", "3.3.3.132");
 
