@@ -31,7 +31,11 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Bolt class to perform the encrypted row calculation
@@ -63,8 +67,8 @@ public class EncRowCalcBolt extends BaseRichBolt
   private Random rand;
 
   // These are the main data structures used here.
-  private HashMap<Integer,Integer> hitsByRow = new HashMap<Integer,Integer>();
-  private HashMap<Integer,Integer> colIndexByRow = new HashMap<Integer,Integer>();
+  private Map<Integer,Integer> hitsByRow = new HashMap<Integer,Integer>();
+  private Map<Integer,Integer> colIndexByRow = new HashMap<Integer,Integer>();
   private List<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<Tuple2<Long,BigInteger>>();
   private List<BigInteger> dataArray = new ArrayList<>();
 
@@ -130,12 +134,12 @@ public class EncRowCalcBolt extends BaseRichBolt
     else if (tuple.getSourceStreamId().equals(StormConstants.ENCCOLMULTBOLT_SESSION_END))
     {
       numEndSigs += 1;
-      logger.debug("SessionEnd signal " + numEndSigs + " of " + totalEndSigs + " received");
+      logger.debug("SessionEnd signal {} of {} received",  numEndSigs, totalEndSigs);
 
       // Need to receive signal from all EncColMultBolt instances before stopping buffering.
       if (numEndSigs == totalEndSigs)
       {
-        logger.debug("Buffering completed, emitting " + bufferedValues.size() + " tuples.");
+        logger.debug("Buffering completed, emitting {} tuples.", bufferedValues.size());
         emitTuples(bufferedValues);
         bufferedValues.clear();
         buffering = false;
@@ -180,7 +184,7 @@ public class EncRowCalcBolt extends BaseRichBolt
     {
       dataArray = (ArrayList<BigInteger>) tuple.getValueByField(StormConstants.PARTIONED_DATA_FIELD);
     }
-    logger.debug("Retrieving " + dataArray.size() + " elements in EncRowCalcBolt.");
+    logger.debug("Retrieving {} elements in EncRowCalcBolt.", dataArray.size());
 
     try
     {

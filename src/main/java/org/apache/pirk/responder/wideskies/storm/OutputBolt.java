@@ -79,7 +79,7 @@ public class OutputBolt extends BaseRichBolt
   public static CountDownLatch latch = new CountDownLatch(1);
 
   // This is the main object here. It holds column Id -> product
-  private HashMap<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
+  private Map<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
 
   private BigInteger colVal;
   private BigInteger colMult;

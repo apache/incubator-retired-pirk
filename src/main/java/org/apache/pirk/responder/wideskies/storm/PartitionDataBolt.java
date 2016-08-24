@@ -104,7 +104,7 @@ public class PartitionDataBolt extends BaseBasicBolt
     {
       partitions = QueryUtils.partitionDataElement(qSchema, json, embedSelector);
 
-      logger.debug("HashSelectorsAndPartitionDataBolt processing " + json.toString() + " outputting results - " + partitions.size());
+      logger.debug("HashSelectorsAndPartitionDataBolt processing {} outputting results - {}", json.toString(), partitions.size());
 
       // splitPartitions determines whether each partition piece is sent individually or the full Array is sent together.
       // Since processing in the follow-on bolt (EncRowCalcBolt) is computationally expensive, current working theory is

@@ -66,7 +66,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
+import java.util.HashMap;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 @Category(IntegrationTest.class)
 public class KafkaStormIntegrationTest
@@ -194,7 +198,7 @@ public class KafkaStormIntegrationTest
         //Thread.sleep(4000);
         //KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
         //loadTestData(producer);
-        Thread.sleep(10000);
+        //Thread.sleep(10000);
         OutputBolt.latch.await();
         logger.info("Finished...");
       }
@@ -282,7 +286,7 @@ public class KafkaStormIntegrationTest
   private void performEncryption() throws Exception
   {
     // ArrayList<String> selectors = BaseTests.selectorsDomain;
-    ArrayList<String> selectors = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
+    List<String> selectors = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
     String queryType = Inputs.DNS_HOSTNAME_QUERY;
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);

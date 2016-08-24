@@ -81,12 +81,12 @@ public class EncColMultBolt extends BaseRichBolt
     if (tuple.getSourceStreamId().equals(StormConstants.ENCROWCALCBOLT_FLUSH_SIG))
     {
       numFlushSignals += 1;
-      logger.debug("Received  " + numFlushSignals + " flush signals out of " + totalFlushSignals);
+      logger.debug("Received  {} flush signals out of {}", numFlushSignals, totalFlushSignals);
 
       // Need to receive notice from all EncRowCalcBolts in order to flush.
       if (numFlushSignals == totalFlushSignals)
       {
-        logger.debug("Received signal to flush in EncColMultBolt. Outputting " + resultsMap.keySet().size() + " results.");
+        logger.debug("Received signal to flush in EncColMultBolt. Outputting {} results.", resultsMap.keySet().size());
         for (Long key : resultsMap.keySet())
           // key = column Id, value = aggregated product
           outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(key, resultsMap.get(key)));
@@ -105,7 +105,7 @@ public class EncColMultBolt extends BaseRichBolt
       long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ERC_FIELD);
       colVal1 = (BigInteger) tuple.getValueByField(StormConstants.ENCRYPTED_VALUE_FIELD);
 
-      logger.debug("Received tuple in ECM, multiplying " + colVal1 + " to col " + colIndex);
+      logger.debug("Received tuple in ECM, multiplying {} to col {}", colVal1, colIndex);
 
       if (resultsMap.containsKey(colIndex))
       {
