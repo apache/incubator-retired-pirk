@@ -88,10 +88,11 @@ public class KafkaStormIntegrationTest
 
   private static File fileQuery;
   private static File fileQuerier;
-  private static String localStopListFile;
 
   private QueryInfo queryInfo;
   private BigInteger nSquared;
+
+  private static int testCountDown = 4;
 
   @Test
   public void testKafkaStormIntegration() throws Exception
@@ -113,8 +114,7 @@ public class KafkaStormIntegrationTest
     SystemConfiguration.setProperty("storm.topoName", "pirTest");
 
     // Create encrypted file
-    localStopListFile = Inputs.createPIRStopList(null, false);
-    SystemConfiguration.setProperty("pir.stopListFile", localStopListFile);
+    SystemConfiguration.setProperty("pir.stopListFile", "none");
     Inputs.createSchemaFiles(StopListFilter.class.getName());
 
     // Perform encryption. Set queryInfo, nSquared, fileQuery, and fileQuerier
@@ -199,7 +199,11 @@ public class KafkaStormIntegrationTest
         //KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
         //loadTestData(producer);
         //Thread.sleep(10000);
-        OutputBolt.latch.await();
+        while(OutputBolt.latch.getCount() == testCountDown){
+          Thread.sleep(1000);
+        }
+        testCountDown -=1;
+
         logger.info("Finished...");
       }
     };
@@ -259,7 +263,6 @@ public class KafkaStormIntegrationTest
     fileQuery.delete();
     fileQuerier.delete();
 
-    new File(localStopListFile).delete();
   }
 
   private HashMap<String,Object> createKafkaProducerConfig()

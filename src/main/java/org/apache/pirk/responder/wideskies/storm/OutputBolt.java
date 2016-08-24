@@ -76,7 +76,7 @@ public class OutputBolt extends BaseRichBolt
   private HadoopFileSystemStore hadoopStore;
 
   // This latch just serves as a hook for testing.
-  public static CountDownLatch latch = new CountDownLatch(1);
+  public static CountDownLatch latch = new CountDownLatch(4);
 
   // This is the main object here. It holds column Id -> product
   private Map<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
