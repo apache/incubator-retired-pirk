@@ -21,6 +21,7 @@ package org.apache.pirk.test.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -267,8 +268,10 @@ public class TestUtils
 
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
+   * @throws IOException 
+   * @throws FileNotFoundException 
    */
-  public static List<QueryResponseJSON> readResultsFile(File file)
+  public static List<QueryResponseJSON> readResultsFile(File file) throws FileNotFoundException, IOException
   {
     List<QueryResponseJSON> results = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(file)))
@@ -279,9 +282,6 @@ public class TestUtils
         QueryResponseJSON jsonResult = new QueryResponseJSON(line);
         results.add(jsonResult);
       }
-    } catch (Exception e)
-    {
-      logger.error(e.toString());
     }
 
     return results;

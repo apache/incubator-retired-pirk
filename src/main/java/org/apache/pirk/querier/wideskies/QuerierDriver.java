@@ -33,6 +33,7 @@ import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.FileIOUtils;
 import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.QueryResultsWriter;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,13 +189,13 @@ public class QuerierDriver implements Serializable
 
       // Perform the encryption
       EncryptQuery encryptQuery = new EncryptQuery(queryInfo, selectors, paillier);
-      encryptQuery.encrypt(numThreads);
+      Querier querier = encryptQuery.encrypt(numThreads);
 
       // Write necessary output files - two files written -
       // (1) Querier object to <outputFile>-QuerierConst.QUERIER_FILETAG
       // (2) Query object to <outputFile>-QuerierConst.QUERY_FILETAG
-      storage.store(outputFile + "-" + QuerierConst.QUERIER_FILETAG, encryptQuery.getQuerier());
-      storage.store(outputFile + "-" + QuerierConst.QUERY_FILETAG, encryptQuery.getQuery());
+      storage.store(outputFile + "-" + QuerierConst.QUERIER_FILETAG, querier);
+      storage.store(outputFile + "-" + QuerierConst.QUERY_FILETAG, querier.getQuery());
     }
     else
     // Decryption
@@ -214,8 +215,7 @@ public class QuerierDriver implements Serializable
 
       // Perform decryption and output the result file
       DecryptResponse decryptResponse = new DecryptResponse(response, querier);
-      decryptResponse.decrypt(numThreads);
-      decryptResponse.writeResultFile(outputFile);
+      QueryResultsWriter.writeResultFile(outputFile, decryptResponse.decrypt(numThreads));
     }
   }
 }
