@@ -178,7 +178,7 @@ public class ComputeEncryptedRow
     {
       // long startTime = System.currentTimeMillis();
 
-      logger.debug("rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+      logger.info("rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
 
       if (limitHitsPerSelector)
       {
@@ -188,7 +188,7 @@ public class ComputeEncryptedRow
           break;
         }
       }
-      logger.debug("dataPartitions.size() = " + dataPartitions.size() + " rowIndex = " + rowIndex + " colCounter = " + colCounter);
+      logger.info("dataPartitions.size() = " + dataPartitions.size() + " rowIndex = " + rowIndex + " colCounter = " + colCounter);
 
       // Update the associated column values
       for (int i = 0; i < dataPartitions.size(); ++i)
@@ -209,7 +209,7 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+        logger.info("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
             + exp + " i = " + i);
 
         returnPairs.add(new Tuple2<>(colCounter, exp));

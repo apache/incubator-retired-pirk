@@ -341,6 +341,8 @@ public class DistTestSuite
     SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
 
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
+    
+    SystemConfiguration.setProperty("pir.numDataPartitions", "3");
 
     SystemConfiguration.setProperty("pir.sparkstreaming.batchSeconds", "30");
     SystemConfiguration.setProperty("pir.sparkstreaming.windowLength", "60");
@@ -471,6 +473,7 @@ public class DistTestSuite
         args.add("-" + ResponderProps.WINDOWLENGTH + "=" + SystemConfiguration.getProperty("pir.sparkstreaming.windowLength", "60"));
         args.add("-" + ResponderProps.MAXBATCHES + "=" + SystemConfiguration.getProperty("pir.sparkstreaming.maxBatches", "-1"));
         args.add("-" + ResponderProps.STOPGRACEFULLY + "=" + SystemConfiguration.getProperty("spark.streaming.stopGracefullyOnShutdown", "false"));
+        args.add("-" + ResponderProps.NUMDATAPARTITIONS + "=" + SystemConfiguration.getProperty("pir.numDataPartitions", "3"));
       }
       else
       {
@@ -527,6 +530,11 @@ public class DistTestSuite
     // Perform decryption
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
+    if(isStreaming)
+    {
+      outputFile = outputFile + "_0"; //currently only processing one batch for testing
+    }
+    logger.info("Pulling results from outputFile = " + outputFile);
     Response response = new HadoopFileSystemStore(fs).recall(outputFile, Response.class);
 
     // Perform decryption and output the result file

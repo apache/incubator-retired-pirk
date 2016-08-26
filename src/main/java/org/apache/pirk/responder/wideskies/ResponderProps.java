@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.cli.Option;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
@@ -57,15 +58,15 @@ public class ResponderProps
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
   public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
-  static final String NUMREDUCETASKS = "pir.numReduceTasks";
-  static final String MAPMEMORY = "mapreduce.map.memory.mb";
-  static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
-  static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
-  static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
-  static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
-  static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
-  static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
-
+  public static final String NUMREDUCETASKS = "pir.numReduceTasks";
+  public static final String MAPMEMORY = "mapreduce.map.memory.mb";
+  public static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
+  public static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
+  public static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
+  public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
+  public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
+  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  
   // For Spark Streaming - optional
   public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
   public static final String WINDOWLENGTH = "pir.sparkstreaming.windowLength";

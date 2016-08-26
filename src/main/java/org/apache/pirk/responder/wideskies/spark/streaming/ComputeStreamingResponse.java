@@ -196,7 +196,7 @@ public class ComputeStreamingResponse
     bVars.setQueryInfo(queryInfo);
 
     // Set the output location
-    bVars.setOutput(outputFile);
+    //bVars.setOutput(outputFile);
 
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
@@ -445,6 +445,9 @@ public class ComputeStreamingResponse
       encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(accum, bVars));
     }
 
+    //Update the output name, by batch number
+    bVars.setOutput(outputFile + "_" + accum.numBatchesGetValue());
+    
     // Form and write the response object
     encColRDD.repartition(1).foreachRDD(new VoidFunction<JavaPairRDD<Long,BigInteger>>()
     {

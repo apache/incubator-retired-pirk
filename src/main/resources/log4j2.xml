@@ -15,7 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<Configuration>
+<Configuration status="DEBUG">
 	<Properties>
 		<Property name="projectPrefix">pirk</Property>
 		<Property name="Directory">./logs</Property>
@@ -40,9 +40,9 @@
 		<Logger name="org.apache.hadoop.hbase" level="info" additivity="false"/>
 		<Logger name="org.apache.hadoop.hbase.zookeeper" level="warn" additivity="false"/>
 		<Logger name="org.apache.zookeeper" level="error" additivity="false"/>
-		<Root level="info">
-			<AppenderRef ref="STDOUT" level="info"/>
-			<AppenderRef ref="RollingFile" level="info"/>
+		<Root level="debug">
+			<AppenderRef ref="STDOUT" level="debug"/>
+			<AppenderRef ref="RollingFile" level="debug"/>
 		</Root>
 	</Loggers>
 
