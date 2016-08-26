@@ -218,6 +218,20 @@ public class ResponderCLI
     optionEsQuery.setType(String.class);
     options.addOption(optionEsQuery);
 
+    // esNodes
+    Option optionEsNodes = new Option("en", ResponderProps.ESNODES, true, "required if baseInputFormat = 'elasticsearch' -- ElasticSearch node in the cluster");
+    optionEsNodes.setRequired(false);
+    optionEsNodes.setArgName(ResponderProps.ESNODES);
+    optionEsNodes.setType(String.class);
+    options.addOption(optionEsNodes);
+
+    // esPort
+    Option optionEsPort = new Option("ep", ResponderProps.ESPORT, true, "required if baseInputFormat = 'elasticsearch' -- ElasticSearch cluster port");
+    optionEsPort.setRequired(false);
+    optionEsPort.setArgName(ResponderProps.ESQUERY);
+    optionEsPort.setType(String.class);
+    options.addOption(optionEsPort);
+
     // outputFile
     Option optionOutputFile = new Option("o", ResponderProps.OUTPUTFILE, true, "required -- Fully qualified name of output file in hdfs");
     optionOutputFile.setRequired(false);

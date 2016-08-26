@@ -503,6 +503,8 @@ public class DistTestSuite
       {
         args.add("-" + ResponderProps.ESQUERY + "=" + SystemConfiguration.getProperty("pir.esQuery"));
         args.add("-" + ResponderProps.ESRESOURCE + "=" + SystemConfiguration.getProperty("pir.esResource"));
+        args.add("-" + ResponderProps.ESNODES + "=" + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_NODES_PROPERTY));
+        args.add("-" + ResponderProps.ESPORT + "=" + SystemConfiguration.getProperty(DistributedTestDriver.ES_INPUT_PORT_PROPERTY));
       }
 
       for (String arg : args)

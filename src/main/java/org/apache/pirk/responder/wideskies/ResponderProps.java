@@ -47,6 +47,8 @@ public class ResponderProps
   public static final String BASEQUERY = "pir.baseQuery";
   public static final String ESRESOURCE = "pir.esResource";
   public static final String ESQUERY = "pir.esQuery";
+  public static final String ESNODES = "es.nodes";
+  public static final String ESPORT = "es.port";
   public static final String BASEINPUTFORMAT = "pir.baseInputFormat";
   public static final String STOPLISTFILE = "pir.stopListFile";
   public static final String QUERYSCHEMAS = "responder.querySchemas";
@@ -74,8 +76,8 @@ public class ResponderProps
   public static final String MAXBATCHES = "pir.sparkstreaming.maxBatches";
   public static final String STOPGRACEFULLY = "spark.streaming.stopGracefullyOnShutdown";
 
-  static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, OUTPUTFILE,
-      BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
+  static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, ESNODES, ESPORT,
+      OUTPUTFILE, BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
       REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
       COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY);
 
@@ -153,6 +155,18 @@ public class ResponderProps
       if (!SystemConfiguration.hasProperty(ESQUERY))
       {
         logger.info("For ElasticSearch inputformat: Must have the option " + ESQUERY);
+        valid = false;
+      }
+
+      if (!SystemConfiguration.hasProperty(ESNODES))
+      {
+        logger.info("For ElasticSearch inputformat: Must have the option " + ESNODES);
+        valid = false;
+      }
+
+      if (!SystemConfiguration.hasProperty(ESPORT))
+      {
+        logger.info("For ElasticSearch inputformat: Must have the option " + ESPORT);
         valid = false;
       }
     }
