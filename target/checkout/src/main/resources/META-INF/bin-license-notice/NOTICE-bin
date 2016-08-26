@@ -1,0 +1,278 @@
+Apache Pirk (incubating)
+Copyright 2016 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+========================================================================
+Common Development and Distribution License 1.0
+========================================================================
+
+The following components are provided under the Common Development and Distribution License 1.0. See project link for details.
+
+	(Common Development and Distribution License (CDDL) v1.0) JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
+    (COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0) (GNU General Public Library) Streaming API for XML (javax.xml.stream:stax-api:1.0-2 - no url defined)
+    (CDDL 1.0) Glassfish Jasper (org.mortbay.jetty:jsp-2.1:6.1.14 - http://jetty.mortbay.org/project/modules/jsp-2.1)
+    (CDDL 1.0) Servlet Specification 2.5 API (org.mortbay.jetty:servlet-api-2.5:6.1.14 - http://jetty.mortbay.org/project/modules/servlet-api-2.5)
+     
+ 
+========================================================================
+Common Development and Distribution License 1.1
+========================================================================
+
+The following components are provided under the Common Development and Distribution License 1.1. See project link for details.
+
+     (CDDL 1.1) (GPL2 w/ CPE) jersey-client (com.sun.jersey:jersey-client:1.9 - https://jersey.java.net/jersey-client/)
+     (CDDL 1.1) (GPL2 w/ CPE) jersey-core (com.sun.jersey:jersey-core:1.9 - https://jersey.java.net/jersey-core/)
+     (CDDL 1.1) (GPL2 w/ CPE) jersey-json (com.sun.jersey:jersey-json:1.9 - https://jersey.java.net/jersey-json/)
+     (CDDL 1.1) (GPL2 w/ CPE) jersey-server (com.sun.jersey:jersey-server:1.9 - https://jersey.java.net/jersey-server/)
+     (CDDL 1.1) (GPL2 w/ CPE) jersey-guice (com.sun.jersey.contribs:jersey-guice:1.9 - https://jersey.java.net/jersey-contribs/jersey-guice/)
+     (CDDL 1.1) (GPL2 w/ CPE) JAXB RI (com.sun.xml.bind:jaxb-impl:2.2.3-1 - http://jaxb.java.net/)
+     (CDDL 1.1) (GPL2 w/ CPE) JAXB API bundle for GlassFish V3 (javax.xml.bind:jaxb-api:2.2.2 - https://jaxb.dev.java.net/)
+     
+   
+========================================================================
+Eclipse Public License 1.0
+========================================================================
+
+The following components are provided under the Eclipse Public License 1.0. See project link for details.
+
+	(Eclipse Public License 1.0) JUnit (junit:junit:4.12 - http://junit.org)
+    (Eclipse Public License v1.0) Eclipse JDT Core (org.eclipse.jdt:core:3.1.1 - http://www.eclipse.org/jdt/)
+     
+
+========================================================================
+NOTICE files
+========================================================================
+
+The following NOTICEs are pertain to software distributed with this project.
+
+-------------------------------------------------------------------------------
+	NOTICE file for direct Apache licensed software dependencies corresponding to 
+	the section 4d of The Apache License, Version 2.0
+-------------------------------------------------------------------------------
+
+Apache Commons Math (http://commons.apache.org/proper/commons-math/)
+Copyright 2001-2016 The Apache Software Foundation
+
+json-simple (https://github.com/fangyidong/json-simple)
+The Apache Software Foundation
+
+Apache Hadoop (http://hadoop.apache.org/)
+The Apache Software Foundation
+
+Apache Spark (http://spark.apache.org/)
+Copyright 2014 and onwards The Apache Software Foundation
+
+Elasticsearch for Apache Hadoop (https://github.com/elastic/elasticsearch-hadoop)
+Copyright 2009-2016 The Apache Software Foundation
+
+jna-gmp (https://github.com/square/jna-gmp)
+The Apache Software Foundation
+
+Apache log4j (http://logging.apache.org/log4j/2.x/)
+The Apache Software Foundation
+
+
+-------------------------------------------------------------------------------
+Notice for the Jackson JSON processor
+-------------------------------------------------------------------------------
+
+Jackson is a high-performance, Free/Open Source JSON processing library.
+It was originally written by Tatu Saloranta (tatu.saloranta@iki.fi), and has
+been in development since 2007.
+It is currently developed by a community of developers, as well as supported
+commercially by FasterXML.com.
+
+Jackson core and extension components may be licensed under different licenses.
+To find the details that apply to this artifact see the accompanying LICENSE file.
+For more information, including possible other licensing options, contact
+FasterXML.com (http://fasterxml.com).
+
+-------------------------------------------------------------------------------
+Notices for other included/utilized software
+-------------------------------------------------------------------------------
+
+This product includes/uses ASM (http://asm.ow2.org/),
+Copyright (c) 2000-2007 INRIA, France Telecom.
+
+This product includes/uses ANTLR (http://www.antlr.org/),
+Copyright (c) 2003-2011, Terrence Parr.
+
+This produce includes/uses Kryo (https://github.com/EsotericSoftware/kryo)
+Copyright (c) 2008, Nathan Sweet
+
+This produce includes/uses MinLog (https://github.com/EsotericSoftware/kryo)
+Copyright (c) 2008, Nathan Sweet
+
+This produce includes/uses ReflectASM (https://github.com/EsotericSoftware/reflectasm)
+Copyright (c) 2008, Nathan Sweet
+
+This produce includes/uses Protocol Buffer Java API (http://code.google.com/p/protobuf)
+This license applies to all parts of Protocol Buffers except the following:
+  - Atomicops support for generic gcc, located in
+    src/google/protobuf/stubs/atomicops_internals_generic_gcc.h.
+    This file is copyrighted by Red Hat Inc.
+  - Atomicops support for AIX/POWER, located in
+    src/google/protobuf/stubs/atomicops_internals_power.h.
+    This file is copyrighted by Bloomberg Finance LP.
+Copyright 2014, Google Inc.  All rights reserved.
+
+This produce includes/uses JSch (http://www.jcraft.com/jsch/)
+Copyright (c) 2002-2015 Atsuhiko Yamanaka, JCraft,Inc. 
+
+This produce includes/uses ParaNamer Core (http://paranamer.codehaus.org/paranamer)
+Copyright (c) 2006 Paul Hammant & ThoughtWorks Inc
+
+This produce includes/uses JLine (http://jline.sourceforge.net)
+Copyright (c) 2002-2006, Marc Prud'hommeaux <mwp1@cornell.edu>
+
+This produce includes/uses Py4J (http://www.py4j.org/)
+Copyright (c) 2009-2016, Barthelemy Dagenais and individual contributors.
+
+This produce includes/uses Janino (http://docs.codehaus.org/display/JANINO/Home/janino)
+Copyright (c) 2001-2016, Arno Unkrig
+Copyright (c) 2015-2016,  TIBCO Software Inc.
+
+This produce includes/uses leveldbjni-all (http://leveldbjni.fusesource.org/leveldbjni-all)
+Copyright (c) 2011, FuseSource Corp.
+
+This produce includes/uses Hamcrest Core (https://github.com/hamcrest/JavaHamcrest/hamcrest-core)
+Copyright (c) 1998, Regents of the University of California, University of California, Berkeley
+
+This produce includes/uses Scala (http://www.scala-lang.org/)
+Copyright (c) 2002-2016 EPFL
+Copyright (c) 2011-2016 Lightbend, Inc. (formerly Typesafe, Inc.)
+    
+This produce includes/uses xmlenc Library (http://xmlenc.sourceforge.net)
+Copyright (c) 2013 Benoist
+
+This produce includes/uses HSQLDB (http://hsqldb.org/)
+Copyright (c) 2001-2016, The HSQL Development Group    
+    
+This product includes/uses SLF4J (http://www.slf4j.org/),
+Copyright (c) 2004-2010 QOS.ch
+
+This produce includes/uses JCL 1.1.1 implemented over SLF4J (http://www.slf4j.org)
+Copyright (c) 2004-2010 QOS.ch
+
+This produce includes/uses JUL to SLF4J bridge (http://www.slf4j.org)
+Copyright (c) 2004-2010 QOS.ch
+
+This produce includes/uses pyrolite (https://github.com/irmen/Pyrolite)
+Copyright (c) by Irmen de Jong
+
+This produce includes/uses JOpt Simple (http://pholser.github.com/jopt-simple)
+Copyright (c) 2004-2015 Paul R. Holser, Jr.
+
+This product includes Guava (http://code.google.com/p/guava-libraries/)
+Copyright (C) 2006 Google Inc.
+
+This produce includes/uses Google Guice (https://github.com/google/guice)
+Copyright 2006-2011 Google, Inc.
+
+This product includes DataNucleus (http://www.datanucleus.org/)
+Copyright 2008-2008 DataNucleus
+
+This produce includes/uses Apache Jakarta HttpClient (http://hc.apache.org/httpclient-3.x/)
+Copyright 1999-2007 The Apache Software Foundation
+
+This produce includes/uses Apache Avro (http://avro.apache.org)
+Copyright 2009-2013 The Apache Software Foundation
+
+This produce includes/uses Akka (https://github.com/akka/akka)
+Copyright 2009-2016 Lightbend Inc
+
+This produce includes/uses Apache Curator (http://curator.apache.org)
+Copyright 2013-2014 The Apache Software Foundation
+
+This produce includes/uses Apache Parquet (https://parquet.apache.org)
+Copyright 2014 The Apache Software Foundation
+
+This produce includes/uses Apache Mesos (http://mesos.apache.org)
+Copyright 2014 The Apache Software Foundation
+
+This produce includes/uses Chill (https://github.com/twitter/chill)
+Copyright 2012 Twitter, Inc.
+
+This produce includes/uses Netty (https://github.com/netty/netty)
+Copyright 2014 The Netty Project
+
+This produce includes/uses Objenesis (http://objenesis.googlecode.com/svn/docs/index.html)
+Copyright 2006-2009 Joe Walnes, Henri Tremblay, Leonardo Mesquita
+
+This produce includes/uses RoaringBitmap (https://github.com/lemire/RoaringBitmap)
+Copyright 2013-2016 the RoaringBitmap authors 
+
+This produce includes/uses Tachyon - Alluxio (http://tachyon-project.org/tachyon-clients/tachyon-client/)
+Copyright 2016 Alluxio Open Foundation
+
+This produce includes/uses Apache Commons (http://commons.apache.org/)
+Copyright, The Apache Software Foundation
+
+This produce includes/uses Uncommon Maths (http://maths.uncommons.org/)
+Copyright 2006-2012 Daniel W. Dyer (http://www.dandyer.co.uk)
+
+This produce includes/uses Apache Directory (http://directory.apache.org/)
+Copyright, The Apache Software Foundation
+
+This produce includes/uses Joda time (http://joda-time.sourceforge.net)
+This product includes software developed by
+Joda.org (http://www.joda.org/).
+
+This produce includes/uses GSON (https://github.com/google/gson)
+Copyright 2008 Google Inc.
+
+This produce includes/uses stream-lib (https://github.com/addthis/stream-lib)
+Copyright 2016 AddThis
+
+This produce includes/uses Compress-LZF (http://github.com/ning/compress)
+Copyright 2009-2010 Ning, Inc.
+
+This produce includes/uses Metrics (http://metrics.dropwizard.io/3.1.0/)
+Copyright 2010-2013 Coda Hale and Yammer, Inc.
+
+This produce includes/uses LZ4 and xxHash (https://github.com/jpountz/lz4-java)
+
+This produce includes/uses FindBugs-jsr305 (http://findbugs.sourceforge.net/)
+    
+This produce includes/uses Apache Xerces2 Java Parser (http://xerces.apache.org/xerces2-j)
+
+This produce includes/uses XML Commons External Components XML APIs (http://xml.apache.org/commons/components/external/)
+                    
+-------------------------------------------------------------------------------
+Notices for optional dependencies
+-------------------------------------------------------------------------------
+
+This product optionally depends on 'SLF4J', a simple logging facade for Java,
+which can be obtained at:
+
+  * LICENSE:
+    * license/LICENSE.slf4j.txt (MIT License)
+  * HOMEPAGE:
+    * http://www.slf4j.org/
+
+This product optionally depends on 'JBoss Logging', a logging framework,
+which can be obtained at:
+
+  * LICENSE:
+    * license/LICENSE.jboss-logging.txt (GNU LGPL 2.1)
+  * HOMEPAGE:
+    * http://anonsvn.jboss.org/repos/common/common-logging-spi/
+
+This product optionally depends on 'OpenJDK JMH', an open source benchmarking implementation, 
+which can be obtained at:
+
+  * LICENSE:
+    * http://openjdk.java.net/legal/gplv2+ce.html (GPL2 w/ CPE)
+  * HOMEPAGE:
+    * http://openjdk.java.net/projects/code-tools/jmh/
+    
+This product optionally depends on 'JNA', an open source Java library access framework, 
+which can be obtained at:
+
+  * LICENSE:
+    * https://github.com/java-native-access/jna/blob/master/LICENSE (LGPLv2.1 before jna-4.0.0, ASL2 starting with jna-4.0.0)
+  * HOMEPAGE:
+    * https://github.com/twall/jna   
+

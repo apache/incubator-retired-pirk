@@ -15,6 +15,7 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/Querier.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/ResponderCLI.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/query/filter/StopListFilter.java
+/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQueryTask.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/response/QueryResponseJSON.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/ResponderProps.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/Accumulators.java
@@ -31,12 +32,10 @@
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponse.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/test/distributed/DistributedTestCLI.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/EncRowCalc.java
-/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/encrypt/ExpTableRunnable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/inputformat/hadoop/BytesArrayWritable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/DataSchema.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/responder/wideskies/spark/EncColMultReducer.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/QuerierConst.java
-/Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQueryRunnable.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/test/distributed/testsuite/DistTestSuite.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/query/wideskies/Query.java
 /Users/voyager/apachePirk/incubator-pirk/src/main/java/org/apache/pirk/schema/data/partitioner/PrimitiveTypePartitioner.java

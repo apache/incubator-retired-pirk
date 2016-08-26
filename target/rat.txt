@@ -2,14 +2,14 @@
 *****************************************************
 Summary
 -------
-Generated at: 2016-08-21T11:55:54-04:00
+Generated at: 2016-08-25T11:50:41-04:00
 
 Notes: 3
 Binaries: 5
 Archives: 0
-Standards: 486
+Standards: 485
 
-Apache Licensed: 111
+Apache Licensed: 110
 Generated Documents: 0
 
 JavaDocs are generated, thus a license header is optional.
@@ -423,8 +423,7 @@ Generated files do not require license headers.
   AL    src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponse.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/decrypt/DecryptResponseTask.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQuery.java
-  AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQueryRunnable.java
-  AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/ExpTableRunnable.java
+  AL    src/main/java/org/apache/pirk/querier/wideskies/encrypt/EncryptQueryTask.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/Querier.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierCLI.java
   AL    src/main/java/org/apache/pirk/querier/wideskies/QuerierConst.java
