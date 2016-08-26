@@ -124,6 +124,7 @@ As per the Apache documentation, verify that the release candidate artifacts sat
 		* [NOTICE file requirements](http://www.apache.org/dev/release.html#notice-content)
 		* [Apache Legal](http://apache.org/legal/)
 		* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
+* The Cryptographic Export Control section in the README is up-to-date
 * All source files have license headers where appropriate, RAT checks pass
 * The provenance of all source files is clear (ASF or software grants)
 
