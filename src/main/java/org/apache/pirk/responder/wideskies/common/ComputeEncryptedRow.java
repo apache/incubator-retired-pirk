@@ -178,17 +178,17 @@ public class ComputeEncryptedRow
     {
       // long startTime = System.currentTimeMillis();
 
-      logger.info("rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+      logger.debug("rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
 
       if (limitHitsPerSelector)
       {
         if (elementCounter >= maxHitsPerSelector)
         {
-          logger.info("maxHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+          logger.debug("maxHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
           break;
         }
       }
-      logger.info("dataPartitions.size() = " + dataPartitions.size() + " rowIndex = " + rowIndex + " colCounter = " + colCounter);
+      logger.debug("dataPartitions.size() = " + dataPartitions.size() + " rowIndex = " + rowIndex + " colCounter = " + colCounter);
 
       // Update the associated column values
       for (int i = 0; i < dataPartitions.size(); ++i)
@@ -209,7 +209,7 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.info("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
+        logger.debug("rowIndex = " + rowIndex + " colCounter = " + colCounter + " part = " + part.toString() + " part binary = " + part.toString(2) + " exp = "
             + exp + " i = " + i);
 
         returnPairs.add(new Tuple2<>(colCounter, exp));
@@ -222,7 +222,7 @@ public class ComputeEncryptedRow
 
       ++elementCounter;
     }
-    logger.info("totalHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+    logger.debug("totalHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
 
     return returnPairs;
   }

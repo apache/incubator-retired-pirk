@@ -409,6 +409,14 @@ public class ResponderCLI
     optionStopGracefully.setType(String.class);
     options.addOption(optionStopGracefully);
 
+    // useQueueStream - spark streaming
+    Option optionUseQueueStream = new Option("queueStream", ResponderProps.USEQUEUESTREAM, true,
+        "optional -- Whether or not to use a queue stream in Spark Streaming; defaults to false");
+    optionUseQueueStream.setRequired(false);
+    optionUseQueueStream.setArgName(ResponderProps.USEQUEUESTREAM);
+    optionUseQueueStream.setType(String.class);
+    options.addOption(optionUseQueueStream);
+
     return options;
   }
 

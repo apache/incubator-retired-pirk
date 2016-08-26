@@ -52,7 +52,7 @@ public class EncColMultReducer implements Function2<BigInteger,BigInteger,BigInt
 
     BigInteger colMult = (colVal1.multiply(colVal2)).mod(query.getNSquared());
 
-    logger.info("colVal1 = " + colVal1.toString() + " colVal2 = " + colVal2.toString() + " colMult = " + colMult.toString());
+    logger.debug("colVal1 = " + colVal1.toString() + " colVal2 = " + colVal2.toString() + " colMult = " + colMult.toString());
 
     // long endTime = System.currentTimeMillis();
     // logger.info("Completed column mult: duration = " + (endTime-startTime));

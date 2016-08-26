@@ -161,6 +161,7 @@ public class ComputeStreamingResponse
       throw new IllegalArgumentException("batchSeconds = " + batchSeconds + " must divide windowLength = " + windowLength);
     }
     useQueueStream = SystemConfiguration.getBooleanProperty("pir.sparkstreaming.useQueueStream", false);
+    logger.info("useQueueStream = " + useQueueStream);
 
     // Set the necessary configurations
     SparkConf conf = new SparkConf().setAppName("SparkPIR").setMaster("yarn-cluster");
@@ -194,9 +195,6 @@ public class ComputeStreamingResponse
     queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
-
-    // Set the output location
-    //bVars.setOutput(outputFile);
 
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
@@ -445,9 +443,9 @@ public class ComputeStreamingResponse
       encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(accum, bVars));
     }
 
-    //Update the output name, by batch number
+    // Update the output name, by batch number
     bVars.setOutput(outputFile + "_" + accum.numBatchesGetValue());
-    
+
     // Form and write the response object
     encColRDD.repartition(1).foreachRDD(new VoidFunction<JavaPairRDD<Long,BigInteger>>()
     {

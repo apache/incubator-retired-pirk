@@ -68,7 +68,7 @@ public class ResponderProps
   public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
   public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
   public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
-  
+
   // For Spark Streaming - optional
   public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
   public static final String WINDOWLENGTH = "pir.sparkstreaming.windowLength";

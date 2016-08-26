@@ -59,14 +59,14 @@ public class FinalResponseFunction implements VoidFunction<Iterator<Tuple2<Long,
     {
       Tuple2<Long,BigInteger> input = iter.next();
       response.addElement(input._1().intValue(), input._2());
-      logger.info("colNum = " + input._1().intValue() + " column = " + input._2().toString());
+      logger.debug("colNum = " + input._1().intValue() + " column = " + input._2().toString());
     }
 
     // Write out the response
     FileSystem fs = FileSystem.get(new Configuration());
     HadoopFileSystemStore storage = new HadoopFileSystemStore(fs);
     String outputFile = bVars.getOutput();
-    logger.info("outputFile = " + outputFile);
+    logger.debug("outputFile = " + outputFile);
     try
     {
       storage.store(outputFile, response);
