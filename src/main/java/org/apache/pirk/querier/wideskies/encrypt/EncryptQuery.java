@@ -105,6 +105,12 @@ public class EncryptQuery
    * Encrypts the query described by the query information using Paillier encryption using the given number of threads.
    * <p>
    * The encryption builds a <code>Querier</code> object, calculating and setting the query vectors.
+   * <p>
+   * If we have hash collisions over our selector set, we will append integers to the key starting with 0 until we no longer have collisions.
+   * <p>
+   * For encrypted query vector E = <E_0, ..., E_{(2^hashBitSize)-1}>:
+   * <p>
+   * E_i = 2^{j*dataPartitionBitSize} if i = H_k(selector_j) 0 otherwise
    * 
    * @param numThreads
    *          the number of threads to use when performing the encryption.
@@ -144,7 +150,7 @@ public class EncryptQuery
       query.generateExpTable();
     }
 
-    // Answer the Querier object.
+    // Return the Querier object.
     return new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
@@ -194,7 +200,8 @@ public class EncryptQuery
     for (String selector : selectors)
     {
       String embeddedSelector = QueryUtils.getEmbeddedSelector(selector, type, dSchema.getPartitionerForElement(selectorName));
-      embedSelectorMap.put(sNum++, embeddedSelector);
+      embedSelectorMap.put(sNum, embeddedSelector);
+      sNum += 1;
     }
 
     return embedSelectorMap;
