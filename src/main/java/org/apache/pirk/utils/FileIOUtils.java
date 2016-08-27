@@ -119,28 +119,18 @@ public class FileIOUtils
 
   public static void writeArrayList(ArrayList<String> aList, File file) throws IOException
   {
-    FileOutputStream fos = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-    for (String s : aList)
+    try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))
     {
-      bw.write(s);
-      bw.newLine();
+      for (String s : aList)
+      {
+        bw.write(s);
+        bw.newLine();
+      }
     }
-    bw.close();
   }
 
   public static void writeArrayList(ArrayList<String> aList, String filename) throws IOException
   {
-    File file = new File(filename);
-    FileOutputStream fos = new FileOutputStream(file);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-    for (String s : aList)
-    {
-      bw.write(s);
-      bw.newLine();
-    }
-    bw.close();
+    writeArrayList(aList, new File(filename));
   }
 }

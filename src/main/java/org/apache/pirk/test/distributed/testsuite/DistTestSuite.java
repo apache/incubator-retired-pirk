@@ -42,6 +42,7 @@ import org.apache.pirk.test.distributed.DistributedTestDriver;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
+import org.apache.pirk.utils.QueryResultsWriter;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.launcher.SparkLauncher;
 import org.json.simple.JSONObject;
@@ -434,16 +435,12 @@ public class DistTestSuite
     // Perform the encryption
     logger.info("Performing encryption of the selectors - forming encrypted query vectors:");
     EncryptQuery encryptQuery = new EncryptQuery(queryInfo, selectors, paillier);
-    encryptQuery.encrypt(numThreads);
+    Querier querier = encryptQuery.encrypt(numThreads);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
-    // Grab the necessary objects
-    Querier querier = encryptQuery.getQuerier();
-    Query query = encryptQuery.getQuery();
-
-    // Write the Querier object to a file
+    // Write the Query object to a file
     Path queryInputDirPath = new Path(queryInputDir);
-    new HadoopFileSystemStore(fs).store(queryInputDirPath, query);
+    new HadoopFileSystemStore(fs).store(queryInputDirPath, querier.getQuery());
     fs.deleteOnExit(queryInputDirPath);
 
     // Grab the original data and query schema properties to reset upon completion
@@ -542,8 +539,7 @@ public class DistTestSuite
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);
-    decryptResponse.decrypt(numThreads);
-    decryptResponse.writeResultFile(fileFinalResults);
+    QueryResultsWriter.writeResultFile(fileFinalResults, decryptResponse.decrypt(numThreads));
     logger.info("Completed performing decryption and writing final results file");
 
     // Read in results

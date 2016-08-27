@@ -22,8 +22,8 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -40,6 +40,7 @@ import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.QueryResultsWriter;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -94,22 +95,21 @@ public class StandaloneQuery
     // Perform the encryption
     logger.info("Performing encryption of the selectors - forming encrypted query vectors:");
     EncryptQuery encryptQuery = new EncryptQuery(queryInfo, selectors, paillier);
-    encryptQuery.encrypt(numThreads);
+    Querier querier = encryptQuery.encrypt(numThreads);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Dork with the embedSelectorMap to generate a false positive for the last valid selector in selectors
     if (testFalsePositive)
     {
-      Querier querier = encryptQuery.getQuerier();
-      HashMap<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
+      Map<Integer,String> embedSelectorMap = querier.getEmbedSelectorMap();
       logger.info("embedSelectorMap((embedSelectorMap.size()-2)) = " + embedSelectorMap.get((embedSelectorMap.size() - 2)) + " selector = "
           + selectors.get((embedSelectorMap.size() - 2)));
       embedSelectorMap.put((embedSelectorMap.size() - 2), "fakeEmbeddedSelector");
     }
 
     // Write necessary output files
-    storage.store(fileQuerier, encryptQuery.getQuerier());
-    storage.store(fileQuery, encryptQuery.getQuery());
+    storage.store(fileQuerier, querier);
+    storage.store(fileQuery, querier.getQuery());
 
     // Perform the PIR query and build the response elements
     logger.info("Performing the PIR Query and constructing the response elements:");
@@ -141,12 +141,11 @@ public class StandaloneQuery
     // Reconstruct the necessary objects from the files
     logger.info("Performing decryption; writing final results file");
     Response responseIn = storage.recall(fileResponse, Response.class);
-    Querier querier = storage.recall(fileQuerier, Querier.class);
+    querier = storage.recall(fileQuerier, Querier.class);
 
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(responseIn, querier);
-    decryptResponse.decrypt(numThreads);
-    decryptResponse.writeResultFile(fileFinalResults);
+    QueryResultsWriter.writeResultFile(fileFinalResults, decryptResponse.decrypt(numThreads));
     logger.info("Completed performing decryption and writing final results file");
 
     // Read in results

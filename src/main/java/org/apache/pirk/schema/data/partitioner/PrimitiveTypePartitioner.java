@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * Class for partitioning objects with primitive Java types
  * 
  */
-public class PrimitiveTypePartitioner implements DataPartitioner
+public final class PrimitiveTypePartitioner implements DataPartitioner
 {
   private static final long serialVersionUID = 1L;
 

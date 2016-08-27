@@ -56,103 +56,90 @@ public class EncryptQuery
 {
   private static final Logger logger = LoggerFactory.getLogger(EncryptQuery.class);
 
-  private final QueryInfo queryInfo; // contains basic query information and functionality
+  // Contains basic query information.
+  private final QueryInfo queryInfo;
 
-  private Query query = null; // contains the query vectors
+  // Selectors for this query.
+  private final List<String> selectors;
 
-  private Querier querier = null; // contains the query vectors and encryption object
+  // Paillier encryption functionality.
+  private final Paillier paillier;
 
-  private final Paillier paillier; // Paillier encryption functionality
-
-  private List<String> selectors = null; // selectors for the query
-
-  // Map to check the embedded selectors in the results for false positives;
-  // if the selector is a fixed size < 32 bits, it is included as is
-  // if the selector is of variable lengths
-  private HashMap<Integer,String> embedSelectorMap = null;
-
-  public EncryptQuery(QueryInfo queryInfoInput, List<String> selectorsInput, Paillier paillierInput)
+  /**
+   * Constructs a query encryptor using the given query information, selectors, and Paillier cryptosystem.
+   * 
+   * @param queryInfo
+   *          Fundamental information about the query.
+   * @param selectors
+   *          the list of selectors for this query.
+   * @param paillier
+   *          the Paillier cryptosystem to use.
+   */
+  public EncryptQuery(QueryInfo queryInfo, List<String> selectors, Paillier paillier)
   {
-    queryInfo = queryInfoInput;
-
-    selectors = selectorsInput;
-
-    paillier = paillierInput;
-
-    embedSelectorMap = new HashMap<>();
-  }
-
-  public Paillier getPaillier()
-  {
-    return paillier;
-  }
-
-  public QueryInfo getQueryInfo()
-  {
-    return queryInfo;
-  }
-
-  public Query getQuery()
-  {
-    return query;
-  }
-
-  public Querier getQuerier()
-  {
-    return querier;
-  }
-
-  public List<String> getSelectors()
-  {
-    return selectors;
-  }
-
-  public HashMap<Integer,String> getEmbedSelectorMap()
-  {
-    return embedSelectorMap;
+    this.queryInfo = queryInfo;
+    this.selectors = selectors;
+    this.paillier = paillier;
   }
 
   /**
-   * Encrypt, building the Query object, calculating and setting the query vectors.
+   * Encrypts the query described by the query information using Paillier encryption.
+   * <p>
+   * The encryption builds a <code>Querier</code> object, calculating and setting the query vectors.
    * <p>
    * Uses the system configured number of threads to conduct the encryption, or a single thread if the configuration has not been set.
    * 
    * @throws InterruptedException
-   *           if the task was interrupted during encryption.
+   *           If the task was interrupted during encryption.
    * @throws PIRException
+   *           If a problem occurs performing the encryption.
+   * @return The querier containing the query, and all information required to perform decryption.
    */
-  public void encrypt() throws InterruptedException, PIRException
+  public Querier encrypt() throws InterruptedException, PIRException
   {
     int numThreads = SystemConfiguration.getIntProperty("numThreads", 1);
-    encrypt(numThreads);
+    return encrypt(numThreads);
   }
 
   /**
-   * Encrypt, building the Query object, calculating and setting the query vectors
+   * Encrypts the query described by the query information using Paillier encryption using the given number of threads.
+   * <p>
+   * The encryption builds a <code>Querier</code> object, calculating and setting the query vectors.
    * <p>
    * If we have hash collisions over our selector set, we will append integers to the key starting with 0 until we no longer have collisions.
    * <p>
    * For encrypted query vector E = <E_0, ..., E_{(2^hashBitSize)-1}>:
    * <p>
    * E_i = 2^{j*dataPartitionBitSize} if i = H_k(selector_j) 0 otherwise
+   * 
+   * @param numThreads
+   *          the number of threads to use when performing the encryption.
+   * @throws InterruptedException
+   *           If the task was interrupted during encryption.
+   * @throws PIRException
+   *           If a problem occurs performing the encryption.
+   * @return The querier containing the query, and all information required to perform decryption.
    */
-  public void encrypt(int numThreads) throws InterruptedException, PIRException
+  public Querier encrypt(int numThreads) throws InterruptedException, PIRException
   {
-    query = new Query(queryInfo, paillier.getN());
+    Query query = new Query(queryInfo, paillier.getN());
 
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
     Map<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
 
     // Form the embedSelectorMap
-    populateEmbeddedSelectorMap();
+    // Map to check the embedded selectors in the results for false positives;
+    // if the selector is a fixed size < 32 bits, it is included as is
+    // if the selector is of variable lengths
+    Map<Integer,String> embedSelectorMap = computeEmbeddedSelectorMap();
 
     if (numThreads == 1)
     {
-      serialEncrypt(selectorQueryVecMapping);
+      serialEncrypt(query, selectorQueryVecMapping);
     }
     else
     {
-      parallelEncrypt(Math.max(2, numThreads), selectorQueryVecMapping);
+      parallelEncrypt(Math.max(2, numThreads), query, selectorQueryVecMapping);
     }
 
     // Generate the expTable in Query, if we are using it and if
@@ -163,8 +150,8 @@ public class EncryptQuery
       query.generateExpTable();
     }
 
-    // Set the Querier object
-    querier = new Querier(selectors, paillier, query, embedSelectorMap);
+    // Return the Querier object.
+    return new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
   private Map<Integer,Integer> computeSelectorQueryVecMap()
@@ -200,31 +187,30 @@ public class EncryptQuery
     return selectorQueryVecMapping;
   }
 
-  private void populateEmbeddedSelectorMap()
+  private Map<Integer,String> computeEmbeddedSelectorMap() throws PIRException
   {
     QuerySchema qSchema = QuerySchemaRegistry.get(queryInfo.getQueryType());
+    String selectorName = qSchema.getSelectorName();
     DataSchema dSchema = DataSchemaRegistry.get(qSchema.getDataSchemaName());
-    String type = dSchema.getElementType(qSchema.getSelectorName());
+    String type = dSchema.getElementType(selectorName);
+
+    Map<Integer,String> embedSelectorMap = new HashMap<>(selectors.size());
+
     int sNum = 0;
     for (String selector : selectors)
     {
-      String embeddedSelector = null;
-      try
-      {
-        embeddedSelector = QueryUtils.getEmbeddedSelector(selector, type, dSchema.getPartitionerForElement(qSchema.getSelectorName()));
-      } catch (Exception e)
-      {
-        logger.info("Caught exception for selector = " + selector);
-        e.printStackTrace();
-        // TODO: Check: should continue?
-      }
-
+      String embeddedSelector = QueryUtils.getEmbeddedSelector(selector, type, dSchema.getPartitionerForElement(selectorName));
       embedSelectorMap.put(sNum, embeddedSelector);
-      ++sNum;
+      sNum += 1;
     }
+
+    return embedSelectorMap;
   }
 
-  private void serialEncrypt(Map<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  /*
+   * Perform the encryption using a single thread, and avoiding the overhead of thread management.
+   */
+  private void serialEncrypt(Query query, Map<Integer,Integer> selectorQueryVecMapping) throws PIRException
   {
     int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
 
@@ -234,7 +220,10 @@ public class EncryptQuery
     logger.info("Completed serial creation of encrypted query vectors");
   }
 
-  private void parallelEncrypt(int numThreads, Map<Integer,Integer> selectorQueryVecMapping) throws InterruptedException, PIRException
+  /*
+   * Performs the encryption with numThreads.
+   */
+  private void parallelEncrypt(int numThreads, Query query, Map<Integer,Integer> selectorQueryVecMapping) throws InterruptedException, PIRException
   {
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
