@@ -207,8 +207,7 @@ public class Inputs
 
     dataElementsJSON.add(jsonObj7);
 
-    // This should never be returned - doesn't hit on any domain selectors
-    // resolution ip on stoplist
+    // Doesn't hit on any domain selectors; resolution ip on stoplist
     JSONObject jsonObj8 = new JSONObject();
     jsonObj8.put(DATE, "2016-02-20T23:29:12.000Z");
     jsonObj8.put(QNAME, "something.else2");
@@ -220,7 +219,7 @@ public class Inputs
 
     dataElementsJSON.add(jsonObj8);
 
-    // This should never be returned in distributed case -- domain and resolution ip on stoplist
+    // Domain and resolution ip on stoplist
     JSONObject jsonObj9 = new JSONObject();
     jsonObj9.put(DATE, "2016-02-20T23:29:13.000Z");
     jsonObj9.put(QNAME, "something.else.on.stoplist");
@@ -340,14 +339,14 @@ public class Inputs
         "{\"qname\":\"something.else\",\"date\":\"2016-02-20T23:29:11.000Z\",\"qtype\":[\"1\"]"
             + ",\"rcode\":\"0\",\"src_ip\":\"1.1.1.1\",\"dest_ip\":\"2.2.2.2\"" + ",\"ip\":[\"3.3.3.3\"]}");
 
-    // Never should be returned - doesn't hit on any selectors
+    // Doesn't hit on any domain selectors; resolution ip on stoplist
     String indexTypeNum8 = esTestIndex + "/" + esType + "/8";
     logger.info("indexTypeNum8 = " + indexTypeNum8);
     ProcessBuilder pAdd8 = new ProcessBuilder("curl", "-XPUT", indexTypeNum8, "-d",
         "{\"qname\":\"something.else2\",\"date\":\"2016-02-20T23:29:12.000Z\",\"qtype\":[\"1\"]"
-            + ",\"rcode\":\"0\",\"src_ip\":\"1.1.1.12\",\"dest_ip\":\"2.2.2.22\"" + ",\"ip\":[\"3.3.3.32\"]}");
+            + ",\"rcode\":\"0\",\"src_ip\":\"5.6.7.8\",\"dest_ip\":\"2.2.2.22\"" + ",\"ip\":[\"3.3.3.132\"]}");
 
-    // This should never be returned -- domain on stoplist
+    // Domain on stoplist
     String indexTypeNum9 = esTestIndex + "/" + esType + "/9";
     logger.info("indexTypeNum9 = " + indexTypeNum9);
     ProcessBuilder pAdd9 = new ProcessBuilder("curl", "-XPUT", indexTypeNum9, "-d",

@@ -62,18 +62,18 @@ public class BaseTests
 
   public static void testDNSHostnameQuery(ArrayList<JSONObject> dataElements, int numThreads, boolean testFalsePositive) throws Exception
   {
-    testDNSHostnameQuery(dataElements, null, false, false, numThreads, testFalsePositive);
+    testDNSHostnameQuery(dataElements, null, false, false, numThreads, testFalsePositive, false);
   }
 
   public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
       throws Exception
   {
-    testDNSHostnameQuery(dataElements, fs, isSpark, isDistributed, numThreads, false);
+    testDNSHostnameQuery(dataElements, fs, isSpark, isDistributed, numThreads, false, false);
   }
 
   // Query for the watched hostname occurred; ; watched value type: hostname (String)
   public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads,
-      boolean testFalsePositive) throws Exception
+      boolean testFalsePositive, boolean isStreaming) throws Exception
   {
     logger.info("Running testDNSHostnameQuery(): ");
 
@@ -83,7 +83,7 @@ public class BaseTests
     List<QueryResponseJSON> results;
     if (isDistributed)
     {
-      results = DistTestSuite.performQuery(Inputs.DNS_HOSTNAME_QUERY, selectorsDomain, fs, isSpark, numThreads);
+      results = DistTestSuite.performQuery(Inputs.DNS_HOSTNAME_QUERY, selectorsDomain, fs, isSpark, numThreads, isStreaming);
     }
     else
     {
@@ -193,11 +193,12 @@ public class BaseTests
 
   public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, int numThreads) throws Exception
   {
-    testDNSIPQuery(dataElements, null, false, false, numThreads);
+    testDNSIPQuery(dataElements, null, false, false, numThreads, false);
   }
 
   // The watched IP address was detected in the response to a query; watched value type: IP address (String)
-  public static void testDNSIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
+  public static void testDNSIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads, boolean isStreaming)
+      throws Exception
   {
     logger.info("Running testDNSIPQuery(): ");
 
@@ -206,7 +207,7 @@ public class BaseTests
 
     if (isDistributed)
     {
-      results = DistTestSuite.performQuery(Inputs.DNS_IP_QUERY, selectorsIP, fs, isSpark, numThreads);
+      results = DistTestSuite.performQuery(Inputs.DNS_IP_QUERY, selectorsIP, fs, isSpark, numThreads, isStreaming);
 
       if (results.size() != 5)
       {
@@ -280,7 +281,7 @@ public class BaseTests
 
     if (isDistributed)
     {
-      results = DistTestSuite.performQuery(Inputs.DNS_NXDOMAIN_QUERY, selectorsDomain, fs, isSpark, numThreads);
+      results = DistTestSuite.performQuery(Inputs.DNS_NXDOMAIN_QUERY, selectorsDomain, fs, isSpark, numThreads, false);
     }
     else
     {
@@ -330,11 +331,12 @@ public class BaseTests
 
   public static void testSRCIPQuery(ArrayList<JSONObject> dataElements, int numThreads) throws Exception
   {
-    testSRCIPQuery(dataElements, null, false, false, numThreads);
+    testSRCIPQuery(dataElements, null, false, false, numThreads, false);
   }
 
   // Query for responses from watched srcIPs
-  public static void testSRCIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
+  public static void testSRCIPQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads, boolean isStreaming)
+      throws Exception
   {
     logger.info("Running testSRCIPQuery(): ");
 
@@ -345,7 +347,7 @@ public class BaseTests
     int numExpectedResults = 1;
     if (isDistributed)
     {
-      results = DistTestSuite.performQuery(Inputs.DNS_SRCIP_QUERY, selectorsIP, fs, isSpark, numThreads);
+      results = DistTestSuite.performQuery(Inputs.DNS_SRCIP_QUERY, selectorsIP, fs, isSpark, numThreads, isStreaming);
       removeTailElements = 2; // The last two elements are on the distributed stoplist
     }
     else
@@ -406,8 +408,8 @@ public class BaseTests
   }
 
   // Query for responses from watched srcIPs
-  public static void testSRCIPQueryNoFilter(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
-      throws Exception
+  public static void testSRCIPQueryNoFilter(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads,
+      boolean isStreaming) throws Exception
   {
     logger.info("Running testSRCIPQueryNoFilter(): ");
 
@@ -417,7 +419,7 @@ public class BaseTests
     int numExpectedResults = 3;
     if (isDistributed)
     {
-      results = DistTestSuite.performQuery(Inputs.DNS_SRCIP_QUERY_NO_FILTER, selectorsIP, fs, isSpark, numThreads);
+      results = DistTestSuite.performQuery(Inputs.DNS_SRCIP_QUERY_NO_FILTER, selectorsIP, fs, isSpark, numThreads, isStreaming);
     }
     else
     {

@@ -113,7 +113,7 @@ public class QuerierDriver implements Serializable
     {
       queryType = SystemConfiguration.getProperty(QuerierProps.QUERYTYPE);
       hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
-      hashKey = SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE);
+      hashKey = SystemConfiguration.getProperty(QuerierProps.HASHKEY);
       dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
       paillierBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.PAILLIERBITSIZE));
       certainty = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.CERTAINTY));

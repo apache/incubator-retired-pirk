@@ -18,12 +18,15 @@
  */
 package org.apache.pirk.responder.wideskies;
 
+import java.security.Permission;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
+import org.apache.pirk.responder.wideskies.spark.streaming.ComputeStreamingResponse;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -50,6 +53,9 @@ public class ResponderDriver
   {
     ResponderCLI responderCLI = new ResponderCLI(args);
 
+    // For handling System.exit calls from Spark Streaming
+    System.setSecurityManager(new SystemExitManager());
+
     if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("mapreduce"))
     {
       logger.info("Launching MapReduce ResponderTool:");
@@ -65,6 +71,25 @@ public class ResponderDriver
       ComputeResponse computeResponse = new ComputeResponse(fs);
       computeResponse.performQuery();
     }
+    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("sparkstreaming"))
+    {
+      logger.info("Launching Spark ComputeStreamingResponse:");
+
+      FileSystem fs = FileSystem.get(new Configuration());
+      ComputeStreamingResponse computeSR = new ComputeStreamingResponse(fs);
+      try
+      {
+        computeSR.performQuery();
+      } catch (SystemExitException e)
+      {
+        // If System.exit(0) is not caught from Spark Streaming,
+        // the application will complete with a 'failed' status
+        logger.info("Exited with System.exit(0) from Spark Streaming");
+      }
+
+      // Teardown the context
+      computeSR.teardown();
+    }
     else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("standalone"))
     {
       logger.info("Launching Standalone Responder:");
@@ -74,6 +99,32 @@ public class ResponderDriver
 
       Responder pirResponder = new Responder(query);
       pirResponder.computeStandaloneResponse();
+    }
+  }
+
+  // Exception and Security Manager classes used to catch System.exit from Spark Streaming
+  private static class SystemExitException extends SecurityException
+  {}
+
+  private static class SystemExitManager extends SecurityManager
+  {
+    @Override
+    public void checkPermission(Permission perm)
+    {}
+
+    @Override
+    public void checkExit(int status)
+    {
+      super.checkExit(status);
+      if (status == 0) // If we exited cleanly, throw SystemExitException
+      {
+        throw new SystemExitException();
+      }
+      else
+      {
+        throw new SecurityException();
+      }
+
     }
   }
 }

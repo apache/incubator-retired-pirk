@@ -166,6 +166,9 @@ public class DistributedTestCLI
     tests += "J - JSON/HDFS MapReduce\n";
     tests += "ES - Elasticsearch Spark \n";
     tests += "JS - JSON/HDFS Spark \n";
+    tests += "SS - Spark Streaming Tests \n";
+    tests += "JSS - JSON/HDFS Spark Streaming \n";
+    tests += "ESS - Elasticsearch Spark Streaming \n";
 
     Option optionTestSelection = new Option("t", "tests", true, "optional -- Select which tests to execute: \n" + tests);
     optionTestSelection.setRequired(false);
