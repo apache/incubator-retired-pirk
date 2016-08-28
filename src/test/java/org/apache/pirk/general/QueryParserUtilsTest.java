@@ -66,11 +66,6 @@ public class QueryParserUtilsTest
     Inputs.createSchemaFiles(null, false, null);
 
     dSchema = DataSchemaRegistry.get(Inputs.TEST_DATA_SCHEMA_NAME);
-
-    // ProcessBuilder pAdd1 = new ProcessBuilder("curl", "-XPUT", indexTypeNum1, "-d",
-    // "{\"qname\":\"a.b.c.com\",\"date\":\"2016-02-20T23:29:05.000Z\",\"qtype\":[\"1\"]"
-    // + ",\"rcode\":\"0\",\"src_ip\":\"55.55.55.55\",\"dest_ip\":\"1.2.3.6\"" + ",\"ip\":[\"10.20.30.40\",\"10.20.30.60\"]}");
-    //
     doc = StringUtils.jsonStringToMapWritableWithArrayWritable(dataElementsJSON.get(0).toJSONString(), dSchema);
     docWAW = StringUtils.jsonStringToMapWritableWithWritableArrayWritable(dataElementsJSON.get(0).toJSONString(), dSchema);
     docMap = StringUtils.jsonStringToMap(dataElementsJSON.get(0).toJSONString(), dSchema);

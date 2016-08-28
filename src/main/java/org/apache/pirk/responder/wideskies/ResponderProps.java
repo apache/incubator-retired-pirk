@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.cli.Option;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
@@ -59,19 +60,26 @@ public class ResponderProps
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
   public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
-  static final String NUMREDUCETASKS = "pir.numReduceTasks";
-  static final String MAPMEMORY = "mapreduce.map.memory.mb";
-  static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
-  static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
-  static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
-  static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
-  static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
-  static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  public static final String NUMREDUCETASKS = "pir.numReduceTasks";
+  public static final String MAPMEMORY = "mapreduce.map.memory.mb";
+  public static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
+  public static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
+  public static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
+  public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
+  public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
+  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+
+  // For Spark Streaming - optional
+  public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
+  public static final String WINDOWLENGTH = "pir.sparkstreaming.windowLength";
+  public static final String USEQUEUESTREAM = "pir.sparkstreaming.useQueueStream";
+  public static final String MAXBATCHES = "pir.sparkstreaming.maxBatches";
+  public static final String STOPGRACEFULLY = "spark.streaming.stopGracefullyOnShutdown";
 
   static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, ESNODES, ESPORT,
       OUTPUTFILE, BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
       REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
-      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS);
+      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY);
 
   /**
    * Validates the responder properties
@@ -90,7 +98,7 @@ public class ResponderProps
     }
 
     String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("standalone"))
+    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("standalone"))
     {
       logger.info("Unsupported platform: " + platform);
       valid = false;
@@ -176,7 +184,7 @@ public class ResponderProps
       valid = false;
     }
 
-    // Parse optional properties with defaults
+    // Parse optional properties
 
     if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
     {
@@ -187,6 +195,8 @@ public class ResponderProps
     {
       SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
     }
+
+    // Parse optional properties with defaults
 
     if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
     {
@@ -221,6 +231,31 @@ public class ResponderProps
     if (!SystemConfiguration.hasProperty(USELOCALCACHE))
     {
       SystemConfiguration.setProperty(USELOCALCACHE, "true");
+    }
+
+    if (!SystemConfiguration.hasProperty(BATCHSECONDS))
+    {
+      SystemConfiguration.setProperty(BATCHSECONDS, "30");
+    }
+
+    if (!SystemConfiguration.hasProperty(WINDOWLENGTH))
+    {
+      SystemConfiguration.setProperty(WINDOWLENGTH, "30");
+    }
+
+    if (!SystemConfiguration.hasProperty(USEQUEUESTREAM))
+    {
+      SystemConfiguration.setProperty(USEQUEUESTREAM, "false");
+    }
+
+    if (!SystemConfiguration.hasProperty(MAXBATCHES))
+    {
+      SystemConfiguration.setProperty(MAXBATCHES, "-1");
+    }
+
+    if (!SystemConfiguration.hasProperty(STOPGRACEFULLY))
+    {
+      SystemConfiguration.setProperty(STOPGRACEFULLY, "false");
     }
 
     // Load the new local query and data schemas

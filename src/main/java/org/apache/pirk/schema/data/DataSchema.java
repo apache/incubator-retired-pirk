@@ -29,6 +29,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner;
 import org.apache.pirk.utils.PIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A data schema describes the target data being referenced by a <code>Querier</code> and a <code>Responder</code>.
@@ -42,6 +44,8 @@ import org.apache.pirk.utils.PIRException;
 public class DataSchema implements Serializable
 {
   private static final long serialVersionUID = 1L;
+
+  private static final Logger logger = LoggerFactory.getLogger(DataSchema.class);
 
   // This schema's name.
   private final String schemaName;
@@ -212,6 +216,7 @@ public class DataSchema implements Serializable
       text = new Text(elementName);
       textRep.put(elementName, text);
     }
+
     return text;
   }
 
