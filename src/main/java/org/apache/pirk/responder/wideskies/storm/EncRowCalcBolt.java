@@ -41,13 +41,13 @@ import java.util.Random;
 
 /**
  * Bolt class to perform the encrypted row calculation
- * <p/>
+ * <p>
  * Receives a {@code <hash(selector), dataPartitions>} tuple as input.
- * <p/>
+ * <p>
  * Encrypts the row data and emits a (column index, encrypted row-value) tuple for each encrypted block.
- * <p/>
+ * <p>
  * Every FLUSH_FREQUENCY seconds, it sends a signal to EncColMultBolt to flush its output and resets all counters. At that point, all outgoing (column index,
- * encrypted row-value) tuples are buffered until a SESSION_END signal is received back from the EncColMultBolt.
+ * encrypted row-value) tuples are buffered until a SESSION_END signal is received back from each EncColMultBolt.
  */
 public class EncRowCalcBolt extends BaseRichBolt
 {
@@ -71,7 +71,7 @@ public class EncRowCalcBolt extends BaseRichBolt
   // These are the main data structures used here.
   private Map<Integer,Integer> hitsByRow = new HashMap<Integer,Integer>();
   private Map<Integer,Integer> colIndexByRow = new HashMap<Integer,Integer>();
-  private List<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<Tuple2<Long,BigInteger>>();
+  private List<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<>();
   private List<BigInteger> dataArray = new ArrayList<>();
 
   private int numEndSigs = 0;
@@ -79,7 +79,7 @@ public class EncRowCalcBolt extends BaseRichBolt
   // These buffered values are used in the case when a session has been ejected, but the SESSION_END signal has not been received
   // yet from the next bolt.
   private boolean buffering = false;
-  private List<Tuple2<Long,BigInteger>> bufferedValues = new ArrayList<Tuple2<Long,BigInteger>>();
+  private List<Tuple2<Long,BigInteger>> bufferedValues = new ArrayList<>();
 
   @Override
   public void prepare(Map map, TopologyContext topologyContext, OutputCollector coll)

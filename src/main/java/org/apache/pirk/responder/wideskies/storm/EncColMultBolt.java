@@ -38,14 +38,13 @@ import java.util.Map;
  * Takes {@code <columnIndex, columnValue>} tuples as input and aggregates (multiplies) the columnValues for a given columnIndex as they are received.
  * <p>
  * EncRowCalcBolts send flush signals to the EncColMultBolts indicating that they have finished sending all tuples for a session. Whenever a flush signal is
- * received from a EncRowCalcBolt, the num of received flush signals is tallied until each encrypted row has emitted a flush signal (there are 2^hashBitSize
- * rows).
+ * received from a EncRowCalcBolt, the num of received flush signals is tallied until each EncRowCalcBolt has emitted a flush signal.
  * <p>
- * Once a flush signal has been received from each row, all {@code <columnIndex, aggregate colVal product>} tuples are sent to the OutputBolt and a session_end
+ * Once a flush signal has been received from each EncRowCalcBolt, all {@code <columnIndex, aggregate colVal product>} tuples are sent to the OutputBolt and a session_end
  * signal is sent back to each EncRowMultBolt.
  * <p>
  * The EncRowMultBolts buffer their output from the time that they send a flush signal to the EncColMultBolts until the time that they receive a session_end
- * signal from the EncColMultBolts.
+ * signal from all of the EncColMultBolts.
  * 
  */
 public class EncColMultBolt extends BaseRichBolt
@@ -61,7 +60,7 @@ public class EncColMultBolt extends BaseRichBolt
   private Long totalFlushSignals;
 
   // This is the main object here. It holds column Id -> aggregated product
-  private HashMap<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
+  private Map<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
   private BigInteger colVal1;
   private BigInteger colMult;
 

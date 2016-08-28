@@ -40,6 +40,7 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -70,7 +71,7 @@ public class OutputBolt extends BaseRichBolt
   private boolean hdfs;
   private String hdfsUri;
   private Integer flushCounter = 0;
-  private ArrayList<Tuple> tuplesToAck = new ArrayList<Tuple>();
+  private List<Tuple> tuplesToAck = new ArrayList<>();
   private Integer totalFlushSigs;
 
   private LocalFileSystemStore localStore;

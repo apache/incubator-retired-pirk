@@ -47,41 +47,52 @@ public class ResponderDriver
 {
   private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
 
+  enum Platform
+  {
+    MAPREDUCE, SPARK, STORM, STANDALONE, NONE;
+  }
+
   public static void main(String[] args) throws Exception
   {
-    ResponderCLI responderCLI = new ResponderCLI(args);
-
-    if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("mapreduce"))
+    Platform platform = Platform.NONE;
+    try
     {
-      logger.info("Launching MapReduce ResponderTool:");
-
-      ComputeResponseTool pirWLTool = new ComputeResponseTool();
-      ToolRunner.run(pirWLTool, new String[] {});
+      platform = Platform.valueOf(SystemConfiguration.getProperty(ResponderProps.PLATFORM).toUpperCase());
+    } catch (IllegalArgumentException e)
+    {
+      logger.error("Platform " + platform + " not found");
     }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("spark"))
+
+    switch (platform)
     {
-      logger.info("Launching Spark ComputeResponse:");
+      case MAPREDUCE:
+        logger.info("Launching MapReduce ResponderTool:");
 
-      FileSystem fs = FileSystem.get(new Configuration());
-      ComputeResponse computeResponse = new ComputeResponse(fs);
-      computeResponse.performQuery();
-    }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("storm"))
-    {
-      logger.info("Launching Storm PirkTopology:");
+        ComputeResponseTool pirWLTool = new ComputeResponseTool();
+        ToolRunner.run(pirWLTool, new String[] {});
+        break;
 
-      PirkTopology.runPirkTopology();
+      case SPARK:
+        logger.info("Launching Spark ComputeResponse:");
 
-    }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("standalone"))
-    {
-      logger.info("Launching Standalone Responder:");
+        FileSystem fs = FileSystem.get(new Configuration());
+        ComputeResponse computeResponse = new ComputeResponse(fs);
+        computeResponse.performQuery();
+        break;
 
-      String queryInput = SystemConfiguration.getProperty("pir.queryInput");
-      Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
+      case STORM:
+        logger.info("Launching Storm PirkTopology:");
+        PirkTopology.runPirkTopology();
+        break;
 
-      Responder pirResponder = new Responder(query);
-      pirResponder.computeStandaloneResponse();
+      case STANDALONE:
+        logger.info("Launching Standalone Responder:");
+
+        String queryInput = SystemConfiguration.getProperty("pir.queryInput");
+        Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
+
+        Responder pirResponder = new Responder(query);
+        pirResponder.computeStandaloneResponse();
     }
   }
 }

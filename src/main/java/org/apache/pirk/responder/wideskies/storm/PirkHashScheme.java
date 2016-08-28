@@ -52,8 +52,6 @@ public class PirkHashScheme extends StringScheme implements Scheme
 
   transient private JSONParser parser;
   transient private JSONObject json;
-  private ArrayList<List<Object>> values = new ArrayList<List<Object>>();;
-  private List<Object> value = new ArrayList<Object>();
   private boolean initialized = false;
   private QuerySchema qSchema;
   private Config conf;
@@ -91,7 +89,7 @@ public class PirkHashScheme extends StringScheme implements Scheme
     } catch (ParseException e)
     {
       json = null;
-      logger.warn("ParseException. ", e);
+      logger.warn("ParseException parsing " + str, e);
     }
     String selector = QueryUtils.getSelectorByQueryTypeJSON(qSchema, json);
     int hash = KeyedHash.hash(queryInfo.getHashKey(), queryInfo.getHashBitSize(), selector);
