@@ -40,6 +40,7 @@ public class Accumulators implements Serializable
   private Accumulator<Integer> numRecordsAfterFilter = null;
   private Accumulator<Integer> numHashes = null;
   private Accumulator<Integer> numColumns = null;
+  private Accumulator<Integer> numBatches = null;
 
   public Accumulators(JavaSparkContext sc)
   {
@@ -48,6 +49,7 @@ public class Accumulators implements Serializable
     numRecordsAfterFilter = sc.accumulator(0);
     numHashes = sc.accumulator(0);
     numColumns = sc.accumulator(0);
+    numBatches = sc.accumulator(0);
   }
 
   public Integer numRecordsReceivedGetValue()
@@ -100,6 +102,16 @@ public class Accumulators implements Serializable
     numColumns.add(val);
   }
 
+  public Integer numBatchesGetValue()
+  {
+    return numBatches.value();
+  }
+
+  public void incNumBatches(int val)
+  {
+    numBatches.add(val);
+  }
+
   public void resetAll()
   {
     numRecordsReceived.setValue(0);
@@ -107,11 +119,12 @@ public class Accumulators implements Serializable
     numRecordsAfterFilter.setValue(0);
     numHashes.setValue(0);
     numColumns.setValue(0);
+    numBatches.setValue(0);
   }
 
   public void printAll()
   {
     logger.info("numRecordsReceived = " + numRecordsReceived.value() + " \n numRecordsFiltered = " + numRecordsFiltered + " \n numRecordsAfterFilter = "
-        + numRecordsAfterFilter + " \n numHashes = " + numHashes + " \n numColumns = " + numColumns);
+        + numRecordsAfterFilter + " \n numHashes = " + numHashes + " \n numColumns = " + numColumns.value() + " \n numBatches = " + numBatches.value());
   }
 }

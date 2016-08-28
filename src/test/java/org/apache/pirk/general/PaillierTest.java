@@ -257,7 +257,7 @@ public class PaillierTest
   {
     Random r = new Random();
     int lowBitLength = 3073; // inclusive
-    int highBitLength = 7001; // exclusive
+    int highBitLength = 4000; // exclusive
 
     int loopVal = 1; // int loopVal = 1000; //change this and re-test for high loop testing
     for (int i = 0; i < loopVal; ++i)
@@ -267,7 +267,7 @@ public class PaillierTest
       basicTestPaillierWithKeyGeneration(bitLength, certainty, ensureBitSet);
       basicTestPaillierWithKeyGeneration(3072, certainty, ensureBitSet);
 
-      // Test with random bit length between 3073 and 7000
+      // Test with random bit length between 3073 and 4000
       int randomLargeBitLength = r.nextInt(highBitLength - lowBitLength) + lowBitLength;
       basicTestPaillierWithKeyGeneration(randomLargeBitLength, certainty, ensureBitSet);
     }

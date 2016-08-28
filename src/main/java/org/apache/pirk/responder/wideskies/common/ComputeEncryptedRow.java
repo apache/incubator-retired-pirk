@@ -181,7 +181,7 @@ public class ComputeEncryptedRow
       {
         if (elementCounter >= maxHitsPerSelector)
         {
-          logger.info("maxHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+          logger.debug("maxHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
           break;
         }
       }
@@ -219,7 +219,7 @@ public class ComputeEncryptedRow
 
       ++elementCounter;
     }
-    logger.info("totalHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
+    logger.debug("totalHits: rowIndex = " + rowIndex + " elementCounter = " + elementCounter);
 
     return returnPairs;
   }

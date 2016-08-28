@@ -46,6 +46,7 @@ import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.test.utils.BaseTests;
 import org.apache.pirk.test.utils.Inputs;
 import org.apache.pirk.test.utils.TestUtils;
+import org.apache.pirk.utils.QueryResultsWriter;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.storm.Config;
 import org.apache.storm.ILocalCluster;
@@ -302,15 +303,15 @@ public class KafkaStormIntegrationTest
     // Perform the encryption
     logger.info("Performing encryption of the selectors - forming encrypted query vectors:");
     EncryptQuery encryptQuery = new EncryptQuery(queryInfo, selectors, paillier);
-    encryptQuery.encrypt(1);
+    Querier querier = encryptQuery.encrypt(1);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Write out files.
     fileQuerier = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERIER_FILETAG, ".txt");
     fileQuery = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERY_FILETAG, ".txt");
 
-    localStore.store(fileQuerier.getAbsolutePath(), encryptQuery.getQuerier());
-    localStore.store(fileQuery, encryptQuery.getQuery());
+    localStore.store(fileQuerier.getAbsolutePath(), querier);
+    localStore.store(fileQuery, querier.getQuery());
   }
 
   private File performDecryption(File responseFile) throws Exception
@@ -327,7 +328,7 @@ public class KafkaStormIntegrationTest
     // Perform decryption and output the result file
     DecryptResponse decryptResponse = new DecryptResponse(response, querier);
     decryptResponse.decrypt(numThreads);
-    decryptResponse.writeResultFile(outputFile);
+    QueryResultsWriter.writeResultFile(outputFile, decryptResponse.decrypt(numThreads));
     return finalResults;
   }
 

@@ -73,7 +73,7 @@ class DecryptResponseTask<V> implements Callable<Map<String,List<QueryResponseJS
     String selectorName = qSchema.getSelectorName();
 
     // Result is a map of (selector -> List of hits).
-    Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>();
+    Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(selectors.size());
     for (String selector : selectors.values())
     {
       resultMap.put(selector, new ArrayList<QueryResponseJSON>());

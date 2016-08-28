@@ -63,10 +63,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
 
     query = bvIn.getQuery();
     queryInfo = bvIn.getQueryInfo();
-    if (bvIn.getUseLocalCache().equals("true"))
-    {
-      useLocalCache = true;
-    }
+    useLocalCache = bvIn.getUseLocalCache();
     limitHitsPerSelector = bvIn.getLimitHitsPerSelector();
     maxHitsPerSelector = bvIn.getMaxHitsPerSelector();
 

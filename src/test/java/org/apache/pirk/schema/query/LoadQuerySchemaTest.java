@@ -305,8 +305,8 @@ public class LoadQuerySchemaTest
   // Create the stoplist file and alter the properties accordingly
   private void createStopListFile() throws IOException, PIRException
   {
-    SystemConfiguration.setProperty("pir.stopListFile", "testStopListFile");
     String newSLFile = Inputs.createStopList(null, false);
+
     SystemConfiguration.setProperty("pir.stopListFile", newSLFile);
   }
 
