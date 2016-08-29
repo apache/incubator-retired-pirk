@@ -57,8 +57,6 @@ public class ResponderDriver
 
   public static void main(String[] args) throws Exception
   {
-    ResponderCLI responderCLI = new ResponderCLI(args);
-
     // For handling System.exit calls from Spark Streaming
     System.setSecurityManager(new SystemExitManager());
 
