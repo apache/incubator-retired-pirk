@@ -61,12 +61,13 @@ public class ResponderDriver
     System.setSecurityManager(new SystemExitManager());
 
     Platform platform = Platform.NONE;
+    String platformString = SystemConfiguration.getProperty(ResponderProps.PLATFORM);
     try
     {
-      platform = Platform.valueOf(SystemConfiguration.getProperty(ResponderProps.PLATFORM).toUpperCase());
+      platform = Platform.valueOf(platformString.toUpperCase());
     } catch (IllegalArgumentException e)
     {
-      logger.error("Platform " + platform + " not found");
+      logger.error("platform " + platformString + " not found.");
     }
 
     switch (platform)
