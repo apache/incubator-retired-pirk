@@ -90,8 +90,9 @@ public class ComputeResponse
   private BroadcastVars bVars = null;
 
   private QueryInfo queryInfo = null;
-  Query query = null;
-  QuerySchema qSchema = null;
+
+  private Query query = null;
+  private QuerySchema qSchema = null;
 
   private int numDataPartitions = 0;
   private int numColMultPartitions = 0;
