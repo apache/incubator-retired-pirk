@@ -3,7 +3,7 @@ title: Downloads
 nav: nav_downloads
 ---
 
-Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using these [KEYS][GPG_KEYS].
+Be sure to verify your downloads by these [procedures](https://www.apache.org/info/verification "Verify") using these [KEYS](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=blob_plain;f=KEYS;hb=refs/heads/master).
 
 ## Current Release
 
@@ -15,5 +15,3 @@ The Maven/Ivy/Gradle downloadable JAR files are published via the ASF repository
 
 Older releases may be found in the [archives](https://archive.apache.org/dist/incubator/pirk/).
 
-[VERIFY_PROCEDURES]: https://www.apache.org/info/verification "Verify"
-[GPG_KEYS]: [add pirk keys]

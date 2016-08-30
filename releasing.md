@@ -16,11 +16,17 @@ This is a guide to making a release of Apache Pirk (incubating). Please follow t
 * [Create the Candidate Release Artifacts](#create-the-candidate-release-artifacts)
 * [Validate the Release Candidate](#validate-the-release-candidate)
 * [Close the Staging Repository](#close-the-staging-repository)
+* [Copy Artifacts to the Apache Distribution Dev Repository](#copy-artifacts-to-the-apache-distribution-dev-repository)
 * [How to Roll Back a Release Candidate](#how-to-roll-back-a-release-candidate)
 * [Generate the Release Notes](#generate-the-release-notes)
 3. [Vote on the Release](#vote-on-the-release)
+* [Apache Pirk Community Vote](#apache-pirk-community-vote)
+* [Incubator PMC Vote](#incubator-pmc-vote)
 4. [Publish the Release](#publish-the-release)
-5. [Update the Website](#update-the-website)
+* [Publish the Maven Artifacts](#publish-the-maven-artifacts)
+* [Publish the Artifacts to the Apache Release Repository](#publish-the-artifacts-to-the-apache-release-repository)
+5. [Announce the Release](#announce-the-release)
+6. [Update the Website](#update-the-website)
 
 
 ## Preliminaries ##
@@ -55,6 +61,9 @@ Make sure that your Maven settings.xml file contains the following:
 	               <mavenExecutorId>forked-path</mavenExecutorId>
 	               <gpg.keyname>yourKeyName</gpg.keyname>
 	               <gpg.passphrase>yourKeyPassword</gpg.passphrase>
+	               <deploy.altRepository>incubator-pirk.releases::default::https://dist.apache.org/repos/dist/dev/incubator/pirk/</deploy.altRepository>
+               <username>yourApacheID</username>
+               <deploy.url>https://dist.apache.org/repos/dist/dev/incubator/pirk/</deploy.url>
 	           </properties>
 	       </profile>
 	 </profiles>
@@ -134,18 +143,40 @@ If the release candidate appears to pass the validation checklist, close the sta
 
 Nexus will now run through a series of checksum and signature validations. 
 
-*If the checks pass*, Nexus will close the repository and give a URL to the closed staging repo (which contains the candidate artifacts). Send this URL to folks in the voting email so that they can find the staged candidate release artifacts.
+*If the checks pass*, Nexus will close the repository and give a URL to the closed staging repo (which contains the candidate artifacts). Include this URL in the voting email so that folks can find the staged candidate release artifacts. Move on to [copy the artifacts via svn to the Apache distribution dev repository](#copy-artifacts-to-the-apache-distribution-dev-repository). 
 
 *If the checks do not pass*, follow the instructions on how to [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts).
+
+### Copy Artifacts to the Apache Distribution Dev-Repository ###
+
+Via svn, copy the candidate release artifacts to [https://dist.apache.org/repos/dist/dev/incubator/pirk/](https://dist.apache.org/repos/dist/dev/incubator/pirk/)
+
+	svn checkout https://dist.apache.org/repos/dist/dev/incubator/pirk/ --username=<your user name>
+
+	mkdir pirk/<release version>
+	
+	copy the release artifacts into the new directory
+	
+	svn add <release version directory>
+
+	svn commit -m 'adding candidate release artifacts' --username=<your user name>
 
 
 ### How to Roll Back a Release Candidate ###
 
-A release candidate must be rolled back in Nexus and locally. 
+A release candidate must be rolled back in Nexus, the Apache dist/dev repo, and locally. 
 
 To roll back the release candidate in Nexus, drop the staging repo by clicking the 'Drop' icon.
 
-To roll back the release locally in your candidate relesae branch:
+To roll back the release candidate in [https://dist.apache.org/repos/dist/dev/incubator/pirk/](https://dist.apache.org/repos/dist/dev/incubator/pirk/):
+
+	svn checkout https://dist.apache.org/repos/dist/dev/incubator/pirk/<release version> --username=<your user name>
+
+	svn delete <release version directory>
+
+	svn commit -m 'delete candidate release artifacts' --username=<your user name>
+
+To roll back the release locally in your candidate release branch:
 
 1. `mvn -Psigned_release versions:set -DnewVersion=<previous release version>-Snapshot`
 2. `mvn -Psigned_release versions:commit`
@@ -158,17 +189,23 @@ To roll back the release locally in your candidate relesae branch:
 
 To generate the release notes within via [Pirk JIRA](https://issues.apache.org/jira/browse/PIRK), follow the instructions found [here](https://confluence.atlassian.com/jira061/jira-administrator-s-guide/project-management/managing-versions/creating-release-notes).
 
-Include the link to the release notes in the voting email. 
+Include the link to the release notes in the voting emails. 
 
 ## Vote on the Release ##
 
-To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.apache.incubator.org) with subject `[VOTE]: Pirk <release version> Release` and a body along the lines of: 
+As per the Apache Incubator [release guidelines](http://incubator.apache.org/incubation/Incubation_Policy.html#Releases), all releases for incubating projects must go through a two-step voting process. [First](#apache-pirk-community-vote), release voting must successfully pass within the Apache Pirk community via the `dev@pirk.incubator.apache.org` mailing list. [Then](#incubator-pmc-vote), release voting must successfully pass within the Apache Incubator PMC via the `general@incubator.apache.org` mailing list.
+
+General information regarding the Apache voting process can be found [here](http://www.apache.org/foundation/voting.html).
+
+### Apache Pirk Community Vote
+
+To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.apache.incubator.org) with subject `[VOTE]: Apache Pirk <release version> Release` and a body along the lines of: 
 
 	This is the vote for <release version> of Apache Pirk (incubating).
 	
 	The vote will run for at least 72 hours and will close on <closing date>.
 	
-	The artifacts can be downloaded here: https://repository.apache.org/content/repositories/<repository name>
+	The artifacts can be downloaded here: https://dist.apache.org/repos/dist/dev/incubator/pirk/release/<release number> or from the Maven staging repo here: https://repository.apache.org/content/repositories/<repository name>
 	
 	All JIRAs completed for this release are tagged with 'FixVersion = <release version>'. You can view them here: <insert link to the JIRA release notes>
 	
@@ -178,16 +215,105 @@ To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.
 	
 	[ ] +1, accept RC as the official <release version> release 
 	[ ] -1, do not accept RC as the official <release version> release because...
+	
+If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts).
 
+Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.
+
+	The Apache Pirk <release version> vote is now closed and has passed as follows:
+
+	[number] +1 (binding) votes
+	[number] -1 (binding) votes
+
+	A vote Apache Pirk <release version> will now be called on general@incubator.apache.org.
+
+### Incubator PMC Vote
+
+Once the candidate release vote passes on dev@pirk.apache.incubator.org, call a vote on IMPC `general@incubator.apache.org` with an email a with subject `[VOTE]: Apache Pirk <release version> Release` and a body along the lines of:
+
+	The PPMC vote for the Apache Pirk 0.1.0-incubating release has passed. We kindly request that the IPMC now vote on the release.
+
+	The PPMC vote thread is located here: <link to the dev voting thread>
+
+	The artifacts can be downloaded here: https://dist.apache.org/repos/dist/dev/incubator/pirk/release/<release number> 
+
+	The artifacts have been signed with Key : <ID of signing key>
+
+	All JIRAs completed for this release are tagged with 'FixVersion = <release version>'. You can view them here: <insert link to the JIRA release notes>
+	
+	Please vote accordingly:
+
+	[ ] +1, accept as the official Apache Pirk <release number> release 
+	[ ] -1, do not accept as the official Apache Pirk <release number> release because...
+
+	The vote will run for at least 72 hours.
+
+If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts) (including re-voting within the Apache Pirk community on dev@pirk.apache.incubator.org).
+
+Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.
+
+	The Apache Pirk <release version> vote is now closed and has passed as follows:
+
+	[number] +1 (binding) votes
+	[number] -1 (binding) votes
+
+	The Apache Pirk (incubating) community will proceed with the release.
 
 ## Publish the Release ##
 
+Once the Apache Pirk PPMC and IPMC votes both pass, publish the release artifacts to the [Nexus Maven repository](#publish-the-maven-artifacts) and to the [Apache release repository](#publish-the-artifacts-to-the-apache-release-repository). 
+
+### Publish the Maven Artifacts
+
+Release the Maven artifacts in Nexus by selecting the staging repository `orgapachepirk-1001` and clicking on the 'Release' icon. 
+
+### Publish the Artifacts to the Apache Release Repository
+
+Via svn, copy the candidate release artifacts to [https://dist.apache.org/repos/dist/release/incubator/pirk/](https://dist.apache.org/repos/dist/release/incubator/pirk/)
+
+	svn checkout https://dist.apache.org/repos/dist/release/incubator/pirk/ --username=<your user name>
+
+	mkdir pirk/<release version>
+	
+	copy the release artifacts into the new directory
+	
+	svn add <release version directory>
+
+	svn commit -m 'adding release artifacts' --username=<your user name> 
+
+## Announce the Release ##
+
+Send an email to `announce@apache.org`, `general@incubator.apache.org`, and `dev@pirk.apache.incubator.org` with the subject `[ANNOUNCE] Apache Pirk <release number> Release` and a body along the lines of: 
+
+	The Apache Pirk team would like to announce the release of Apache Pirk <release version>. 
+
+	Apache Pirk (incubating) is a framework for scalable Private Information Retrieval (PIR). The goal of Pirk is to provide a landing place for robust, scalable, and practical implementations of PIR algorithms.
+
+	More details regarding Apache Pirk can be found here:
+	http://pirk.incubator.apache.org/
+
+	The release artifacts can be downloaded here: 
+	https://dist.apache.org/repos/dist/release/incubator/pirk/<release version>
+
+	Maven artifacts have been made available here: 
+	https://repository.apache.org/content/repositories/releases/org/apache/pirk/
+
+	All JIRAs completed for this release are tagged with 'FixVersion = <release version>'; the release notes can be found here: 
+	<link to release notes on JIRA>
+
+	Thanks!
+
+	The Apache Pirk Team
+
+General Apache information regarding announcing a release may be found [here](http://www.apache.org/dev/release.html#release-announcements).
 
 ## Update the Website ##
 
 Add the current release link to the [Downloads page]({{ site.baseurl }}/downloads).
 
-Update the javadocs. 
+Update the [javadocs]({{ site.baseurl }}/javadocs). 
+
+Update the [News]({{ site.baseurl }}/news) page and the News info bar on the left side of the [homepage]({{ site.baseurl }}/) (via editing _includes/newsfeed.md) with the release information.
 
 
 
