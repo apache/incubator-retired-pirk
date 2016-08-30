@@ -335,7 +335,7 @@ public class ComputeResponse
     logger.info("Performing query: ");
 
     // If we are using distributed exp tables -- Create the expTable file in hdfs for this query, if it doesn't exist
-    if ((queryInfo.getUseHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
+    if ((queryInfo.useHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
     {
       // <queryHash, <<power>,<element^power mod N^2>>
       JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations = ComputeExpLookupTable.computeExpTable(sc, fs, bVars, query, queryInput,

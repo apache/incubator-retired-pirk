@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -83,8 +83,8 @@ public class ComputeExpLookupTable
     }
 
     // Write the query hashes to a RDD
-    TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
-    ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
+    Map<Integer,BigInteger> queryElements = query.getQueryElements();
+    List<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
     JavaRDD<Integer> queryHashes = sc.parallelize(keys, numSplits);

@@ -24,7 +24,8 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -154,7 +155,7 @@ public class ComputeResponseTool extends Configured implements Tool
     Path outPathFinal = new Path(outputDirFinal);
 
     // If we are using distributed exp tables -- Create the expTable file in hdfs for this query, if it doesn't exist
-    if ((queryInfo.getUseHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
+    if ((queryInfo.useHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
     {
       success = computeExpTable();
     }
@@ -243,8 +244,8 @@ public class ComputeResponseTool extends Configured implements Tool
       fs.delete(splitDir, true);
     }
     // Write the query hashes to the split files
-    TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
-    ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
+    Map<Integer,BigInteger> queryElements = query.getQueryElements();
+    List<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
     int elementsPerSplit = queryElements.size() / numSplits; // Integral division.

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -122,8 +123,6 @@ public class EncryptQuery
    */
   public Querier encrypt(int numThreads) throws InterruptedException, PIRException
   {
-    Query query = new Query(queryInfo, paillier.getN());
-
     // Determine the query vector mappings for the selectors; vecPosition -> selectorNum
     Map<Integer,Integer> selectorQueryVecMapping = computeSelectorQueryVecMap();
 
@@ -133,18 +132,23 @@ public class EncryptQuery
     // if the selector is of variable lengths
     Map<Integer,String> embedSelectorMap = computeEmbeddedSelectorMap();
 
+    SortedMap<Integer,BigInteger> queryElements;
     if (numThreads == 1)
     {
-      serialEncrypt(query, selectorQueryVecMapping);
+      queryElements = serialEncrypt(selectorQueryVecMapping);
+      logger.info("Completed serial creation of encrypted query vectors");
     }
     else
     {
-      parallelEncrypt(Math.max(2, numThreads), query, selectorQueryVecMapping);
+      queryElements = parallelEncrypt(selectorQueryVecMapping, Math.max(2, numThreads));
+      logger.info("Completed parallel creation of encrypted query vectors");
     }
+
+    Query query = new Query(queryInfo, paillier.getN(), queryElements);
 
     // Generate the expTable in Query, if we are using it and if
     // useHDFSExpLookupTable is false -- if we are generating it as standalone and not on the cluster
-    if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable())
+    if (queryInfo.useExpLookupTable() && !queryInfo.useHDFSExpLookupTable())
     {
       logger.info("Starting expTable generation");
       query.generateExpTable();
@@ -208,22 +212,21 @@ public class EncryptQuery
   }
 
   /*
-   * Perform the encryption using a single thread, and avoiding the overhead of thread management.
+   * Perform the encryption using a single thread, avoiding the overhead of thread management.
    */
-  private void serialEncrypt(Query query, Map<Integer,Integer> selectorQueryVecMapping) throws PIRException
+  private SortedMap<Integer,BigInteger> serialEncrypt(Map<Integer,Integer> selectorQueryVecMapping) throws PIRException
   {
     int numElements = 1 << queryInfo.getHashBitSize(); // 2^hashBitSize
 
     EncryptQueryTask task = new EncryptQueryTask(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, 0, numElements - 1);
-    query.addQueryElements(task.call());
 
-    logger.info("Completed serial creation of encrypted query vectors");
+    return task.call();
   }
 
   /*
    * Performs the encryption with numThreads.
    */
-  private void parallelEncrypt(int numThreads, Query query, Map<Integer,Integer> selectorQueryVecMapping) throws InterruptedException, PIRException
+  private SortedMap<Integer,BigInteger> parallelEncrypt(Map<Integer,Integer> selectorQueryVecMapping, int numThreads) throws InterruptedException, PIRException
   {
     // Encrypt and form the query vector
     ExecutorService es = Executors.newCachedThreadPool();
@@ -243,16 +246,17 @@ public class EncryptQuery
       }
 
       // Create the runnable and execute
-      EncryptQueryTask runEnc = new EncryptQueryTask(queryInfo.getDataPartitionBitSize(), paillier.clone(), selectorQueryVecMapping, start, stop);
+      EncryptQueryTask runEnc = new EncryptQueryTask(queryInfo.getDataPartitionBitSize(), paillier, selectorQueryVecMapping, start, stop);
       futures.add(es.submit(runEnc));
     }
 
     // Pull all encrypted elements and add to resultMap
+    SortedMap<Integer,BigInteger> queryElements = new TreeMap<>();
     try
     {
       for (Future<SortedMap<Integer,BigInteger>> future : futures)
       {
-        query.addQueryElements(future.get(1, TimeUnit.DAYS));
+        queryElements.putAll(future.get(1, TimeUnit.DAYS));
       }
     } catch (TimeoutException | ExecutionException e)
     {
@@ -261,6 +265,6 @@ public class EncryptQuery
 
     es.shutdown();
 
-    logger.info("Completed parallel creation of encrypted query vectors");
+    return queryElements;
   }
 }

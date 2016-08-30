@@ -166,12 +166,12 @@ public class QueryInfo implements Serializable, Cloneable
     return dataPartitionBitSize;
   }
 
-  public boolean getUseExpLookupTable()
+  public boolean useExpLookupTable()
   {
     return useExpLookupTable;
   }
 
-  public boolean getUseHDFSExpLookupTable()
+  public boolean useHDFSExpLookupTable()
   {
     return useHDFSExpLookupTable;
   }
