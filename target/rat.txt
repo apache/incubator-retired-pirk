@@ -2,14 +2,14 @@
 *****************************************************
 Summary
 -------
-Generated at: 2016-08-25T11:50:41-04:00
+Generated at: 2016-08-30T10:04:51-04:00
 
 Notes: 3
 Binaries: 5
 Archives: 0
-Standards: 485
+Standards: 537
 
-Apache Licensed: 110
+Apache Licensed: 123
 Generated Documents: 0
 
 JavaDocs are generated, thus a license header is optional.
@@ -104,6 +104,7 @@ Generated files do not require license headers.
    docs/org/apache/pirk/inputformat/hadoop/package-use.html
    docs/org/apache/pirk/inputformat/hadoop/TextArrayWritable.html
    docs/org/apache/pirk/querier/wideskies/class-use/Querier.html
+   docs/org/apache/pirk/querier/wideskies/class-use/QuerierCLI.html
    docs/org/apache/pirk/querier/wideskies/class-use/QuerierConst.html
    docs/org/apache/pirk/querier/wideskies/class-use/QuerierDriver.html
    docs/org/apache/pirk/querier/wideskies/class-use/QuerierDriverCLI.html
@@ -131,6 +132,7 @@ Generated files do not require license headers.
    docs/org/apache/pirk/querier/wideskies/package-tree.html
    docs/org/apache/pirk/querier/wideskies/package-use.html
    docs/org/apache/pirk/querier/wideskies/Querier.html
+   docs/org/apache/pirk/querier/wideskies/QuerierCLI.html
    docs/org/apache/pirk/querier/wideskies/QuerierConst.html
    docs/org/apache/pirk/querier/wideskies/QuerierDriver.html
    docs/org/apache/pirk/querier/wideskies/QuerierDriverCLI.html
@@ -215,12 +217,40 @@ Generated files do not require license headers.
    docs/org/apache/pirk/responder/wideskies/spark/package-summary.html
    docs/org/apache/pirk/responder/wideskies/spark/package-tree.html
    docs/org/apache/pirk/responder/wideskies/spark/package-use.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/class-use/ComputeStreamingResponse.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/class-use/FinalResponseFunction.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/ComputeStreamingResponse.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/FinalResponseFunction.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/package-frame.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/package-summary.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/package-tree.html
+   docs/org/apache/pirk/responder/wideskies/spark/streaming/package-use.html
    docs/org/apache/pirk/responder/wideskies/standalone/class-use/Responder.html
    docs/org/apache/pirk/responder/wideskies/standalone/package-frame.html
    docs/org/apache/pirk/responder/wideskies/standalone/package-summary.html
    docs/org/apache/pirk/responder/wideskies/standalone/package-tree.html
    docs/org/apache/pirk/responder/wideskies/standalone/package-use.html
    docs/org/apache/pirk/responder/wideskies/standalone/Responder.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/EncColMultBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/EncRowCalcBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/OutputBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/PartitionDataBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/PirkHashScheme.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/PirkTopology.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/StormConstants.html
+   docs/org/apache/pirk/responder/wideskies/storm/class-use/StormUtils.html
+   docs/org/apache/pirk/responder/wideskies/storm/EncColMultBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/EncRowCalcBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/OutputBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/package-frame.html
+   docs/org/apache/pirk/responder/wideskies/storm/package-summary.html
+   docs/org/apache/pirk/responder/wideskies/storm/package-tree.html
+   docs/org/apache/pirk/responder/wideskies/storm/package-use.html
+   docs/org/apache/pirk/responder/wideskies/storm/PartitionDataBolt.html
+   docs/org/apache/pirk/responder/wideskies/storm/PirkHashScheme.html
+   docs/org/apache/pirk/responder/wideskies/storm/PirkTopology.html
+   docs/org/apache/pirk/responder/wideskies/storm/StormConstants.html
+   docs/org/apache/pirk/responder/wideskies/storm/StormUtils.html
    docs/org/apache/pirk/response/wideskies/class-use/Response.html
    docs/org/apache/pirk/response/wideskies/package-frame.html
    docs/org/apache/pirk/response/wideskies/package-summary.html
@@ -235,7 +265,6 @@ Generated files do not require license headers.
    docs/org/apache/pirk/schema/data/DataSchema.html
    docs/org/apache/pirk/schema/data/DataSchemaLoader.html
    docs/org/apache/pirk/schema/data/DataSchemaRegistry.html
-   docs/org/apache/pirk/schema/data/LoadDataSchemas.html
    docs/org/apache/pirk/schema/data/LoadDataSchemaTest.html
    docs/org/apache/pirk/schema/data/package-frame.html
    docs/org/apache/pirk/schema/data/package-summary.html
@@ -301,6 +330,14 @@ Generated files do not require license headers.
    docs/org/apache/pirk/serialization/SerializationService.html
    docs/org/apache/pirk/serialization/SerializationTest.html
    docs/org/apache/pirk/serialization/Storable.html
+   docs/org/apache/pirk/storm/class-use/KafkaStormIntegrationTest.html
+   docs/org/apache/pirk/storm/class-use/SystemTime.html
+   docs/org/apache/pirk/storm/KafkaStormIntegrationTest.html
+   docs/org/apache/pirk/storm/package-frame.html
+   docs/org/apache/pirk/storm/package-summary.html
+   docs/org/apache/pirk/storm/package-tree.html
+   docs/org/apache/pirk/storm/package-use.html
+   docs/org/apache/pirk/storm/SystemTime.html
    docs/org/apache/pirk/test/distributed/class-use/DistributedTestCLI.html
    docs/org/apache/pirk/test/distributed/class-use/DistributedTestDriver.html
    docs/org/apache/pirk/test/distributed/DistributedTestCLI.html
@@ -339,6 +376,7 @@ Generated files do not require license headers.
    docs/org/apache/pirk/utils/class-use/LogUtils.html
    docs/org/apache/pirk/utils/class-use/PIRException.html
    docs/org/apache/pirk/utils/class-use/QueryParserUtils.html
+   docs/org/apache/pirk/utils/class-use/QueryResultsWriter.html
    docs/org/apache/pirk/utils/class-use/StopListUtils.html
    docs/org/apache/pirk/utils/class-use/StringUtils.html
    docs/org/apache/pirk/utils/class-use/SystemConfiguration.html
@@ -358,6 +396,7 @@ Generated files do not require license headers.
    docs/org/apache/pirk/utils/package-use.html
    docs/org/apache/pirk/utils/PIRException.html
    docs/org/apache/pirk/utils/QueryParserUtils.html
+   docs/org/apache/pirk/utils/QueryResultsWriter.html
    docs/org/apache/pirk/utils/StopListUtils.html
    docs/org/apache/pirk/utils/StringUtils.html
    docs/org/apache/pirk/utils/SystemConfiguration.html
@@ -458,7 +497,17 @@ Generated files do not require license headers.
   AL    src/main/java/org/apache/pirk/responder/wideskies/spark/ExpTableGenerator.java
   AL    src/main/java/org/apache/pirk/responder/wideskies/spark/FilterData.java
   AL    src/main/java/org/apache/pirk/responder/wideskies/spark/HashSelectorsAndPartitionData.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/spark/streaming/ComputeStreamingResponse.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/spark/streaming/FinalResponseFunction.java
   AL    src/main/java/org/apache/pirk/responder/wideskies/standalone/Responder.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/EncColMultBolt.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/EncRowCalcBolt.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/OutputBolt.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/PartitionDataBolt.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/PirkHashScheme.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/PirkTopology.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/StormConstants.java
+  AL    src/main/java/org/apache/pirk/responder/wideskies/storm/StormUtils.java
   AL    src/main/java/org/apache/pirk/response/wideskies/Response.java
   AL    src/main/java/org/apache/pirk/schema/data/DataSchema.java
   AL    src/main/java/org/apache/pirk/schema/data/DataSchemaLoader.java
@@ -497,6 +546,7 @@ Generated files do not require license headers.
   AL    src/main/java/org/apache/pirk/utils/KeyedHash.java
   AL    src/main/java/org/apache/pirk/utils/PIRException.java
   AL    src/main/java/org/apache/pirk/utils/QueryParserUtils.java
+  AL    src/main/java/org/apache/pirk/utils/QueryResultsWriter.java
   AL    src/main/java/org/apache/pirk/utils/StopListUtils.java
   AL    src/main/java/org/apache/pirk/utils/StringUtils.java
   AL    src/main/java/org/apache/pirk/utils/SystemConfiguration.java
@@ -514,6 +564,8 @@ Generated files do not require license headers.
   AL    src/test/java/org/apache/pirk/schema/data/LoadDataSchemaTest.java
   AL    src/test/java/org/apache/pirk/schema/query/LoadQuerySchemaTest.java
   AL    src/test/java/org/apache/pirk/serialization/SerializationTest.java
+  AL    src/test/java/org/apache/pirk/storm/KafkaStormIntegrationTest.java
+  AL    src/test/java/org/apache/pirk/storm/SystemTime.java
   AL    src/test/java/org/apache/pirk/wideskies/standalone/StandaloneTest.java
  
 *****************************************************

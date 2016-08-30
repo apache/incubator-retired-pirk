@@ -1,0 +1,140 @@
+ INFO [main] 2016-08-30 10:05:08,994 (LoadQuerySchemaTest.java:217) - Starting testDataSchemaDoesNotExist: 
+ INFO [main] 2016-08-30 10:05:08,995 (TestUtils.java:144) - createQuerySchema: querySchemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:08,996 (TestUtils.java:165) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:08,996 (TestUtils.java:180) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:08,997 (TestUtils.java:213) - elementName = elementName1
+ INFO [main] 2016-08-30 10:05:08,999 (TestUtils.java:213) - elementName = elementName2
+ INFO [main] 2016-08-30 10:05:09,000 (TestUtils.java:213) - elementName = elementName3
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeQuerySchema</schemaName><dataSchemaName>fakeDataSchema</dataSchemaName><selectorName>elementName4</selectorName><elements><name>elementName1</name><name>elementName2</name><name>elementName3</name></elements></schema>
+ INFO [main] 2016-08-30 10:05:09,003 (QuerySchemaLoader.java:83) - Loading query schemas: 
+ INFO [main] 2016-08-30 10:05:09,004 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:09,005 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:09,007 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,008 (QuerySchemaLoader.java:190) - schemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,008 (QuerySchemaLoader.java:194) - dataSchemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,009 (QuerySchemaLoader.java:205) - selectorName = elementName4
+ERROR [main] 2016-08-30 10:05:09,009 (QuerySchemaLoader.java:90) - Caught exception: 
+org.apache.pirk.utils.PIRException: dataSchema = fakeDataSchema does not contain selectorName = elementName4
+	at org.apache.pirk.schema.query.QuerySchemaLoader.loadSchema(QuerySchemaLoader.java:208)
+	at org.apache.pirk.schema.query.QuerySchemaLoader.initialize(QuerySchemaLoader.java:154)
+	at org.apache.pirk.schema.query.QuerySchemaLoader.initialize(QuerySchemaLoader.java:104)
+	at org.apache.pirk.schema.query.QuerySchemaLoader.<clinit>(QuerySchemaLoader.java:87)
+	at org.apache.pirk.schema.query.LoadQuerySchemaTest.testDataSchemaDoesNotExist(LoadQuerySchemaTest.java:234)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:283)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeWithRerun(JUnit4Provider.java:173)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:128)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+ INFO [main] 2016-08-30 10:05:09,011 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:09,012 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile345865191822537598.xml
+ INFO [main] 2016-08-30 10:05:09,014 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,015 (QuerySchemaLoader.java:190) - schemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,015 (QuerySchemaLoader.java:194) - dataSchemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,015 (QuerySchemaLoader.java:205) - selectorName = elementName4
+ INFO [main] 2016-08-30 10:05:09,015 (LoadQuerySchemaTest.java:246) - Finished testDataSchemaDoesNotExist 
+ INFO [main] 2016-08-30 10:05:09,016 (LoadQuerySchemaTest.java:73) - Starting testGeneralSchemaLoad: 
+ INFO [main] 2016-08-30 10:05:09,019 (Inputs.java:394) - StopList file being created
+ INFO [main] 2016-08-30 10:05:09,019 (TestUtils.java:299) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/stopListFile5540512522926820277.tmp
+ INFO [main] 2016-08-30 10:05:09,021 (LoadQuerySchemaTest.java:319) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8371190444510686530.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName2</name><type>int</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName3</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>elementName4</name><type>byte</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element></schema>
+ INFO [main] 2016-08-30 10:05:09,025 (DataSchemaLoader.java:129) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8371190444510686530.xml hdfs = false
+ INFO [main] 2016-08-30 10:05:09,026 (DataSchemaLoader.java:144) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8371190444510686530.xml
+ INFO [main] 2016-08-30 10:05:09,029 (DataSchemaLoader.java:236) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,029 (DataSchemaLoader.java:194) - schemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,030 (DataSchemaLoader.java:296) - name = elementName1 javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,030 (DataSchemaLoader.java:296) - name = elementName2 javaType = int isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,031 (DataSchemaLoader.java:296) - name = elementName3 javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-30 10:05:09,031 (DataSchemaLoader.java:296) - name = elementName4 javaType = byte isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,032 (TestUtils.java:144) - createQuerySchema: querySchemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,033 (TestUtils.java:165) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8638764576738501216.xml
+ INFO [main] 2016-08-30 10:05:09,034 (TestUtils.java:180) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8638764576738501216.xml
+ INFO [main] 2016-08-30 10:05:09,036 (TestUtils.java:213) - elementName = elementName1
+ INFO [main] 2016-08-30 10:05:09,037 (TestUtils.java:213) - elementName = elementName2
+ INFO [main] 2016-08-30 10:05:09,037 (TestUtils.java:213) - elementName = elementName3
+ INFO [main] 2016-08-30 10:05:09,042 (TestUtils.java:231) - filterName = elementName2
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeQuerySchema</schemaName><dataSchemaName>fakeDataSchema</dataSchemaName><selectorName>elementName4</selectorName><elements><name>elementName1</name><name>elementName2</name><name>elementName3</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>elementName2</name></filterNames></schema>
+ INFO [main] 2016-08-30 10:05:09,053 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8638764576738501216.xml
+ INFO [main] 2016-08-30 10:05:09,055 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8638764576738501216.xml
+ INFO [main] 2016-08-30 10:05:09,058 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,058 (QuerySchemaLoader.java:190) - schemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,058 (QuerySchemaLoader.java:194) - dataSchemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,059 (QuerySchemaLoader.java:205) - selectorName = elementName4
+ INFO [main] 2016-08-30 10:05:09,059 (QuerySchemaLoader.java:234) - name = elementName1 partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,060 (QuerySchemaLoader.java:247) - name = elementName1 bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-30 10:05:09,060 (QuerySchemaLoader.java:234) - name = elementName2 partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,060 (QuerySchemaLoader.java:247) - name = elementName2 bits = 64 dataElementSize = 128
+ INFO [main] 2016-08-30 10:05:09,061 (QuerySchemaLoader.java:234) - name = elementName3 partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-30 10:05:09,061 (QuerySchemaLoader.java:247) - name = elementName3 bits = 64 dataElementSize = 192
+ INFO [main] 2016-08-30 10:05:09,067 (QuerySchemaLoader.java:329) - filterName = elementName2
+ WARN [main] 2016-08-30 10:05:09,607 (NativeCodeLoader.java:62) - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+ INFO [main] 2016-08-30 10:05:09,970 (LoadQuerySchemaTest.java:158) - Finished testGeneralSchemaLoad: 
+ INFO [main] 2016-08-30 10:05:09,971 (LoadQuerySchemaTest.java:252) - Starting testSelectorDoesNotExistInDataSchema: 
+ INFO [main] 2016-08-30 10:05:09,972 (LoadQuerySchemaTest.java:319) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8289783590580316700.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName2</name><type>int</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName3</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>elementName4</name><type>byte</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element></schema>
+ INFO [main] 2016-08-30 10:05:09,975 (DataSchemaLoader.java:129) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8289783590580316700.xml hdfs = false
+ INFO [main] 2016-08-30 10:05:09,975 (DataSchemaLoader.java:144) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile8289783590580316700.xml
+ INFO [main] 2016-08-30 10:05:09,977 (DataSchemaLoader.java:236) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,978 (DataSchemaLoader.java:194) - schemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,978 (DataSchemaLoader.java:296) - name = elementName1 javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,978 (DataSchemaLoader.java:296) - name = elementName2 javaType = int isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,979 (DataSchemaLoader.java:296) - name = elementName3 javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-30 10:05:09,979 (DataSchemaLoader.java:296) - name = elementName4 javaType = byte isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,979 (TestUtils.java:144) - createQuerySchema: querySchemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,980 (TestUtils.java:165) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8305498539690649759.xml
+ INFO [main] 2016-08-30 10:05:09,980 (TestUtils.java:180) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8305498539690649759.xml
+ INFO [main] 2016-08-30 10:05:09,981 (TestUtils.java:213) - elementName = elementName1
+ INFO [main] 2016-08-30 10:05:09,981 (TestUtils.java:213) - elementName = elementName2
+ INFO [main] 2016-08-30 10:05:09,981 (TestUtils.java:213) - elementName = elementName3
+ INFO [main] 2016-08-30 10:05:09,982 (TestUtils.java:231) - filterName = elementName2
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeQuerySchema</schemaName><dataSchemaName>fakeDataSchema</dataSchemaName><selectorName>nonExistentElement</selectorName><elements><name>elementName1</name><name>elementName2</name><name>elementName3</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>elementName2</name></filterNames></schema>
+ INFO [main] 2016-08-30 10:05:09,983 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8305498539690649759.xml
+ INFO [main] 2016-08-30 10:05:09,984 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile8305498539690649759.xml
+ INFO [main] 2016-08-30 10:05:09,986 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,986 (QuerySchemaLoader.java:190) - schemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,986 (QuerySchemaLoader.java:194) - dataSchemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,987 (QuerySchemaLoader.java:205) - selectorName = nonExistentElement
+ INFO [main] 2016-08-30 10:05:09,987 (LoadQuerySchemaTest.java:302) - Finished testSelectorDoesNotExistInDataSchema 
+ INFO [main] 2016-08-30 10:05:09,988 (LoadQuerySchemaTest.java:319) - file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile2835942122918287790.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeDataSchema</schemaName><element><name>elementName1</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName2</name><type>int</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>elementName3</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>elementName4</name><type>byte</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element></schema>
+ INFO [main] 2016-08-30 10:05:09,990 (DataSchemaLoader.java:129) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile2835942122918287790.xml hdfs = false
+ INFO [main] 2016-08-30 10:05:09,991 (DataSchemaLoader.java:144) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/dataSchemaFile2835942122918287790.xml
+ INFO [main] 2016-08-30 10:05:09,993 (DataSchemaLoader.java:236) - Root element: schema
+ INFO [main] 2016-08-30 10:05:09,993 (DataSchemaLoader.java:194) - schemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:09,993 (DataSchemaLoader.java:296) - name = elementName1 javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,994 (DataSchemaLoader.java:296) - name = elementName2 javaType = int isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,994 (DataSchemaLoader.java:296) - name = elementName3 javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-30 10:05:09,994 (DataSchemaLoader.java:296) - name = elementName4 javaType = byte isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-30 10:05:09,994 (TestUtils.java:144) - createQuerySchema: querySchemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:09,995 (TestUtils.java:165) - localFS: file = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile5203386841963852326.xml
+ INFO [main] 2016-08-30 10:05:09,995 (TestUtils.java:180) - query.schemas = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile5203386841963852326.xml
+ INFO [main] 2016-08-30 10:05:09,996 (TestUtils.java:213) - elementName = elementName1
+ INFO [main] 2016-08-30 10:05:09,997 (TestUtils.java:213) - elementName = elementName2
+ INFO [main] 2016-08-30 10:05:09,997 (TestUtils.java:213) - elementName = elementName3
+ INFO [main] 2016-08-30 10:05:09,997 (TestUtils.java:231) - filterName = elementName2
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>fakeQuerySchema</schemaName><dataSchemaName>fakeDataSchema</dataSchemaName><selectorName>nonExistentElement</selectorName><elements><name>elementName1</name><name>elementName2</name><name>elementName3</name></elements><filter>bogusFilterClass</filter><filterNames><name>elementName2</name></filterNames></schema>
+ INFO [main] 2016-08-30 10:05:09,999 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile5203386841963852326.xml
+ INFO [main] 2016-08-30 10:05:10,000 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/83/07wq_8t55pn3mgj99512hb8c0000gn/T/querySchemaFile5203386841963852326.xml
+ INFO [main] 2016-08-30 10:05:10,001 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-30 10:05:10,002 (QuerySchemaLoader.java:190) - schemaName = fakeQuerySchema
+ INFO [main] 2016-08-30 10:05:10,002 (QuerySchemaLoader.java:194) - dataSchemaName = fakeDataSchema
+ INFO [main] 2016-08-30 10:05:10,002 (QuerySchemaLoader.java:205) - selectorName = nonExistentElement
+ INFO [main] 2016-08-30 10:05:10,003 (LoadQuerySchemaTest.java:211) - Finished testFunkyFilterScenarios
