@@ -31,7 +31,6 @@ import org.apache.pirk.schema.response.QueryResponseJSON;
 public class QueryResultsWriter
 {
 
-
   /**
    * Writes elements of the resultMap to output file, one line for each element, where each line is a string representation of the corresponding
    * QueryResponseJSON object

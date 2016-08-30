@@ -95,8 +95,8 @@ public class BaseTests
     logger.info("Completed testDNSHostnameQuery(): ");
   }
 
-  public static void checkDNSHostnameQueryResults(List<QueryResponseJSON> results, boolean isDistributed, int numExpectedResults,
-      boolean testFalsePositive, List<JSONObject> dataElements)
+  public static void checkDNSHostnameQueryResults(List<QueryResponseJSON> results, boolean isDistributed, int numExpectedResults, boolean testFalsePositive,
+      List<JSONObject> dataElements)
   {
     QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_HOSTNAME_QUERY);
     logger.info("results:");

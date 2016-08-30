@@ -120,7 +120,8 @@ public class PirkTopology
     // b2.setMemoryLoad(5000);
     // b2.setCPULoad(150.0);
 
-    BoltDeclarer b3 = builder.setBolt(StormConstants.ENCCOLMULTBOLT_ID, ecmbolt, enccolmultboltParallelism)
+    BoltDeclarer b3 = builder
+        .setBolt(StormConstants.ENCCOLMULTBOLT_ID, ecmbolt, enccolmultboltParallelism)
         .fieldsGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCROWCALCBOLT_DATASTREAM_ID,
             new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD, StormConstants.SALT))
         .allGrouping(StormConstants.ENCROWCALCBOLT_ID, StormConstants.ENCROWCALCBOLT_FLUSH_SIG);

@@ -125,7 +125,6 @@ public class KafkaStormIntegrationTest
     KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
     loadTestData(producer);
 
-
     logger.info("Test (splitPartitions,saltColumns) = (true,true)");
     SystemConfiguration.setProperty("storm.splitPartitions", "true");
     SystemConfiguration.setProperty("storm.saltColumns", "true");
@@ -196,14 +195,15 @@ public class KafkaStormIntegrationTest
       {
         iLocalCluster.submitTopology("pirk_integration_test", config, topology);
         logger.info("Pausing for setup.");
-        //Thread.sleep(4000);
-        //KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
-        //loadTestData(producer);
-        //Thread.sleep(10000);
-        while(OutputBolt.latch.getCount() == testCountDown){
+        // Thread.sleep(4000);
+        // KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
+        // loadTestData(producer);
+        // Thread.sleep(10000);
+        while (OutputBolt.latch.getCount() == testCountDown)
+        {
           Thread.sleep(1000);
         }
-        testCountDown -=1;
+        testCountDown -= 1;
 
         logger.info("Finished...");
       }
@@ -248,7 +248,7 @@ public class KafkaStormIntegrationTest
 
     zkClient = new ZkClient(zookeeperLocalCluster.getConnectString(), 60000, 60000, ZKStringSerializer$.MODULE$);
     ZkUtils zkUtils = new ZkUtils(zkClient, new ZkConnection(zookeeperLocalCluster.getConnectString()), false);
-    //ZkUtils zkUtils = ZkUtils.apply(zookeeperLocalCluster.getConnectString(), 60000, 60000, false);
+    // ZkUtils zkUtils = ZkUtils.apply(zookeeperLocalCluster.getConnectString(), 60000, 60000, false);
     AdminUtils.createTopic(zkUtils, topic, 1, 1, new Properties());
   }
 

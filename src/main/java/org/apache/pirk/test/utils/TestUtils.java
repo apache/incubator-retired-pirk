@@ -268,8 +268,9 @@ public class TestUtils
 
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
-   * @throws IOException 
-   * @throws FileNotFoundException 
+   * 
+   * @throws IOException
+   * @throws FileNotFoundException
    */
   public static List<QueryResponseJSON> readResultsFile(File file) throws FileNotFoundException, IOException
   {

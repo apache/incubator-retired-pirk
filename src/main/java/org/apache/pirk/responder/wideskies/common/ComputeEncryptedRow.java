@@ -140,8 +140,8 @@ public class ComputeEncryptedRow
         {
           e.printStackTrace();
         }
-        logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}",
-            rowIndex, colCounter, part.toString(), part.toString(2), exp, i, dataPartitions.getBigInteger(i), dataPartitions.getBigInteger(i).toString(2));
+        logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}", rowIndex, colCounter, part.toString(),
+            part.toString(2), exp, i, dataPartitions.getBigInteger(i), dataPartitions.getBigInteger(i).toString(2));
 
         returnPairs.add(new Tuple2<>(colCounter, exp));
 
@@ -206,8 +206,8 @@ public class ComputeEncryptedRow
           e.printStackTrace();
         }
 
-        logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {}",
-            rowIndex, colCounter, part.toString(), part.toString(2), exp, i);
+        logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {}", rowIndex, colCounter, part.toString(), part.toString(2), exp,
+            i);
 
         returnPairs.add(new Tuple2<>(colCounter, exp));
 
@@ -306,8 +306,8 @@ public class ComputeEncryptedRow
         e.printStackTrace();
       }
 
-      logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}",
-          rowIndex, colCounter, part.toString(), part.toString(2), exp, i, dataPartitions.getBigInteger(i), dataPartitions.getBigInteger(i).toString(2));
+      logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}", rowIndex, colCounter, part.toString(),
+          part.toString(2), exp, i, dataPartitions.getBigInteger(i), dataPartitions.getBigInteger(i).toString(2));
 
       returnPairs.add(new Tuple2<>(colCounter, exp));
 
@@ -328,8 +328,7 @@ public class ComputeEncryptedRow
    * <p>
    * Emits {@code Tuple2<<colNum, colVal>>}
    */
-  public static List<Tuple2<Long,BigInteger>> computeEncRow(List<BigInteger> dataPartitions, Query query, int rowIndex, int colIndex)
-      throws IOException
+  public static List<Tuple2<Long,BigInteger>> computeEncRow(List<BigInteger> dataPartitions, Query query, int rowIndex, int colIndex) throws IOException
   {
     List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
@@ -356,8 +355,8 @@ public class ComputeEncryptedRow
         break;
       }
 
-      logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}",
-          rowIndex, colCounter, part.toString(), part.toString(2), exp, i, dataPartitions.get(i), dataPartitions.get(i).toString(2));
+      logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}", rowIndex, colCounter, part.toString(),
+          part.toString(2), exp, i, dataPartitions.get(i), dataPartitions.get(i).toString(2));
 
       returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
 
