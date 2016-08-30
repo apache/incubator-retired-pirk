@@ -21,49 +21,49 @@ package org.apache.pirk.responder.wideskies.storm;
 public class StormConstants
 {
   // Topology Components
-  public static final String SPOUT_ID = "kafkaspout";
-  public static final String PARTITION_DATA_BOLT_ID = "partitiondataBolt";
-  public static final String ENCROWCALCBOLT_ID = "encrowcalcbolt";
-  public static final String ENCCOLMULTBOLT_ID = "enccolmultbolt";
-  public static final String OUTPUTBOLT_ID = "outputbolt";
+  static final String SPOUT_ID = "kafkaspout";
+  static final String PARTITION_DATA_BOLT_ID = "partitiondataBolt";
+  static final String ENCROWCALCBOLT_ID = "encrowcalcbolt";
+  static final String ENCCOLMULTBOLT_ID = "enccolmultbolt";
+  static final String OUTPUTBOLT_ID = "outputbolt";
 
   // Extra Streams
-  public static final String DEFAULT = "default";
-  public static final String ENCROWCALCBOLT_DATASTREAM_ID = "encrowcalcbolt_datastream_id";
-  public static final String ENCROWCALCBOLT_FLUSH_SIG = "encrowcalcbolt_flush";
-  public static final String ENCCOLMULTBOLT_SESSION_END = "enccolmultbolt_sess_end";
+  static final String DEFAULT = "default";
+  static final String ENCROWCALCBOLT_DATASTREAM_ID = "encrowcalcbolt_datastream_id";
+  static final String ENCROWCALCBOLT_FLUSH_SIG = "encrowcalcbolt_flush";
+  static final String ENCCOLMULTBOLT_SESSION_END = "enccolmultbolt_sess_end";
 
   // Tuple Fields
   // From HashBolt (and variants)
-  public static final String HASH_FIELD = "hash";
-  public static final String PARTIONED_DATA_FIELD = "parData";
-  public static final String JSON_DATA_FIELD = "data";
+  static final String HASH_FIELD = "hash";
+  static final String PARTIONED_DATA_FIELD = "parData";
+  static final String JSON_DATA_FIELD = "data";
   // From EncRowCalcBolt
-  public static final String COLUMN_INDEX_ERC_FIELD = "colIndexErc";
-  public static final String ENCRYPTED_VALUE_FIELD = "encRowValue";
+  static final String COLUMN_INDEX_ERC_FIELD = "colIndexErc";
+  static final String ENCRYPTED_VALUE_FIELD = "encRowValue";
   // From EncColMultBolt
-  public static final String COLUMN_INDEX_ECM_FIELD = "colIndex";
-  public static final String COLUMN_PRODUCT_FIELD = "colProduct";
+  static final String COLUMN_INDEX_ECM_FIELD = "colIndex";
+  static final String COLUMN_PRODUCT_FIELD = "colProduct";
 
   // Configuration Keys
   public static final String USE_HDFS = "useHdfs";
-  public static final String HDFS_URI_KEY = "hdfsUri";
-  public static final String QUERY_FILE_KEY = "queryFile";
+  static final String HDFS_URI_KEY = "hdfsUri";
+  static final String QUERY_FILE_KEY = "queryFile";
   public static final String QUERY_INFO_KEY = "queryInfo";
-  public static final String ALLOW_ADHOC_QSCHEMAS_KEY = "allowAdHocQuerySchemas";
-  public static final String QSCHEMA_KEY = "qSchema";
-  public static final String DSCHEMA_KEY = "dschema";
+  static final String ALLOW_ADHOC_QSCHEMAS_KEY = "allowAdHocQuerySchemas";
+  static final String QSCHEMA_KEY = "qSchema";
+  static final String DSCHEMA_KEY = "dschema";
   public static final String OUTPUT_FILE_KEY = "output";
-  public static final String LIMIT_HITS_PER_SEL_KEY = "limitHitsPerSelector";
-  public static final String MAX_HITS_PER_SEL_KEY = "maxHitsPerSelector";
-  public static final String SALT_COLUMNS_KEY = "saltColumns";
-  public static final String ROW_DIVISIONS_KEY = "rowDivisions";
-  public static final String SPLIT_PARTITIONS_KEY = "splitPartitions";
+  static final String LIMIT_HITS_PER_SEL_KEY = "limitHitsPerSelector";
+  static final String MAX_HITS_PER_SEL_KEY = "maxHitsPerSelector";
+  static final String SALT_COLUMNS_KEY = "saltColumns";
+  static final String ROW_DIVISIONS_KEY = "rowDivisions";
+  static final String SPLIT_PARTITIONS_KEY = "splitPartitions";
   public static final String N_SQUARED_KEY = "nSquared";
-  public static final String ENCROWCALCBOLT_PARALLELISM_KEY = "encrowcalcboltPar";
-  public static final String ENCCOLMULTBOLT_PARALLELISM_KEY = "enccolmultboltPar";
+  static final String ENCROWCALCBOLT_PARALLELISM_KEY = "encrowcalcboltPar";
+  static final String ENCCOLMULTBOLT_PARALLELISM_KEY = "enccolmultboltPar";
 
-  public static final String SALT = "salt";
-  public static final String FLUSH = "flush";
+  static final String SALT = "salt";
+  static final String FLUSH = "flush";
 
 }

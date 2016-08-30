@@ -19,6 +19,18 @@
 
 package org.apache.pirk.responder.wideskies.storm;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -32,17 +44,6 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Bolt to compute and output the final Response object for a query
@@ -65,11 +66,9 @@ public class OutputBolt extends BaseRichBolt
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(OutputBolt.class);
 
   private OutputCollector outputCollector;
-  private QueryInfo queryInfo;
   private Response response;
   private String outputFile;
   private boolean hdfs;
-  private String hdfsUri;
   private Integer flushCounter = 0;
   private List<Tuple> tuplesToAck = new ArrayList<>();
   private Integer totalFlushSigs;
@@ -81,10 +80,7 @@ public class OutputBolt extends BaseRichBolt
   public static CountDownLatch latch = new CountDownLatch(4);
 
   // This is the main object here. It holds column Id -> product
-  private Map<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
-
-  private BigInteger colVal;
-  private BigInteger colMult;
+  private Map<Long,BigInteger> resultsMap = new HashMap<>();
 
   private BigInteger nSquared;
 
@@ -100,7 +96,7 @@ public class OutputBolt extends BaseRichBolt
 
     if (hdfs)
     {
-      hdfsUri = (String) map.get(StormConstants.HDFS_URI_KEY);
+      String hdfsUri = (String) map.get(StormConstants.HDFS_URI_KEY);
       try
       {
         FileSystem fs = FileSystem.get(URI.create(hdfsUri), new Configuration());
@@ -116,7 +112,7 @@ public class OutputBolt extends BaseRichBolt
       localStore = new LocalFileSystemStore();
     }
     nSquared = new BigInteger((String) map.get(StormConstants.N_SQUARED_KEY));
-    queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
+    QueryInfo queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
     response = new Response(queryInfo);
 
     logger.info("Intitialized OutputBolt.");
@@ -126,7 +122,7 @@ public class OutputBolt extends BaseRichBolt
   public void execute(Tuple tuple)
   {
     long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ECM_FIELD);
-    colVal = (BigInteger) tuple.getValueByField(StormConstants.COLUMN_PRODUCT_FIELD);
+    BigInteger colVal = (BigInteger) tuple.getValueByField(StormConstants.COLUMN_PRODUCT_FIELD);
 
     // colIndex == -1 is just the signal sent by EncColMultBolt to notify that it flushed it's values.
     // Could have created a new stream for such signals, but that seemed like overkill.
@@ -137,12 +133,12 @@ public class OutputBolt extends BaseRichBolt
       logger.debug("Received " + flushCounter + " output flush signals out of " + totalFlushSigs);
 
       // Wait till all EncColMultBolts have been flushed
-      if (flushCounter == totalFlushSigs)
+      if (Objects.equals(flushCounter, totalFlushSigs))
       {
         logger.info("TimeToFlush reached - outputting response to " + outputFile + " with columns.size = " + resultsMap.keySet().size());
         try
         {
-          String timestamp = (new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date())).toString();
+          String timestamp = (new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date()));
           for (long cv : resultsMap.keySet())
           {
             response.addElement((int) cv, resultsMap.get(cv));
@@ -182,7 +178,7 @@ public class OutputBolt extends BaseRichBolt
       // in which case a small number of multiplications still need to be done per column.
       if (resultsMap.containsKey(colIndex))
       {
-        colMult = colVal.multiply(resultsMap.get(colIndex)).mod(nSquared);
+        BigInteger colMult = colVal.multiply(resultsMap.get(colIndex)).mod(nSquared);
         resultsMap.put(colIndex, colMult);
       }
       else

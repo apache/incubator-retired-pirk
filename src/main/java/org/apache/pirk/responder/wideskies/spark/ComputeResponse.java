@@ -249,7 +249,7 @@ public class ComputeResponse
 
     JavaRDD<MapWritable> jsonRDD;
 
-    Job job = new Job();
+    Job job = Job.getInstance();
     String baseQuery = SystemConfiguration.getProperty("pir.baseQuery");
     String jobName = "pirSpark_base_" + baseQuery + "_" + System.currentTimeMillis();
     job.setJobName(jobName);
@@ -283,8 +283,7 @@ public class ComputeResponse
     // Filter out by the provided stopListFile entries
     if (qSchema.getFilter() != null)
     {
-      JavaRDD<MapWritable> filteredRDD = jsonRDD.filter(new FilterData(accum, bVars));
-      return filteredRDD;
+      return jsonRDD.filter(new FilterData(accum, bVars));
     }
     else
     {
@@ -303,7 +302,7 @@ public class ComputeResponse
 
     JavaRDD<MapWritable> jsonRDD;
 
-    Job job = new Job();
+    Job job = Job.getInstance();
     String jobName = "pirSpark_ES_" + esQuery + "_" + System.currentTimeMillis();
     job.setJobName(jobName);
     job.getConfiguration().set("es.nodes", SystemConfiguration.getProperty("es.nodes"));
@@ -316,8 +315,7 @@ public class ComputeResponse
     // Filter out by the provided stopListFile entries
     if (qSchema.getFilter() != null)
     {
-      JavaRDD<MapWritable> filteredRDD = jsonRDD.filter(new FilterData(accum, bVars));
-      return filteredRDD;
+      return jsonRDD.filter(new FilterData(accum, bVars));
     }
     else
     {
@@ -386,11 +384,11 @@ public class ComputeResponse
     JavaPairRDD<Long,BigInteger> encColRDD;
     if (colMultReduceByKey)
     {
-      encColRDD = encRowRDD.reduceByKey(new EncColMultReducer(accum, bVars), numColMultPartitions);
+      encColRDD = encRowRDD.reduceByKey(new EncColMultReducer(bVars), numColMultPartitions);
     }
     else
     {
-      encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(accum, bVars));
+      encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(bVars));
     }
 
     // Form the final response object

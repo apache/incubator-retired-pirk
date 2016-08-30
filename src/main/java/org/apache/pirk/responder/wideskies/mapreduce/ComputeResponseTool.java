@@ -110,8 +110,6 @@ public class ComputeResponseTool extends Configured implements Tool
   private String esQuery = "none";
   private String esResource = "none";
 
-  String dataSchema = "none";
-
   private Configuration conf = null;
   private FileSystem fs = null;
 
@@ -264,7 +262,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Run the job to generate the expTable
     // Job jobExp = new Job(mrConfig.getConfig(), "pirExp-" + pirWL.getWatchlistNum());
-    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getIdentifier());
+    Job jobExp = Job.getInstance(conf, "pirExp-" + queryInfo.getIdentifier());
 
     jobExp.setSpeculativeExecution(false);
     jobExp.getConfiguration().set("mapreduce.map.speculative", "false");
@@ -312,7 +310,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Assemble the exp table from the output
     // element_index -> fileName
-    HashMap<Integer,String> expFileTable = new HashMap<>();
+    Map<Integer,String> expFileTable = new HashMap<>();
     FileStatus[] status = fs.listStatus(outPathExp);
     for (FileStatus fstat : status)
     {
@@ -352,7 +350,7 @@ public class ComputeResponseTool extends Configured implements Tool
   {
     boolean success;
 
-    Job job = new Job(conf, "pirMR");
+    Job job = Job.getInstance(conf, "pirMR");
     job.setSpeculativeExecution(false);
 
     // Set the data and query schema properties
@@ -445,7 +443,7 @@ public class ComputeResponseTool extends Configured implements Tool
   {
     boolean success;
 
-    Job columnMultJob = new Job(conf, "pir_columnMult");
+    Job columnMultJob = Job.getInstance(conf, "pir_columnMult");
     columnMultJob.setSpeculativeExecution(false);
 
     String columnMultJobName = "pir_columnMult";
@@ -505,7 +503,7 @@ public class ComputeResponseTool extends Configured implements Tool
   {
     boolean success;
 
-    Job finalResponseJob = new Job(conf, "pir_finalResponse");
+    Job finalResponseJob = Job.getInstance(conf, "pir_finalResponse");
     finalResponseJob.setSpeculativeExecution(false);
 
     String finalResponseJobName = "pir_finalResponse";

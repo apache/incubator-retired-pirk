@@ -18,6 +18,15 @@
  */
 package org.apache.pirk.storm;
 
+import java.io.File;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
@@ -25,8 +34,8 @@ import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
 
 import org.I0Itec.zkclient.ZkClient;
-
 import org.I0Itec.zkclient.ZkConnection;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.curator.test.TestingServer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -38,7 +47,10 @@ import org.apache.pirk.querier.wideskies.QuerierConst;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.responder.wideskies.storm.*;
+import org.apache.pirk.responder.wideskies.storm.OutputBolt;
+import org.apache.pirk.responder.wideskies.storm.PirkHashScheme;
+import org.apache.pirk.responder.wideskies.storm.PirkTopology;
+import org.apache.pirk.responder.wideskies.storm.StormConstants;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.query.filter.StopListFilter;
 import org.apache.pirk.schema.response.QueryResponseJSON;
@@ -61,17 +73,11 @@ import org.apache.storm.testing.TestJob;
 import org.json.simple.JSONObject;
 
 import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.TemporaryFolder;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Properties;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.ArrayList;
 
 @Category(IntegrationTest.class)
 public class KafkaStormIntegrationTest
@@ -86,6 +92,9 @@ public class KafkaStormIntegrationTest
 
   private static final String topic = "pirk_test_topic";
   private static final String kafkaTmpDir = "/tmp/kafka";
+
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
 
   private static File fileQuery;
   private static File fileQuerier;
@@ -122,7 +131,7 @@ public class KafkaStormIntegrationTest
     performEncryption();
     SystemConfiguration.setProperty("pir.queryInput", fileQuery.getAbsolutePath());
 
-    KafkaProducer producer = new KafkaProducer<String,String>(createKafkaProducerConfig());
+    KafkaProducer<String,String> producer = new KafkaProducer<>(createKafkaProducerConfig());
     loadTestData(producer);
 
     logger.info("Test (splitPartitions,saltColumns) = (true,true)");
@@ -260,17 +269,13 @@ public class KafkaStormIntegrationTest
     zookeeperLocalCluster.stop();
 
     FileUtils.deleteDirectory(new File(kafkaTmpDir));
-
-    fileQuery.delete();
-    fileQuerier.delete();
-
   }
 
-  private HashMap<String,Object> createKafkaProducerConfig()
+  private Map<String,Object> createKafkaProducerConfig()
   {
     String kafkaHostName = "localhost";
-    Integer kafkaPorts = 11111;
-    HashMap<String,Object> config = new HashMap<String,Object>();
+    int kafkaPorts = 11111;
+    Map<String,Object> config = new HashMap<>();
     config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHostName + ":" + kafkaPorts);
     config.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     config.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -278,18 +283,17 @@ public class KafkaStormIntegrationTest
     return config;
   }
 
-  private void loadTestData(KafkaProducer producer)
+  private void loadTestData(KafkaProducer<String,String> producer)
   {
     for (JSONObject dataRecord : Inputs.createJSONDataElements())
     {
       logger.info("Sending record to Kafka " + dataRecord.toString());
-      producer.send(new ProducerRecord<String,String>(topic, dataRecord.toString()));
+      producer.send(new ProducerRecord<>(topic, dataRecord.toString()));
     }
   }
 
   private void performEncryption() throws Exception
   {
-    // ArrayList<String> selectors = BaseTests.selectorsDomain;
     List<String> selectors = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
     String queryType = Inputs.DNS_HOSTNAME_QUERY;
 
@@ -307,8 +311,8 @@ public class KafkaStormIntegrationTest
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Write out files.
-    fileQuerier = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERIER_FILETAG, ".txt");
-    fileQuery = File.createTempFile("pir_integrationTest-" + QuerierConst.QUERY_FILETAG, ".txt");
+    fileQuerier = folder.newFile("pir_integrationTest-" + QuerierConst.QUERIER_FILETAG + ".txt");
+    fileQuery = folder.newFile("pir_integrationTest-" + QuerierConst.QUERY_FILETAG + ".txt");
 
     localStore.store(fileQuerier.getAbsolutePath(), querier);
     localStore.store(fileQuery, querier.getQuery());

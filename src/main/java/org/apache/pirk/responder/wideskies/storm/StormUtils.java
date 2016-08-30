@@ -18,6 +18,9 @@
  */
 package org.apache.pirk.responder.wideskies.storm;
 
+import java.net.URI;
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.query.wideskies.Query;
@@ -30,9 +33,6 @@ import org.apache.storm.Constants;
 import org.apache.storm.tuple.Tuple;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.Map;
-
 /**
  * Utils class for the Storm implementation of Wideskies
  */
@@ -43,14 +43,14 @@ public class StormUtils
   /**
    * Method to read in serialized Query object from the given queryFile
    * 
-   * @param useHdfs
-   * @param hdfsUri
-   * @param queryFile
-   * @return
+   * @param useHdfs - true or false
+   * @param hdfsUri - HDFS path
+   * @param queryFile -
+   * @return {@link Query}
    */
   public static Query getQuery(boolean useHdfs, String hdfsUri, String queryFile)
   {
-    Query query = null;
+    Query query;
 
     try
     {
@@ -77,7 +77,7 @@ public class StormUtils
    * Method to read in and return a serialized Query object from the given file and initialize/load the query.schemas and data.schemas
    * 
    * @param map
-   * @return
+   * @return {@link Query}
    */
   public static Query prepareQuery(Map map)
   {

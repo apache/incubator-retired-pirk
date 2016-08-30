@@ -19,6 +19,10 @@
 
 package org.apache.pirk.responder.wideskies.storm;
 
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -27,10 +31,6 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Bolt class to perform encrypted column multiplication
@@ -60,9 +60,7 @@ public class EncColMultBolt extends BaseRichBolt
   private Long totalFlushSignals;
 
   // This is the main object here. It holds column Id -> aggregated product
-  private Map<Long,BigInteger> resultsMap = new HashMap<Long,BigInteger>();
-  private BigInteger colVal1;
-  private BigInteger colMult;
+  private Map<Long,BigInteger> resultsMap = new HashMap<>();
 
   @Override
   public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector)
@@ -93,7 +91,7 @@ public class EncColMultBolt extends BaseRichBolt
         resultsMap.clear();
 
         // Send signal to OutputBolt to write output and notify EncRowCalcBolt that results have been flushed.
-        outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(new Long(-1), BigInteger.valueOf(0)));
+        outputCollector.emit(StormConstants.ENCCOLMULTBOLT_ID, new Values(-1L, BigInteger.ZERO));
         outputCollector.emit(StormConstants.ENCCOLMULTBOLT_SESSION_END, new Values(1));
         numFlushSignals = 0;
       }
@@ -103,13 +101,13 @@ public class EncColMultBolt extends BaseRichBolt
       // Data tuple received. Do column multiplication.
 
       long colIndex = tuple.getLongByField(StormConstants.COLUMN_INDEX_ERC_FIELD);
-      colVal1 = (BigInteger) tuple.getValueByField(StormConstants.ENCRYPTED_VALUE_FIELD);
+      BigInteger colVal1 = (BigInteger) tuple.getValueByField(StormConstants.ENCRYPTED_VALUE_FIELD);
 
       logger.debug("Received tuple in ECM, multiplying {} to col {}", colVal1, colIndex);
 
       if (resultsMap.containsKey(colIndex))
       {
-        colMult = colVal1.multiply(resultsMap.get(colIndex));
+        BigInteger colMult = colVal1.multiply(resultsMap.get(colIndex));
         resultsMap.put(colIndex, colMult.mod(nSquared));
       }
       else
