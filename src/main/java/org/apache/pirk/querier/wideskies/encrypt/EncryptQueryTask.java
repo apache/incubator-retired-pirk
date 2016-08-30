@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Runnable class for multithreaded PIR encryption
  */
-class EncryptQueryTask implements Callable<SortedMap<Integer,BigInteger>>
+final class EncryptQueryTask implements Callable<SortedMap<Integer,BigInteger>>
 {
   private static final Logger logger = LoggerFactory.getLogger(EncryptQueryTask.class);
 
