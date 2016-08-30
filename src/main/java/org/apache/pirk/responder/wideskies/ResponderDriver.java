@@ -28,6 +28,7 @@ import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
 import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
 import org.apache.pirk.responder.wideskies.spark.streaming.ComputeStreamingResponse;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
+import org.apache.pirk.responder.wideskies.storm.PirkTopology;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -49,6 +50,11 @@ public class ResponderDriver
 {
   private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
 
+  enum Platform
+  {
+    MAPREDUCE, SPARK, SPARKSTREAMING, STORM, STANDALONE, NONE;
+  }
+
   public static void main(String[] args) throws Exception
   {
     ResponderCLI responderCLI = new ResponderCLI(args);
@@ -56,49 +62,64 @@ public class ResponderDriver
     // For handling System.exit calls from Spark Streaming
     System.setSecurityManager(new SystemExitManager());
 
-    if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("mapreduce"))
+    Platform platform = Platform.NONE;
+    String platformString = SystemConfiguration.getProperty(ResponderProps.PLATFORM);
+    try
     {
-      logger.info("Launching MapReduce ResponderTool:");
-
-      ComputeResponseTool pirWLTool = new ComputeResponseTool();
-      ToolRunner.run(pirWLTool, new String[] {});
+      platform = Platform.valueOf(platformString.toUpperCase());
+    } catch (IllegalArgumentException e)
+    {
+      logger.error("platform " + platformString + " not found.");
     }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("spark"))
+
+    switch (platform)
     {
-      logger.info("Launching Spark ComputeResponse:");
+      case MAPREDUCE:
+        logger.info("Launching MapReduce ResponderTool:");
 
-      FileSystem fs = FileSystem.get(new Configuration());
-      ComputeResponse computeResponse = new ComputeResponse(fs);
-      computeResponse.performQuery();
-    }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("sparkstreaming"))
-    {
-      logger.info("Launching Spark ComputeStreamingResponse:");
+        ComputeResponseTool pirWLTool = new ComputeResponseTool();
+        ToolRunner.run(pirWLTool, new String[] {});
+        break;
 
-      FileSystem fs = FileSystem.get(new Configuration());
-      ComputeStreamingResponse computeSR = new ComputeStreamingResponse(fs);
-      try
-      {
-        computeSR.performQuery();
-      } catch (SystemExitException e)
-      {
-        // If System.exit(0) is not caught from Spark Streaming,
-        // the application will complete with a 'failed' status
-        logger.info("Exited with System.exit(0) from Spark Streaming");
-      }
+      case SPARK:
+        logger.info("Launching Spark ComputeResponse:");
 
-      // Teardown the context
-      computeSR.teardown();
-    }
-    else if (SystemConfiguration.getProperty(ResponderProps.PLATFORM).equals("standalone"))
-    {
-      logger.info("Launching Standalone Responder:");
+        ComputeResponse computeResponse = new ComputeResponse(FileSystem.get(new Configuration()));
+        computeResponse.performQuery();
+        break;
 
-      String queryInput = SystemConfiguration.getProperty("pir.queryInput");
-      Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
+      case SPARKSTREAMING:
+        logger.info("Launching Spark ComputeStreamingResponse:");
 
-      Responder pirResponder = new Responder(query);
-      pirResponder.computeStandaloneResponse();
+        ComputeStreamingResponse computeSR = new ComputeStreamingResponse(FileSystem.get(new Configuration()));
+        try
+        {
+          computeSR.performQuery();
+        } catch (SystemExitException e)
+        {
+          // If System.exit(0) is not caught from Spark Streaming,
+          // the application will complete with a 'failed' status
+          logger.info("Exited with System.exit(0) from Spark Streaming");
+        }
+
+        // Teardown the context
+        computeSR.teardown();
+        break;
+
+      case STORM:
+        logger.info("Launching Storm PirkTopology:");
+        PirkTopology.runPirkTopology();
+        break;
+
+      case STANDALONE:
+        logger.info("Launching Standalone Responder:");
+
+        String queryInput = SystemConfiguration.getProperty("pir.queryInput");
+        Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
+
+        Responder pirResponder = new Responder(query);
+        pirResponder.computeStandaloneResponse();
+        break;
     }
   }
 

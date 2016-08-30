@@ -16,9 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.pirk.query.wideskies;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.pirk.schema.query.QuerySchema;
@@ -44,7 +47,7 @@ public class QueryInfo implements Serializable, Cloneable
   private String queryType = null; // QueryType string const
 
   private int hashBitSize = 0; // Bit size of the keyed hash function
-  private String hashKey = null; // Key for the keyed hash function
+  private String hashKey; // Key for the keyed hash function
 
   private int numBitsPerDataElement = 0; // total num bits per returned data value - defined relative to query type
   private int dataPartitionBitSize = 0; // num of bits for each partition of an incoming data element, must be < 32 right now
@@ -94,6 +97,33 @@ public class QueryInfo implements Serializable, Cloneable
     }
 
     printQueryInfo();
+  }
+
+  public QueryInfo(Map queryInfoMap)
+  {
+    // The Storm Config serializes the map as a json and reads back in with numeric values as longs.
+    // So numerics need to be cast as a long and call .intValue. However, in PirkHashScheme the map contains ints.
+    identifier = UUID.fromString((String) queryInfoMap.get("uuid"));
+    queryType = (String) queryInfoMap.get("queryType");
+    hashKey = (String) queryInfoMap.get("hashKey");
+    useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
+    useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
+    embedSelector = (boolean) queryInfoMap.get("embedSelector");
+    try
+    {
+      numSelectors = ((Long) queryInfoMap.get("numSelectors")).intValue();
+      hashBitSize = ((Long) queryInfoMap.get("hashBitSize")).intValue();
+      numBitsPerDataElement = ((Long) queryInfoMap.get("numBitsPerDataElement")).intValue();
+      numPartitionsPerDataElement = ((Long) queryInfoMap.get("numPartitionsPerDataElement")).intValue();
+      dataPartitionBitSize = ((Long) queryInfoMap.get("dataPartitionsBitSize")).intValue();
+    } catch (ClassCastException e)
+    {
+      numSelectors = (int) queryInfoMap.get("numSelectors");
+      hashBitSize = (int) queryInfoMap.get("hashBitSize");
+      numBitsPerDataElement = (int) queryInfoMap.get("numBitsPerDataElement");
+      numPartitionsPerDataElement = (int) queryInfoMap.get("numPartitionsPerDataElement");
+      dataPartitionBitSize = (int) queryInfoMap.get("dataPartitionsBitSize");
+    }
   }
 
   public UUID getIdentifier()
@@ -149,6 +179,24 @@ public class QueryInfo implements Serializable, Cloneable
   public boolean getEmbedSelector()
   {
     return embedSelector;
+  }
+
+  public Map toMap()
+  {
+    Map<String,Object> queryInfo = new HashMap<String,Object>();
+    queryInfo.put("uuid", identifier.toString());
+    queryInfo.put("queryType", queryType);
+    queryInfo.put("numSelectors", numSelectors);
+    queryInfo.put("hashBitSize", hashBitSize);
+    queryInfo.put("hashKey", hashKey);
+    queryInfo.put("numBitsPerDataElement", numBitsPerDataElement);
+    queryInfo.put("numPartitionsPerDataElement", numPartitionsPerDataElement);
+    queryInfo.put("dataPartitionsBitSize", dataPartitionBitSize);
+    queryInfo.put("useExpLookupTable", useExpLookupTable);
+    queryInfo.put("useHDFSExpLookupTable", useHDFSExpLookupTable);
+    queryInfo.put("embedSelector", embedSelector);
+
+    return queryInfo;
   }
 
   public void addQuerySchema(QuerySchema qSchemaIn)

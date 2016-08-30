@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.function.Consumer;
+
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
