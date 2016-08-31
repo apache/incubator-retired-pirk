@@ -45,13 +45,17 @@ public class BroadcastVars implements Serializable
 
   private Broadcast<QuerySchema> querySchema = null;
 
-  private Broadcast<String> useLocalCache = null;
+  private Broadcast<Boolean> useLocalCache = null;
 
   private Broadcast<Boolean> limitHitsPerSelector = null;
 
   private Broadcast<Integer> maxHitsPerSelector = null;
 
   private Broadcast<String> expDir = null;
+
+  private Broadcast<String> output = null;
+
+  private Broadcast<Integer> maxBatches = null;
 
   public BroadcastVars(JavaSparkContext sc)
   {
@@ -71,6 +75,16 @@ public class BroadcastVars implements Serializable
   public QueryInfo getQueryInfo()
   {
     return queryInfo.getValue();
+  }
+
+  public void setOutput(String outputIn)
+  {
+    output = jsc.broadcast(outputIn);
+  }
+
+  public String getOutput()
+  {
+    return output.getValue();
   }
 
   public void setQueryInfo(QueryInfo queryInfoIn)
@@ -98,12 +112,12 @@ public class BroadcastVars implements Serializable
     return dataSchema.getValue();
   }
 
-  public void setUseLocalCache(String useLocalCacheInput)
+  public void setUseLocalCache(Boolean useLocalCacheInput)
   {
     useLocalCache = jsc.broadcast(useLocalCacheInput);
   }
 
-  public String getUseLocalCache()
+  public Boolean getUseLocalCache()
   {
     return useLocalCache.getValue();
   }
@@ -136,5 +150,15 @@ public class BroadcastVars implements Serializable
   public String getExpDir()
   {
     return expDir.getValue();
+  }
+
+  public Integer getMaxBatches()
+  {
+    return maxBatches.getValue();
+  }
+
+  public void setMaxBatches(Integer maxBatchesIn)
+  {
+    maxBatches = jsc.broadcast(maxBatchesIn);
   }
 }

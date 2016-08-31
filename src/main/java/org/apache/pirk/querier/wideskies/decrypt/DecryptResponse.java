@@ -18,16 +18,11 @@
  */
 package org.apache.pirk.querier.wideskies.decrypt;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -42,6 +37,7 @@ import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,12 +54,16 @@ public class DecryptResponse
 
   private final Querier querier;
 
-  private final Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
-
   public DecryptResponse(Response responseInput, Querier querierInput)
   {
     response = responseInput;
     querier = querierInput;
+  }
+
+  public Map<String,List<QueryResponseJSON>> decrypt() throws InterruptedException, PIRException
+  {
+    int numThreads = SystemConfiguration.getIntProperty("numThreads", 1);
+    return decrypt(numThreads);
   }
 
   /**
@@ -86,8 +86,10 @@ public class DecryptResponse
    * where D^k_r,l = Y_{r*numPartitionsPerDataElement + l} & (2^{r*numPartitionsPerDataElement} * (2^numBitsPerDataElement - 1))
    *
    */
-  public void decrypt(int numThreads) throws InterruptedException, PIRException
+  public Map<String,List<QueryResponseJSON>> decrypt(int numThreads) throws InterruptedException, PIRException
   {
+    Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
+
     QueryInfo queryInfo = response.getQueryInfo();
 
     Paillier paillier = querier.getPaillier();
@@ -159,6 +161,8 @@ public class DecryptResponse
     }
 
     es.shutdown();
+
+    return resultMap;
   }
 
   // Method to perform basic decryption of each raw response element - does not
@@ -173,43 +177,5 @@ public class DecryptResponse
     }
 
     return decryptedElements;
-  }
-
-  /**
-   * Writes elements of the resultMap to output file, one line for each element, where each line is a string representation of the corresponding
-   * QueryResponseJSON object
-   */
-  public void writeResultFile(String filename) throws IOException
-  {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filename))))
-    {
-      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
-      {
-        for (QueryResponseJSON hitJSON : entry.getValue())
-        {
-          bw.write(hitJSON.getJSONString());
-          bw.newLine();
-        }
-      }
-    }
-  }
-
-  /**
-   * Writes elements of the resultMap to output file, one line for each element, where each line is a string representation of the corresponding
-   * QueryResponseJSON object
-   */
-  public void writeResultFile(File file) throws IOException
-  {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file)))
-    {
-      for (Entry<String,List<QueryResponseJSON>> entry : resultMap.entrySet())
-      {
-        for (QueryResponseJSON hitJSON : entry.getValue())
-        {
-          bw.write(hitJSON.getJSONString());
-          bw.newLine();
-        }
-      }
-    }
   }
 }

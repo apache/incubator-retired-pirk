@@ -190,7 +190,7 @@ public class Responder
       logger.debug("Before: columns.get(" + (i + rowCounter) + ") = " + columns.get(i + rowCounter));
 
       BigInteger exp;
-      if (query.getQueryInfo().getUseExpLookupTable() && !query.getQueryInfo().getUseHDFSExpLookupTable()) // using the standalone
+      if (query.getQueryInfo().useExpLookupTable() && !query.getQueryInfo().useHDFSExpLookupTable()) // using the standalone
       // lookup table
       {
         exp = query.getExp(rowQuery, hitValPartitions.get(i).intValue());

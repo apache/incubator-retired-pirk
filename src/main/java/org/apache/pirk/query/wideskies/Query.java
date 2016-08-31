@@ -23,10 +23,9 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.function.Consumer;
+
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
@@ -42,9 +41,9 @@ public class Query implements Serializable, Storable
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  private final QueryInfo qInfo; // holds all query info
+  private final QueryInfo queryInfo; // holds all query info
 
-  private final TreeMap<Integer,BigInteger> queryElements = new TreeMap<>(); // query elements - ordered on insertion
+  private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
@@ -57,19 +56,20 @@ public class Query implements Serializable, Storable
   private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
   private final BigInteger NSquared;
 
-  public Query(QueryInfo queryInfoIn, BigInteger NInput)
+  public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer,BigInteger> queryElements)
   {
-    qInfo = queryInfoIn;
-    N = NInput;
+    this.queryInfo = queryInfo;
+    this.N = N;
     NSquared = N.pow(2);
+    this.queryElements = queryElements;
   }
 
   public QueryInfo getQueryInfo()
   {
-    return qInfo;
+    return queryInfo;
   }
 
-  public TreeMap<Integer,BigInteger> getQueryElements()
+  public SortedMap<Integer,BigInteger> getQueryElements()
   {
     return queryElements;
   }
@@ -104,33 +104,13 @@ public class Query implements Serializable, Storable
     expFileBasedLookup = expInput;
   }
 
-  public Map<BigInteger,Map<Integer,BigInteger>> getExpTable()
-  {
-    return expTable;
-  }
-
-  public void setExpTable(Map<BigInteger,Map<Integer,BigInteger>> expTableInput)
-  {
-    expTable = expTableInput;
-  }
-
-  public void addQueryElements(SortedMap<Integer,BigInteger> elements)
-  {
-    queryElements.putAll(elements);
-  }
-
-  public boolean containsElement(BigInteger element)
-  {
-    return queryElements.containsValue(element);
-  }
-
   /**
    * This should be called after all query elements have been added in order to generate the expTable. For int exponentiation with BigIntegers, assumes that
    * dataPartitionBitSize < 32.
    */
   public void generateExpTable()
   {
-    int maxValue = (1 << qInfo.getDataPartitionBitSize()) - 1; // 2^partitionBitSize - 1
+    int maxValue = (1 << queryInfo.getDataPartitionBitSize()) - 1; // 2^partitionBitSize - 1
 
     queryElements.values().parallelStream().forEach(new Consumer<BigInteger>()
     {
@@ -151,6 +131,7 @@ public class Query implements Serializable, Storable
 
   public BigInteger getExp(BigInteger value, int power)
   {
-    return expTable.get(value).get(power);
+    Map<Integer,BigInteger> powerMap = expTable.get(value);
+    return (powerMap == null) ? null : powerMap.get(power);
   }
 }

@@ -39,7 +39,7 @@ public class EncColMultGroupedMapper implements PairFunction<Tuple2<Long,Iterabl
 
   Query query = null;
 
-  EncColMultGroupedMapper(Accumulators accumIn, BroadcastVars bbVarsIn)
+  public EncColMultGroupedMapper(Accumulators accumIn, BroadcastVars bbVarsIn)
   {
 
     query = bbVarsIn.getQuery();

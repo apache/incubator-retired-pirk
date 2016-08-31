@@ -63,10 +63,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
 
     query = bvIn.getQuery();
     queryInfo = bvIn.getQueryInfo();
-    if (bvIn.getUseLocalCache().equals("true"))
-    {
-      useLocalCache = true;
-    }
+    useLocalCache = bvIn.getUseLocalCache();
     limitHitsPerSelector = bvIn.getLimitHitsPerSelector();
     maxHitsPerSelector = bvIn.getMaxHitsPerSelector();
 
@@ -81,7 +78,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);
 
-    if (queryInfo.getUseHDFSExpLookupTable())
+    if (queryInfo.useHDFSExpLookupTable())
     {
       FileSystem fs;
       try

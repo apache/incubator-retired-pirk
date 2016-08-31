@@ -115,7 +115,7 @@ public class RowCalcReducer extends Reducer<IntWritable,BytesArrayWritable,LongW
     logger.debug("Processing reducer for hash = " + rowIndex);
     ctx.getCounter(MRStats.NUM_HASHES_REDUCER).increment(1);
 
-    if (queryInfo.getUseHDFSExpLookupTable())
+    if (queryInfo.useHDFSExpLookupTable())
     {
       ComputeEncryptedRow.loadCacheFromHDFS(fs, query.getExpFile(rowIndex.get()), query);
     }

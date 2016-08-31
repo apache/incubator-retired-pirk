@@ -117,6 +117,23 @@ public class SystemConfiguration
   }
 
   /**
+   * Gets the specified property as an <code>long</code>, or the default value if the property isn't found.
+   * 
+   * @param propertyName
+   *          The name of the requested long property value.
+   * @param defaultValue
+   *          The value to return if the property is undefined.
+   * @return The value of the requested property, or the default value if the property is undefined.
+   * @throws NumberFormatException
+   *           If the property does not contain a parsable <code>long</code> value.
+   */
+  public static long getLongProperty(String propertyName, long defaultValue)
+  {
+    String value = props.getProperty(propertyName);
+    return (value == null) ? defaultValue : Long.parseLong(value);
+  }
+
+  /**
    * Gets the specified property as a <code>boolean</code>, or the default value if the property isn't defined.
    * 
    * @param propertyName
@@ -207,6 +224,7 @@ public class SystemConfiguration
    */
   public static void loadPropsFromDir(String dirName)
   {
+    logger.info("Loading properties from dirName = " + dirName);
     File[] directoryListing = new File(dirName).listFiles(new FilenameFilter()
     {
       @Override

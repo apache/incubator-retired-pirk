@@ -90,7 +90,9 @@ public class ComputeResponse
   private BroadcastVars bVars = null;
 
   private QueryInfo queryInfo = null;
-  Query query = null;
+
+  private Query query = null;
+  private QuerySchema qSchema = null;
 
   private int numDataPartitions = 0;
   private int numColMultPartitions = 0;
@@ -175,7 +177,6 @@ public class ComputeResponse
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
 
-    QuerySchema qSchema = null;
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
       qSchema = queryInfo.getQuerySchema();
@@ -190,7 +191,7 @@ public class ComputeResponse
     bVars.setDataSchema(dSchema);
 
     // Set the local cache flag
-    bVars.setUseLocalCache(SystemConfiguration.getProperty("pir.useLocalCache", "true"));
+    bVars.setUseLocalCache(SystemConfiguration.getBooleanProperty("pir.useLocalCache", true));
 
     useHDFSLookupTable = SystemConfiguration.isSetTrue("pir.useHDFSLookupTable");
 
@@ -246,7 +247,7 @@ public class ComputeResponse
   {
     logger.info("Reading data ");
 
-    JavaRDD<MapWritable> dataRDD;
+    JavaRDD<MapWritable> jsonRDD;
 
     Job job = new Job();
     String baseQuery = SystemConfiguration.getProperty("pir.baseQuery");
@@ -262,7 +263,6 @@ public class ComputeResponse
       logger.debug("schemaName = " + name);
     }
 
-    QuerySchema qSchema = QuerySchemaRegistry.get(bVars.getQueryInfo().getQueryType());
     job.getConfiguration().set("dataSchemaName", qSchema.getDataSchemaName());
     job.getConfiguration().set("data.schemas", SystemConfiguration.getProperty("data.schemas"));
 
@@ -278,12 +278,19 @@ public class ComputeResponse
     FileInputFormat.setInputPaths(job, inputData);
 
     // Read data from hdfs
-    JavaRDD<MapWritable> jsonRDD = sc.newAPIHadoopRDD(job.getConfiguration(), inputClass, Text.class, MapWritable.class).values().coalesce(numDataPartitions);
+    jsonRDD = sc.newAPIHadoopRDD(job.getConfiguration(), inputClass, Text.class, MapWritable.class).values().coalesce(numDataPartitions);
 
     // Filter out by the provided stopListFile entries
-    dataRDD = jsonRDD.filter(new FilterData(accum, bVars));
-
-    return dataRDD;
+    if (qSchema.getFilter() != null)
+    {
+      JavaRDD<MapWritable> filteredRDD = jsonRDD.filter(new FilterData(accum, bVars));
+      return filteredRDD;
+    }
+    else
+    {
+      logger.info("qSchema.getFilter() is null");
+      return jsonRDD;
+    }
   }
 
   /**
@@ -294,7 +301,7 @@ public class ComputeResponse
   {
     logger.info("Reading data ");
 
-    JavaRDD<MapWritable> dataRDD;
+    JavaRDD<MapWritable> jsonRDD;
 
     Job job = new Job();
     String jobName = "pirSpark_ES_" + esQuery + "_" + System.currentTimeMillis();
@@ -304,13 +311,19 @@ public class ComputeResponse
     job.getConfiguration().set("es.resource", esResource);
     job.getConfiguration().set("es.query", esQuery);
 
-    JavaRDD<MapWritable> jsonRDD = sc.newAPIHadoopRDD(job.getConfiguration(), EsInputFormat.class, Text.class, MapWritable.class).values()
-        .coalesce(numDataPartitions);
+    jsonRDD = sc.newAPIHadoopRDD(job.getConfiguration(), EsInputFormat.class, Text.class, MapWritable.class).values().coalesce(numDataPartitions);
 
     // Filter out by the provided stopListFile entries
-    dataRDD = jsonRDD.filter(new FilterData(accum, bVars));
-
-    return dataRDD;
+    if (qSchema.getFilter() != null)
+    {
+      JavaRDD<MapWritable> filteredRDD = jsonRDD.filter(new FilterData(accum, bVars));
+      return filteredRDD;
+    }
+    else
+    {
+      logger.info("qSchema.getFilter() is null");
+      return jsonRDD;
+    }
   }
 
   /**
@@ -322,7 +335,7 @@ public class ComputeResponse
     logger.info("Performing query: ");
 
     // If we are using distributed exp tables -- Create the expTable file in hdfs for this query, if it doesn't exist
-    if ((queryInfo.getUseHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
+    if ((queryInfo.useHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
     {
       // <queryHash, <<power>,<element^power mod N^2>>
       JavaPairRDD<Integer,Iterable<Tuple2<Integer,BigInteger>>> expCalculations = ComputeExpLookupTable.computeExpTable(sc, fs, bVars, query, queryInput,
