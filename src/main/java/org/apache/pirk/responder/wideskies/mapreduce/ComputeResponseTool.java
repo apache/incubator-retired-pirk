@@ -346,6 +346,7 @@ public class ComputeResponseTool extends Configured implements Tool
     return success;
   }
 
+  @SuppressWarnings("unchecked")
   private boolean readDataEncRows(Path outPathInit) throws Exception
   {
     boolean success;
