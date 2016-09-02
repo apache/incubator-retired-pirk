@@ -36,12 +36,12 @@ Pirk is written in Java and currently uses a Maven build system with a single le
 
 For convenience, the following POM files are included:
 
-* pom.xml — Pirk pom file for Hadoop/YARN and Spark platforms
+* pom.xml — Pirk pom file for Hadoop/YARN, Storm and Spark platforms
 * pom-with-benchmarks.xml — Pirk pom file for running Paillier benchmarking testing
 
 Pirk may be built with a specific pom file via ‘mvn package -f ’
 
-Dependencies can be found in the pom.xml file and include [Apache Hadoop](http://hadoop.apache.org/), [Apache Spark](http://spark.apache.org/), and [Elasticsearch](https://github.com/elastic/elasticsearch). Currently, Pirk may be utilized in a distributed Hadoop/MapReduce or Spark framework as well as in standalone mode.
+Dependencies can be found in the pom.xml file and include [Apache Hadoop](http://hadoop.apache.org/), [Apache Spark](http://spark.apache.org/), [Apache Storm](http://storm.apache.org)and [Elasticsearch](https://github.com/elastic/elasticsearch). Currently, Pirk may be utilized in a distributed Hadoop/MapReduce, Storm or Spark framework as well as in standalone mode.
 
 If you are a User, please check out the [For Users](http://pirk.incubator.apache.org/for_users) section of the Pirk website.
 
