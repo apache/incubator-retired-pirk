@@ -20,15 +20,11 @@
 package org.apache.pirk.responder.wideskies.storm;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
-
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.DataSchemaRegistry;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.storm.task.TopologyContext;
@@ -54,8 +50,6 @@ public class PartitionDataBolt extends BaseBasicBolt
 
   private static final long serialVersionUID = 1L;
 
-  private QueryInfo queryInfo;
-  private String queryType;
   private QuerySchema qSchema = null;
 
   private boolean embedSelector;
@@ -63,13 +57,12 @@ public class PartitionDataBolt extends BaseBasicBolt
   private boolean splitPartitions;
 
   private JSONObject json;
-  private List<BigInteger> partitions;
 
   @Override
   public void prepare(Map map, TopologyContext context)
   {
-    queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
-    queryType = queryInfo.getQueryType();
+    QueryInfo queryInfo = new QueryInfo((Map) map.get(StormConstants.QUERY_INFO_KEY));
+    String queryType = queryInfo.getQueryType();
     embedSelector = queryInfo.getEmbedSelector();
     logger.info("partition databolt hdfs = " + map.get(StormConstants.USE_HDFS));
     StormUtils.initializeSchemas(map, "partition");
@@ -102,7 +95,7 @@ public class PartitionDataBolt extends BaseBasicBolt
 
     try
     {
-      partitions = QueryUtils.partitionDataElement(qSchema, json, embedSelector);
+      List<BigInteger> partitions = QueryUtils.partitionDataElement(qSchema, json, embedSelector);
 
       logger.debug("HashSelectorsAndPartitionDataBolt processing {} outputting results - {}", json.toString(), partitions.size());
 
