@@ -228,7 +228,7 @@ public class ResponderCLI
     // esPort
     Option optionEsPort = new Option("ep", ResponderProps.ESPORT, true, "required if baseInputFormat = 'elasticsearch' -- ElasticSearch cluster port");
     optionEsPort.setRequired(false);
-    optionEsPort.setArgName(ResponderProps.ESQUERY);
+    optionEsPort.setArgName(ResponderProps.ESPORT);
     optionEsPort.setType(String.class);
     options.addOption(optionEsPort);
 
