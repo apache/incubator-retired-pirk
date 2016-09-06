@@ -42,7 +42,7 @@ public class FilterData implements Function<MapWritable,Boolean>
   private DataSchema dSchema = null;
   private Object filter = null;
 
-  public FilterData(Accumulators accumIn, BroadcastVars bbVarsIn) throws Exception
+  public FilterData(Accumulators accumIn, BroadcastVars bbVarsIn)
   {
     accum = accumIn;
 

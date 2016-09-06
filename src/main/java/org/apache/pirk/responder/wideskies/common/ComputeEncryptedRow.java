@@ -345,10 +345,10 @@ public class ComputeEncryptedRow
     {
       BigInteger part = dataPartitions.get(i);
 
-      BigInteger exp = null;
+      BigInteger exp;
       try
       {
-        exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+        exp = expCache.get(new Tuple3<>(rowQuery, part, query.getNSquared()));
       } catch (ExecutionException e)
       {
         e.printStackTrace();
@@ -358,7 +358,7 @@ public class ComputeEncryptedRow
       logger.debug("rowIndex = {} colCounter = {} part = {} part binary = {} exp = {} i = {} partition = {} = {}", rowIndex, colCounter, part.toString(),
           part.toString(2), exp, i, dataPartitions.get(i), dataPartitions.get(i).toString(2));
 
-      returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+      returnPairs.add(new Tuple2<>(colCounter, exp));
 
       ++colCounter;
     }
@@ -380,13 +380,13 @@ public class ComputeEncryptedRow
     BigInteger exp = null;
     try
     {
-      exp = expCache.get(new Tuple3<BigInteger,BigInteger,BigInteger>(rowQuery, part, query.getNSquared()));
+      exp = expCache.get(new Tuple3<>(rowQuery, part, query.getNSquared()));
     } catch (ExecutionException e)
     {
       e.printStackTrace();
     }
 
-    returnPairs.add(new Tuple2<Long,BigInteger>(colCounter, exp));
+    returnPairs.add(new Tuple2<>(colCounter, exp));
 
     ++colCounter;
 

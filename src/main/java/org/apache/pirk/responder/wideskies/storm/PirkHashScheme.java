@@ -18,27 +18,24 @@
  */
 package org.apache.pirk.responder.wideskies.storm;
 
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.utils.KeyedHash;
-
 import org.apache.storm.Config;
 import org.apache.storm.kafka.StringScheme;
 import org.apache.storm.spout.Scheme;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.LoggerFactory;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Scheme used by spout to retrieve and hash selector from JSON data on Kafka.
@@ -51,7 +48,6 @@ public class PirkHashScheme extends StringScheme implements Scheme
   private QueryInfo queryInfo;
 
   transient private JSONParser parser;
-  transient private JSONObject json;
   private boolean initialized = false;
   private QuerySchema qSchema;
   private Config conf;
@@ -81,8 +77,9 @@ public class PirkHashScheme extends StringScheme implements Scheme
 
       initialized = true;
     }
-    String str = super.deserializeString(bytes);
+    String str = deserializeString(bytes);
 
+    JSONObject json;
     try
     {
       json = (JSONObject) parser.parse(str);

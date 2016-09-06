@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -53,7 +54,7 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
   @Override
   public Iterable<Tuple2<Integer,String>> call(Iterator<Tuple2<Integer,Iterable<Tuple2<Integer,BigInteger>>>> iter) throws Exception
   {
-    ArrayList<Tuple2<Integer,String>> keyFileList = new ArrayList<>();
+    List<Tuple2<Integer,String>> keyFileList = new ArrayList<>();
 
     FileSystem fs = FileSystem.get(new Configuration());
 

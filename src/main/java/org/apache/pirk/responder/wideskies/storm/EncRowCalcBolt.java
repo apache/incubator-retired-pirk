@@ -19,8 +19,17 @@
 
 package org.apache.pirk.responder.wideskies.storm;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.responder.wideskies.common.ComputeEncryptedRow;
+
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -29,15 +38,8 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.slf4j.LoggerFactory;
-import scala.Tuple2;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import scala.Tuple2;
 
 /**
  * Bolt class to perform the encrypted row calculation
@@ -69,8 +71,8 @@ public class EncRowCalcBolt extends BaseRichBolt
   private Random rand;
 
   // These are the main data structures used here.
-  private Map<Integer,Integer> hitsByRow = new HashMap<Integer,Integer>();
-  private Map<Integer,Integer> colIndexByRow = new HashMap<Integer,Integer>();
+  private Map<Integer,Integer> hitsByRow = new HashMap<>();
+  private Map<Integer,Integer> colIndexByRow = new HashMap<>();
   private List<Tuple2<Long,BigInteger>> matrixElements = new ArrayList<>();
   private List<BigInteger> dataArray = new ArrayList<>();
 
@@ -164,8 +166,8 @@ public class EncRowCalcBolt extends BaseRichBolt
    * Extracts (hash, data partitions) from tuple. Encrypts the data partitions. Returns all of the pairs of (col index, col value). Also advances the
    * colIndexByRow and hitsByRow appropriately.
    *
-   * @param tuple
-   * @return
+   * @param tuple {@code Tuple}
+   * @return {@code List<Tuple2>}
    */
   private List<Tuple2<Long,BigInteger>> processTupleFromPartitionDataBolt(Tuple tuple)
   {

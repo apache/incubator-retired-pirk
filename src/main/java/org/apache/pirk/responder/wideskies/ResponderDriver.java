@@ -50,9 +50,9 @@ public class ResponderDriver
 {
   private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
 
-  enum Platform
+  private enum Platform
   {
-    MAPREDUCE, SPARK, SPARKSTREAMING, STORM, STANDALONE, NONE;
+    MAPREDUCE, SPARK, SPARKSTREAMING, STORM, STANDALONE, NONE
   }
 
   public static void main(String[] args) throws Exception
