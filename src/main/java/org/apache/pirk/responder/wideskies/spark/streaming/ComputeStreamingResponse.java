@@ -18,6 +18,7 @@
  */
 package org.apache.pirk.responder.wideskies.spark.streaming;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +47,6 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
-import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -85,7 +85,7 @@ public class ComputeStreamingResponse
   private String outputDirExp = null;
 
   private String queryInput = null;
-  QuerySchema qSchema = null;
+  private QuerySchema qSchema = null;
 
   private String esQuery = "none";
   private String esResource = "none";
@@ -94,16 +94,12 @@ public class ComputeStreamingResponse
   private HadoopFileSystemStore storage = null;
   private JavaStreamingContext jssc = null;
 
-  boolean useQueueStream = false;
+  private boolean useQueueStream = false;
 
-  private long batchSeconds = 0;
   private long windowLength = 0;
 
   private Accumulators accum = null;
   private BroadcastVars bVars = null;
-
-  private QueryInfo queryInfo = null;
-  Query query = null;
 
   private int numDataPartitions = 0;
   private int numColMultPartitions = 0;
@@ -154,7 +150,7 @@ public class ComputeStreamingResponse
         + " esResource = " + esResource);
 
     // Pull the batchSeconds and windowLength parameters
-    batchSeconds = SystemConfiguration.getLongProperty("pir.sparkstreaming.batchSeconds", 30);
+    long batchSeconds = SystemConfiguration.getLongProperty("pir.sparkstreaming.batchSeconds", 30);
     windowLength = SystemConfiguration.getLongProperty("pir.sparkstreaming.windowLength", 60);
     if (windowLength % batchSeconds != 0)
     {
@@ -191,8 +187,8 @@ public class ComputeStreamingResponse
     bVars = new BroadcastVars(jssc.sparkContext());
 
     // Set the Query and QueryInfo broadcast variables
-    query = storage.recall(queryInput, Query.class);
-    queryInfo = query.getQueryInfo();
+    Query query = storage.recall(queryInput, Query.class);
+    QueryInfo queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
 
@@ -258,7 +254,7 @@ public class ComputeStreamingResponse
   /**
    * Method to read in data from an allowed input source/format and perform the query
    */
-  public void performQuery() throws Exception
+  public void performQuery() throws IOException, ClassNotFoundException, InterruptedException
   {
     logger.info("Performing query: ");
 
@@ -279,11 +275,11 @@ public class ComputeStreamingResponse
    * Method to read in the data from an allowed input format, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaDStream<MapWritable> readData() throws ClassNotFoundException, Exception
+  public JavaDStream<MapWritable> readData() throws ClassNotFoundException, IOException
   {
     logger.info("Reading data ");
 
-    Job job = new Job();
+    Job job = Job.getInstance();
     String baseQuery = SystemConfiguration.getProperty("pir.baseQuery");
     String jobName = "pirSpark_base_" + baseQuery + "_" + System.currentTimeMillis();
     job.setJobName(jobName);
@@ -298,7 +294,7 @@ public class ComputeStreamingResponse
     Class<BaseInputFormat> inputClass = (Class<BaseInputFormat>) Class.forName(classString);
     if (!Class.forName("org.apache.pirk.inputformat.hadoop.BaseInputFormat").isAssignableFrom(inputClass))
     {
-      throw new Exception("baseInputFormat class = " + classString + " does not extend BaseInputFormat");
+      throw new ClassCastException("baseInputFormat class = " + classString + " does not extend BaseInputFormat");
     }
     job.setInputFormatClass(inputClass);
 
@@ -306,10 +302,10 @@ public class ComputeStreamingResponse
 
     // Read data from hdfs
     logger.info("useQueueStream = " + useQueueStream);
-    JavaDStream<MapWritable> mwStream = null;
+    JavaDStream<MapWritable> mwStream;
     if (useQueueStream)
     {
-      Queue<JavaRDD<MapWritable>> rddQueue = new LinkedList<JavaRDD<MapWritable>>();
+      Queue<JavaRDD<MapWritable>> rddQueue = new LinkedList<>();
       JavaRDD<MapWritable> rddIn = jssc.sparkContext().newAPIHadoopRDD(job.getConfiguration(), inputClass, Text.class, MapWritable.class).values()
           .coalesce(numDataPartitions);
 
@@ -334,8 +330,7 @@ public class ComputeStreamingResponse
     // Filter out by the provided stopListFile entries
     if (qSchema.getFilter() != null)
     {
-      JavaDStream<MapWritable> filteredRDD = mwStream.filter(new FilterData(accum, bVars));
-      return filteredRDD;
+      return mwStream.filter(new FilterData(accum, bVars));
     }
 
     return mwStream;
@@ -345,11 +340,11 @@ public class ComputeStreamingResponse
    * Method to read in the data from elasticsearch, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaDStream<MapWritable> readDataES() throws Exception
+  public JavaDStream<MapWritable> readDataES() throws IOException
   {
     logger.info("Reading data ");
 
-    Job job = new Job();
+    Job job = Job.getInstance();
     String jobName = "pirSpark_ES_" + esQuery + "_" + System.currentTimeMillis();
     job.setJobName(jobName);
     job.getConfiguration().set("es.nodes", SystemConfiguration.getProperty("es.nodes"));
@@ -358,10 +353,10 @@ public class ComputeStreamingResponse
     job.getConfiguration().set("es.query", esQuery);
 
     // Read data from hdfs
-    JavaDStream<MapWritable> mwStream = null;
+    JavaDStream<MapWritable> mwStream;
     if (useQueueStream)
     {
-      Queue<JavaRDD<MapWritable>> rddQueue = new LinkedList<JavaRDD<MapWritable>>();
+      Queue<JavaRDD<MapWritable>> rddQueue = new LinkedList<>();
       JavaRDD<MapWritable> rddIn = jssc.sparkContext().newAPIHadoopRDD(job.getConfiguration(), EsInputFormat.class, Text.class, MapWritable.class).values()
           .coalesce(numDataPartitions);
       rddQueue.add(rddIn);
@@ -386,8 +381,7 @@ public class ComputeStreamingResponse
     // Filter out by the provided stopListFile entries
     if (qSchema.getFilter() != null)
     {
-      JavaDStream<MapWritable> filteredRDD = mwStream.filter(new FilterData(accum, bVars));
-      return filteredRDD;
+      return mwStream.filter(new FilterData(accum, bVars));
     }
     else
     {
@@ -401,7 +395,7 @@ public class ComputeStreamingResponse
    * @throws InterruptedException
    * 
    */
-  public void performQuery(JavaDStream<MapWritable> input) throws PIRException, InterruptedException
+  public void performQuery(JavaDStream<MapWritable> input) throws InterruptedException
   {
     logger.info("Performing query: ");
 
@@ -430,38 +424,33 @@ public class ComputeStreamingResponse
   }
 
   // Method to compute the final encrypted columns
-  private void encryptedColumnCalc(JavaPairDStream<Long,BigInteger> encRowRDD) throws PIRException
+  private void encryptedColumnCalc(JavaPairDStream<Long,BigInteger> encRowRDD)
   {
     // Multiply the column values by colNum: emit <colNum, finalColVal>
     JavaPairDStream<Long,BigInteger> encColRDD;
     if (colMultReduceByKey)
     {
-      encColRDD = encRowRDD.reduceByKey(new EncColMultReducer(accum, bVars), numColMultPartitions);
+      encColRDD = encRowRDD.reduceByKey(new EncColMultReducer(bVars), numColMultPartitions);
     }
     else
     {
-      encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(accum, bVars));
+      encColRDD = encRowRDD.groupByKey(numColMultPartitions).mapToPair(new EncColMultGroupedMapper(bVars));
     }
 
     // Update the output name, by batch number
     bVars.setOutput(outputFile + "_" + accum.numBatchesGetValue());
 
     // Form and write the response object
-    encColRDD.repartition(1).foreachRDD(new VoidFunction<JavaPairRDD<Long,BigInteger>>()
-    {
-      @Override
-      public void call(JavaPairRDD<Long,BigInteger> rdd)
+    encColRDD.repartition(1).foreachRDD((VoidFunction<JavaPairRDD<Long, BigInteger>>) rdd -> {
+      rdd.foreachPartition(new FinalResponseFunction(accum, bVars));
+
+      int maxBatchesVar = bVars.getMaxBatches();
+      if (maxBatchesVar != -1 && accum.numBatchesGetValue() == maxBatchesVar)
       {
-        rdd.foreachPartition(new FinalResponseFunction(accum, bVars));
-
-        int maxBatchesVar = bVars.getMaxBatches();
-        if (maxBatchesVar != -1 && accum.numBatchesGetValue() == maxBatchesVar)
-        {
-          logger.info("num batches = maxBatches = " + maxBatchesVar + "; shutting down");
-          System.exit(0);
-        }
-
+        logger.info("num batches = maxBatches = " + maxBatchesVar + "; shutting down");
+        System.exit(0);
       }
+
     });
   }
 }

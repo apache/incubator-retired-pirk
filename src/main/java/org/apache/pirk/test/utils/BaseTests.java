@@ -77,8 +77,6 @@ public class BaseTests
   {
     logger.info("Running testDNSHostnameQuery(): ");
 
-    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_HOSTNAME_QUERY);
-
     int numExpectedResults = 6;
     List<QueryResponseJSON> results;
     if (isDistributed)
@@ -93,6 +91,14 @@ public class BaseTests
         numExpectedResults = 7; // all 7 for non distributed case; if testFalsePositive==true, then 6
       }
     }
+    checkDNSHostnameQueryResults(results, isDistributed, numExpectedResults, testFalsePositive, dataElements);
+    logger.info("Completed testDNSHostnameQuery(): ");
+  }
+
+  public static void checkDNSHostnameQueryResults(List<QueryResponseJSON> results, boolean isDistributed, int numExpectedResults, boolean testFalsePositive,
+      List<JSONObject> dataElements)
+  {
+    QuerySchema qSchema = QuerySchemaRegistry.get(Inputs.DNS_HOSTNAME_QUERY);
     logger.info("results:");
     printResultList(results);
 
@@ -188,7 +194,6 @@ public class BaseTests
         }
       }
     }
-    logger.info("Completed testDNSHostnameQuery(): ");
   }
 
   public static void testDNSIPQuery(ArrayList<JSONObject> dataElements, int numThreads) throws Exception

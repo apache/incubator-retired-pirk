@@ -21,7 +21,7 @@ package org.apache.pirk.responder.wideskies;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.cli.Option;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.pirk.inputformat.hadoop.InputFormatConst;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
@@ -60,14 +60,14 @@ public class ResponderProps
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
   public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
-  public static final String NUMREDUCETASKS = "pir.numReduceTasks";
-  public static final String MAPMEMORY = "mapreduce.map.memory.mb";
-  public static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
-  public static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
-  public static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
-  public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
+  static final String NUMREDUCETASKS = "pir.numReduceTasks";
+  static final String MAPMEMORY = "mapreduce.map.memory.mb";
+  static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
+  static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
+  static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
+  static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
   public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
-  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
 
   // For Spark Streaming - optional
   public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
@@ -76,10 +76,45 @@ public class ResponderProps
   public static final String MAXBATCHES = "pir.sparkstreaming.maxBatches";
   public static final String STOPGRACEFULLY = "spark.streaming.stopGracefullyOnShutdown";
 
-  static final List<String> PROPSLIST = Arrays.asList(PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, ESNODES, ESPORT,
-      OUTPUTFILE, BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
-      REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
-      COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY);
+  // Storm parameters
+  // hdfs
+  private static final String HDFSURI = "hdfs.uri";
+  private static final String USEHDFS = "hdfs.use";
+  // kafka
+  private static final String KAFKATOPIC = "kafka.topic";
+  private static final String KAFKACLIENTID = "kafka.clientId";
+  private static final String KAFKAZK = "kafka.zk";
+  private static final String KAFKAFORCEFROMSTART = "kafka.forceFromStart";
+  // pirk topo
+  private static final String STORMTOPONAME = "storm.topoName";
+  private static final String STORMWORKERS = "storm.workers";
+  private static final String STORMNUMACKERS = "storm.numAckers";
+  private static final String STORMRECEIVEBUFFERS = "storm.executor.receiveBufferSize";
+  private static final String STORMSENDBUFFERS = "storm.executor.sendBufferSize";
+  private static final String STORMTRANSFERBUFFERS = "storm.executor.transferBufferSize";
+  private static final String STORMMAXSPOUTPENDING = "storm.maxSpoutPending";
+  private static final String STORMHEAPMEMORY = "storm.worker.heapMemory";
+  private static final String STORMCHILDOPTS = "storm.worker.childOpts";
+  private static final String STORMMAXWORKERHEAP = "storm.maxWorkerHeapMemory";
+  private static final String STORMCOMPONENTONHEAP = "storm.componentOnheapMem";
+  private static final String STORMSPOUTPAR = "storm.spout.parallelism";
+  private static final String STORMPARTITIONDATABOLTPAR = "storm.partitiondata.parallelism";
+  private static final String STORMENCROWCALCBOLTPAR = "storm.encrowcalcbolt.parallelism";
+  private static final String STORMENCCOLMULTBOLTPAR = "storm.enccolmultbolt.parallelism";
+  private static final String STORMFLUSHFREQUENCY = "storm.encrowcalcbolt.ticktuple";
+  private static final String STORMSPLITPARTITIONS = "storm.splitPartitions";
+  private static final String STORMSALTCOLUMNS = "storm.saltColumns";
+  private static final String STORMNUMROWDIVS = "storm.rowDivs";
+
+  private static final String[] STORMPROPS = new String[] {HDFSURI, USEHDFS, KAFKATOPIC, KAFKACLIENTID, KAFKAZK, KAFKAFORCEFROMSTART, STORMTOPONAME, STORMWORKERS,
+      STORMNUMACKERS, STORMRECEIVEBUFFERS, STORMSENDBUFFERS, STORMTRANSFERBUFFERS, STORMMAXSPOUTPENDING, STORMHEAPMEMORY, STORMCHILDOPTS, STORMMAXWORKERHEAP,
+      STORMCOMPONENTONHEAP, STORMSPOUTPAR, STORMPARTITIONDATABOLTPAR, STORMENCROWCALCBOLTPAR, STORMENCCOLMULTBOLTPAR, STORMFLUSHFREQUENCY,
+      STORMSPLITPARTITIONS, STORMSALTCOLUMNS, STORMNUMROWDIVS};
+
+  static final List<String> PROPSLIST = Arrays.asList((String[]) ArrayUtils.addAll(new String[] {PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY,
+      ESRESOURCE, ESQUERY, ESNODES, OUTPUTFILE, BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY,
+      REDUCEMEMORY, MAPJAVAOPTS, REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS,
+      USEMODEXPJOIN, COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY}, STORMPROPS));
 
   /**
    * Validates the responder properties
@@ -98,7 +133,8 @@ public class ResponderProps
     }
 
     String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("standalone"))
+    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("storm")
+        && !platform.equals("standalone"))
     {
       logger.info("Unsupported platform: " + platform);
       valid = false;

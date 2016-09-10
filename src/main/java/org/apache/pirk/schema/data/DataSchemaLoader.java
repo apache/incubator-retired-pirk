@@ -131,8 +131,8 @@ public class DataSchemaLoader
       InputStream is = null;
       if (hdfs)
       {
-        is = fs.open(new Path(schemaFile));
         logger.info("hdfs: filePath = " + schemaFile);
+        is = fs.open(fs.makeQualified(new Path(schemaFile)));
       }
       else
       {

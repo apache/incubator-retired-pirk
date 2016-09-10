@@ -89,7 +89,7 @@ public class DecryptResponse
   public Map<String,List<QueryResponseJSON>> decrypt(int numThreads) throws InterruptedException, PIRException
   {
     Map<String,List<QueryResponseJSON>> resultMap = new HashMap<>(); // selector -> ArrayList of hits
-    
+
     QueryInfo queryInfo = response.getQueryInfo();
 
     Paillier paillier = querier.getPaillier();
@@ -161,10 +161,10 @@ public class DecryptResponse
     }
 
     es.shutdown();
-    
+
     return resultMap;
   }
-  
+
   // Method to perform basic decryption of each raw response element - does not
   // extract and reconstruct the data elements
   private List<BigInteger> decryptElements(TreeMap<Integer,BigInteger> elements, Paillier paillier)

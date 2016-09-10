@@ -74,7 +74,6 @@ public class KeyedHash
 
     } catch (NoSuchAlgorithmException e)
     {
-
       logger.info(e.toString());
       bitLimitedHash = hash(key, bitSize, input);
     }

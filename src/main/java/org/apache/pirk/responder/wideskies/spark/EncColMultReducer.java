@@ -38,7 +38,7 @@ public class EncColMultReducer implements Function2<BigInteger,BigInteger,BigInt
 
   Query query = null;
 
-  public EncColMultReducer(Accumulators accumIn, BroadcastVars bbVarsIn)
+  public EncColMultReducer(BroadcastVars bbVarsIn)
   {
 
     query = bbVarsIn.getQuery();

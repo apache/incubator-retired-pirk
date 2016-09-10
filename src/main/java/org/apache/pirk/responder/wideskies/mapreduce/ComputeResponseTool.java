@@ -24,7 +24,8 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -109,8 +110,6 @@ public class ComputeResponseTool extends Configured implements Tool
   private String esQuery = "none";
   private String esResource = "none";
 
-  String dataSchema = "none";
-
   private Configuration conf = null;
   private FileSystem fs = null;
 
@@ -154,7 +153,7 @@ public class ComputeResponseTool extends Configured implements Tool
     Path outPathFinal = new Path(outputDirFinal);
 
     // If we are using distributed exp tables -- Create the expTable file in hdfs for this query, if it doesn't exist
-    if ((queryInfo.getUseHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
+    if ((queryInfo.useHDFSExpLookupTable() || useHDFSLookupTable) && query.getExpFileBasedLookup().isEmpty())
     {
       success = computeExpTable();
     }
@@ -243,8 +242,8 @@ public class ComputeResponseTool extends Configured implements Tool
       fs.delete(splitDir, true);
     }
     // Write the query hashes to the split files
-    TreeMap<Integer,BigInteger> queryElements = query.getQueryElements();
-    ArrayList<Integer> keys = new ArrayList<>(queryElements.keySet());
+    Map<Integer,BigInteger> queryElements = query.getQueryElements();
+    List<Integer> keys = new ArrayList<>(queryElements.keySet());
 
     int numSplits = SystemConfiguration.getIntProperty("pir.expCreationSplits", 100);
     int elementsPerSplit = queryElements.size() / numSplits; // Integral division.
@@ -263,7 +262,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Run the job to generate the expTable
     // Job jobExp = new Job(mrConfig.getConfig(), "pirExp-" + pirWL.getWatchlistNum());
-    Job jobExp = new Job(conf, "pirExp-" + queryInfo.getIdentifier());
+    Job jobExp = Job.getInstance(conf, "pirExp-" + queryInfo.getIdentifier());
 
     jobExp.setSpeculativeExecution(false);
     jobExp.getConfiguration().set("mapreduce.map.speculative", "false");
@@ -311,7 +310,7 @@ public class ComputeResponseTool extends Configured implements Tool
 
     // Assemble the exp table from the output
     // element_index -> fileName
-    HashMap<Integer,String> expFileTable = new HashMap<>();
+    Map<Integer,String> expFileTable = new HashMap<>();
     FileStatus[] status = fs.listStatus(outPathExp);
     for (FileStatus fstat : status)
     {
@@ -347,11 +346,12 @@ public class ComputeResponseTool extends Configured implements Tool
     return success;
   }
 
+  @SuppressWarnings("unchecked")
   private boolean readDataEncRows(Path outPathInit) throws Exception
   {
     boolean success;
 
-    Job job = new Job(conf, "pirMR");
+    Job job = Job.getInstance(conf, "pirMR");
     job.setSpeculativeExecution(false);
 
     // Set the data and query schema properties
@@ -444,7 +444,7 @@ public class ComputeResponseTool extends Configured implements Tool
   {
     boolean success;
 
-    Job columnMultJob = new Job(conf, "pir_columnMult");
+    Job columnMultJob = Job.getInstance(conf, "pir_columnMult");
     columnMultJob.setSpeculativeExecution(false);
 
     String columnMultJobName = "pir_columnMult";
@@ -504,7 +504,7 @@ public class ComputeResponseTool extends Configured implements Tool
   {
     boolean success;
 
-    Job finalResponseJob = new Job(conf, "pir_finalResponse");
+    Job finalResponseJob = Job.getInstance(conf, "pir_finalResponse");
     finalResponseJob.setSpeculativeExecution(false);
 
     String finalResponseJobName = "pir_finalResponse";

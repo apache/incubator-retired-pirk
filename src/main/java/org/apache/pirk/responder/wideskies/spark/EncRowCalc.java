@@ -78,7 +78,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
     int rowIndex = hashDocTuple._1;
     accum.incNumHashes(1);
 
-    if (queryInfo.getUseHDFSExpLookupTable())
+    if (queryInfo.useHDFSExpLookupTable())
     {
       FileSystem fs;
       try

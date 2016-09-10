@@ -21,7 +21,6 @@ package org.apache.pirk.test.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -268,10 +267,10 @@ public class TestUtils
 
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
-   * @throws IOException 
-   * @throws FileNotFoundException 
+   * 
+   * @throws IOException - {@link IOException}
    */
-  public static List<QueryResponseJSON> readResultsFile(File file) throws FileNotFoundException, IOException
+  public static List<QueryResponseJSON> readResultsFile(File file) throws IOException
   {
     List<QueryResponseJSON> results = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(file)))
@@ -289,7 +288,7 @@ public class TestUtils
 
   /**
    * Write the ArrayList<String to a tmp file in the local filesystem with the given fileName
-   * 
+   * @throws IOException - {@link IOException}
    */
   public static String writeToTmpFile(List<String> list, String fileName, String suffix) throws IOException
   {

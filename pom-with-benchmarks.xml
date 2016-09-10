@@ -17,17 +17,17 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
- 
+
 	<groupId>org.apache.pirk</groupId>
 	<artifactId>pirk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
 	<name>Apache Pirk (incubating) Project</name>
-	<description>Apache Pirk (incubating) is a framework for scalable 
+	<description>Apache Pirk (incubating) is a framework for scalable
 		Private Information Retrieval (PIR). </description>
 	<url>http://pirk.incubator.apache.org/</url>
 
@@ -70,22 +70,12 @@
 				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 		</repository>
-		
+
 		<repository>
 			<id>conjars.org</id>
 			<url>http://conjars.org/repo</url>
 		</repository>
-		
-		<!-- This repository is TEMPORARY while we pilot additions to JNA-GMP -->
-		<!-- before we do a pull request and wait for Square to do a release  -->
-		<repository>
-			<id>jna-gmp-mvn-repo-jacobwil</id>
-			<url>https://raw.github.com/jacobwil/jna-gmp/mvn-repo</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository> 
+
 	</repositories>
 
 	<properties>
@@ -196,6 +186,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-hadoop</artifactId>
 			<version>${elasticsearch.version}</version>
@@ -278,43 +280,43 @@
 		    <artifactId>jmh-generator-annprocess</artifactId>
 		    <version>${jmh.version}</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
 		<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>2.18</version>
-			<configuration>
-			<redirectTestOutputToFile>true</redirectTestOutputToFile>
-			<argLine combine.children="append">-Xmx1G
-				-Djava.net.preferIPv4Stack=true</argLine>
-			</configuration>
-			<dependencies>
-				<dependency>
-				<!-- Force surefire to use JUnit -->
-				<groupId>org.apache.maven.surefire</groupId>
-				<artifactId>surefire-junit4</artifactId>
-				<version>2.18</version>
-				</dependency>
-			</dependencies>
-                </plugin>
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-compiler-plugin</artifactId>
-			    <version>3.1</version>
-			    <configuration>
-			        <compilerVersion>${javac.target}</compilerVersion>
-			        <source>${javac.target}</source>
-			        <target>${javac.target}</target>
-			    </configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18</version>
+				<configuration>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<argLine combine.children="append">-Xmx1G
+						-Djava.net.preferIPv4Stack=true</argLine>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<!-- Force surefire to use JUnit -->
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>2.18</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-shade-plugin</artifactId>
-			    <version>2.4.3</version> <!-- older versions of maven-shade-plugin make JMH painful -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<compilerVersion>${javac.target}</compilerVersion>
+					<source>${javac.target}</source>
+					<target>${javac.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version> <!-- older versions of maven-shade-plugin make JMH painful -->
 
 				<executions>
 					<execution>
@@ -328,10 +330,10 @@
 							<shadedClassifierName>exe</shadedClassifierName>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 								</transformer>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 								</transformer>
 							</transformers>
 							<filters>
@@ -347,37 +349,37 @@
 						</configuration>
 					</execution>
 					<execution>
-					    <phase>package</phase>
-					    <id>benchmark</id>
-					    <goals>
-					        <goal>shade</goal>
-					    </goals>
-					    <configuration>
-					        <!-- The jar is very corrupted if it isn't minimized -->
-					        <minimizeJar>true</minimizeJar>
-					        <finalName>${benchmarkjar.name}</finalName>
-					        <transformers>
-					            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-					                <mainClass>org.openjdk.jmh.Main</mainClass>
-					            </transformer>
-					        </transformers>
-					        <filters>
-					            <filter>
-					                <!--
-					                    Shading signed JARs will fail without this.
-					                    http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
-					                -->
-					                <artifact>*:*</artifact>
-					                <excludes>
-					                    <exclude>META-INF/*.SF</exclude>
-					                    <exclude>META-INF/*.DSA</exclude>
-					                    <exclude>META-INF/*.RSA</exclude>
-					                </excludes>
-					            </filter>
-					        </filters>
-					    </configuration>
+						<phase>package</phase>
+						<id>benchmark</id>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<!-- The jar is very corrupted if it isn't minimized -->
+							<minimizeJar>true</minimizeJar>
+							<finalName>${benchmarkjar.name}</finalName>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.openjdk.jmh.Main</mainClass>
+								</transformer>
+							</transformers>
+							<filters>
+								<filter>
+									<!--
+                                        Shading signed JARs will fail without this.
+                                        http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
+                                    -->
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
 					</execution>
-					
+
 				</executions>
 			</plugin>
 		</plugins>
