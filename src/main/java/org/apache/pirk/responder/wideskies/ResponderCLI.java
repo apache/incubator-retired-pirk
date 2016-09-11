@@ -19,6 +19,7 @@
 package org.apache.pirk.responder.wideskies;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -26,6 +27,8 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,8 @@ public class ResponderCLI
   private CommandLine commandLine = null;
 
   private static final String LOCALPROPFILE = "local.responder.properties";
+  private static final String HDFSPROPDIR = "hdfsPropertiesDir";
+  private static final String HDFSPROPFILE = "hdfsPropertiesFile";
 
   /**
    * Create and parse allowable options
@@ -106,8 +111,9 @@ public class ResponderCLI
    * Method to parse and validate the options provided
    *
    * @return - true if valid, false otherwise
+ * @throws IOException 
    */
-  private boolean parseOptions()
+  private boolean parseOptions() throws IOException
   {
     boolean valid;
 
@@ -115,6 +121,16 @@ public class ResponderCLI
     if (hasOption(LOCALPROPFILE))
     {
       SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
+    }
+    else if(hasOption(HDFSPROPDIR))
+    {
+    	FileSystem fs = FileSystem.get(new Configuration());
+    	SystemConfiguration.loadPropsFromHDFSDir(getOptionValue(HDFSPROPDIR), fs);
+    }
+    else if(hasOption(HDFSPROPFILE))
+    {
+    	FileSystem fs = FileSystem.get(new Configuration());
+    	SystemConfiguration.loadPropsFromFile(getOptionValue(HDFSPROPFILE), fs);
     }
     else
     {
@@ -148,16 +164,30 @@ public class ResponderCLI
     optionHelp.setRequired(false);
     options.addOption(optionHelp);
 
-    // local.querier.properties
+    // local.responder.properties
     Option optionLocalPropFile = new Option("localPropFile", LOCALPROPFILE, true, "Optional local properties file");
     optionLocalPropFile.setRequired(false);
     optionLocalPropFile.setArgName(LOCALPROPFILE);
     optionLocalPropFile.setType(String.class);
     options.addOption(optionLocalPropFile);
+    
+    // hdfsPropertiesDir
+    Option optionHDFSPropDir = new Option("hdfsPropsDir", HDFSPROPDIR, true, "Optional location of directory in hdfs containing properties file(s)");
+    optionHDFSPropDir.setRequired(false);
+    optionHDFSPropDir.setArgName(HDFSPROPDIR);
+    optionHDFSPropDir.setType(String.class);
+    options.addOption(optionHDFSPropDir);
+    
+    // hdfsPropertiesFile
+    Option optionHDFSPropFile = new Option("hdfsPropsFile", HDFSPROPFILE, true, "Optional location of properties file(s) in hdfs");
+    optionHDFSPropFile.setRequired(false);
+    optionHDFSPropFile.setArgName(HDFSPROPFILE);
+    optionHDFSPropFile.setType(String.class);
+    options.addOption(optionHDFSPropFile);
 
     // platform
     Option optionPlatform = new Option("p", ResponderProps.PLATFORM, true,
-        "required -- 'mapreduce', 'spark', or 'standalone' : Processing platform technology for the responder");
+        "required -- 'mapreduce', 'spark', 'sparkstreaming', 'storm', or 'standalone' : Processing platform technology for the responder");
     optionPlatform.setRequired(false);
     optionPlatform.setArgName(ResponderProps.PLATFORM);
     optionPlatform.setType(String.class);
