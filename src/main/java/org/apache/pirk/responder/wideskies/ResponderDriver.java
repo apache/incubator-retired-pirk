@@ -18,18 +18,10 @@
  */
 package org.apache.pirk.responder.wideskies;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.Permission;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.util.ToolRunner;
-import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
-import org.apache.pirk.responder.wideskies.spark.ComputeResponse;
-import org.apache.pirk.responder.wideskies.spark.streaming.ComputeStreamingResponse;
-import org.apache.pirk.responder.wideskies.standalone.Responder;
-import org.apache.pirk.responder.wideskies.storm.PirkTopology;
-import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,83 +41,111 @@ import org.slf4j.LoggerFactory;
 public class ResponderDriver
 {
   private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
+  // ClassNames to instantiate Platforms using the platform CLI
+  private final static String MAPREDUCE_LAUNCHER = "org.apache.pirk.responder.wideskies.mapreduce.MapReduceResponderLauncher";
+  private final static String SPARK_LAUNCHER = "org.apache.pirk.responder.wideskies.spark.SparkResponderLauncher";
+  private final static String SPARKSTREAMING_LAUNCHER = "org.apache.pirk.responder.wideskies.spark.streaming.SparkStreamingResponderLauncher";
+  private final static String STANDALONE_LAUNCHER = "org.apache.pirk.responder.wideskies.standalone.StandaloneResponderLauncher";
+  private final static String STORM_LAUNCHER = "org.apache.pirk.responder.wideskies.storm.StormResponderLauncher";
 
   private enum Platform
   {
     MAPREDUCE, SPARK, SPARKSTREAMING, STORM, STANDALONE, NONE
   }
 
-  public static void main(String[] args) throws Exception
+  private static void launch(String launcherClassName)
+  {
+    logger.info("Launching Responder with {}", launcherClassName);
+    try
+    {
+      Class clazz = Class.forName(launcherClassName);
+      if (ResponderLauncher.class.isAssignableFrom(clazz))
+      {
+        Object launcherInstance = clazz.newInstance();
+        Method m = launcherInstance.getClass().getDeclaredMethod("run");
+        m.invoke(launcherInstance);
+      }
+      else
+      {
+        logger.error("Class {} does not implement ResponderLauncher", launcherClassName);
+      }
+    }
+    catch (ClassNotFoundException e)
+    {
+      logger.error("Class {} not found, check launcher property: {}", launcherClassName);
+    }
+    catch (NoSuchMethodException e)
+    {
+      logger.error("In {} run method not found: {}", launcherClassName);
+    }
+    catch (InvocationTargetException e)
+    {
+      logger.error("In {} run method could not be invoked: {}: {}", launcherClassName, e);
+    }
+    catch (InstantiationException e)
+    {
+      logger.error("Instantiation exception within {}: {}", launcherClassName, e);
+    }
+    catch (IllegalAccessException e)
+    {
+      logger.error("IllegalAccess Exception {}", e);
+    }
+  }
+
+  public static void main(String[] args)
   {
     ResponderCLI responderCLI = new ResponderCLI(args);
 
     // For handling System.exit calls from Spark Streaming
     System.setSecurityManager(new SystemExitManager());
 
-    Platform platform = Platform.NONE;
-    String platformString = SystemConfiguration.getProperty(ResponderProps.PLATFORM);
-    try
+    String launcherClassName = SystemConfiguration.getProperty(ResponderProps.LAUNCHER);
+    if (launcherClassName != null)
     {
-      platform = Platform.valueOf(platformString.toUpperCase());
-    } catch (IllegalArgumentException e)
-    {
-      logger.error("platform " + platformString + " not found.");
+      launch(launcherClassName);
     }
-
-    logger.info("platform = " + platform);
-    switch (platform)
+    else
     {
-      case MAPREDUCE:
-        logger.info("Launching MapReduce ResponderTool:");
+      logger.warn("platform is being deprecaited in flavor of launcher");
+      Platform platform = Platform.NONE;
+      String platformString = SystemConfiguration.getProperty(ResponderProps.PLATFORM);
 
-        ComputeResponseTool pirWLTool = new ComputeResponseTool();
-        ToolRunner.run(pirWLTool, new String[] {});
-        break;
+      try
+      {
+        platform = Platform.valueOf(platformString.toUpperCase());
+        logger.info("platform = " + platform);
+      } catch (IllegalArgumentException e)
+      {
+        logger.error("platform " + platformString + " not found.");
+      }
 
-      case SPARK:
-        logger.info("Launching Spark ComputeResponse:");
+      switch (platform)
+      {
+        case MAPREDUCE:
+          launch(MAPREDUCE_LAUNCHER);
+          break;
 
-        ComputeResponse computeResponse = new ComputeResponse(FileSystem.get(new Configuration()));
-        computeResponse.performQuery();
-        break;
+        case SPARK:
+          launch(SPARK_LAUNCHER);
+          break;
 
-      case SPARKSTREAMING:
-        logger.info("Launching Spark ComputeStreamingResponse:");
+        case SPARKSTREAMING:
+          launch(SPARKSTREAMING_LAUNCHER);
+          break;
 
-        ComputeStreamingResponse computeSR = new ComputeStreamingResponse(FileSystem.get(new Configuration()));
-        try
-        {
-          computeSR.performQuery();
-        } catch (SystemExitException e)
-        {
-          // If System.exit(0) is not caught from Spark Streaming,
-          // the application will complete with a 'failed' status
-          logger.info("Exited with System.exit(0) from Spark Streaming");
-        }
+        case STORM:
+          launch(STORM_LAUNCHER);
+          break;
 
-        // Teardown the context
-        computeSR.teardown();
-        break;
-
-      case STORM:
-        logger.info("Launching Storm PirkTopology:");
-        PirkTopology.runPirkTopology();
-        break;
-
-      case STANDALONE:
-        logger.info("Launching Standalone Responder:");
-
-        String queryInput = SystemConfiguration.getProperty("pir.queryInput");
-        Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
-
-        Responder pirResponder = new Responder(query);
-        pirResponder.computeStandaloneResponse();
-        break;
+        case STANDALONE:
+          launch(STANDALONE_LAUNCHER);
+          break;
+      }
     }
   }
 
   // Exception and Security Manager classes used to catch System.exit from Spark Streaming
-  private static class SystemExitException extends SecurityException
+  public static class SystemExitException extends SecurityException
   {}
 
   private static class SystemExitManager extends SecurityManager

@@ -111,7 +111,7 @@ public class ResponderCLI
    * Method to parse and validate the options provided
    *
    * @return - true if valid, false otherwise
- * @throws IOException 
+ * @throws IOException
    */
   private boolean parseOptions() throws IOException
   {
@@ -170,14 +170,14 @@ public class ResponderCLI
     optionLocalPropFile.setArgName(LOCALPROPFILE);
     optionLocalPropFile.setType(String.class);
     options.addOption(optionLocalPropFile);
-    
+
     // hdfsPropertiesDir
     Option optionHDFSPropDir = new Option("hdfsPropsDir", HDFSPROPDIR, true, "Optional location of directory in hdfs containing properties file(s)");
     optionHDFSPropDir.setRequired(false);
     optionHDFSPropDir.setArgName(HDFSPROPDIR);
     optionHDFSPropDir.setType(String.class);
     options.addOption(optionHDFSPropDir);
-    
+
     // hdfsPropertiesFile
     Option optionHDFSPropFile = new Option("hdfsPropsFile", HDFSPROPFILE, true, "Optional location of properties file(s) in hdfs");
     optionHDFSPropFile.setRequired(false);
@@ -187,11 +187,20 @@ public class ResponderCLI
 
     // platform
     Option optionPlatform = new Option("p", ResponderProps.PLATFORM, true,
-        "required -- 'mapreduce', 'spark', 'sparkstreaming', 'storm', or 'standalone' : Processing platform technology for the responder");
+        "deprecated (required if launcher not present) -- 'mapreduce', 'spark', 'sparkstreaming', 'storm', or 'standalone' : Processing platform technology for the responder");
     optionPlatform.setRequired(false);
     optionPlatform.setArgName(ResponderProps.PLATFORM);
     optionPlatform.setType(String.class);
     options.addOption(optionPlatform);
+
+    // launcherClass
+    Option optionLauncherClass = new Option("l", ResponderProps.LAUNCHER, true,
+        "required (if platform not present) -- full claas name of class implementing ResponderLauncher : Processing platform technology for the responder");
+    optionLauncherClass.setRequired(false);
+    optionLauncherClass.setArgName(ResponderProps.LAUNCHER);
+    optionLauncherClass.setType(String.class);
+    options.addOption(optionLauncherClass);
+
 
     // queryInput
     Option optionQueryInput = new Option("q", ResponderProps.QUERYINPUT, true, "required -- Fully qualified dir in hdfs of Query files");
