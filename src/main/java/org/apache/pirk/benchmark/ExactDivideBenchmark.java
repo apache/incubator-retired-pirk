@@ -94,7 +94,7 @@ public class ExactDivideBenchmark
 
     try
     {
-      allState.product.divide(allState.value1);
+      IntegerMathAbstraction.exactDivide(allState.product, allState.value1);
     } catch (Exception e)
     {
       logger.error("Exception in testWithoutGMP!\n" + e);

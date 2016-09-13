@@ -80,7 +80,7 @@ public class ModularMultiplyBenchmark
     return toReturn;
   }
 
-  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMP(ModularMultiplyBenchmarkState allState)
+  @Benchmark @BenchmarkMode(Mode.Throughput) public void testWithGMPMulMod(ModularMultiplyBenchmarkState allState)
   {
     SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
     IntegerMathAbstraction.reloadConfiguration();

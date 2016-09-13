@@ -93,7 +93,7 @@ public class GCDBenchmark
 
     try
     {
-      allState.value1.gcd(allState.value2);
+      IntegerMathAbstraction.gcd(allState.value1, allState.value2);
     } catch (Exception e)
     {
       logger.error("Exception in testWithoutGMP!\n" + e);

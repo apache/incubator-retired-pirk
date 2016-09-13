@@ -46,14 +46,14 @@ public final class IntegerMathAbstraction
    */
   public static void reloadConfiguration()
   {
-    useGMPmodPow              = SystemConfiguration.getProperty("paillier.useGMPForModPow").equals("true");
-    useGMPConstantTimeMethods = SystemConfiguration.getProperty("paillier.GMPConstantTimeMode").equals("true");
-    useGMPmodularMultiply     = SystemConfiguration.getProperty("paillier.useGMPForModularMultiply").equals("true");
-    useGMPmodularInverse      = SystemConfiguration.getProperty("paillier.useGMPForModularInverse").equals("true");
-    useGMPgcd                 = SystemConfiguration.getProperty("paillier.useGMPForGCD").equals("true");
-    useGMPexactDivide         = SystemConfiguration.getProperty("paillier.useGMPForExactDivide").equals("true");
-    useGMPmultiply            = SystemConfiguration.getProperty("paillier.useGMPForMultiply").equals("true");
-    useGMPmod                 = SystemConfiguration.getProperty("paillier.useGMPForMod").equals("true");
+    useGMPmodPow              = SystemConfiguration.getBooleanProperty("paillier.useGMPForModPow", true);
+    useGMPConstantTimeMethods = SystemConfiguration.getBooleanProperty("paillier.GMPConstantTimeMode", true);
+    useGMPmodularMultiply     = SystemConfiguration.getBooleanProperty("paillier.useGMPForModularMultiply", true);
+    useGMPmodularInverse      = SystemConfiguration.getBooleanProperty("paillier.useGMPForModularInverse", true);
+    useGMPgcd                 = SystemConfiguration.getBooleanProperty("paillier.useGMPForGCD", true);
+    useGMPexactDivide         = SystemConfiguration.getBooleanProperty("paillier.useGMPForExactDivide", true);
+    useGMPmultiply            = SystemConfiguration.getBooleanProperty("paillier.useGMPForMultiply", false);
+    useGMPmod                 = SystemConfiguration.getBooleanProperty("paillier.useGMPForMod", false);
 
   }
 

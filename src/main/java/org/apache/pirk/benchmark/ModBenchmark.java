@@ -101,7 +101,7 @@ public class ModBenchmark
 
     try
     {
-      allState.dividend.mod(allState.modulus);
+      IntegerMathAbstraction.mod(allState.dividend, allState.modulus);
     } catch (Exception e)
     {
       logger.error("Exception in testWithoutGMP!\n" + e);
