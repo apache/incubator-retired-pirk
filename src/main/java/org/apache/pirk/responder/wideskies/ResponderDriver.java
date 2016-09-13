@@ -72,6 +72,7 @@ public class ResponderDriver
       logger.error("platform " + platformString + " not found.");
     }
 
+    logger.info("platform = " + platform);
     switch (platform)
     {
       case MAPREDUCE:
