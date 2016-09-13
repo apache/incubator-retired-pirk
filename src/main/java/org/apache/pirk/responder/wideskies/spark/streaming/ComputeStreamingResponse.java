@@ -191,6 +191,11 @@ public class ComputeStreamingResponse
     QueryInfo queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
+    
+    if(query == null)
+    {
+    	logger.info("query is null for queryInput = " + queryInput);
+    }
 
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
