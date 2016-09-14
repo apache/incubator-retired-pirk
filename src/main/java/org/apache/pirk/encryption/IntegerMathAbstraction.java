@@ -32,7 +32,7 @@ public final class IntegerMathAbstraction
 {
 
   private static boolean useGMPmodPow, useGMPConstantTimeMethods, useGMPmodularMultiply,
-    useGMPmodularInverse, useGMPgcd, useGMPexactDivide, useGMPmultiply, useGMPmod;
+    useGMPmodularInverse, useGMPgcd, useGMPexactDivide;
 
   static
   {
@@ -52,8 +52,6 @@ public final class IntegerMathAbstraction
     useGMPmodularInverse      = SystemConfiguration.getBooleanProperty("paillier.useGMPForModularInverse", true);
     useGMPgcd                 = SystemConfiguration.getBooleanProperty("paillier.useGMPForGCD", true);
     useGMPexactDivide         = SystemConfiguration.getBooleanProperty("paillier.useGMPForExactDivide", true);
-    useGMPmultiply            = SystemConfiguration.getBooleanProperty("paillier.useGMPForMultiply", false);
-    useGMPmod                 = SystemConfiguration.getBooleanProperty("paillier.useGMPForMod", false);
 
   }
 
@@ -235,11 +233,14 @@ public final class IntegerMathAbstraction
     return result;
   }
 
+
+  // For a short period of time these methods exposed GMP implementations. They no longer do.
+  // They are kept here to make it easy to try optimizations in the future.
+
   /**
    * Returns a BigInteger whose value is {@code dividend mod modulus}.
    * <p>
-   * This method uses the value of {@code paillier.useGMPForMod} as it was set
-   * when the class was loaded to decide which implementation of modular inversion to invoke.
+   * This method always uses BigInteger's implementation. 
    *
    * @param dividend
    * @param modulus
@@ -247,25 +248,13 @@ public final class IntegerMathAbstraction
    */
   public static BigInteger mod(BigInteger dividend, BigInteger modulus)
   {
-    BigInteger result;
-
-    if (useGMPmod)
-    {
-      result = Gmp.mod(dividend, modulus);
-    }
-    else
-    {
-      result = dividend.mod(modulus);
-    }
-
-    return result;
+    return dividend.mod(modulus);
   }
 
   /**
    * Returns a BigInteger whose value is {@code value1 * value2}
    * <p>
-   * This method uses the value of {@code paillier.useGMPForMultiply} as it was set
-   * when the class was loaded to decide which implementation of modular inversion to invoke.
+   * This method always uses BigInteger's implementation. 
    *
    * @param value1
    * @param value2
@@ -273,18 +262,7 @@ public final class IntegerMathAbstraction
    */
   public static BigInteger multiply(BigInteger value1, BigInteger value2)
   {
-    BigInteger result;
-
-    if (useGMPmultiply)
-    {
-      result = Gmp.multiply(value1, value2);
-    }
-    else
-    {
-      result = value1.multiply(value2);
-    }
-
-    return result;
+    return value1.multiply(value2);
   }
 
 }
