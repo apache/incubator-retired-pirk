@@ -75,7 +75,7 @@ The format of the query schema XML file is as follows:
 
 A corresponding XSD file may be found [here](https://github.com/apache/incubator-pirk/blob/master/src/main/resources/query-schema.xsd).
 
-The selectorName is the name of the element in the corresponding data schema that is to be used as the primary selector or indicator for the query (see Wideskies paper [link]). 
+The selectorName is the name of the element in the corresponding data schema that is to be used as the primary selector or indicator for the query (see the [Wideskies paper]({{ site.baseurl }}/papers/wideskies_paper.pdf)). 
 
 The elements field specifies all elements (via \<name\>) within a given piece of data to return as part of the encrypted query.
 
