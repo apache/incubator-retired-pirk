@@ -24,7 +24,7 @@ nav: nav_developers
 	
 ## General Info
 
-Pirk is written in Java 7 and build and dependency management is accomplished via [Apache Maven](https://maven.apache.org/). Pirk uses [Git](https://git-scm.com/) for change management. 
+Pirk is written in Java 8 and build and dependency management is accomplished via [Apache Maven](https://maven.apache.org/). Pirk uses [Git](https://git-scm.com/) for change management. 
 
 ## Code Repo
 
