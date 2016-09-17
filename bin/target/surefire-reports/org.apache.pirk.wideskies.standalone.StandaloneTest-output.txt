@@ -1,0 +1,639 @@
+ INFO [main] 2016-08-27 15:29:58,401 (SystemConfiguration.java:288) - Loading file 'pirk.properties'
+ INFO [main] 2016-08-27 15:29:58,403 (SystemConfiguration.java:288) - Loading file 'querier.properties'
+ INFO [main] 2016-08-27 15:29:58,404 (SystemConfiguration.java:288) - Loading file 'responder.properties'
+ INFO [main] 2016-08-27 15:29:58,406 (SystemConfiguration.java:227) - Loading properties from dirName = /root/
+ INFO [main] 2016-08-27 15:29:58,426 (Inputs.java:394) - StopList file being created
+ INFO [main] 2016-08-27 15:29:58,442 (TestUtils.java:298) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/stopListFile3265985943200090790.tmp
+ INFO [main] 2016-08-27 15:29:58,443 (StandaloneTest.java:69) - stopListFileProp = stopListFile new prop = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/stopListFile3265985943200090790.tmp
+ INFO [main] 2016-08-27 15:29:58,447 (Inputs.java:520) - file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/testDataSchemaFile7400400310236958651.xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>testDataSchema</schemaName><element><name>date</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner</partitioner></element><element><name>qname</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>src_ip</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>dest_ip</name><type>string</type><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element><element><name>qtype</name><type>short</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>rcode</name><type>int</type><partitioner>org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner</partitioner></element><element><name>ip</name><type>string</type><isArray/><partitioner>org.apache.pirk.schema.data.partitioner.IPDataPartitioner</partitioner></element></schema>
+ INFO [main] 2016-08-27 15:29:58,565 (DataSchemaLoader.java:81) - Loading pre-configured data schemas: 
+ INFO [main] 2016-08-27 15:29:58,566 (DataSchemaLoader.java:127) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/testDataSchemaFile7400400310236958651.xml hdfs = false
+ INFO [main] 2016-08-27 15:29:58,568 (DataSchemaLoader.java:142) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/testDataSchemaFile7400400310236958651.xml
+ INFO [main] 2016-08-27 15:29:58,579 (DataSchemaLoader.java:234) - Root element: schema
+ INFO [main] 2016-08-27 15:29:58,582 (DataSchemaLoader.java:192) - schemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:58,591 (DataSchemaLoader.java:294) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-08-27 15:29:58,592 (DataSchemaLoader.java:294) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,592 (DataSchemaLoader.java:294) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,593 (DataSchemaLoader.java:294) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,594 (DataSchemaLoader.java:294) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,594 (DataSchemaLoader.java:294) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,595 (DataSchemaLoader.java:294) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,595 (DataSchemaLoader.java:127) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/testDataSchemaFile7400400310236958651.xml hdfs = false
+ INFO [main] 2016-08-27 15:29:58,596 (DataSchemaLoader.java:142) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/testDataSchemaFile7400400310236958651.xml
+ INFO [main] 2016-08-27 15:29:58,599 (DataSchemaLoader.java:234) - Root element: schema
+ INFO [main] 2016-08-27 15:29:58,600 (DataSchemaLoader.java:192) - schemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:58,601 (DataSchemaLoader.java:294) - name = date javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-08-27 15:29:58,602 (DataSchemaLoader.java:294) - name = qname javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,602 (DataSchemaLoader.java:294) - name = src_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,603 (DataSchemaLoader.java:294) - name = dest_ip javaType = string isArray = false partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,603 (DataSchemaLoader.java:294) - name = qtype javaType = short isArray = true partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,604 (DataSchemaLoader.java:294) - name = rcode javaType = int isArray = false partitioner org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,604 (DataSchemaLoader.java:294) - name = ip javaType = string isArray = true partitioner org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,605 (TestUtils.java:144) - createQuerySchema: querySchemaName = dns-hostname-query
+ INFO [main] 2016-08-27 15:29:58,605 (TestUtils.java:165) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:58,606 (TestUtils.java:180) - query.schemas = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:58,608 (TestUtils.java:213) - elementName = date
+ INFO [main] 2016-08-27 15:29:58,609 (TestUtils.java:213) - elementName = src_ip
+ INFO [main] 2016-08-27 15:29:58,609 (TestUtils.java:213) - elementName = dest_ip
+ INFO [main] 2016-08-27 15:29:58,609 (TestUtils.java:213) - elementName = qtype
+ INFO [main] 2016-08-27 15:29:58,610 (TestUtils.java:213) - elementName = rcode
+ INFO [main] 2016-08-27 15:29:58,610 (TestUtils.java:213) - elementName = ip
+ INFO [main] 2016-08-27 15:29:58,610 (TestUtils.java:231) - filterName = qname
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-hostname-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>qname</selectorName><elements><name>date</name><name>src_ip</name><name>dest_ip</name><name>qtype</name><name>rcode</name><name>ip</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>qname</name></filterNames></schema>
+ INFO [main] 2016-08-27 15:29:58,616 (TestUtils.java:144) - createQuerySchema: querySchemaName = dns-ip-query
+ INFO [main] 2016-08-27 15:29:58,617 (TestUtils.java:165) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:58,617 (TestUtils.java:180) - query.schemas = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:58,619 (TestUtils.java:213) - elementName = src_ip
+ INFO [main] 2016-08-27 15:29:58,621 (TestUtils.java:213) - elementName = dest_ip
+ INFO [main] 2016-08-27 15:29:58,624 (TestUtils.java:213) - elementName = ip
+ INFO [main] 2016-08-27 15:29:58,625 (TestUtils.java:231) - filterName = qname
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-ip-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>ip</selectorName><elements><name>src_ip</name><name>dest_ip</name><name>ip</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>qname</name></filterNames></schema>
+ INFO [main] 2016-08-27 15:29:58,631 (TestUtils.java:144) - createQuerySchema: querySchemaName = dns-nxdomain-query
+ INFO [main] 2016-08-27 15:29:58,635 (TestUtils.java:165) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:29:58,636 (TestUtils.java:180) - query.schemas = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:29:58,638 (TestUtils.java:213) - elementName = qname
+ INFO [main] 2016-08-27 15:29:58,638 (TestUtils.java:213) - elementName = src_ip
+ INFO [main] 2016-08-27 15:29:58,640 (TestUtils.java:213) - elementName = dest_ip
+ INFO [main] 2016-08-27 15:29:58,643 (TestUtils.java:231) - filterName = qname
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-nxdomain-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>qname</selectorName><elements><name>qname</name><name>src_ip</name><name>dest_ip</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>qname</name></filterNames></schema>
+ INFO [main] 2016-08-27 15:29:58,649 (TestUtils.java:144) - createQuerySchema: querySchemaName = dns-srcip-query
+ INFO [main] 2016-08-27 15:29:58,650 (TestUtils.java:165) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:29:58,653 (TestUtils.java:180) - query.schemas = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:29:58,660 (TestUtils.java:213) - elementName = qname
+ INFO [main] 2016-08-27 15:29:58,666 (TestUtils.java:213) - elementName = dest_ip
+ INFO [main] 2016-08-27 15:29:58,666 (TestUtils.java:213) - elementName = ip
+ INFO [main] 2016-08-27 15:29:58,673 (TestUtils.java:231) - filterName = src_ip
+ INFO [main] 2016-08-27 15:29:58,676 (TestUtils.java:231) - filterName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-srcip-query</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>src_ip</selectorName><elements><name>qname</name><name>dest_ip</name><name>ip</name></elements><filter>org.apache.pirk.schema.query.filter.StopListFilter</filter><filterNames><name>src_ip</name><name>ip</name></filterNames></schema>
+ INFO [main] 2016-08-27 15:29:58,684 (TestUtils.java:144) - createQuerySchema: querySchemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-08-27 15:29:58,685 (TestUtils.java:165) - localFS: file = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:29:58,685 (TestUtils.java:180) - query.schemas = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml,/var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:29:58,687 (TestUtils.java:213) - elementName = qname
+ INFO [main] 2016-08-27 15:29:58,687 (TestUtils.java:213) - elementName = dest_ip
+ INFO [main] 2016-08-27 15:29:58,688 (TestUtils.java:213) - elementName = ip
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema><schemaName>dns-srcip-query-no-filter</schemaName><dataSchemaName>testDataSchema</dataSchemaName><selectorName>src_ip</selectorName><elements><name>qname</name><name>dest_ip</name><name>ip</name></elements></schema>
+ INFO [main] 2016-08-27 15:29:58,693 (QuerySchemaLoader.java:83) - Loading query schemas: 
+ INFO [main] 2016-08-27 15:29:58,693 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:58,694 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:58,697 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:58,697 (QuerySchemaLoader.java:190) - schemaName = dns-hostname-query
+ INFO [main] 2016-08-27 15:29:58,698 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:58,698 (QuerySchemaLoader.java:205) - selectorName = qname
+ INFO [main] 2016-08-27 15:29:58,699 (QuerySchemaLoader.java:234) - name = date partitionerName = org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-08-27 15:29:58,699 (QuerySchemaLoader.java:247) - name = date bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:58,700 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,700 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:29:58,700 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,701 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-08-27 15:29:58,701 (QuerySchemaLoader.java:234) - name = qtype partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,701 (QuerySchemaLoader.java:247) - name = qtype bits = 32 dataElementSize = 160
+ INFO [main] 2016-08-27 15:29:58,702 (QuerySchemaLoader.java:234) - name = rcode partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:58,702 (QuerySchemaLoader.java:247) - name = rcode bits = 32 dataElementSize = 192
+ INFO [main] 2016-08-27 15:29:58,702 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:58,703 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 256
+ INFO [main] 2016-08-27 15:29:58,703 (QuerySchemaLoader.java:329) - filterName = qname
+ WARN [main] 2016-08-27 15:29:59,273 (NativeCodeLoader.java:62) - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+ INFO [main] 2016-08-27 15:29:59,715 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:59,715 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:59,718 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,718 (QuerySchemaLoader.java:190) - schemaName = dns-ip-query
+ INFO [main] 2016-08-27 15:29:59,718 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,719 (QuerySchemaLoader.java:205) - selectorName = ip
+ INFO [main] 2016-08-27 15:29:59,719 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,720 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 32
+ INFO [main] 2016-08-27 15:29:59,723 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,723 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,724 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,724 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 128
+ INFO [main] 2016-08-27 15:29:59,724 (QuerySchemaLoader.java:329) - filterName = qname
+ INFO [main] 2016-08-27 15:29:59,791 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:29:59,792 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:29:59,795 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,796 (QuerySchemaLoader.java:190) - schemaName = dns-nxdomain-query
+ INFO [main] 2016-08-27 15:29:59,796 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,796 (QuerySchemaLoader.java:205) - selectorName = qname
+ INFO [main] 2016-08-27 15:29:59,796 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:59,797 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,799 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,799 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:29:59,799 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,800 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-08-27 15:29:59,800 (QuerySchemaLoader.java:329) - filterName = qname
+ INFO [main] 2016-08-27 15:29:59,843 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:29:59,844 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:29:59,845 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,846 (QuerySchemaLoader.java:190) - schemaName = dns-srcip-query
+ INFO [main] 2016-08-27 15:29:59,846 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,847 (QuerySchemaLoader.java:205) - selectorName = src_ip
+ INFO [main] 2016-08-27 15:29:59,847 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:59,848 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,848 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,848 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:29:59,848 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,848 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-08-27 15:29:59,849 (QuerySchemaLoader.java:329) - filterName = src_ip
+ INFO [main] 2016-08-27 15:29:59,849 (QuerySchemaLoader.java:329) - filterName = ip
+ INFO [main] 2016-08-27 15:29:59,928 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:29:59,928 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:29:59,930 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,931 (QuerySchemaLoader.java:190) - schemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-08-27 15:29:59,932 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,932 (QuerySchemaLoader.java:205) - selectorName = src_ip
+ INFO [main] 2016-08-27 15:29:59,932 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:59,933 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,933 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,934 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:29:59,934 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,935 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-08-27 15:29:59,936 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:59,936 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-hostname-query_file3314386415501988537.xml
+ INFO [main] 2016-08-27 15:29:59,938 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,940 (QuerySchemaLoader.java:190) - schemaName = dns-hostname-query
+ INFO [main] 2016-08-27 15:29:59,940 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:205) - selectorName = qname
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:234) - name = date partitionerName = org.apache.pirk.schema.data.partitioner.ISO8601DatePartitioner
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:247) - name = date bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:29:59,941 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:234) - name = qtype partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:247) - name = qtype bits = 32 dataElementSize = 160
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:234) - name = rcode partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:247) - name = rcode bits = 32 dataElementSize = 192
+ INFO [main] 2016-08-27 15:29:59,942 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,943 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 256
+ INFO [main] 2016-08-27 15:29:59,943 (QuerySchemaLoader.java:329) - filterName = qname
+ INFO [main] 2016-08-27 15:29:59,992 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:59,992 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-ip-query_file915737331856012481.xml
+ INFO [main] 2016-08-27 15:29:59,994 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:29:59,994 (QuerySchemaLoader.java:190) - schemaName = dns-ip-query
+ INFO [main] 2016-08-27 15:29:59,995 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:29:59,995 (QuerySchemaLoader.java:205) - selectorName = ip
+ INFO [main] 2016-08-27 15:29:59,995 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,995 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 32
+ INFO [main] 2016-08-27 15:29:59,996 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,996 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 64
+ INFO [main] 2016-08-27 15:29:59,996 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:29:59,997 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 128
+ INFO [main] 2016-08-27 15:29:59,997 (QuerySchemaLoader.java:329) - filterName = qname
+ INFO [main] 2016-08-27 15:30:00,023 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:30:00,024 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-nxdomain-query_file3551224420275441127.xml
+ INFO [main] 2016-08-27 15:30:00,026 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:30:00,026 (QuerySchemaLoader.java:190) - schemaName = dns-nxdomain-query
+ INFO [main] 2016-08-27 15:30:00,026 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:30:00,027 (QuerySchemaLoader.java:205) - selectorName = qname
+ INFO [main] 2016-08-27 15:30:00,027 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:30:00,027 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:30:00,027 (QuerySchemaLoader.java:234) - name = src_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,027 (QuerySchemaLoader.java:247) - name = src_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:30:00,028 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,028 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 128
+ INFO [main] 2016-08-27 15:30:00,028 (QuerySchemaLoader.java:329) - filterName = qname
+ INFO [main] 2016-08-27 15:30:00,053 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:30:00,054 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query_file64669928874202112.xml
+ INFO [main] 2016-08-27 15:30:00,056 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:30:00,056 (QuerySchemaLoader.java:190) - schemaName = dns-srcip-query
+ INFO [main] 2016-08-27 15:30:00,056 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:30:00,057 (QuerySchemaLoader.java:205) - selectorName = src_ip
+ INFO [main] 2016-08-27 15:30:00,057 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:30:00,057 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:30:00,058 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,058 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:30:00,058 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,058 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-08-27 15:30:00,059 (QuerySchemaLoader.java:329) - filterName = src_ip
+ INFO [main] 2016-08-27 15:30:00,059 (QuerySchemaLoader.java:329) - filterName = ip
+ INFO [main] 2016-08-27 15:30:00,123 (QuerySchemaLoader.java:128) - Loading schemaFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:30:00,123 (QuerySchemaLoader.java:143) - localFS: inputFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/dns-srcip-query-no-filter_file8397507933417789406.xml
+ INFO [main] 2016-08-27 15:30:00,125 (QuerySchemaLoader.java:292) - Root element: schema
+ INFO [main] 2016-08-27 15:30:00,126 (QuerySchemaLoader.java:190) - schemaName = dns-srcip-query-no-filter
+ INFO [main] 2016-08-27 15:30:00,127 (QuerySchemaLoader.java:194) - dataSchemaName = testDataSchema
+ INFO [main] 2016-08-27 15:30:00,127 (QuerySchemaLoader.java:205) - selectorName = src_ip
+ INFO [main] 2016-08-27 15:30:00,128 (QuerySchemaLoader.java:234) - name = qname partitionerName = org.apache.pirk.schema.data.partitioner.PrimitiveTypePartitioner
+ INFO [main] 2016-08-27 15:30:00,128 (QuerySchemaLoader.java:247) - name = qname bits = 64 dataElementSize = 64
+ INFO [main] 2016-08-27 15:30:00,128 (QuerySchemaLoader.java:234) - name = dest_ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,128 (QuerySchemaLoader.java:247) - name = dest_ip bits = 32 dataElementSize = 96
+ INFO [main] 2016-08-27 15:30:00,128 (QuerySchemaLoader.java:234) - name = ip partitionerName = org.apache.pirk.schema.data.partitioner.IPDataPartitioner
+ INFO [main] 2016-08-27 15:30:00,129 (QuerySchemaLoader.java:247) - name = ip bits = 64 dataElementSize = 160
+ INFO [main] 2016-08-27 15:30:00,140 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:00,147 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:00,153 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier3843007850328626117.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query9110080292961137824.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse8306333623250541901.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile2223670633434411418.txt
+ INFO [main] 2016-08-27 15:30:00,155 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:00,157 (Paillier.java:90) - Using secure random from SUN:NativePRNG
+ INFO [main] 2016-08-27 15:30:00,234 (Paillier.java:174) - Parameters = p = 1643872859 q = 1408367357 N = -1417170449 NSquared = 1874746657 lambdaN = 2060261964 bitLength = 384
+ INFO [main] 2016-08-27 15:30:00,234 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:01,272 (EncryptQuery.java:220) - Completed serial creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:01,274 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:01,573 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:01,729 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:01,729 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,751 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,759 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,767 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,770 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,773 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,776 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,780 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,784 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:01,787 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:01,788 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:01,799 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:01,800 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:02,025 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:02,028 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:02,038 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:02,039 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,039 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","ip":["3.3.3.3","0.0.0.0"],"qname":"something.else","match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,040 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,040 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,041 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:02,044 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,046 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,047 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:02,048 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,048 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,049 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,049 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:02,050 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,053 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,053 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","qname":"something.else","ip":["3.3.3.3","0.0.0.0"],"match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:02,055 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:02,055 (BaseTests.java:341) - Running testSRCIPQuery(): 
+ INFO [main] 2016-08-27 15:30:02,056 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:02,057 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier2322449589991861511.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query1534603966599825876.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse6228058243871973148.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile3545561396863807927.txt
+ INFO [main] 2016-08-27 15:30:02,058 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 160 numPartitionsPerDataElement = 24 queryType = dns-srcip-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:02,087 (Paillier.java:174) - Parameters = p = 1473833901 q = -1784661641 N = 527372907 NSquared = -467846983 lambdaN = 419100324 bitLength = 384
+ INFO [main] 2016-08-27 15:30:02,088 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:03,016 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:03,016 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:03,205 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:03,351 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:03,352 (StandaloneQuery.java:122) - selector = 55.55.55.55 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,354 (StandaloneQuery.java:122) - selector = 127.128.129.130 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,356 (StandaloneQuery.java:122) - selector = 131.132.133.134 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,359 (StandaloneQuery.java:122) - selector = 135.136.137.138 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,361 (StandaloneQuery.java:122) - selector = 139.140.141.142 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,363 (StandaloneQuery.java:122) - selector = 143.144.145.146 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,366 (StandaloneQuery.java:122) - selector = 1.1.1.1 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,368 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,371 (StandaloneQuery.java:122) - selector = 55.55.55.55 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:03,374 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:03,375 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:03,377 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:03,377 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:03,565 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:03,565 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:03,570 (BaseTests.java:642) - {"src_ip":"5.6.7.8","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"somethin","dest_ip":"2.2.2.22","ip":["3.3.3.132","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:03,570 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"a.b.c.co","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:03,577 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"somethin","dest_ip":"2.2.2.232","ip":["3.3.3.132","0.0.0.0"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:03,578 (BaseTests.java:391) - correctResults:
+ INFO [main] 2016-08-27 15:30:03,578 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"a.b.c.co","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:03,579 (BaseTests.java:642) - {"src_ip":"5.6.7.8","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"somethin","dest_ip":"2.2.2.22","ip":["3.3.3.132","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:03,579 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"somethin","dest_ip":"2.2.2.232","ip":["3.3.3.132","0.0.0.0"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:03,580 (BaseTests.java:407) - Completed testSRCIPQuery(): 
+ INFO [main] 2016-08-27 15:30:03,580 (BaseTests.java:203) - Running testDNSIPQuery(): 
+ INFO [main] 2016-08-27 15:30:03,581 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:03,582 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier3623563098820035255.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query745569536352900137.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse5630956979775915060.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile1703675608692272477.txt
+ INFO [main] 2016-08-27 15:30:03,583 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 20 queryType = dns-ip-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:03,601 (Paillier.java:174) - Parameters = p = -1776233361 q = -1985121467 N = 743055083 NSquared = -1416107079 lambdaN = -680920780 bitLength = 384
+ INFO [main] 2016-08-27 15:30:03,603 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:04,070 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:04,070 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:04,183 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:04,245 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:04,246 (StandaloneQuery.java:122) - selector = 10.20.30.40 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,248 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,250 (StandaloneQuery.java:122) - selector = 13.14.15.16 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,252 (StandaloneQuery.java:122) - selector = 21.22.23.24 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,255 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,256 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,258 (StandaloneQuery.java:122) - selector = 3.3.3.3 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,261 (StandaloneQuery.java:122) - selector = 3.3.3.132 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,263 (StandaloneQuery.java:122) - selector = 3.3.3.132 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:04,265 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:04,265 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:04,267 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:04,268 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:04,349 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:04,349 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:04,351 (BaseTests.java:642) - {"src_ip":"127.128.129.130","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:04,351 (BaseTests.java:642) - {"src_ip":"139.140.141.142","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:04,352 (BaseTests.java:642) - {"src_ip":"143.144.145.146","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:04,352 (BaseTests.java:642) - {"src_ip":"131.132.133.134","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"match":"13.14.15.16"}
+ INFO [main] 2016-08-27 15:30:04,352 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"10.20.30.40"}
+ INFO [main] 2016-08-27 15:30:04,352 (BaseTests.java:642) - {"src_ip":"135.136.137.138","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"match":"21.22.23.24"}
+ INFO [main] 2016-08-27 15:30:04,353 (BaseTests.java:265) - Completed testDNSIPQuery(): 
+ INFO [main] 2016-08-27 15:30:04,354 (BaseTests.java:277) - Running testDNSNXDOMAINQuery(): 
+ INFO [main] 2016-08-27 15:30:04,354 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:04,355 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier6053050132868035183.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query1006355306527096193.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse1538807944028392928.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile4817662487798614637.txt
+ INFO [main] 2016-08-27 15:30:04,355 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 20 queryType = dns-nxdomain-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:04,373 (Paillier.java:174) - Parameters = p = 1948242861 q = 925946217 N = 2018381557 NSquared = -835996039 lambdaN = -1287693704 bitLength = 384
+ INFO [main] 2016-08-27 15:30:04,374 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:04,875 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:04,876 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:05,025 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:05,097 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:05,098 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:05,099 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:05,101 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:05,103 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:05,103 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:05,210 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:05,211 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:05,213 (BaseTests.java:642) - {"src_ip":"135.136.137.138","event_type":"dns-nxdomain-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"d.e.com","dest_ip":"17.18.19.20","match":"d.e.com"}
+ INFO [main] 2016-08-27 15:30:05,215 (BaseTests.java:329) - Completed testDNSNXDOMAINQuery(): 
+ INFO [main] 2016-08-27 15:30:05,216 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:05,216 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:05,217 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier396680456236120717.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query5591269861589044440.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse5657407092679251209.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile4363419296273460027.txt
+ INFO [main] 2016-08-27 15:30:05,217 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:05,249 (Paillier.java:174) - Parameters = p = 1776489747 q = 1019402951 N = 467505093 NSquared = 417312153 lambdaN = -1819720366 bitLength = 384
+ INFO [main] 2016-08-27 15:30:05,249 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:05,897 (EncryptQuery.java:220) - Completed serial creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:05,897 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:05,997 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:06,050 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:06,051 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,053 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,056 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,059 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,065 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,067 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,069 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,072 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,075 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:06,078 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:06,078 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:06,082 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:06,083 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:06,172 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:06,173 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:06,174 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:06,175 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,175 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","ip":["3.3.3.3","0.0.0.0"],"qname":"something.else","match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,175 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,176 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,176 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:06,176 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,176 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,177 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:06,177 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,177 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,177 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,177 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:06,178 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,178 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,178 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","qname":"something.else","ip":["3.3.3.3","0.0.0.0"],"match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:06,179 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:06,179 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:06,179 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:06,182 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier6730618379290877038.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query2004594196542346056.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse7852076984691048447.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile2798017819437846567.txt
+ INFO [main] 2016-08-27 15:30:06,183 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:06,213 (Paillier.java:174) - Parameters = p = -1275357191 q = 1492817423 N = -135017065 NSquared = 1405431569 lambdaN = 1971245000 bitLength = 384
+ INFO [main] 2016-08-27 15:30:06,214 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:06,862 (EncryptQuery.java:220) - Completed serial creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:06,862 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:06,973 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:07,027 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:07,027 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,028 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,033 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,035 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,037 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,039 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,041 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,044 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,047 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:07,050 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:07,050 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:07,053 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:07,053 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:07,158 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:07,159 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:07,161 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:07,162 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,162 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","ip":["3.3.3.3","0.0.0.0"],"qname":"something.else","match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,162 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,163 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,163 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:07,163 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,163 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,164 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:07,164 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,164 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,164 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,165 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:07,165 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,165 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,165 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","qname":"something.else","ip":["3.3.3.3","0.0.0.0"],"match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:07,166 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:07,166 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:07,167 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:07,168 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier1259710645512618019.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query3375683425048715210.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse6138856073711328828.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile2144920272162833407.txt
+ INFO [main] 2016-08-27 15:30:07,173 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:07,191 (Paillier.java:174) - Parameters = p = 1567111521 q = -787386923 N = 412551861 NSquared = -1845976071 lambdaN = 423377184 bitLength = 384
+ INFO [main] 2016-08-27 15:30:07,203 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:07,686 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:07,686 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:07,893 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:07,995 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:07,995 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,002 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,005 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,014 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,018 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,021 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,030 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,037 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,040 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:08,043 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:08,043 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:08,048 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:08,049 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:08,199 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:08,200 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:08,203 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:08,203 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","ip":["3.3.3.3","0.0.0.0"],"qname":"something.else","match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,204 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:08,205 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,206 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,206 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","qname":"something.else","ip":["3.3.3.3","0.0.0.0"],"match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:08,207 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:08,207 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:08,208 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:08,209 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier4369098895546656333.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query614511490051148493.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse4569413515286007974.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile1951727497196208543.txt
+ INFO [main] 2016-08-27 15:30:08,210 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 32 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+ INFO [main] 2016-08-27 15:30:08,236 (Paillier.java:174) - Parameters = p = -843009765 q = 993594395 N = 1671623129 NSquared = -786544143 lambdaN = 760519250 bitLength = 384
+ INFO [main] 2016-08-27 15:30:08,243 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:09,094 (EncryptQuery.java:220) - Completed serial creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:09,094 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:09,188 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:09,265 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:09,265 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,266 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,267 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,269 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,270 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,271 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,274 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,276 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,277 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:09,280 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:09,280 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:09,283 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:09,283 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:09,358 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:09,358 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:09,360 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:09,360 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,360 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","ip":["3.3.3.3","0.0.0.0"],"qname":"something.else","match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,360 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,360 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,361 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:09,361 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,361 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,361 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:09,361 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,362 (BaseTests.java:642) - {"date":"2016-02-20T23:29:11.000Z","src_ip":"1.1.1.1","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"2.2.2.2","qname":"something.else","ip":["3.3.3.3","0.0.0.0"],"match":"something.else","rcode":0}
+ INFO [main] 2016-08-27 15:30:09,363 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:09,363 (BaseTests.java:341) - Running testSRCIPQuery(): 
+ INFO [main] 2016-08-27 15:30:09,363 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:09,364 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier3960497822538183161.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query8893364678542373810.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse6910220209322459092.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile1013177733846573876.txt
+ INFO [main] 2016-08-27 15:30:09,364 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 160 numPartitionsPerDataElement = 20 queryType = dns-srcip-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+ INFO [main] 2016-08-27 15:30:09,377 (Paillier.java:174) - Parameters = p = -1955215441 q = 1419267581 N = 1012792051 NSquared = 848134825 lambdaN = -457704564 bitLength = 384
+ INFO [main] 2016-08-27 15:30:09,377 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:09,895 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:09,895 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:10,009 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:10,060 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:10,061 (StandaloneQuery.java:122) - selector = 55.55.55.55 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,062 (StandaloneQuery.java:122) - selector = 127.128.129.130 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,063 (StandaloneQuery.java:122) - selector = 131.132.133.134 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,064 (StandaloneQuery.java:122) - selector = 135.136.137.138 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,065 (StandaloneQuery.java:122) - selector = 139.140.141.142 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,066 (StandaloneQuery.java:122) - selector = 143.144.145.146 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,067 (StandaloneQuery.java:122) - selector = 1.1.1.1 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,068 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,069 (StandaloneQuery.java:122) - selector = 55.55.55.55 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,070 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:10,070 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:10,071 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:10,071 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:10,128 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:10,128 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:10,129 (BaseTests.java:642) - {"src_ip":"5.6.7.8","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"somethin","dest_ip":"2.2.2.22","ip":["3.3.3.132","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:10,129 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"a.b.c.co","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:10,129 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"somethin","dest_ip":"2.2.2.232","ip":["3.3.3.132","0.0.0.0"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:10,129 (BaseTests.java:391) - correctResults:
+ INFO [main] 2016-08-27 15:30:10,130 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"a.b.c.co","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:10,130 (BaseTests.java:642) - {"src_ip":"5.6.7.8","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"somethin","dest_ip":"2.2.2.22","ip":["3.3.3.132","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:10,130 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-srcip-query","query_id":63e0dc1f-5750-4c74-95a9-0d71c600d7e9,"qname":"somethin","dest_ip":"2.2.2.232","ip":["3.3.3.132","0.0.0.0"],"match":"55.55.55.55"}
+ INFO [main] 2016-08-27 15:30:10,130 (BaseTests.java:407) - Completed testSRCIPQuery(): 
+ INFO [main] 2016-08-27 15:30:10,130 (BaseTests.java:203) - Running testDNSIPQuery(): 
+ INFO [main] 2016-08-27 15:30:10,130 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:10,131 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier894240581231733240.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query6460244631041298426.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse2180117917610318831.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile7568367685847607367.txt
+ INFO [main] 2016-08-27 15:30:10,131 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 5 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-ip-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+ INFO [main] 2016-08-27 15:30:10,138 (Paillier.java:174) - Parameters = p = -1722949553 q = 535336313 N = -1577779113 NSquared = 344333713 lambdaN = 1952400712 bitLength = 384
+ INFO [main] 2016-08-27 15:30:10,138 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:10,668 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:10,669 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:10,785 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:10,862 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:10,863 (StandaloneQuery.java:122) - selector = 10.20.30.40 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,864 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,866 (StandaloneQuery.java:122) - selector = 13.14.15.16 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,868 (StandaloneQuery.java:122) - selector = 21.22.23.24 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,869 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,871 (StandaloneQuery.java:122) - selector = 5.6.7.8 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,872 (StandaloneQuery.java:122) - selector = 3.3.3.3 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,874 (StandaloneQuery.java:122) - selector = 3.3.3.132 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,876 (StandaloneQuery.java:122) - selector = 3.3.3.132 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:10,877 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:10,877 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:10,878 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:10,879 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:10,952 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:10,952 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:10,954 (BaseTests.java:642) - {"src_ip":"127.128.129.130","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:10,954 (BaseTests.java:642) - {"src_ip":"139.140.141.142","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:10,954 (BaseTests.java:642) - {"src_ip":"143.144.145.146","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"match":"5.6.7.8"}
+ INFO [main] 2016-08-27 15:30:10,954 (BaseTests.java:642) - {"src_ip":"131.132.133.134","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"match":"13.14.15.16"}
+ INFO [main] 2016-08-27 15:30:10,954 (BaseTests.java:642) - {"src_ip":"55.55.55.55","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"match":"10.20.30.40"}
+ INFO [main] 2016-08-27 15:30:10,955 (BaseTests.java:642) - {"src_ip":"135.136.137.138","event_type":"dns-ip-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"match":"21.22.23.24"}
+ INFO [main] 2016-08-27 15:30:10,955 (BaseTests.java:265) - Completed testDNSIPQuery(): 
+ INFO [main] 2016-08-27 15:30:10,956 (BaseTests.java:277) - Running testDNSNXDOMAINQuery(): 
+ INFO [main] 2016-08-27 15:30:10,956 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:10,956 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier4881681351125662371.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query6471821872798663602.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse8237702190939361668.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile4429597777999760886.txt
+ INFO [main] 2016-08-27 15:30:10,957 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 128 numPartitionsPerDataElement = 16 queryType = dns-nxdomain-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = false
+ INFO [main] 2016-08-27 15:30:10,972 (Paillier.java:174) - Parameters = p = 599263481 q = -567393817 N = -2146086481 NSquared = -2134493791 lambdaN = 1058505576 bitLength = 384
+ INFO [main] 2016-08-27 15:30:10,973 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:11,284 (EncryptQuery.java:264) - Completed parallel creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:11,285 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:11,377 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:11,425 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:11,425 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:11,426 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:11,426 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:11,426 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:11,426 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:11,503 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:11,503 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:11,508 (BaseTests.java:642) - {"src_ip":"135.136.137.138","event_type":"dns-nxdomain-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qname":"d.e.com","dest_ip":"17.18.19.20","match":"d.e.com"}
+ INFO [main] 2016-08-27 15:30:11,508 (BaseTests.java:329) - Completed testDNSNXDOMAINQuery(): 
+ INFO [main] 2016-08-27 15:30:11,508 (BaseTests.java:78) - Running testDNSHostnameQuery(): 
+ INFO [main] 2016-08-27 15:30:11,508 (StandaloneQuery.java:63) - Performing watchlisting: 
+ INFO [main] 2016-08-27 15:30:11,509 (StandaloneQuery.java:77) - fileQuerier = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-querier6435150911406792831.txt fileQuery  = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/querySideOut-query484361505536259494.txt responseFile = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/encryptedResponse4337808255699203430.txt fileFinalResults = /var/folders/6m/1pjbh3894cdbqjf013ll3kb80000gp/T/finalResultFile7093616721366174904.txt
+ INFO [main] 2016-08-27 15:30:11,509 (QueryInfo.java:166) - identifier = 63e0dc1f-5750-4c74-95a9-0d71c600d7e9 numSelectors = 6 hashBitSize = 12 hashKey = someKey dataPartitionBitSize = 8 numBitsPerDataElement = 256 numPartitionsPerDataElement = 36 queryType = dns-hostname-query useExpLookupTable = false useHDFSExpLookupTable = false embedSelector = true
+ INFO [main] 2016-08-27 15:30:11,518 (Paillier.java:174) - Parameters = p = 1969297849 q = 1700312583 N = 310983183 NSquared = 1295568097 lambdaN = 468170024 bitLength = 384
+ INFO [main] 2016-08-27 15:30:11,519 (StandaloneQuery.java:96) - Performing encryption of the selectors - forming encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:12,180 (EncryptQuery.java:220) - Completed serial creation of encrypted query vectors
+ INFO [main] 2016-08-27 15:30:12,180 (StandaloneQuery.java:99) - Completed encryption of the selectors - completed formation of the encrypted query vectors:
+ INFO [main] 2016-08-27 15:30:12,180 (StandaloneQuery.java:105) - embedSelectorMap((embedSelectorMap.size()-2)) = 650527453 selector = something.else
+ INFO [main] 2016-08-27 15:30:12,282 (StandaloneQuery.java:115) - Performing the PIR Query and constructing the response elements:
+ INFO [main] 2016-08-27 15:30:12,332 (StandaloneQuery.java:118) - Query and Responder elements constructed
+ INFO [main] 2016-08-27 15:30:12,332 (StandaloneQuery.java:122) - selector = a.b.c.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,334 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,336 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,339 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,343 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,345 (StandaloneQuery.java:122) - selector = d.e.com numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,348 (StandaloneQuery.java:122) - selector = something.else numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,350 (StandaloneQuery.java:122) - selector = something.else2 numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,352 (StandaloneQuery.java:122) - selector = something.else.on.stoplist numDataElements = 7
+ INFO [main] 2016-08-27 15:30:12,354 (StandaloneQuery.java:131) - Completed the PIR Query and construction of the response elements:
+ INFO [main] 2016-08-27 15:30:12,355 (StandaloneQuery.java:134) - Forming response from response elements; writing to a file
+ INFO [main] 2016-08-27 15:30:12,361 (StandaloneQuery.java:138) - Completed forming response from response elements and writing to a file
+ INFO [main] 2016-08-27 15:30:12,362 (StandaloneQuery.java:142) - Performing decryption; writing final results file
+ INFO [main] 2016-08-27 15:30:12,451 (StandaloneQuery.java:149) - Completed performing decryption and writing final results file
+ INFO [main] 2016-08-27 15:30:12,452 (StandaloneQuery.java:152) - Reading in and checking results
+ INFO [main] 2016-08-27 15:30:12,454 (BaseTests.java:96) - results:
+ INFO [main] 2016-08-27 15:30:12,455 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","ip":["10.20.30.40","10.20.30.60"],"qname":"a.b.c.com","match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,455 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,455 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","ip":["13.14.15.16","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,456 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","ip":["21.22.23.24","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:12,456 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,456 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","ip":["5.6.7.8","0.0.0.0"],"qname":"d.e.com","match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,456 (BaseTests.java:174) - correctResults: 
+ INFO [main] 2016-08-27 15:30:12,457 (BaseTests.java:642) - {"date":"2016-02-20T23:29:05.000Z","src_ip":"55.55.55.55","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.6","qname":"a.b.c.com","ip":["10.20.30.40","10.20.30.60"],"match":"a.b.c.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,457 (BaseTests.java:642) - {"date":"2016-02-20T23:29:06.000Z","src_ip":"127.128.129.130","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"1.2.3.4","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,457 (BaseTests.java:642) - {"date":"2016-02-20T23:29:07.000Z","src_ip":"131.132.133.134","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"9.10.11.12","qname":"d.e.com","ip":["13.14.15.16","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,458 (BaseTests.java:642) - {"date":"2016-02-20T23:29:08.000Z","src_ip":"135.136.137.138","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"17.18.19.20","qname":"d.e.com","ip":["21.22.23.24","0.0.0.0"],"match":"d.e.com","rcode":3}
+ INFO [main] 2016-08-27 15:30:12,458 (BaseTests.java:642) - {"date":"2016-02-20T23:29:09.000Z","src_ip":"139.140.141.142","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"25.26.27.28","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,458 (BaseTests.java:642) - {"date":"2016-02-20T23:29:10.000Z","src_ip":"143.144.145.146","event_type":"dns-hostname-query","query_id":"63e0dc1f-5750-4c74-95a9-0d71c600d7e9","qtype":[1,0],"dest_ip":"33.34.35.36","qname":"d.e.com","ip":["5.6.7.8","0.0.0.0"],"match":"d.e.com","rcode":0}
+ INFO [main] 2016-08-27 15:30:12,459 (BaseTests.java:191) - Completed testDNSHostnameQuery(): 

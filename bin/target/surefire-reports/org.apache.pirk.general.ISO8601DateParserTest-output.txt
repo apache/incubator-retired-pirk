@@ -1,0 +1,2 @@
+ INFO [main] 2016-08-27 15:29:58,218 (ISO8601DateParserTest.java:40) - Starting testDateParsing: 
+ INFO [main] 2016-08-27 15:29:58,224 (ISO8601DateParserTest.java:48) - Successfully completed testDateParsing
