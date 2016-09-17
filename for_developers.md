@@ -25,7 +25,7 @@ nav: nav_developers
 ## General Info
 
 Pirk is written in Java 8 and build and dependency management is accomplished via [Apache Maven](https://maven.apache.org/). Pirk uses [Git](https://git-scm.com/) for change management. 
-
+ 
 ## Code Repo
 
 The Pirk code is available via the [Pirk git repository](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git) and is mirrored to [Github](https://github.com/apache/incubator-pirk). 
