@@ -78,16 +78,15 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <scala.version>2.10.4</scala.version>
-        <jmh.version>1.11.3</jmh.version>
+        <jmh.version>1.13</jmh.version>
         <benchmarkjar.name>benchmarks</benchmarkjar.name>
         <javac.target>1.8</javac.target>
         <slf4j.version>1.7.21</slf4j.version>
         <log4j2.version>2.1</log4j2.version>
         <junit.version>4.12</junit.version>
         <log4j.configuration>log4j2.xml</log4j.configuration>
-        <hadoop.version>2.7.2</hadoop.version>
+        <hadoop.version>2.7.3</hadoop.version>
         <spark.version>1.6.1</spark.version>
-        <apache-commons.version>3.3</apache-commons.version>
         <elasticsearch.version>2.3.4</elasticsearch.version>
         <storm.version>1.0.1</storm.version>
         <kafka.version>0.9.0.1</kafka.version>
@@ -106,19 +105,19 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
-            <version>${apache-commons.version}</version>
+            <version>3.6.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>1.1</version>
+            <version>1.1.1</version>
         </dependency>
 
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>${apache-commons.version}</version>
+            <version>3.5</version>
         </dependency>
 
         <dependency>
@@ -443,7 +442,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.5.201505241946</version>
+                    <version>0.7.7.201606060606</version>
                     <executions>
                         <execution>
                             <goals>
@@ -468,7 +467,7 @@
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.1.0</version>
+                    <version>4.2.0</version>
                 </plugin>
 
 
@@ -492,7 +491,7 @@
                             <!-- Force surefire to use JUnit -->
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-junit4</artifactId>
-                            <version>2.18</version>
+                            <version>2.19.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -511,7 +510,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.0.2</version>
                     <configuration>
                         <excludes>
                             <exclude>org/apache/pirk/benchmark/**</exclude>
@@ -629,7 +628,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.1</version>
+                    <version>2.5.3</version>
                     <configuration>
                         <useReleaseProfile>true</useReleaseProfile>
                         <releaseProfiles>signed_release</releaseProfiles>
