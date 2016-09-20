@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/pirk.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<title>Running Pirk in Cloud Environments (GCP, AWS, Azure)</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'pirk.incubator.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  
+  // decorate menu with currently navigated page
+  $(function() {
+    $("#nav_commercial_cloud").addClass("active");
+  });
+  
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81114308-1', 'auto');
+  ga('send', 'pageview');
+  
+</script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Pirk" class="img-responsive" src="/images/pirkImage.png" width="150"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_users"><a href="/for_users">For Users</a></li>
+          <li id="nav_developers"><a href="/for_developers">For Developers</a></li>
+          <li id="nav_developers"><a href="/cloud_instructions">Cloud instructions</a></li>
+          <li id="nav_papers"><a href="/papers">Papers &amp Presentations</a></li>
+          <li class="nav_faq"><a href="/faq">FAQ</a></li>
+          <li class="divider"></li>
+           <li><a href="/javadocs">Javadocs</a></li>     
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolvedpirk"><a href="/get_involved_pirk">Get Involved</a></li>
+          <li id="nav_listspirk"><a href="/mailing_list_pirk">Mailing Lists</a></li>
+          <li id="nav_peoplepirk"><a href="/people_pirk">People</a></li>
+       	</ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_releasing"><a href="/how_to_contribute">How to Contribute</a></li>
+          <li id="nav_releasing"><a href="/releasing">Making Releases</a></li>
+          <li id="nav_nav_verify_release"><a href="/verifying_releases">Verifying Releases</a></li>
+          <li id="nav_update_website"><a href="/website_updates">Website Updates</a></li>
+          <hr>
+          <li><a href="https://issues.apache.org/jira/browse/PIRK ">Issue Tracker/JIRA <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/job/pirk/">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/incubator-pirk">Travis CI Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/incubator-pirk"> Pirk Github Mirror <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+        <li class="nav-link"><a href="/roadmap">Roadmap</a></li>
+       <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+        </ul>
+        </ul>
+    </div> 
+  </div>  
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div id="content">
+          
+          <h1 class="title">Running Pirk in Cloud Environments (GCP, AWS, Azure)</h1>
+          
+          <h2 id="google-cloud-platform-gcp">Google Cloud Platform (GCP)</h2>
+<p>This guide is a walkthrough with steps to get Pirk running on Google’s Cloud Platform.</p>
+
+<h3 id="steps">Steps</h3>
+<ol>
+  <li>Create a google cloud account. You may be eligible for a first-60-days-or-$300 credit. You can do this from <a href="https://cloud.google.com/">https://cloud.google.com/</a>.</li>
+  <li>Install the <a href="https://cloud.google.com/sdk/"><code class="highlighter-rouge">gcloud</code> command line tool</a> and run <code class="highlighter-rouge">gcloud init</code>. This will let you authorize the <code class="highlighter-rouge">gcloud</code> tool against your Google account.</li>
+  <li>Create a new project. For example, <code class="highlighter-rouge">pirkongcpexample</code></li>
+  <li>Enable billing for that project (somewhere in the user interface). If you are a free trial user you may not need to change anything in the billing settings.</li>
+  <li>Enable the dataproc API. At the time of writing, <a href="https://console.developers.google.com/apis/api/dataproc/overview">this page API</a> was involved in the process of enabling dataproc API (if you have more than one project you may need to switch to the correct one using the picker on the page next to the Google logo). Ignore any warnings you see about a need to get credentials.</li>
+  <li>
+    <p>Spin up a cluster (replace $PROJECTNAME with the project name you used above):<br />
+<code class="highlighter-rouge">gcloud dataproc clusters create cluster-1 --zone us-east1-b --master-machine-type n1-standard-2 --master-boot-disk-size 150 --num-workers 3 --worker-machine-type n1-highmem-2 --worker-boot-disk-size 25 --project </code><strong><code class="highlighter-rouge">$PROJECTNAME</code></strong><code class="highlighter-rouge"> --properties yarn:yarn.log-aggregation-enable=true,yarn:yarn.scheduler.maximum-allocation-mb=10240,yarn:yarn.nodemanager.resource.memory-mb=10240</code></p>
+  </li>
+  <li>
+    <p>Once this completes run <code class="highlighter-rouge">gcloud compute config-ssh</code>. This adds entries to your <code class="highlighter-rouge">~/.ssh/config</code> which allow you to connect to your cluster nodes. To see the list look at your <code class="highlighter-rouge">~/.ssh/config</code> file. An example:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>Host cluster-1-m.us-east1-b.pirkongcpexample
+    HostName 105.126.210.81  
+    IdentityFile /Users/pirkdev/.ssh/google_ed25519  
+    UserKnownHostsFile=/Users/pirkdev/.ssh/google_compute_known_hosts  
+    HostKeyAlias=compute.1295540156620891161  
+    IdentitiesOnly=yes  
+    CheckHostIP=no 
+</code></pre>
+    </div>
+
+    <p>To SSH to this node I type <code class="highlighter-rouge">ssh -D 10010 cluster-1-m.us-east1-b.pirkongcpexample</code> (the <code class="highlighter-rouge">-m</code> indicates the master). (The <code class="highlighter-rouge">-D 10010</code> flag is optional and enables a SOCKS proxy you can configure a web browser with to see the <a href="https://cloud.google.com/dataproc/concepts/cluster-web-interfaces">web interfaces</a>)</p>
+  </li>
+  <li>On GCP the default property <code class="highlighter-rouge">spark.home = /usr</code> is incorrect. Since <code class="highlighter-rouge">/root/</code> isn’t accessible 
+ (and thus putting an additional properties file in <code class="highlighter-rouge">local.pirk.properties.dir=/root/</code> isn’t viable) one solution is to modify the
+ compiled-in <code class="highlighter-rouge">pirk.properties</code>
+ to have <code class="highlighter-rouge">local.pirk.properties.dir=/home/pirkdev/share</code> instead. (You’ll want to change the <code class="highlighter-rouge">pirkdev</code> to your username on the node).
+ At <code class="highlighter-rouge">/home/pirkdev/share/sparkfix.properties</code> put a file containing <code class="highlighter-rouge">spark.home=/usr/lib/spark/bin</code></li>
+  <li>Transfer your compiled jar to the cluster: e.g. <code class="highlighter-rouge">scp apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar cluster-1-m.us-east1-b.pirkongcpexample:~</code></li>
+  <li>
+    <p>Run your jar. For example:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>   hadoop jar apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar org.apache.pirk.test.distributed.DistributedTestDriver -j $PWD/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar
+        
+   spark-submit --class org.apache.pirk.test.distributed.DistributedTestDriver  $PWD/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar -j $PWD/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar -t 1:JS
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>When you want to stop your cluster:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>   [pirkdev:~] 2 % gcloud compute instances list
+   NAME           ZONE        MACHINE_TYPE    …
+   cluster-1-m    us-east1-b  n1-standard-2   …
+   cluster-1-w-0  us-east1-b  n1-highmem-2    …
+   cluster-1-w-1  us-east1-b  n1-highmem-2    …
+   cluster-1-w-2  us-east1-b  n1-highmem-2    …
+   [pirkdev:~] 2 % gcloud compute instances stop cluster-1-m  cluster-1-w-0 cluster-1-w-1 cluster-1-w-2
+</code></pre>
+    </div>
+  </li>
+</ol>
+
+<p>Stop your instances to save money. <a href="https://cloud.google.com/compute/docs/instances/stopping-or-deleting-an-instance">To quote google</a>:</p>
+
+<blockquote>
+  <p>A stopped instance does not incur charges, but all of the resources that are attached to 
+the instance will still be charged. For example, you are charged for persistent disks and 
+external IP addresses according to the price sheet, even if an instance is stopped. To stop 
+being charged for attached resources, you can reconfigure a stopped instance to not use 
+those resources, and then delete the resources.</p>
+</blockquote>
+
+<h2 id="microsoft-azure">Microsoft Azure</h2>
+<p>Right now Pirk can’t be run on Microsoft’s Azure HDInsight Hadoop platform because it only supports Java 7. Committer Jacob Wilder emailed a Microsoft engineer who works on HDInsight and heard that it is on Microsoft’s roadmap for the end of September or October 2016.</p>
+
+<h3 id="steps-that-will-likely-eventually-work">Steps that will likely eventually work</h3>
+
+<p>These directions are based on the <a href="https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/">basic cli instructions</a> and the article <a href="https://azure.microsoft.com/en-us/documentation/articles/hdinsight-hadoop-create-linux-clusters-azure-cli/">Create Linux-based clusters in HDInsight using the Azure CLI</a>.</p>
+
+<p>A note on HDInsight pricing: 
+&gt; HDInsight clusters billing is pro-rated per minute, whether you are using them or not. Please be sure to delete your cluster after you have finished using it. For information on deleting a cluster, see <a href="https://azure.microsoft.com/en-us/documentation/articles/hdinsight-delete-cluster/">How to delete an HDInsight cluster</a>.</p>
+
+<ol>
+  <li>Create a Microsoft Azure account and either add billing information or get some credit for it.</li>
+  <li>If you haven’t used Azure before then deploy <a href="https://github.com/Azure/azure-quickstart-templates/blob/master/101-acs-mesos/docs/CommonIssues.md">this template</a>. It will set up your account with licenses for the right resources. Don’t forget to delete it after deploy.</li>
+  <li>Install the Azure CLI and run <code class="highlighter-rouge">azure login</code> to authenticate.</li>
+  <li>Enter resource manager mode with <code class="highlighter-rouge">azure config mode arm</code></li>
+  <li>Pick a location from the location list (<code class="highlighter-rouge">azure location list</code>, e.g. <code class="highlighter-rouge">eastus</code>). Remainder of this tutorial uses location eastus but you can switch it out.</li>
+  <li>Create the cluster group. This example uses the name <code class="highlighter-rouge">pirkcluster1</code>, you can pick a different name.  <code class="highlighter-rouge">azure group create </code><strong><code class="highlighter-rouge">pirkcluster1</code></strong><code class="highlighter-rouge"> eastus</code>`</li>
+  <li>Create storage to use for the cluster <code class="highlighter-rouge">azure storage account create -g </code><strong><code class="highlighter-rouge">pirkcluster1</code></strong><code class="highlighter-rouge"> --sku-name RAGRS -l eastus --kind Storage </code><strong><code class="highlighter-rouge">pirkstorage1</code></strong></li>
+  <li>
+    <p>Get one of the access keys for the storage account. <code class="highlighter-rouge">key1</code> is fine.</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> % azure storage account keys list -g pirkcluster1 pirkstorage
+ info:    Executing command storage account keys list
+ + Getting storage account keys                                
+ data:    Name  Key                                Permissions
+ data:    ----  ----------------------------------------------
+ data:    key1  [a bunch of base64, save THIS]     Full  
+ data:    key2  another bunch of base 64           Full       
+ info:    storage account keys list command OK
+</code></pre>
+    </div>
+  </li>
+  <li>Register for the Azure HDInsight provider: <code class="highlighter-rouge">azure provider register Microsoft.HDInsight</code></li>
+  <li>
+    <p>Create the cluster. Replace the bold faced values. You already have <code class="highlighter-rouge">key1_from_above_command</code>. Select your own ssh and http passwords. In this example <strong><code class="highlighter-rouge">pirkhdinsight1</code></strong> is the name that will be used to SSH into the cluster and manage it.<br />
+<code class="highlighter-rouge">azure hdinsight cluster create -g pirkcluster1 -l eastus -y Linux --clusterType Hadoop --defaultStorageAccountName pirkstorage1.blob.core.windows.net --defaultStorageAccountKey </code><strong><code class="highlighter-rouge">key1_from_above_command</code></strong><code class="highlighter-rouge"> --defaultStorageContainer </code><strong><code class="highlighter-rouge">pirkhdinsight1</code></strong><code class="highlighter-rouge"> --workerNodeCount 2 --userName admin --password </code><strong><code class="highlighter-rouge">httppassword</code></strong><code class="highlighter-rouge"> --sshUserName sshuser --sshPassword </code><strong><code class="highlighter-rouge">sshpassword</code></strong><code class="highlighter-rouge"> </code><strong><code class="highlighter-rouge">pirkhdinsight1</code></strong></p>
+  </li>
+  <li>This command takes about 15 minutes. Once it finishes you can log into your cluster using <code class="highlighter-rouge">ssh sshuser@</code><strong><code class="highlighter-rouge">pirkhdinsight1</code></strong><code class="highlighter-rouge">-ssh.azurehdinsight.net</code> where you’ve replaced <strong><code class="highlighter-rouge">pirkhdinsight1</code></strong> with the name of your cluster.</li>
+  <li>You may choose to install your ssh keys at this point using a command like <code class="highlighter-rouge">ssh-copy-id -i ~/.ssh/azure_ed25519 -o PubkeyAuthentication=no sshuser@pirkhdinsight1-ssh.azurehdinsight.net</code></li>
+  <li>At this point you can’t do anything since HDInsight doesn’t support Java 8. Delete your cluster and wait for Azure HDInsight to support Java 8.</li>
+</ol>
+
+<h2 id="amazon-web-services-ec2-emr">Amazon Web Services EC2 EMR</h2>
+<ol>
+  <li>You’ll need to have an AWS account with credit or billing information.</li>
+  <li>Either create a key pair within the AWS user interface or make one locally and upload the public key. Note the exact name of the keypair in the AWS interface because it is an argument to later commands. The keypair used in this tutorial is called <code class="highlighter-rouge">amazon_rsa</code> in the amazon user interface and the private key is located on the local machine at <code class="highlighter-rouge">~/.ssh/amazon_rsa</code></li>
+  <li>Install the <a href="https://aws.amazon.com/cli/">AWS CLI</a> (probably using <code class="highlighter-rouge">pip install aws</code>) and run <code class="highlighter-rouge">aws configure</code> and input the required Access Key ID and Secret associated with your account.</li>
+  <li>Run <code class="highlighter-rouge">aws emr create-default-roles</code>.</li>
+  <li>
+    <p>Before you can create a cluster you need to make a JSON file locally. Call it (for example) <code class="highlighter-rouge">aws-cluster-conf.json</code> with these contents:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> [
+   {
+     "Classification": "yarn-site",
+     "Properties": {
+       "yarn.nodemanager.aux-services": "mapreduce_shuffle",
+       "yarn.nodemanager.aux-services.mapreduce_shuffle.class": "org.apache.hadoop.mapred.ShuffleHandler"
+     }
+   }
+ ]
+</code></pre>
+    </div>
+
+    <p>This configuration file fixes some YARN configuration options that (left absent)
+ prevent distributed Pirk from running.</p>
+  </li>
+  <li>
+    <p>Create the cluster:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> aws emr create-cluster \
+    --name "Spark Cluster" \
+    --release-label emr-5.0.0 \
+    --applications Name=Spark \
+    --ec2-attributes KeyName=amazon_rsa \
+    --instance-type m3.xlarge \
+    --instance-count 3 \
+    --use-default-roles \
+    --configurations file://./aws-cluster-conf.json
+</code></pre>
+    </div>
+
+    <p>Make note of the ClusterID it returns. For the remainder of these steps, assume that <strong><code class="highlighter-rouge">$cid</code></strong> has been set equal to the cluster ID (you may find it convenient to do this using <code class="highlighter-rouge">export cid=YOURCLUSTERID</code>)</p>
+  </li>
+  <li>Wait for your cluster to be ready. You might find this command helpful: <code class="highlighter-rouge">watch -n 60 aws emr describe-cluster --output json --cluster-id </code><strong><code class="highlighter-rouge">$cid</code></strong></li>
+  <li>Once your cluster is ready, go into the <a href="https://console.aws.amazon.com/ec2/v2/home">AWS console in your browser</a> and add a firewall rule enabling SSH access. Select the correct region in the upper corner, then click on Security Groups in the left hand column. Find the row with the Group Name “ElasticMapReduce-master”, select the Inbound tab in the lower pane, click Edit, and then add a Rule for SSH (in the drop down menu) with Source “My IP” (change this to another value if desired).</li>
+  <li>Upload the jar file (underneath the covers this is running <code class="highlighter-rouge">scp</code>):<br />
+<code class="highlighter-rouge">aws emr put --cluster-id </code><strong><code class="highlighter-rouge">$cid</code></strong><code class="highlighter-rouge"> --key-pair-file </code><strong><code class="highlighter-rouge">~/.ssh/amazon_rsa</code></strong><code class="highlighter-rouge"> --src apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar</code></li>
+  <li>
+    <p>SSH in using<br />
+<code class="highlighter-rouge">aws emr ssh --cluster-id </code><strong><code class="highlighter-rouge">$cid</code></strong><code class="highlighter-rouge"> --key-pair-file </code><strong><code class="highlighter-rouge">~/.ssh/amazon_rsa</code></strong><br />
+If you want to SSH in and set up a SOCKS proxy to access the <a href="https://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-web-interfaces.html">web interfaces</a> (like in the GCP instructions) copy the output of the SSH command and add the <code class="highlighter-rouge">-D $SOCKSPORTNUM</code> flag. The YARN resource manager is on port 8088 of the Master node.</p>
+  </li>
+  <li>Now on the cluster, you can run the distributed tests:<br />
+<code class="highlighter-rouge">hadoop jar apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar org.apache.pirk.test.distributed.DistributedTestDriver -j $PWD/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar -t 1:J</code></li>
+  <li>When you are done working with your cluster, terminate it:<br />
+<code class="highlighter-rouge">aws emr terminate-clusters --cluster-ids </code><strong><code class="highlighter-rouge">$cid</code></strong></li>
+</ol>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2016-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

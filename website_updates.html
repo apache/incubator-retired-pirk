@@ -93,6 +93,7 @@
         <ul class="dropdown-menu">
           <li id="nav_users"><a href="/for_users">For Users</a></li>
           <li id="nav_developers"><a href="/for_developers">For Developers</a></li>
+          <li id="nav_developers"><a href="/cloud_instructions">Cloud instructions</a></li>
           <li id="nav_papers"><a href="/papers">Papers &amp Presentations</a></li>
           <li class="nav_faq"><a href="/faq">FAQ</a></li>
           <li class="divider"></li>
@@ -148,10 +149,14 @@
           
           <h1 class="title">Updating the Website</h1>
           
-          <p>Pirk’s web site is developed using <a href="https://jekyllrb.com">Jekyll</a>. The Jekyll source is contained in the <a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages">gh-pages</a> branch and the <a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=asf-site">asf-site</a> branch contains the HTML content.</p>
+          <p>Pirk’s web site is developed using <a href="https://jekyllrb.com">Jekyll</a>. The Jekyll source is contained in the 
+<a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages">gh-pages</a> branch and the 
+<a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=asf-site">asf-site</a> branch contains 
+the HTML content.</p>
 
 <p>Website development is
-performed by editing the contents of the <a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages">gh-pages</a> branch, either
+performed by editing the contents of the 
+<a href="https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages">gh-pages</a> branch, either
 directly by a committer, with a pull request to <a href="https://github.com/apache/incubator-pirk">GitHub</a>, or a patch
 submitted to <a href="https://issues.apache.org/jira/browse/PIRK">JIRA</a>. The rendered site can be previewed locally or on
 <a href="https://apache.github.io/incubator-pirk/">GitHub</a>, and the rendered site (in the <code class="highlighter-rouge">_site</code> directory) will be
@@ -192,12 +197,16 @@ branch. You can also run this command manually:</p>
 </div>
 
 <p>To automatically run this post-commit hook in your local repository, copy
-the given file into your <code class="highlighter-rouge">.git/hook</code> directory:</p>
+the given file into your <code class="highlighter-rouge">.git/hooks</code> directory, and ensure the file is executable:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>cp ./_devtools/git-hooks/post-commit .git/hooks/
+chmod +x .git/hooks/post-commit
 </code></pre>
 </div>
 
+<p>Finally, ensure you have pushed the changes in both the <code class="highlighter-rouge">asf-site</code> and <code class="highlighter-rouge">gh-pages</code> branches. The <code class="highlighter-rouge">gh-pages</code> branch 
+contains the source used by the <code class="highlighter-rouge">post-commit</code> script to generate the static HTML which lives in the
+<code class="highlighter-rouge">asf-site</code> branch and is actually served.</p>
 
         </div>
 

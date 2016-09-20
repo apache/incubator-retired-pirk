@@ -1,8 +1,0 @@
- INFO [main] 2016-08-27 15:31:05,906 (PartitionUtilsTest.java:47) - Starting testMask: 
- INFO [main] 2016-08-27 15:31:05,907 (PartitionUtilsTest.java:61) - Successfully completed testMask
- INFO [main] 2016-08-27 15:31:05,907 (PartitionUtilsTest.java:105) - Starting testToPartitions:
- INFO [main] 2016-08-27 15:31:05,910 (PartitionUtilsTest.java:260) - testString.getBytes().length = 10
- INFO [main] 2016-08-27 15:31:05,910 (PartitionUtilsTest.java:260) - testString.getBytes().length = 1
- INFO [main] 2016-08-27 15:31:05,911 (PartitionUtilsTest.java:235) - Sucessfully completed testToPartitions:
- INFO [main] 2016-08-27 15:31:05,912 (PartitionUtilsTest.java:67) - Starting testPartitionBits: 
- INFO [main] 2016-08-27 15:31:05,912 (PartitionUtilsTest.java:99) - Successfully completed testPartitionBits
