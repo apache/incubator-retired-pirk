@@ -41,11 +41,10 @@ branch. You can also run this command manually:
     ./_devtools/git-hooks/post-commit
 
 To automatically run this post-commit hook in your local repository, copy
-the given file into your `.git/hooks` directory, make the file executable, and run it:
+the given file into your `.git/hooks` directory, and ensure the file is executable: 
 
     cp ./_devtools/git-hooks/post-commit .git/hooks/
     chmod +x .git/hooks/post-commit
-    ./.git/hooks/post-commit
 
 Finally, ensure you have pushed the changes in both the `asf-site` and `gh-pages` branches. The `gh-pages` branch 
 contains the source used by the `post-commit` script to generate the static HTML which lives in the
