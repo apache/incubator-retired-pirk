@@ -3,10 +3,14 @@ title: Updating the Website
 nav: nav_website_updates
 ---
 
-Pirk's web site is developed using [Jekyll](https://jekyllrb.com). The Jekyll source is contained in the [gh-pages](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages) branch and the [asf-site](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=asf-site) branch contains the HTML content.
+Pirk's web site is developed using [Jekyll](https://jekyllrb.com). The Jekyll source is contained in the 
+[gh-pages](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages) branch and the 
+[asf-site](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=asf-site) branch contains 
+the HTML content.
 
 Website development is
-performed by editing the contents of the [gh-pages](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages) branch, either
+performed by editing the contents of the 
+[gh-pages](https://git-wip-us.apache.org/repos/asf?p=incubator-pirk.git;a=tree;h=gh-pages) branch, either
 directly by a committer, with a pull request to [GitHub](https://github.com/apache/incubator-pirk), or a patch
 submitted to [JIRA](https://issues.apache.org/jira/browse/PIRK). The rendered site can be previewed locally or on
 [GitHub](https://apache.github.io/incubator-pirk/), and the rendered site (in the `_site` directory) will be
@@ -37,7 +41,12 @@ branch. You can also run this command manually:
     ./_devtools/git-hooks/post-commit
 
 To automatically run this post-commit hook in your local repository, copy
-the given file into your `.git/hook` directory:
+the given file into your `.git/hooks` directory, make the file executable, and run it:
 
     cp ./_devtools/git-hooks/post-commit .git/hooks/
-    
+    chmod +x .git/hooks/post-commit
+    ./.git/hooks/post-commit
+
+Finally, ensure you have pushed the changes in both the `asf-site` and `gh-pages` branches. The `gh-pages` branch 
+contains the source used by the `post-commit` script to generate the static HTML which lives in the
+`asf-site` branch and is actually served.
