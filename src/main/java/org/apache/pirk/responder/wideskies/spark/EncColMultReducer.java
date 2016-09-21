@@ -22,6 +22,7 @@ import java.math.BigInteger;
 
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class EncColMultReducer implements Function2<BigInteger,BigInteger,BigInt
   {
     // long startTime = System.currentTimeMillis();
 
-    BigInteger colMult = (colVal1.multiply(colVal2)).mod(query.getNSquared());
+    BigInteger colMult = IntegerMathAbstraction.modularMultiply(colVal1, colVal2, query.getNSquared());
 
     logger.debug("colVal1 = " + colVal1.toString() + " colVal2 = " + colVal2.toString() + " colMult = " + colMult.toString());
 

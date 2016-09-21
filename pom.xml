@@ -94,6 +94,18 @@
         <pirk.forkCount>1C</pirk.forkCount>
         <pirk.reuseForks>true</pirk.reuseForks>
     </properties>
+	<repositories>
+		<!-- This repository is TEMPORARY while we pilot additions to JNA-GMP -->
+		<!-- before we do a pull request and wait for Square to do a release  -->
+		<repository>
+			<id>jna-gmp-mvn-repo-jacobwil</id>
+			<url>https://raw.github.com/jacobwil/jna-gmp/mvn-repo</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 
     <dependencies>
         <dependency>
@@ -252,6 +264,13 @@
             </exclusions>
         </dependency>
 
+		<!-- Square's JNA GMP module -->
+		<!-- This version is pulled from jacobwil's github *temporarily* -->
+		<dependency>
+			<groupId>com.squareup.jnagmp</groupId>
+			<artifactId>jnagmp</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+		</dependency>
         <dependency>
             <groupId>org.apache.storm</groupId>
             <artifactId>storm-core</artifactId>
@@ -314,7 +333,7 @@
         <dependency>
             <groupId>com.squareup.jnagmp</groupId>
             <artifactId>jnagmp</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1-SNAPSHOT</version>
         </dependency>
 
         <!-- JMH for benchmarking the Paillier functions -->

@@ -25,8 +25,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +119,7 @@ public class Query implements Serializable, Storable
         Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
         for (int i = 0; i <= maxValue; ++i)
         {
-          BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+          BigInteger value = IntegerMathAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
           powMap.put(i, value);
         }
         expTable.put(element, powMap);

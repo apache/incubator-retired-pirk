@@ -29,6 +29,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +69,7 @@ public class ColumnMultReducer extends Reducer<LongWritable,Text,LongWritable,Te
     for (Text val : colVals)
     {
       BigInteger valBI = new BigInteger(val.toString());
-      column = (column.multiply(valBI)).mod(query.getNSquared());
+      column = IntegerMathAbstraction.modularMultiply(column, valBI, query.getNSquared());
       logger.debug("valBI = " + valBI.toString() + " column = " + column.toString());
     }
     logger.debug("final column value = " + column.toString());

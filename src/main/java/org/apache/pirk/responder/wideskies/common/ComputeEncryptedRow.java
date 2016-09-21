@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.inputformat.hadoop.BytesArrayWritable;
 import org.apache.pirk.query.wideskies.Query;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class ComputeEncryptedRow
         public BigInteger load(Tuple3<BigInteger,BigInteger,BigInteger> info) throws Exception
         {
           logger.debug("cache miss");
-          return ModPowAbstraction.modPow(info._1(), info._2(), info._3());
+          return IntegerMathAbstraction.modPow(info._1(), info._2(), info._3());
         }
       });
 
@@ -134,7 +134,7 @@ public class ComputeEncryptedRow
           }
           else
           {
-            exp = ModPowAbstraction.modPow(rowQuery, part, query.getNSquared());
+            exp = IntegerMathAbstraction.modPow(rowQuery, part, query.getNSquared());
           }
         } catch (ExecutionException e)
         {
@@ -199,7 +199,7 @@ public class ComputeEncryptedRow
           }
           else
           {
-            exp = ModPowAbstraction.modPow(rowQuery, part, query.getNSquared());
+            exp = IntegerMathAbstraction.modPow(rowQuery, part, query.getNSquared());
           }
         } catch (ExecutionException e)
         {

@@ -67,7 +67,7 @@
 			<id>mvn-public</id>
 			<url>http://mvnrepository.com/artifact</url>
 			<snapshots>
-				<updatePolicy>always</updatePolicy>
+				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 		</repository>
 
@@ -79,49 +79,110 @@
 	</repositories>
 
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<scala.version>2.10.4</scala.version>
-		<jmh.version>1.11.3</jmh.version>
+		<jmh.version>1.13</jmh.version>
 		<benchmarkjar.name>benchmarks</benchmarkjar.name>
-		<javac.target>1.7</javac.target>
+		<javac.target>1.8</javac.target>
+		<slf4j.version>1.7.21</slf4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
+		<junit.version>4.12</junit.version>
+		<log4j.configuration>log4j2.xml</log4j.configuration>
+		<hadoop.version>2.7.2</hadoop.version>
+		<apache-commons.version>3.3</apache-commons.version>
+		<elasticsearch.version>2.3.3</elasticsearch.version>
+		<spark-streaming.version>2.0.0</spark-streaming.version>
+		<pirk.forkCount>1C</pirk.forkCount>
+		<pirk.reuseForks>true</pirk.reuseForks>
+    
+    <jmh.version>1.11.3</jmh.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
-			<version>3.3</version>
+			<version>${apache-commons.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>${apache-commons.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
-			<version>2.7.2</version>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-core</artifactId>
-			<version>2.7.2</version>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
-			<version>2.7.2</version>
+			<version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.11</artifactId>
 			<version>1.6.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -139,39 +200,85 @@
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-hadoop</artifactId>
-			<version>2.1.2</version>
+			<version>${elasticsearch.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-net</artifactId>
 					<groupId>commons-net</groupId>
 				</exclusion>
 				<exclusion>
+					<groupId>org.apache.hive</groupId>
+					<artifactId>hive-service</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>log4j-over-slf4j</artifactId>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.storm</groupId>
+					<artifactId>storm-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-local</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cascading</groupId>
+					<artifactId>cascading-hadoop</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
 
-		<!-- Square's JNA GMP module-->
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
+			<version>${spark-streaming.version}</version>
+		</dependency>
+
+		<!-- Sl4j modules -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		
+		<!-- Square's JNA GMP module -->
+		<!-- This version is pulled from jacobwil's github *temporarily* -->
 		<dependency>
 			<groupId>com.squareup.jnagmp</groupId>
 			<artifactId>jnagmp</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
 		</dependency>
 		<!-- JMH for benchmarking the Paillier functions -->
 		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-core</artifactId>
-			<version>${jmh.version}</version>
+		    <groupId>org.openjdk.jmh</groupId>
+		    <artifactId>jmh-core</artifactId>
+		    <version>${jmh.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-generator-annprocess</artifactId>
-			<version>${jmh.version}</version>
+		    <groupId>org.openjdk.jmh</groupId>
+		    <artifactId>jmh-generator-annprocess</artifactId>
+		    <version>${jmh.version}</version>
 		</dependency>
 
 	</dependencies>

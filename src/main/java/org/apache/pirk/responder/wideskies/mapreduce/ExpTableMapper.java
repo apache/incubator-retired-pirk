@@ -25,7 +25,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class ExpTableMapper extends Mapper<LongWritable,Text,Text,Text>
     BigInteger element = query.getQueryElement(Integer.parseInt(value.toString()));
     for (int i = 0; i <= maxValue; ++i)
     {
-      BigInteger modPow = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+      BigInteger modPow = IntegerMathAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
 
       valueOut.set(i + "-" + modPow.toString()); // val: <power>-<element^power mod N^2>
       ctx.write(value, valueOut);

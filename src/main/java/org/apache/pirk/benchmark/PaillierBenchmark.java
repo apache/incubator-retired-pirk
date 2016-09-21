@@ -21,7 +21,7 @@ package org.apache.pirk.benchmark;
 
 import java.math.BigInteger;
 
-import org.apache.pirk.encryption.ModPowAbstraction;
+import org.apache.pirk.encryption.IntegerMathAbstraction;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
@@ -51,7 +51,7 @@ public class PaillierBenchmark
     BigInteger r1 = null; // random number in (Z/NZ)*
     BigInteger m1 = null; // message to encrypt
 
-    Paillier pallier = null;
+    Paillier paillier = null;
 
     /**
      * This sets up the state for the two separate benchmarks
@@ -62,11 +62,11 @@ public class PaillierBenchmark
       int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 100);
       try
       {
-        pallier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);
+        paillier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);
 
       } catch (PIRException e)
       {
-        System.out.printf("Couldn't build pallier object!%n");
+        System.out.printf("Couldn't build paillier object!\n");
       }
 
       r1 = BigInteger.valueOf(3);
@@ -80,11 +80,18 @@ public class PaillierBenchmark
   {
     SystemConfiguration.setProperty("paillier.useGMPForModPow", "true");
     SystemConfiguration.setProperty("paillier.GMPConstantTimeMode", "false");
-    ModPowAbstraction.reloadConfiguration();
+
+    SystemConfiguration.setProperty("paillier.useGMPForExactDivide", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "true");
+    IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.pallier.encrypt(allState.m1, allState.r1);
+      allState.paillier.encrypt(allState.m1, allState.r1);
     } catch (PIRException e)
     {
       logger.info("Exception in testWithGMP!\n");
@@ -97,11 +104,18 @@ public class PaillierBenchmark
   {
     SystemConfiguration.setProperty("paillier.useGMPForModPow", "true");
     SystemConfiguration.setProperty("paillier.GMPConstantTimeMode", "true");
-    ModPowAbstraction.reloadConfiguration();
+
+    SystemConfiguration.setProperty("paillier.useGMPForExactDivide", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForGCD", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "true");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "true");
+    IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.pallier.encrypt(allState.m1, allState.r1);
+      allState.paillier.encrypt(allState.m1, allState.r1);
     } catch (PIRException e)
     {
       logger.info("Exception in testWithGMPConstantTime!\n");
@@ -113,11 +127,18 @@ public class PaillierBenchmark
   public void testWithoutGMP(PaillierBenchmarkState allState)
   {
     SystemConfiguration.setProperty("paillier.useGMPForModPow", "false");
-    ModPowAbstraction.reloadConfiguration();
+
+    SystemConfiguration.setProperty("paillier.useGMPForExactDivide", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForGCD", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForModularInverse", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForModularMultiply", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMod", "false");
+    SystemConfiguration.setProperty("paillier.useGMPForMultiply", "false");
+    IntegerMathAbstraction.reloadConfiguration();
 
     try
     {
-      allState.pallier.encrypt(allState.m1, allState.r1);
+      allState.paillier.encrypt(allState.m1, allState.r1);
     } catch (PIRException e)
     {
       logger.info("Exception in testWithoutGMP!\n");
