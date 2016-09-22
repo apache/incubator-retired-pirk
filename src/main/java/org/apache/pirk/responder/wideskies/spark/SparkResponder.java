@@ -16,24 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.pirk.responder.wideskies.spark;
 
-package org.apache.pirk.responder.wideskies.storm;
+import java.io.IOException;
 
-import org.apache.pirk.responder.wideskies.ResponderLauncher;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to launch Storm responder
+ * Class to launch spark responder
  */
-public class StormResponderLauncher implements ResponderLauncher
+public class SparkResponder implements ResponderPlugin
 {
-  private static final Logger logger = LoggerFactory.getLogger(StormResponderLauncher.class);
+  private static final Logger logger = LoggerFactory.getLogger(SparkResponder.class);
+
+  @Override
+  public String getPlatformName() {
+    return "spark";
+  }
 
   @Override
   public void run() throws Exception
   {
-    logger.info("Launching Storm PirkTopology:");
-    PirkTopology.runPirkTopology();
+    logger.info("Launching Spark ComputeResponse:");
+    try
+    {
+      ComputeResponse computeResponse = new ComputeResponse(FileSystem.get(new Configuration()));
+      computeResponse.performQuery();
+    }
+    catch (IOException e)
+    {
+      logger.error("Unable to open filesystem: {}", e);
+    }
   }
 }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.pirk.responder.wideskies;
+package org.apache.pirk.responder.wideskies.spi;
 
 /**
  * Interface which launches a responder
@@ -25,8 +25,14 @@ package org.apache.pirk.responder.wideskies;
  * Implement this interface to start the execution of a framework responder, the run method will be called via reflection by the ResponderDriver.
  * </p>
  */
-public interface ResponderLauncher
+public interface ResponderPlugin
 {
+  /**
+   * Returns the plugin name for your framework
+   * This will be the platform argument
+   * @return
+   */
+  public String getPlatformName();
   /**
    * This method launches your framework responder.
    */

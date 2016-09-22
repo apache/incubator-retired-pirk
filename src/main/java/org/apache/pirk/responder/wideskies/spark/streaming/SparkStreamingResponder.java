@@ -21,20 +21,29 @@ package org.apache.pirk.responder.wideskies.spark.streaming;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.responder.wideskies.ResponderDriver;
-import org.apache.pirk.responder.wideskies.ResponderLauncher;
+import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.security.Permission;
 
 /**
  * Class to launch stand alone responder
  */
-public class SparkStreamingResponderLauncher implements ResponderLauncher
+public class SparkStreamingResponder implements ResponderPlugin
 {
-  private static final Logger logger = LoggerFactory.getLogger(SparkStreamingResponderLauncher.class);
+  private static final Logger logger = LoggerFactory.getLogger(SparkStreamingResponder.class);
+
+  @Override
+  public String getPlatformName() {
+    return "sparkstreaming";
+  }
 
   @Override
   public void run() throws Exception
   {
+    // For handling System.exit calls from Spark Streaming
+    System.setSecurityManager(new SystemExitManager());
     logger.info("Launching Spark ComputeStreamingResponse:");
     ComputeStreamingResponse computeSR = null;
     try
@@ -42,7 +51,7 @@ public class SparkStreamingResponderLauncher implements ResponderLauncher
       computeSR = new ComputeStreamingResponse(FileSystem.get(new Configuration()));
       computeSR.performQuery();
     }
-    catch (ResponderDriver.SystemExitException e)
+    catch (SystemExitException e)
     {
       // If System.exit(0) is not caught from Spark Streaming,
       // the application will complete with a 'failed' status
@@ -54,6 +63,30 @@ public class SparkStreamingResponderLauncher implements ResponderLauncher
       if (computeSR != null)
         computeSR.teardown();
     }
+  }
 
+  // Exception and Security Manager classes used to catch System.exit from Spark Streaming
+  private static class SystemExitException extends SecurityException
+  {}
+
+  private static class SystemExitManager extends SecurityManager
+  {
+    @Override
+    public void checkPermission(Permission perm)
+    {}
+
+    @Override
+    public void checkExit(int status)
+    {
+      super.checkExit(status);
+      if (status == 0) // If we exited cleanly, throw SystemExitException
+      {
+        throw new SystemExitException();
+      }
+      else
+      {
+        throw new SecurityException();
+      }
+    }
   }
 }

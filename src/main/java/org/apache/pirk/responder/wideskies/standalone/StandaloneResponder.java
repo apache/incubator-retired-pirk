@@ -19,7 +19,7 @@
 package org.apache.pirk.responder.wideskies.standalone;
 
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.responder.wideskies.ResponderLauncher;
+import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -30,9 +30,15 @@ import java.io.IOException;
 /**
  * Class to launch stand alone responder
  */
-public class StandaloneResponderLauncher implements ResponderLauncher
+public class StandaloneResponder implements ResponderPlugin
 {
-  private static final Logger logger = LoggerFactory.getLogger(StandaloneResponderLauncher.class);
+  private static final Logger logger = LoggerFactory.getLogger(StandaloneResponder.class);
+
+  @Override
+  public String getPlatformName() {
+    return "standalone";
+  }
+
   @Override
   public void run()
   {
@@ -44,8 +50,9 @@ public class StandaloneResponderLauncher implements ResponderLauncher
       Responder pirResponder = new Responder(query);
       pirResponder.computeStandaloneResponse();
     }
-    catch (IOException e) {
-      logger.error("Error reading {} \n {}", queryInput, e.getMessage());
+    catch (IOException e)
+    {
+      logger.error("Error reading {}, {}", queryInput, e.getMessage());
     }
   }
 }

@@ -37,9 +37,7 @@ public class ResponderProps
   private static final Logger logger = LoggerFactory.getLogger(ResponderDriver.class);
 
   // Required properties
-  @Deprecated
   public static final String PLATFORM = "platform";
-  public static final String LAUNCHER = "launcher";
   public static final String QUERYINPUT = "pir.queryInput";
   public static final String DATAINPUTFORMAT = "pir.dataInputFormat";
   public static final String OUTPUTFILE = "pir.outputFile";
@@ -113,7 +111,7 @@ public class ResponderProps
       STORMCOMPONENTONHEAP, STORMSPOUTPAR, STORMPARTITIONDATABOLTPAR, STORMENCROWCALCBOLTPAR, STORMENCCOLMULTBOLTPAR, STORMFLUSHFREQUENCY,
       STORMSPLITPARTITIONS, STORMSALTCOLUMNS, STORMNUMROWDIVS};
 
-  static final List<String> PROPSLIST = Arrays.asList((String[]) ArrayUtils.addAll(new String[] {LAUNCHER, PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY,
+  static final List<String> PROPSLIST = Arrays.asList((String[]) ArrayUtils.addAll(new String[] {PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY,
       ESRESOURCE, ESQUERY, ESNODES, OUTPUTFILE, BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY,
       REDUCEMEMORY, MAPJAVAOPTS, REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS,
       USEMODEXPJOIN, COLMULTREDUCEBYKEY, ALLOWEMBEDDEDQUERYSCHEMAS, BATCHSECONDS, WINDOWLENGTH, USEQUEUESTREAM, MAXBATCHES, STOPGRACEFULLY}, STORMPROPS));
@@ -128,27 +126,11 @@ public class ResponderProps
 
     // Parse general required options
 
-    if (!SystemConfiguration.hasProperty(LAUNCHER) && !SystemConfiguration.hasProperty(PLATFORM))
+    if (!SystemConfiguration.hasProperty(PLATFORM))
     {
-      logger.info("Must have the option {} or option {}", PLATFORM, LAUNCHER);
+      logger.info("Must have the option {}", PLATFORM);
       valid = false;
     }
-
-    if (SystemConfiguration.hasProperty(PLATFORM) && !SystemConfiguration.hasProperty(LAUNCHER))
-    {
-      String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-      if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("storm")
-          && !platform.equals("standalone"))
-      {
-        logger.info("Unsupported platform: " + platform);
-        valid = false;
-      }
-    }
-    else if (SystemConfiguration.hasProperty(PLATFORM))
-    {
-      logger.warn("Ingoring deprecated platform option, in favor of launcher option");
-    }
-
 
     if (!SystemConfiguration.hasProperty(QUERYINPUT))
     {

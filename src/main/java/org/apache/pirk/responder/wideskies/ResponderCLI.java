@@ -187,20 +187,11 @@ public class ResponderCLI
 
     // platform
     Option optionPlatform = new Option("p", ResponderProps.PLATFORM, true,
-        "deprecated (required if launcher not present) -- 'mapreduce', 'spark', 'sparkstreaming', 'storm', or 'standalone' : Processing platform technology for the responder");
+        "required -- 'mapreduce', 'spark', 'sparkstreaming', 'storm', or 'standalone' : Processing platform technology for the responder");
     optionPlatform.setRequired(false);
     optionPlatform.setArgName(ResponderProps.PLATFORM);
     optionPlatform.setType(String.class);
     options.addOption(optionPlatform);
-
-    // launcherClass
-    Option optionLauncherClass = new Option("l", ResponderProps.LAUNCHER, true,
-        "required (if platform not present) -- full claas name of class implementing ResponderLauncher : Processing platform technology for the responder");
-    optionLauncherClass.setRequired(false);
-    optionLauncherClass.setArgName(ResponderProps.LAUNCHER);
-    optionLauncherClass.setType(String.class);
-    options.addOption(optionLauncherClass);
-
 
     // queryInput
     Option optionQueryInput = new Option("q", ResponderProps.QUERYINPUT, true, "required -- Fully qualified dir in hdfs of Query files");

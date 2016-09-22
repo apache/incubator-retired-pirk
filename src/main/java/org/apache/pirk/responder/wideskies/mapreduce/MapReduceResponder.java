@@ -16,35 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.pirk.responder.wideskies.spark;
+package org.apache.pirk.responder.wideskies.mapreduce;
 
-import java.io.IOException;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.pirk.responder.wideskies.ResponderLauncher;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to launch spark responder
+ * Class to launch Map Reduce responder
  */
-public class SparkResponderLauncher implements ResponderLauncher
+public class MapReduceResponder implements ResponderPlugin
 {
-  private static final Logger logger = LoggerFactory.getLogger(SparkResponderLauncher.class);
+  private static final Logger logger = LoggerFactory.getLogger(MapReduceResponder.class);
+
+  @Override
+  public String getPlatformName() {
+    return "mapreduce";
+  }
 
   @Override
   public void run() throws Exception
   {
-    logger.info("Launching Spark ComputeResponse:");
-    try
-    {
-      ComputeResponse computeResponse = new ComputeResponse(FileSystem.get(new Configuration()));
-      computeResponse.performQuery();
-    }
-    catch (IOException e)
-    {
-      logger.error("Unable to open filesystem: {}", e);
-    }
+    logger.info("Launching MapReduce ResponderTool:");
+    ComputeResponseTool pirWLTool = new ComputeResponseTool();
+    ToolRunner.run(pirWLTool, new String[] {});
   }
 }
