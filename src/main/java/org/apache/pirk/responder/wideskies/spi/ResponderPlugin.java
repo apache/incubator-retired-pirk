@@ -19,6 +19,8 @@
 
 package org.apache.pirk.responder.wideskies.spi;
 
+import org.apache.pirk.utils.PIRException;
+
 /**
  * Interface which launches a responder
  * <p>
@@ -36,5 +38,5 @@ public interface ResponderPlugin
   /**
    * This method launches your framework responder.
    */
-  public void run() throws Exception;
+  public void run() throws PIRException;
 }

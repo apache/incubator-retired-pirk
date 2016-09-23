@@ -54,6 +54,7 @@ import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
 import org.apache.pirk.utils.FileConst;
 import org.apache.pirk.utils.HDFS;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.elasticsearch.hadoop.mr.EsInputFormat;
 import org.slf4j.Logger;
@@ -117,7 +118,7 @@ public class ComputeResponseTool extends Configured implements Tool
   private QueryInfo queryInfo = null;
   private QuerySchema qSchema = null;
 
-  public ComputeResponseTool() throws Exception
+  public ComputeResponseTool() throws IOException, PIRException
   {
     setupParameters();
 

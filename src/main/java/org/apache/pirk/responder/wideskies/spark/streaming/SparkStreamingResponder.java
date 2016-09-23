@@ -18,14 +18,15 @@
  */
 package org.apache.pirk.responder.wideskies.spark.streaming;
 
+import java.io.IOException;
+import java.security.Permission;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.pirk.responder.wideskies.ResponderDriver;
 import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
+import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.Permission;
 
 /**
  * Class to launch stand alone responder
@@ -40,15 +41,25 @@ public class SparkStreamingResponder implements ResponderPlugin
   }
 
   @Override
-  public void run() throws Exception
+  public void run() throws PIRException
   {
     // For handling System.exit calls from Spark Streaming
     System.setSecurityManager(new SystemExitManager());
+    
+    FileSystem fileSys;
+    try
+    {
+      fileSys = FileSystem.get(new Configuration());
+    } catch (IOException e)
+    {
+      throw new PIRException(e);
+    }
+    
     logger.info("Launching Spark ComputeStreamingResponse:");
     ComputeStreamingResponse computeSR = null;
     try
     {
-      computeSR = new ComputeStreamingResponse(FileSystem.get(new Configuration()));
+      computeSR = new ComputeStreamingResponse(fileSys);
       computeSR.performQuery();
     }
     catch (SystemExitException e)
@@ -56,6 +67,9 @@ public class SparkStreamingResponder implements ResponderPlugin
       // If System.exit(0) is not caught from Spark Streaming,
       // the application will complete with a 'failed' status
       logger.info("Exited with System.exit(0) from Spark Streaming");
+    } catch (IOException e)
+    {
+      throw new PIRException(e);
     }
     finally
     {
@@ -67,7 +81,9 @@ public class SparkStreamingResponder implements ResponderPlugin
 
   // Exception and Security Manager classes used to catch System.exit from Spark Streaming
   private static class SystemExitException extends SecurityException
-  {}
+  {
+    private static final long serialVersionUID = 1L;
+  }
 
   private static class SystemExitManager extends SecurityManager
   {
