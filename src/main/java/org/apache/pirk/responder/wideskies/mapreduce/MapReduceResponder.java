@@ -20,6 +20,7 @@ package org.apache.pirk.responder.wideskies.mapreduce;
 
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
+import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +37,17 @@ public class MapReduceResponder implements ResponderPlugin
   }
 
   @Override
-  public void run() throws Exception
+  public void run() throws PIRException
   {
     logger.info("Launching MapReduce ResponderTool:");
-    ComputeResponseTool pirWLTool = new ComputeResponseTool();
-    ToolRunner.run(pirWLTool, new String[] {});
+    try
+    {
+      ComputeResponseTool pirWLTool = new ComputeResponseTool();
+      ToolRunner.run(pirWLTool, new String[] {});
+    } catch (Exception e)
+    {
+      // An exception occurred invoking the tool, don't know how to recover.
+      throw new PIRException(e);
+    }
   }
 }

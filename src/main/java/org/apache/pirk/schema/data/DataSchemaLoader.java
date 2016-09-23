@@ -19,7 +19,6 @@
 package org.apache.pirk.schema.data;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -79,14 +78,12 @@ public class DataSchemaLoader
   static
   {
     logger.info("Loading pre-configured data schemas: ");
-
     try
     {
       initialize();
-    } catch (Exception e)
+    } catch (PIRException e)
     {
-      logger.error("Caught exception: ");
-      e.printStackTrace();
+      logger.error(e.getLocalizedMessage());
     }
   }
 
@@ -94,10 +91,10 @@ public class DataSchemaLoader
   /**
    * Initializes the static {@link DataSchemaRegistry} with a list of available data schema names.
    * 
-   * @throws Exception
+   * @throws PIRException
    *           - failed to initialize
    */
-  public static void initialize() throws Exception
+  public static void initialize() throws PIRException
   {
     initialize(false, null);
   }
@@ -110,10 +107,10 @@ public class DataSchemaLoader
    *          If true, specifies that the data schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the data schema exists
-   * @throws Exception
-   *           - failed to initialize
+   * @throws PIRException
+   *           - failed to initialize the data schemas because they could not be read or are invalid.
    */
-  public static void initialize(boolean hdfs, FileSystem fs) throws Exception
+  public static void initialize(boolean hdfs, FileSystem fs) throws PIRException
   {
     String dataSchemas = SystemConfiguration.getProperty("data.schemas", "none");
     if (dataSchemas.equals("none"))
@@ -122,41 +119,43 @@ public class DataSchemaLoader
     }
 
     String[] dataSchemaFiles = dataSchemas.split(",");
-    for (String schemaFile : dataSchemaFiles)
+    try
     {
-      logger.info("Loading schemaFile = " + schemaFile + " hdfs = " + hdfs);
+      for (String schemaFile : dataSchemaFiles)
+      {
+        DataSchema dataSchema = readSchemaFile(schemaFile, fs, hdfs);
+        DataSchemaRegistry.put(dataSchema);
+      }
+    } catch (IOException e)
+    {
+      throw new PIRException("Error reading data schema", e);
+    }
+  }
 
-      // Parse and load the schema file into a DataSchema object; place in the schemaMap
-      DataSchemaLoader loader = new DataSchemaLoader();
-      InputStream is = null;
-      if (hdfs)
-      {
-        logger.info("hdfs: filePath = " + schemaFile);
-        is = fs.open(fs.makeQualified(new Path(schemaFile)));
-      }
-      else
-      {
-        try
-        {
-          is = new FileInputStream(schemaFile);
-          logger.info("localFS: inputFile = " + schemaFile);
-        } catch (FileNotFoundException e)
-        {
-          logger.info("localFS: inputFile = " + schemaFile + " not found");
-        }
-      }
+  private static DataSchema readSchemaFile(String schemaFile, FileSystem fs, boolean hdfs) throws IOException, PIRException
+  {
+    logger.info("Loading data schemaFile = " + schemaFile + " hdfs = " + hdfs);
 
-      if (is != null)
-      {
-        try
-        {
-          DataSchema dataSchema = loader.loadSchema(is);
-          DataSchemaRegistry.put(dataSchema);
-        } finally
-        {
-          is.close();
-        }
-      }
+    // Parse and load the schema file into a DataSchema object; place in the schemaMap
+    DataSchemaLoader loader = new DataSchemaLoader();
+    InputStream is;
+    if (hdfs)
+    {
+      logger.info("hdfs: filePath = " + schemaFile);
+      is = fs.open(fs.makeQualified(new Path(schemaFile)));
+    }
+    else
+    {
+      logger.info("localFS: inputFile = " + schemaFile);
+      is = new FileInputStream(schemaFile);
+    }
+
+    try
+    {
+      return loader.loadSchema(is);
+    } finally
+    {
+      is.close();
     }
   }
 

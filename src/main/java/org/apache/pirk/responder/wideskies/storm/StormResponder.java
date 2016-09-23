@@ -20,6 +20,7 @@
 package org.apache.pirk.responder.wideskies.storm;
 
 import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
+import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class StormResponder implements ResponderPlugin
   }
 
   @Override
-  public void run() throws Exception
+  public void run() throws PIRException
   {
     logger.info("Launching Storm PirkTopology:");
     PirkTopology.runPirkTopology();

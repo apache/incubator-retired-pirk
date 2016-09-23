@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.pirk.responder.wideskies.spi.ResponderPlugin;
+import org.apache.pirk.utils.PIRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class SparkResponder implements ResponderPlugin
   }
 
   @Override
-  public void run() throws Exception
+  public void run() throws PIRException
   {
     logger.info("Launching Spark ComputeResponse:");
     try
