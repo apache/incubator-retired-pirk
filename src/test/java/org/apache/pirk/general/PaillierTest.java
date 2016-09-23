@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.util.Random;
 
 import org.apache.pirk.encryption.Paillier;
+import org.apache.pirk.encryption.PaillierBridge;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.junit.BeforeClass;
@@ -84,7 +85,7 @@ public class PaillierTest
   {
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(2), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(2), BigInteger.valueOf(2), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p,q < 3");
     } catch (PIRException ignore)
@@ -92,7 +93,7 @@ public class PaillierTest
 
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(2), BigInteger.valueOf(3), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(2), BigInteger.valueOf(3), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p < 3");
     } catch (PIRException ignore)
@@ -100,7 +101,7 @@ public class PaillierTest
 
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(3), BigInteger.valueOf(2), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(3), BigInteger.valueOf(2), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for q < 3");
     } catch (PIRException ignore)
@@ -108,7 +109,7 @@ public class PaillierTest
 
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(7), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(7), BigInteger.valueOf(7), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p = q");
     } catch (PIRException ignore)
@@ -116,7 +117,7 @@ public class PaillierTest
 
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(8), BigInteger.valueOf(7), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(8), BigInteger.valueOf(7), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for p not prime");
     } catch (PIRException ignore)
@@ -124,7 +125,7 @@ public class PaillierTest
 
     try
     {
-      Paillier paillier = new Paillier(BigInteger.valueOf(7), BigInteger.valueOf(10), 128);
+      Paillier paillier = PaillierBridge.newPaillier(BigInteger.valueOf(7), BigInteger.valueOf(10), 128);
       assertNotNull(paillier);
       fail("Paillier constructor did not throw PIRException for q not prime");
     } catch (PIRException ignore)
@@ -141,7 +142,7 @@ public class PaillierTest
 
     try
     {
-      Paillier pailler = new Paillier(p, q, bitLength);
+      Paillier pailler = PaillierBridge.newPaillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N);
       assertNotNull(encM1);
       fail("Paillier encryption did not throw PIRException for message m = N");
@@ -150,7 +151,7 @@ public class PaillierTest
 
     try
     {
-      Paillier pailler = new Paillier(p, q, bitLength);
+      Paillier pailler = PaillierBridge.newPaillier(p, q, bitLength);
       BigInteger encM1 = pailler.encrypt(N.add(BigInteger.TEN));
       assertNotNull(encM1);
       fail("Paillier encryption did not throw PIRException for message m > N");
@@ -179,7 +180,7 @@ public class PaillierTest
   {
     logger.info("Starting testPaillierGivenAllParameters: ");
 
-    Paillier pailler = new Paillier(p, q, bitLength);
+    Paillier pailler = PaillierBridge.newPaillier(p, q, bitLength);
 
     assertEquals(pailler.getN(), N);
     assertEquals(pailler.getLambdaN(), lambdaN);
