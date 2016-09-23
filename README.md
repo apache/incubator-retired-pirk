@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<img alt="Apache Pirk" class="img-responsive" src="contrib/pirkImage.png" width="350"/>
+<img alt="Apache Pirk" class="img-responsive" src="contrib/ApachePirk.png" width="350"/>
 --
 
 --
