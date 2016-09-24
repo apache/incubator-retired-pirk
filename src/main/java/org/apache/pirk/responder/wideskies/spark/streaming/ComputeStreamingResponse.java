@@ -43,10 +43,12 @@ import org.apache.pirk.responder.wideskies.spark.HashSelectorsAndPartitionData;
 import org.apache.pirk.schema.data.DataSchema;
 import org.apache.pirk.schema.data.DataSchemaLoader;
 import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.data.partitioner.DataPartitioner;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.serialization.HadoopFileSystemStore;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -106,7 +108,7 @@ public class ComputeStreamingResponse
 
   private boolean colMultReduceByKey = false;
 
-  public ComputeStreamingResponse(FileSystem fileSys) throws Exception
+  public ComputeStreamingResponse(FileSystem fileSys) throws PIRException
   {
     fs = fileSys;
     storage = new HadoopFileSystemStore(fs);
@@ -171,12 +173,18 @@ public class ComputeStreamingResponse
 
     // Setup, run query, teardown
     logger.info("Setting up for query run");
-    setup();
+    try
+    {
+      setup();
+    } catch (IOException e)
+    {
+      throw new PIRException("An error occurred setting up the streaming responder.", e);
+    }
     logger.info("Setup complete");
   }
 
   // Setup for the accumulators and broadcast variables
-  private void setup() throws Exception
+  private void setup() throws IOException, PIRException
   {
     // Load the schemas
     DataSchemaLoader.initialize(true, fs);
@@ -191,11 +199,6 @@ public class ComputeStreamingResponse
     QueryInfo queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
-
-    if (query == null)
-    {
-      logger.info("query is null for queryInput = " + queryInput);
-    }
 
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
     {
@@ -235,15 +238,20 @@ public class ComputeStreamingResponse
 
   /**
    * Method to start the computation
-   * 
-   * @throws InterruptedException
    */
-  public void start() throws InterruptedException
+  public void start()
   {
     logger.info("Starting computation...");
 
     jssc.start();
-    jssc.awaitTermination();
+    try
+    {
+      jssc.awaitTermination();
+    } catch (InterruptedException e)
+    {
+      // Interrupted while waiting for termination
+      Thread.interrupted();
+    }
   }
 
   /**
@@ -259,7 +267,7 @@ public class ComputeStreamingResponse
   /**
    * Method to read in data from an allowed input source/format and perform the query
    */
-  public void performQuery() throws IOException, ClassNotFoundException, InterruptedException
+  public void performQuery() throws IOException, PIRException
   {
     logger.info("Performing query: ");
 
@@ -272,6 +280,9 @@ public class ComputeStreamingResponse
     {
       inputRDD = readDataES();
     }
+    else {
+      throw new PIRException("Unknown data input format " + dataInputFormat);
+    }
 
     performQuery(inputRDD);
   }
@@ -280,7 +291,7 @@ public class ComputeStreamingResponse
    * Method to read in the data from an allowed input format, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaDStream<MapWritable> readData() throws ClassNotFoundException, IOException
+  public JavaDStream<MapWritable> readData() throws IOException, PIRException
   {
     logger.info("Reading data ");
 
@@ -296,10 +307,13 @@ public class ComputeStreamingResponse
 
     // Set the inputFormatClass based upon the baseInputFormat property
     String classString = SystemConfiguration.getProperty("pir.baseInputFormat");
-    Class<BaseInputFormat> inputClass = (Class<BaseInputFormat>) Class.forName(classString);
-    if (!Class.forName("org.apache.pirk.inputformat.hadoop.BaseInputFormat").isAssignableFrom(inputClass))
+    Class<? extends BaseInputFormat<Text,MapWritable>> inputClass;
+    try
     {
-      throw new ClassCastException("baseInputFormat class = " + classString + " does not extend BaseInputFormat");
+      inputClass = (Class<? extends BaseInputFormat<Text,MapWritable>>) Class.forName(classString);
+    } catch (ClassNotFoundException | ClassCastException e)
+    {
+      throw new PIRException(classString + " cannot be instantiated or does not extend BaseInputFormat", e);
     }
     job.setInputFormatClass(inputClass);
 
@@ -397,10 +411,8 @@ public class ComputeStreamingResponse
   /**
    * Method to perform the query given an input JavaDStream of JSON
    * 
-   * @throws InterruptedException
-   * 
    */
-  public void performQuery(JavaDStream<MapWritable> input) throws InterruptedException
+  public void performQuery(JavaDStream<MapWritable> input)
   {
     logger.info("Performing query: ");
 

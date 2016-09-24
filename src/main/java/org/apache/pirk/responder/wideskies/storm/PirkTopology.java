@@ -19,11 +19,18 @@
 package org.apache.pirk.responder.wideskies.storm;
 
 import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.AuthorizationException;
+import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.generated.StormTopology;
-import org.apache.storm.kafka.*;
+import org.apache.storm.kafka.BrokerHosts;
+import org.apache.storm.kafka.KafkaSpout;
+import org.apache.storm.kafka.SpoutConfig;
+import org.apache.storm.kafka.ZkHosts;
 import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.topology.BoltDeclarer;
 import org.apache.storm.topology.TopologyBuilder;
@@ -61,7 +68,7 @@ public class PirkTopology
   private static final String queryFile = SystemConfiguration.getProperty("pir.queryInput");
   private static final String outputPath = SystemConfiguration.getProperty("pir.outputFile");
 
-  public static void runPirkTopology() throws Exception
+  public static void runPirkTopology() throws PIRException
   {
     // Set up Kafka parameters
     logger.info("Configuring Kafka.");
@@ -85,7 +92,13 @@ public class PirkTopology
 
     // Run topology
     logger.info("Submitting Pirk topology to Storm...");
-    StormSubmitter.submitTopologyWithProgressBar(topologyName, conf, topology);
+    try
+    {
+      StormSubmitter.submitTopologyWithProgressBar(topologyName, conf, topology);
+    } catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
+    {
+      throw new PIRException(e);
+    }
 
   } // main
 

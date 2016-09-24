@@ -19,7 +19,6 @@
 package org.apache.pirk.schema.query;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -92,10 +91,9 @@ public class QuerySchemaLoader
     try
     {
       initialize();
-    } catch (Exception e)
+    } catch (PIRException e)
     {
-      logger.error("Caught exception: ");
-      e.printStackTrace();
+      logger.error(e.getLocalizedMessage());
     }
   }
 
@@ -103,10 +101,10 @@ public class QuerySchemaLoader
   /**
    * Initializes the static {@link QuerySchemaRegistry} with a list of query schema names.
    * 
-   * @throws Exception
+   * @throws PIRException
    *           - failed to initialize
    */
-  public static void initialize() throws Exception
+  public static void initialize() throws PIRException
   {
     initialize(false, null);
   }
@@ -119,10 +117,10 @@ public class QuerySchemaLoader
    *          If true, specifies that the query schema is an hdfs file; if false, that it is a regular file.
    * @param fs
    *          Used only when {@code hdfs} is true; the {@link FileSystem} handle for the hdfs in which the query schema exists
-   * @throws Exception
-   *           - failed to initialize
+   * @throws PIRException
+   *           - failed to initialize the query schemas because they could not be read or are invalid.
    */
-  public static void initialize(boolean hdfs, FileSystem fs) throws Exception
+  public static void initialize(boolean hdfs, FileSystem fs) throws PIRException
   {
     String querySchemas = SystemConfiguration.getProperty("query.schemas", "none");
     if (querySchemas.equals("none"))
@@ -130,42 +128,45 @@ public class QuerySchemaLoader
       logger.info("query.schemas = none");
       return;
     }
+
     String[] querySchemaFiles = querySchemas.split(",");
-    for (String schemaFile : querySchemaFiles)
+    try
     {
-      logger.info("Loading schemaFile = " + schemaFile);
+      for (String schemaFile : querySchemaFiles)
+      {
+        QuerySchema querySchema = readSchemaFile(schemaFile, fs, hdfs);
+        QuerySchemaRegistry.put(querySchema);
+      }
+    } catch (IOException e)
+    {
+      throw new PIRException("Error reading query schema", e);
+    }
+  }
 
-      // Parse and load the schema file into a QuerySchema object; place in the schemaMap
-      QuerySchemaLoader loader = new QuerySchemaLoader();
-      InputStream is = null;
-      if (hdfs)
-      {
-        is = fs.open(new Path(schemaFile));
-        logger.info("hdfs: filePath = " + schemaFile);
-      }
-      else
-      {
-        try
-        {
-          is = new FileInputStream(schemaFile);
-          logger.info("localFS: inputFile = " + schemaFile);
-        } catch (FileNotFoundException e)
-        {
-          logger.info("localFS: inputFile = " + schemaFile + " not found");
-        }
-      }
+  private static QuerySchema readSchemaFile(String schemaFile, FileSystem fs, boolean hdfs) throws IOException, PIRException
+  {
+    logger.info("Loading query schemaFile = " + schemaFile);
 
-      if (is != null)
-      {
-        try
-        {
-          QuerySchema querySchema = loader.loadSchema(is);
-          QuerySchemaRegistry.put(querySchema);
-        } finally
-        {
-          is.close();
-        }
-      }
+    // Parse and load the schema file into a QuerySchema object.
+    QuerySchemaLoader loader = new QuerySchemaLoader();
+    InputStream is;
+    if (hdfs)
+    {
+      logger.info("hdfs: filePath = " + schemaFile);
+      is = fs.open(new Path(schemaFile));
+    }
+    else
+    {
+      logger.info("localFS: inputFile = " + schemaFile);
+      is = new FileInputStream(schemaFile);
+    }
+
+    try
+    {
+      return loader.loadSchema(is);
+    } finally
+    {
+      is.close();
     }
   }
 

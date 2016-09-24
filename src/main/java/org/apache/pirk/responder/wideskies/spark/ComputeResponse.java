@@ -99,7 +99,7 @@ public class ComputeResponse
 
   private boolean colMultReduceByKey = false;
 
-  public ComputeResponse(FileSystem fileSys) throws Exception
+  public ComputeResponse(FileSystem fileSys) throws PIRException
   {
     fs = fileSys;
     storage = new HadoopFileSystemStore(fs);
@@ -156,12 +156,18 @@ public class ComputeResponse
 
     // Setup, run query, teardown
     logger.info("Setting up for query run");
-    setup();
+    try
+    {
+      setup();
+    } catch (IOException e)
+    {
+      throw new PIRException("An error occurred setting up the Spark responder.", e);
+    }
     logger.info("Setup complete");
   }
 
   // Setup for the accumulators and broadcast variables
-  private void setup() throws Exception
+  private void setup() throws IOException, PIRException
   {
     // Load the schemas
     DataSchemaLoader.initialize(true, fs);
@@ -219,7 +225,7 @@ public class ComputeResponse
   /**
    * Method to read in data from an allowed input source/format and perform the query
    */
-  public void performQuery() throws Exception
+  public void performQuery() throws IOException, PIRException
   {
     logger.info("Performing query: ");
 
@@ -243,7 +249,7 @@ public class ComputeResponse
    * Method to read in the data from an allowed input format, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaRDD<MapWritable> readData() throws Exception
+  public JavaRDD<MapWritable> readData() throws IOException, PIRException
   {
     logger.info("Reading data ");
 
@@ -268,10 +274,13 @@ public class ComputeResponse
 
     // Set the inputFormatClass based upon the baseInputFormat property
     String classString = SystemConfiguration.getProperty("pir.baseInputFormat");
-    Class<BaseInputFormat> inputClass = (Class<BaseInputFormat>) Class.forName(classString);
-    if (!Class.forName("org.apache.pirk.inputformat.hadoop.BaseInputFormat").isAssignableFrom(inputClass))
+    Class<? extends BaseInputFormat<Text,MapWritable>> inputClass;
+    try
     {
-      throw new Exception("baseInputFormat class = " + classString + " does not extend BaseInputFormat");
+      inputClass = (Class<? extends BaseInputFormat<Text,MapWritable>>) Class.forName(classString);
+    } catch (ClassNotFoundException | ClassCastException e)
+    {
+      throw new PIRException(classString + " cannot be instantiated or does not extend BaseInputFormat", e);
     }
     job.setInputFormatClass(inputClass);
 
@@ -296,7 +305,7 @@ public class ComputeResponse
    * Method to read in the data from elasticsearch, filter, and return a RDD of MapWritable data elements
    */
   @SuppressWarnings("unchecked")
-  public JavaRDD<MapWritable> readDataES() throws Exception
+  public JavaRDD<MapWritable> readDataES() throws IOException, PIRException
   {
     logger.info("Reading data ");
 
