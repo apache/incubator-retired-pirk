@@ -51,7 +51,8 @@ public class BaseTests
   public static final int dataPartitionBitSize = 8;
 
   // Selectors for domain and IP queries, queryIdentifier is the first entry for file generation
-  private static ArrayList<String> selectorsDomain = new ArrayList<>(Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
+  private static ArrayList<String> selectorsDomain = new ArrayList<>(
+      Arrays.asList("s.t.u.net", "d.e.com", "r.r.r.r", "a.b.c.com", "something.else", "x.y.net"));
   private static ArrayList<String> selectorsIP = new ArrayList<>(Arrays.asList("55.55.55.55", "5.6.7.8", "10.20.30.40", "13.14.15.16", "21.22.23.24"));
 
   // Encryption variables -- Paillier mechanisms are tested in the Paillier test code, so these are fixed...
@@ -65,8 +66,7 @@ public class BaseTests
     testDNSHostnameQuery(dataElements, null, false, false, numThreads, testFalsePositive, false);
   }
 
-  public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
-      throws Exception
+  public static void testDNSHostnameQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     testDNSHostnameQuery(dataElements, fs, isSpark, isDistributed, numThreads, false, false);
   }
@@ -276,8 +276,7 @@ public class BaseTests
   }
 
   // A query that returned an nxdomain response was made for the watched hostname; watched value type: hostname (String)
-  public static void testDNSNXDOMAINQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads)
-      throws Exception
+  public static void testDNSNXDOMAINQuery(List<JSONObject> dataElements, FileSystem fs, boolean isSpark, boolean isDistributed, int numThreads) throws Exception
   {
     logger.info("Running testDNSNXDOMAINQuery(): ");
 

@@ -140,8 +140,8 @@ public class ComputeResponse
     String stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
     useModExpJoin = SystemConfiguration.getBooleanProperty("pir.useModExpJoin", false);
 
-    logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery
-        + " esResource = " + esResource);
+    logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery + " esResource = "
+        + esResource);
 
     // Set the necessary configurations
     SparkConf conf = new SparkConf().setAppName("SparkPIR").setMaster("yarn-cluster");

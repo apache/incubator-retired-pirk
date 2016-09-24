@@ -163,20 +163,22 @@ public class QuerierCLI
     options.addOption(optionACTION);
 
     // INPUTFILE
-    Option optionINPUTFILE = new Option("i", QuerierProps.INPUTFILE, true, "required - Fully qualified file containing input "
-        + "-- \n The input is either: \n (1) For Encryption: A query file - Contains the query selectors, one per line; "
-        + "the first line must be the query number \n OR \n (2) For Decryption: A response file - Contains the serialized Response object");
+    Option optionINPUTFILE = new Option("i", QuerierProps.INPUTFILE, true,
+        "required - Fully qualified file containing input "
+            + "-- \n The input is either: \n (1) For Encryption: A query file - Contains the query selectors, one per line; "
+            + "the first line must be the query number \n OR \n (2) For Decryption: A response file - Contains the serialized Response object");
     optionINPUTFILE.setRequired(false);
     optionINPUTFILE.setArgName(QuerierProps.INPUTFILE);
     optionINPUTFILE.setType(String.class);
     options.addOption(optionINPUTFILE);
 
     // OUTPUTFILE
-    Option optionOUTPUTFILE = new Option("o", QuerierProps.OUTPUTFILE, true, "required - Fully qualified file for the result output. "
-        + "\n The output file specifies either: \n (1) For encryption: \n \t (a) A file to contain the serialized Querier object named: " + "<outputFile>-"
-        + QuerierConst.QUERIER_FILETAG + "  AND \n \t " + "(b) A file to contain the serialized Query object named: <outputFile>-" + QuerierConst.QUERY_FILETAG
-        + "\n " + "OR \n (2) A file to contain the decryption results where each line is where each line "
-        + "corresponds to one hit and is a JSON object with the schema QuerySchema");
+    Option optionOUTPUTFILE = new Option("o", QuerierProps.OUTPUTFILE, true,
+        "required - Fully qualified file for the result output. "
+            + "\n The output file specifies either: \n (1) For encryption: \n \t (a) A file to contain the serialized Querier object named: " + "<outputFile>-"
+            + QuerierConst.QUERIER_FILETAG + "  AND \n \t " + "(b) A file to contain the serialized Query object named: <outputFile>-"
+            + QuerierConst.QUERY_FILETAG + "\n " + "OR \n (2) A file to contain the decryption results where each line is where each line "
+            + "corresponds to one hit and is a JSON object with the schema QuerySchema");
     optionOUTPUTFILE.setRequired(false);
     optionOUTPUTFILE.setArgName(QuerierProps.OUTPUTFILE);
     optionOUTPUTFILE.setType(String.class);
@@ -204,8 +206,8 @@ public class QuerierCLI
     options.addOption(optionQuerySchemas);
 
     // TYPE
-    Option optionTYPE = new Option("qt", QuerierProps.QUERYTYPE, true, "required for encryption -- Type of the query as defined "
-        + "in the 'schemaName' tag of the corresponding query schema file");
+    Option optionTYPE = new Option("qt", QuerierProps.QUERYTYPE, true,
+        "required for encryption -- Type of the query as defined " + "in the 'schemaName' tag of the corresponding query schema file");
     optionTYPE.setRequired(false);
     optionTYPE.setArgName(QuerierProps.QUERYTYPE);
     optionTYPE.setType(String.class);

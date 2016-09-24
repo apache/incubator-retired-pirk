@@ -34,8 +34,8 @@ import scala.Tuple2;
 /**
  * Functionality for computing the encrypted rows using a pre-computed, passed in modular exponentiation lookup table
  */
-public class EncRowCalcPrecomputedCache implements
-    PairFlatMapFunction<Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>>,Long,BigInteger>
+public class EncRowCalcPrecomputedCache
+    implements PairFlatMapFunction<Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>>,Long,BigInteger>
 {
   private static final long serialVersionUID = 1L;
 

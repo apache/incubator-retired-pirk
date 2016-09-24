@@ -121,8 +121,8 @@ public class EncColMultBolt extends BaseRichBolt
   @Override
   public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
-    outputFieldsDeclarer
-        .declareStream(StormConstants.ENCCOLMULTBOLT_ID, new Fields(StormConstants.COLUMN_INDEX_ECM_FIELD, StormConstants.COLUMN_PRODUCT_FIELD));
+    outputFieldsDeclarer.declareStream(StormConstants.ENCCOLMULTBOLT_ID,
+        new Fields(StormConstants.COLUMN_INDEX_ECM_FIELD, StormConstants.COLUMN_PRODUCT_FIELD));
     outputFieldsDeclarer.declareStream(StormConstants.ENCCOLMULTBOLT_SESSION_END, new Fields("finished"));
   }
 }

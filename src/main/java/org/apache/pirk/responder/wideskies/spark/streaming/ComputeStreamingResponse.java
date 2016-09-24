@@ -146,8 +146,8 @@ public class ComputeStreamingResponse
     queryInput = SystemConfiguration.getProperty("pir.queryInput");
     String stopListFile = SystemConfiguration.getProperty("pir.stopListFile");
 
-    logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery
-        + " esResource = " + esResource);
+    logger.info("outputFile = " + outputFile + " queryInputDir = " + queryInput + " stopListFile = " + stopListFile + " esQuery = " + esQuery + " esResource = "
+        + esResource);
 
     // Pull the batchSeconds and windowLength parameters
     long batchSeconds = SystemConfiguration.getLongProperty("pir.sparkstreaming.batchSeconds", 30);
@@ -191,10 +191,10 @@ public class ComputeStreamingResponse
     QueryInfo queryInfo = query.getQueryInfo();
     bVars.setQuery(query);
     bVars.setQueryInfo(queryInfo);
-    
-    if(query == null)
+
+    if (query == null)
     {
-    	logger.info("query is null for queryInput = " + queryInput);
+      logger.info("query is null for queryInput = " + queryInput);
     }
 
     if (SystemConfiguration.getBooleanProperty("pir.allowAdHocQuerySchemas", false))
@@ -446,7 +446,7 @@ public class ComputeStreamingResponse
     bVars.setOutput(outputFile + "_" + accum.numBatchesGetValue());
 
     // Form and write the response object
-    encColRDD.repartition(1).foreachRDD((VoidFunction<JavaPairRDD<Long, BigInteger>>) rdd -> {
+    encColRDD.repartition(1).foreachRDD((VoidFunction<JavaPairRDD<Long,BigInteger>>) rdd -> {
       rdd.foreachPartition(new FinalResponseFunction(accum, bVars));
 
       int maxBatchesVar = bVars.getMaxBatches();

@@ -20,6 +20,7 @@ package org.apache.pirk.schema.query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +59,9 @@ public class QuerySchema implements Serializable
 
   // Total number of bits to be returned for each data element hit.
   private final int dataElementSize;
+
+  // Additional fields by key,value
+  private final HashMap<String,String> additionalFields = new HashMap<>();
 
   QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {
@@ -152,5 +156,28 @@ public class QuerySchema implements Serializable
   public DataFilter getFilter()
   {
     return filter;
+  }
+
+  /**
+   * Returns the map of additional field keys and values
+   * <p>
+   * Note that additional fields are optional, thus the map may be empty
+   * 
+   * @return The additionalFields HashMap
+   */
+  public HashMap<String,String> getAdditionalFields()
+  {
+    return additionalFields;
+  }
+
+  /**
+   * Returns the value from the additionalFields mapping corresponding to the given key
+   * 
+   * @param key
+   * @return value from the additionalFields mapping corresponding to the given key
+   */
+  public String getAdditionalFieldValue(String key)
+  {
+    return additionalFields.get(key);
   }
 }

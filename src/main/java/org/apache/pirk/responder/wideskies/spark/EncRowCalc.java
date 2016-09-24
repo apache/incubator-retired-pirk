@@ -93,8 +93,8 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
     }
 
     // Compute the encrypted row elements for a query from extracted data partitions
-    List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowBI(hashDocTuple._2, query, rowIndex, limitHitsPerSelector,
-        maxHitsPerSelector, useLocalCache);
+    List<Tuple2<Long,BigInteger>> encRowValues = ComputeEncryptedRow.computeEncRowBI(hashDocTuple._2, query, rowIndex, limitHitsPerSelector, maxHitsPerSelector,
+        useLocalCache);
 
     returnPairs.addAll(encRowValues);
 
