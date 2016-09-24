@@ -128,15 +128,7 @@ public class ResponderProps
 
     if (!SystemConfiguration.hasProperty(PLATFORM))
     {
-      logger.info("Must have the option " + PLATFORM);
-      valid = false;
-    }
-
-    String platform = SystemConfiguration.getProperty(PLATFORM).toLowerCase();
-    if (!platform.equals("mapreduce") && !platform.equals("spark") && !platform.equals("sparkstreaming") && !platform.equals("storm")
-        && !platform.equals("standalone"))
-    {
-      logger.info("Unsupported platform: " + platform);
+      logger.info("Must have the option {}", PLATFORM);
       valid = false;
     }
 

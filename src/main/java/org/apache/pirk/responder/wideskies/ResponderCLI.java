@@ -111,7 +111,7 @@ public class ResponderCLI
    * Method to parse and validate the options provided
    *
    * @return - true if valid, false otherwise
- * @throws IOException 
+ * @throws IOException
    */
   private boolean parseOptions() throws IOException
   {
@@ -170,14 +170,14 @@ public class ResponderCLI
     optionLocalPropFile.setArgName(LOCALPROPFILE);
     optionLocalPropFile.setType(String.class);
     options.addOption(optionLocalPropFile);
-    
+
     // hdfsPropertiesDir
     Option optionHDFSPropDir = new Option("hdfsPropsDir", HDFSPROPDIR, true, "Optional location of directory in hdfs containing properties file(s)");
     optionHDFSPropDir.setRequired(false);
     optionHDFSPropDir.setArgName(HDFSPROPDIR);
     optionHDFSPropDir.setType(String.class);
     options.addOption(optionHDFSPropDir);
-    
+
     // hdfsPropertiesFile
     Option optionHDFSPropFile = new Option("hdfsPropsFile", HDFSPROPFILE, true, "Optional location of properties file(s) in hdfs");
     optionHDFSPropFile.setRequired(false);
