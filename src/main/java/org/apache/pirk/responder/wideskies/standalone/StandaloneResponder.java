@@ -35,7 +35,8 @@ public class StandaloneResponder implements ResponderPlugin
   private static final Logger logger = LoggerFactory.getLogger(StandaloneResponder.class);
 
   @Override
-  public String getPlatformName() {
+  public String getPlatformName()
+  {
     return "standalone";
   }
 
@@ -49,8 +50,7 @@ public class StandaloneResponder implements ResponderPlugin
       Query query = new LocalFileSystemStore().recall(queryInput, Query.class);
       Responder pirResponder = new Responder(query);
       pirResponder.computeStandaloneResponse();
-    }
-    catch (IOException e)
+    } catch (IOException e)
     {
       logger.error("Error reading {}, {}", queryInput, e.getMessage());
     }

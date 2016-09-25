@@ -31,6 +31,7 @@ public class StormResponder implements ResponderPlugin
 {
 
   private static final Logger logger = LoggerFactory.getLogger(StormResponder.class);
+
   @Override
   public String getPlatformName()
   {

@@ -153,9 +153,9 @@ public class QuerierDriver implements Serializable
     // Perform the action
     if (action.equals("encrypt"))
     {
-      logger.info("Performing encryption: \n inputFile = " + inputFile + "\n outputFile = " + outputFile + "\n numThreads = " + numThreads
-          + "\n hashBitSize = " + hashBitSize + "\n hashKey = " + hashKey + "\n dataPartitionBitSize = " + dataPartitionBitSize + "\n paillierBitSize = "
-          + paillierBitSize + "\n certainty = " + certainty);
+      logger.info("Performing encryption: \n inputFile = " + inputFile + "\n outputFile = " + outputFile + "\n numThreads = " + numThreads + "\n hashBitSize = "
+          + hashBitSize + "\n hashKey = " + hashKey + "\n dataPartitionBitSize = " + dataPartitionBitSize + "\n paillierBitSize = " + paillierBitSize
+          + "\n certainty = " + certainty);
 
       // Read in the selectors and extract the queryIdentifier - first line in the file
       ArrayList<String> selectors = FileIOUtils.readToArrayList(inputFile);
@@ -182,8 +182,8 @@ public class QuerierDriver implements Serializable
       BigInteger val = (BigInteger.valueOf(2)).pow(exp);
       if (val.compareTo(paillier.getN()) != -1)
       {
-        logger.error("The number of selectors = " + numSelectors + " must be such that " + "2^{numSelector*dataPartitionBitSize} < N = "
-            + paillier.getN().toString(2));
+        logger.error(
+            "The number of selectors = " + numSelectors + " must be such that " + "2^{numSelector*dataPartitionBitSize} < N = " + paillier.getN().toString(2));
         System.exit(0);
       }
 

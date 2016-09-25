@@ -72,8 +72,8 @@ public class QueryInfo implements Serializable, Cloneable
         embedSelectorInput, useHDFSExpLookupTableInput);
   }
 
-  public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput,
-      String queryTypeInput, boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
+  public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+      boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
   {
     identifier = identifierInput;
     queryType = queryTypeInput;

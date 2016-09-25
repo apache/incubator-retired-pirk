@@ -30,11 +30,12 @@ import org.apache.pirk.utils.PIRException;
 public interface ResponderPlugin
 {
   /**
-   * Returns the plugin name for your framework
-   * This will be the platform argument
+   * Returns the plugin name for your framework This will be the platform argument
+   * 
    * @return
    */
   public String getPlatformName();
+
   /**
    * This method launches your framework responder.
    */

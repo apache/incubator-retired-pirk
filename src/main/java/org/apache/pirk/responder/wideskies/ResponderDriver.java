@@ -57,12 +57,10 @@ public class ResponderDriver
       {
         responder.run();
       }
-    }
-    catch (PIRException pirEx)
+    } catch (PIRException pirEx)
     {
       logger.error("Failed to load platform plugin: {}! {}", platformName, pirEx.getMessage());
-    }
-    catch (Exception ex)
+    } catch (Exception ex)
     {
       logger.error("Failed to run platform plugin: {}! {}", platformName, ex);
     }

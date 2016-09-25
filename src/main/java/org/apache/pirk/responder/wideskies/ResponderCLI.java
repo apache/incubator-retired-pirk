@@ -111,7 +111,7 @@ public class ResponderCLI
    * Method to parse and validate the options provided
    *
    * @return - true if valid, false otherwise
- * @throws IOException
+   * @throws IOException
    */
   private boolean parseOptions() throws IOException
   {
@@ -122,15 +122,15 @@ public class ResponderCLI
     {
       SystemConfiguration.loadPropsFromFile(new File(getOptionValue(LOCALPROPFILE)));
     }
-    else if(hasOption(HDFSPROPDIR))
+    else if (hasOption(HDFSPROPDIR))
     {
-    	FileSystem fs = FileSystem.get(new Configuration());
-    	SystemConfiguration.loadPropsFromHDFSDir(getOptionValue(HDFSPROPDIR), fs);
+      FileSystem fs = FileSystem.get(new Configuration());
+      SystemConfiguration.loadPropsFromHDFSDir(getOptionValue(HDFSPROPDIR), fs);
     }
-    else if(hasOption(HDFSPROPFILE))
+    else if (hasOption(HDFSPROPFILE))
     {
-    	FileSystem fs = FileSystem.get(new Configuration());
-    	SystemConfiguration.loadPropsFromFile(getOptionValue(HDFSPROPFILE), fs);
+      FileSystem fs = FileSystem.get(new Configuration());
+      SystemConfiguration.loadPropsFromFile(getOptionValue(HDFSPROPFILE), fs);
     }
     else
     {

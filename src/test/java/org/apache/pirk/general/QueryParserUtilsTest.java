@@ -326,7 +326,8 @@ public class QueryParserUtilsTest
 
   private void testBooleanQueryMapMapWritableWAW()
   {
-    assertTrue(QueryParserUtils.checkRecordWritableArrayWritable("?q=qtype:1+AND+date:[2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z]", docWAW, dSchema));
+    assertTrue(
+        QueryParserUtils.checkRecordWritableArrayWritable("?q=qtype:1+AND+date:[2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z]", docWAW, dSchema));
     assertTrue(QueryParserUtils.checkRecordWritableArrayWritable("?q=qtype:5+OR+date:[2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z]", docWAW, dSchema));
 
     assertTrue(QueryParserUtils.checkRecordWritableArrayWritable("?q=qtype:1+AND+rcode:0+AND+date:[2015-05-05T20:33:07.000Z+TO+2016-02-20T23:29:05.000Z]",

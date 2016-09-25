@@ -12,6 +12,7 @@ org.apache.pirk.responder.wideskies.common
 org.apache.pirk.responder.wideskies.mapreduce
 org.apache.pirk.responder.wideskies.spark
 org.apache.pirk.responder.wideskies.spark.streaming
+org.apache.pirk.responder.wideskies.spi
 org.apache.pirk.responder.wideskies.standalone
 org.apache.pirk.responder.wideskies.storm
 org.apache.pirk.response.wideskies
