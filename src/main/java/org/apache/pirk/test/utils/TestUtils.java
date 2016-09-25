@@ -187,10 +187,7 @@ public class TestUtils
         SystemConfiguration.setProperty("query.schemas", SystemConfiguration.getProperty("query.schemas", "") + "," + fileName);
       }
     }
-    else
-    {
-      SystemConfiguration.setProperty("query.schemas", fileName);
-    }
+
     logger.info("query.schemas = " + SystemConfiguration.getProperty("query.schemas"));
 
     // Write to the file

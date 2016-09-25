@@ -187,7 +187,7 @@ public class LoadQuerySchemaTest
     // Create the query schema used and force it to load
     try
     {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null, false, null, false,
+      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null, true, null, false,
           additionalFields);
 
     } catch (IOException e)

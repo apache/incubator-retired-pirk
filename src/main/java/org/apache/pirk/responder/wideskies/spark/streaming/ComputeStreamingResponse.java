@@ -280,7 +280,8 @@ public class ComputeStreamingResponse
     {
       inputRDD = readDataES();
     }
-    else {
+    else
+    {
       throw new PIRException("Unknown data input format " + dataInputFormat);
     }
 

@@ -53,7 +53,7 @@ public class ResponderService
   {
     try
     {
-      for(ResponderPlugin plugin : loader)
+      for (ResponderPlugin plugin : loader)
       {
         if (platformName.equalsIgnoreCase(plugin.getPlatformName()))
         {
@@ -61,8 +61,7 @@ public class ResponderService
           return plugin;
         }
       }
-    }
-    catch (ServiceConfigurationError e)
+    } catch (ServiceConfigurationError e)
     {
       logger.error("ResponderPlugin configuration error {}", e);
       throw new PIRException(e);

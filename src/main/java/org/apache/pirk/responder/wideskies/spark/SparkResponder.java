@@ -35,7 +35,8 @@ public class SparkResponder implements ResponderPlugin
   private static final Logger logger = LoggerFactory.getLogger(SparkResponder.class);
 
   @Override
-  public String getPlatformName() {
+  public String getPlatformName()
+  {
     return "spark";
   }
 
@@ -47,8 +48,7 @@ public class SparkResponder implements ResponderPlugin
     {
       ComputeResponse computeResponse = new ComputeResponse(FileSystem.get(new Configuration()));
       computeResponse.performQuery();
-    }
-    catch (IOException e)
+    } catch (IOException e)
     {
       logger.error("Unable to open filesystem: {}", e);
     }
