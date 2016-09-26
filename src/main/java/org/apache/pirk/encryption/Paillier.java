@@ -65,7 +65,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Ref: Paillier, Pascal. "Public-Key Cryptosystems Based on Composite Degree Residuosity Classes." EUROCRYPT'99.
  */
-public class Paillier implements Cloneable, Serializable
+public final class Paillier implements Cloneable, Serializable
 {
   private static final long serialVersionUID = 1L;
 
@@ -105,13 +105,11 @@ public class Paillier implements Cloneable, Serializable
 
   private int bitLength = 0; // bit length of the modulus N
 
-  /**
-   * Constructor with all parameters p,q, and bitLengthInput specified
+  /* Constructor with all parameters p,q, and bitLengthInput specified
    * <p>
-   * Only used, at this point, for testing purposes
-   *
+   * Only used, at this point, for testing purposes.
    */
-  public Paillier(BigInteger pInput, BigInteger qInput, int bitLengthInput) throws PIRException
+  Paillier(BigInteger pInput, BigInteger qInput, int bitLengthInput) throws PIRException
   {
     bitLength = bitLengthInput;
 
