@@ -30,6 +30,7 @@ import java.util.Properties;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.pirk.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,10 @@ public class SystemConfiguration
 
   private static final String LOCAL_PROPERTIES_DIR = "local.pirk.properties.dir";
 
+  // The below cannot be named "log4j.properties" as that name will seek to
+  // hadoop's similarly named file and not our own.
+  private static final String LOG_PROPERTIES_FILE = "mylog4j.properties";
+
   static
   {
     initialize();
@@ -76,6 +81,10 @@ public class SystemConfiguration
 
     // Try to load the local properties files, if they exists
     loadPropsFromDir(getProperty(LOCAL_PROPERTIES_DIR));
+
+    // Try to reassert our own log properties
+    // Needed to ensure that we can change log levels in hadoop/mapreduce.
+    LogUtils.reassertLogProperties();
   }
 
   /**
