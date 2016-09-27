@@ -143,7 +143,7 @@ public class DataSchema implements Serializable
    * @param elementName
    *          the name of the element whose partitioner is required.
    * @return the data partitioner, or <code>null</code> if the element does not exist.
-   * @throws PIRExcpetion
+   * @throws PIRException
    *           if the partitioner cannot be instantiated.
    * @see DataSchema#getPartitionerInstance(String)
    */

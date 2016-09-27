@@ -66,7 +66,7 @@ final class EncryptQueryTask implements Callable<SortedMap<Integer,BigInteger>>
       BigInteger valToEnc = (selectorNum == null) ? BigInteger.ZERO : (BigInteger.valueOf(2)).pow(selectorNum * dataPartitionBitSize);
       BigInteger encVal = paillier.encrypt(valToEnc);
       encryptedValues.put(i, encVal);
-      logger.debug("selectorNum = " + selectorNum + " valToEnc = " + valToEnc + " envVal = " + encVal);
+      logger.debug("selectorNum = " + selectorNum + " valToEnc = " + valToEnc + " encVal = " + encVal);
     }
 
     return encryptedValues;
