@@ -59,10 +59,6 @@ public class SystemConfiguration
 
   private static final String LOCAL_PROPERTIES_DIR = "local.pirk.properties.dir";
 
-  // The below cannot be named "log4j.properties" as that name will seek to
-  // hadoop's similarly named file and not our own.
-  private static final String LOG_PROPERTIES_FILE = "mylog4j.properties";
-
   static
   {
     initialize();
