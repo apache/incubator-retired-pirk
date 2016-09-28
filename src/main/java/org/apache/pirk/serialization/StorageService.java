@@ -27,7 +27,7 @@ abstract class StorageService
 
   StorageService()
   {
-    this.setSerializer(new JavaSerializer());
+    this.setSerializer(new JsonSerializer());
   }
 
   StorageService(SerializationService service)
