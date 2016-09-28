@@ -142,7 +142,7 @@ public final class Paillier implements Serializable
   /**
    * Constructs a Paillier algorithm with generated keys.
    * <p>
-   * The generated keys {@code p} and {@code q} will have the given modulus bit length and prime certainty.
+   * The generated keys {@code p} and {@code q} will have half the given modulus bit length, and the given prime certainty.
    * <p>
    * The probability that the generated keys represent primes will exceed (1 - (1/2)<sup>{@code certainty}</sup>). The execution time of this constructor is
    * proportional to the value of this parameter.
@@ -162,7 +162,7 @@ public final class Paillier implements Serializable
   /**
    * Constructs a Paillier algorithm with generated keys and optionally ensures a certain bit is set in the modulus.
    * <p>
-   * The generated keys {@code p} and {@code q} will have the given modulus bit length and prime certainty.
+   * The generated keys {@code p} and {@code q} will have half the given modulus bit length, and the given prime certainty.
    * <p>
    * The probability that the generated keys represent primes will exceed (1 - (1/2)<sup>{@code certainty}</sup>). The execution time of this constructor is
    * proportional to the value of this parameter.
@@ -239,7 +239,7 @@ public final class Paillier implements Serializable
   /**
    * Returns the value of Carmichael's function at {@code N}.
    * <p>
-   * The Carmichael function of {@code N} is the lowest common multiple of {@code p-1} and {@code q-1},
+   * The Carmichael function of {@code N} is the least common multiple of {@code p-1} and {@code q-1},
    * 
    * @return Carmichael's function at {@code N}.
    */
