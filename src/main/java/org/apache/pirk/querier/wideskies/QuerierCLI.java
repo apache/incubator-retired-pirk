@@ -18,17 +18,14 @@
  */
 package org.apache.pirk.querier.wideskies;
 
-import java.io.File;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
+import org.apache.pirk.schema.data.DataSchemaLoader;
+import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * Class for parsing the command line options for the QuerierDriver
@@ -44,7 +41,6 @@ public class QuerierCLI
 
   /**
    * Create and parse allowable options
-   * 
    */
   public QuerierCLI(String[] args)
   {
@@ -80,9 +76,8 @@ public class QuerierCLI
 
   /**
    * Determine if an option was provided by the user via the CLI
-   * 
-   * @param option
-   *          - the option of interest
+   *
+   * @param option - the option of interest
    * @return true if option was provided, false otherwise
    */
   public boolean hasOption(String option)
@@ -92,9 +87,8 @@ public class QuerierCLI
 
   /**
    * Obtain the argument of the option provided by the user via the CLI
-   * 
-   * @param option
-   *          - the option of interest
+   *
+   * @param option - the option of interest
    * @return value of the argument of the option
    */
   public String getOptionValue(String option)
@@ -104,7 +98,7 @@ public class QuerierCLI
 
   /**
    * Method to parse and validate the options provided
-   * 
+   *
    * @return - true if valid, false otherwise
    */
   private boolean parseOptions()
@@ -131,12 +125,28 @@ public class QuerierCLI
     // Validate properties
     valid = QuerierProps.validateQuerierProperties();
 
+    // Load the new local query and data schemas
+    if (valid)
+    {
+      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = " + SystemConfiguration
+          .getProperty("query.schemas"));
+      try
+      {
+        DataSchemaLoader.initialize();
+        QuerySchemaLoader.initialize();
+
+      } catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+
     return valid;
   }
 
   /**
    * Create the options available for the DistributedTestDriver
-   * 
+   *
    * @return Apache's CLI Options object
    */
   private Options createOptions()
@@ -163,22 +173,20 @@ public class QuerierCLI
     options.addOption(optionACTION);
 
     // INPUTFILE
-    Option optionINPUTFILE = new Option("i", QuerierProps.INPUTFILE, true,
-        "required - Fully qualified file containing input "
-            + "-- \n The input is either: \n (1) For Encryption: A query file - Contains the query selectors, one per line; "
-            + "the first line must be the query number \n OR \n (2) For Decryption: A response file - Contains the serialized Response object");
+    Option optionINPUTFILE = new Option("i", QuerierProps.INPUTFILE, true, "required - Fully qualified file containing input "
+        + "-- \n The input is either: \n (1) For Encryption: A query file - Contains the query selectors, one per line; "
+        + "the first line must be the query number \n OR \n (2) For Decryption: A response file - Contains the serialized Response object");
     optionINPUTFILE.setRequired(false);
     optionINPUTFILE.setArgName(QuerierProps.INPUTFILE);
     optionINPUTFILE.setType(String.class);
     options.addOption(optionINPUTFILE);
 
     // OUTPUTFILE
-    Option optionOUTPUTFILE = new Option("o", QuerierProps.OUTPUTFILE, true,
-        "required - Fully qualified file for the result output. "
-            + "\n The output file specifies either: \n (1) For encryption: \n \t (a) A file to contain the serialized Querier object named: " + "<outputFile>-"
-            + QuerierConst.QUERIER_FILETAG + "  AND \n \t " + "(b) A file to contain the serialized Query object named: <outputFile>-"
-            + QuerierConst.QUERY_FILETAG + "\n " + "OR \n (2) A file to contain the decryption results where each line is where each line "
-            + "corresponds to one hit and is a JSON object with the schema QuerySchema");
+    Option optionOUTPUTFILE = new Option("o", QuerierProps.OUTPUTFILE, true, "required - Fully qualified file for the result output. "
+        + "\n The output file specifies either: \n (1) For encryption: \n \t (a) A file to contain the serialized Querier object named: " + "<outputFile>-"
+        + QuerierConst.QUERIER_FILETAG + "  AND \n \t " + "(b) A file to contain the serialized Query object named: <outputFile>-" + QuerierConst.QUERY_FILETAG
+        + "\n " + "OR \n (2) A file to contain the decryption results where each line is where each line "
+        + "corresponds to one hit and is a JSON object with the schema QuerySchema");
     optionOUTPUTFILE.setRequired(false);
     optionOUTPUTFILE.setArgName(QuerierProps.OUTPUTFILE);
     optionOUTPUTFILE.setType(String.class);
@@ -244,8 +252,8 @@ public class QuerierCLI
 
     // CERTAINTY
     Option optionCERTAINTY = new Option("c", QuerierProps.CERTAINTY, true,
-        "required for encryption -- Certainty of prime generation for Paillier -- must  be greater than or " + "equal to "
-            + SystemConfiguration.getProperty("pir.primeCertainty") + "");
+        "required for encryption -- Certainty of prime generation for Paillier -- must  be greater than or " + "equal to " + SystemConfiguration
+            .getProperty("pir.primeCertainty") + "");
     optionCERTAINTY.setRequired(false);
     optionCERTAINTY.setArgName(QuerierProps.CERTAINTY);
     optionCERTAINTY.setType(String.class);
