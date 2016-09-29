@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ~ Licensed to the Apache Software Foundation (ASF) under one or more
+	~ contributor license agreements. See the NOTICE file distributed with ~
+	this work for additional information regarding copyright ownership. ~ The
+	ASF licenses this file to You under the Apache License, Version 2.0 ~ (the
+	"License"); you may not use this file except in compliance with ~ the License.
+	You may obtain a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0
+	~ ~ Unless required by applicable law or agreed to in writing, software ~
+	distributed under the License is distributed on an "AS IS" BASIS, ~ WITHOUT
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ~ See the
+	License for the specific language governing permissions and ~ limitations
+	under the License. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>apache-pirk</artifactId>
+        <groupId>org.apache.pirk</groupId>
+        <version>0.2.0-incubating-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>pirk-storm</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.pirk</groupId>
+            <artifactId>pirk-core</artifactId>
+            <version>0.2.0-incubating-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-core</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.10</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Sl4j modules -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.12</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>.travis.yml</exclude> <!-- Travis CI Build Descriptor File -->
+                            <exclude>findbugs-exclude.xml</exclude> <!-- False positives for FindBugs analysis -->
+                            <exclude>KEYS</exclude> <!-- GPG keys of Release Managers -->
+                            <exclude>eclipse*.xml</exclude> <!-- Exclude eclipse* xml -->
+                            <exclude>docs/*</exclude> <!-- Exclude docs -->
+                            <exclude>logs/*</exclude> <!-- Exclude logs -->
+                            <exclude>**/m2.conf</exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
+                            <exclude>**/pirk-?.log</exclude> <!--exclude logs from tests-->
+                            <exclude>src/main/resources/META-INF/**</exclude>
+                        </excludes>
+                    </configuration>
+                    <dependencies>
+                        <!-- workaround for RAT-158 -->
+                        <dependency>
+                            <groupId>org.apache.maven.doxia</groupId>
+                            <artifactId>doxia-core</artifactId>
+                            <version>1.6</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>xerces</groupId>
+                                    <artifactId>xercesImpl</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Coverage analysis for tests -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.7.201606060606</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <output>file</output>
+                                <dumpOnExit>true</dumpOnExit>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Report jacoco coverage to coveralls.io -->
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>4.2.0</version>
+                </plugin>
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.18</version>
+                    <configuration>
+                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        <argLine combine.children="append">-Xmx1G
+                            -Djava.net.preferIPv4Stack=true
+                        </argLine>
+                        <systemPropertyVariables>
+                            <log4j.configuration>${log4j.configuration}</log4j.configuration>
+                        </systemPropertyVariables>
+                        <forkCount>${pirk.forkCount}</forkCount>
+                        <reuseForks>${pirk.reuseForks}</reuseForks>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <!-- Force surefire to use JUnit -->
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit4</artifactId>
+                            <version>2.19.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                    <configuration>
+                        <compilerVersion>${javac.target}</compilerVersion>
+                        <source>${javac.target}</source>
+                        <target>${javac.target}</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>org/apache/pirk/benchmark/**</exclude>
+                            <exclude>*/openjdk/**</exclude>
+                            <exclude>generated-sources/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>org/apache/pirk/benchmark/**</exclude>
+                            <exclude>*/openjdk/**</exclude>
+                            <exclude>generated-sources/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version> <!-- older versions of maven-shade-plugin make JMH painful -->
+
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <id>main</id>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <shadedArtifactAttached>true</shadedArtifactAttached>
+                                <shadedClassifierName>exe</shadedClassifierName>
+                                <transformers>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    </transformer>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                    </transformer>
+                                </transformers>
+                                <filters>
+                                    <filter>
+                                        <artifact>*:*</artifact>
+                                        <excludes>
+                                            <exclude>META-INF/*.SF</exclude>
+                                            <exclude>META-INF/*.DSA</exclude>
+                                            <exclude>META-INF/*.RSA</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
+                            </configuration>
+                        </execution>
+
+                        <!-- in the version with benchmarks (pom-with-benchmarks.xml), this
+                            is where that <execution></execution> lives -->
+
+                    </executions>
+                </plugin>
+
+                <!--This plugin's configuration is used to store Eclipse m2e settings
+                    only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.scala-tools
+                                        </groupId>
+                                        <artifactId>
+                                            maven-scala-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.15.2,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>testCompile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.rat
+                                        </groupId>
+                                        <artifactId>
+                                            apache-rat-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.11,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>check</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <useReleaseProfile>true</useReleaseProfile>
+                        <releaseProfiles>signed_release</releaseProfiles>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <goals>deploy</goals>
+                        <tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
+                        <pushChanges>false</pushChanges>
+                        <localCheckout>true</localCheckout>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>default</id>
+                            <goals>
+                                <goal>perform</goal>
+                            </goals>
+                            <configuration>
+                                <pomFileName>pom.xml</pomFileName>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
+                    <configuration>
+                        <javadocDirectory>docs</javadocDirectory>
+                        <testJavadocDirectory>docs/test</testJavadocDirectory>
+                        <javadocVersion>1.8</javadocVersion>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+</project>

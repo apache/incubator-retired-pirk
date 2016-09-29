@@ -1,0 +1,2 @@
+org.apache.pirk.responder.wideskies.spark.SparkResponder
+org.apache.pirk.responder.wideskies.spark.streaming.SparkStreamingResponder
