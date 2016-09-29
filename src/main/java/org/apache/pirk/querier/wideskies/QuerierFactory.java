@@ -59,7 +59,7 @@ public class QuerierFactory
     int numThreads = Integer.parseInt(properties.getProperty(QuerierProps.NUMTHREADS));
     String queryType = properties.getProperty(QuerierProps.QUERYTYPE);
     int hashBitSize = Integer.parseInt(properties.getProperty(QuerierProps.HASHBITSIZE));
-    int bitSet = -1;
+    int bitSet = Integer.parseInt(properties.getProperty(QuerierProps.BITSET));
     String hashKey = properties.getProperty(QuerierProps.HASHKEY);
     int dataPartitionBitSize = Integer.parseInt(properties.getProperty(QuerierProps.DATAPARTITIONSIZE));
     int paillierBitSize = Integer.parseInt(properties.getProperty(QuerierProps.PAILLIERBITSIZE));
@@ -67,12 +67,6 @@ public class QuerierFactory
     boolean embedSelector = Boolean.valueOf(properties.getProperty(QuerierProps.EMBEDSELECTOR, "false"));
     boolean useMemLookupTable = Boolean.valueOf(properties.getProperty(QuerierProps.USEMEMLOOKUPTABLE, "false"));
     boolean useHDFSLookupTable = Boolean.valueOf(properties.getProperty(QuerierProps.USEHDFSLOOKUPTABLE, "false"));
-
-    if (properties.containsKey(QuerierProps.BITSET))
-    {
-      bitSet = Integer.parseInt(properties.getProperty(QuerierProps.BITSET));
-      logger.info("bitSet = " + bitSet);
-    }
 
     // Check to ensure we have a valid queryType
     if (QuerySchemaRegistry.get(queryType) == null)

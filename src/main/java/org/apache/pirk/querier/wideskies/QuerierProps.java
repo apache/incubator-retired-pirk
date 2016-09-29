@@ -145,6 +145,11 @@ public class QuerierProps
     {
       properties.setProperty(USEHDFSLOOKUPTABLE, "false");
     }
+
+    if (!properties.containsKey(BITSET))
+    {
+      properties.setProperty(BITSET, "-1");
+    }
   }
 
   public static boolean validateQuerierEncryptionProperties(Properties properties)
@@ -185,12 +190,6 @@ public class QuerierProps
     if (!properties.containsKey(CERTAINTY))
     {
       logger.info("For action='encrypt': Must have the option " + CERTAINTY);
-      valid = false;
-    }
-
-    if (!properties.containsKey(BITSET))
-    {
-      logger.info("For action='encrypt': Must have the option " + BITSET);
       valid = false;
     }
 
