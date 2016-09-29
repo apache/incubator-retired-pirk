@@ -26,7 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonSerializer extends SerializationService
 {
-  private ObjectMapper objectMapper = new ObjectMapper();
+  // We really only need the one objectMapper, I think.
+  public static final ObjectMapper objectMapper = new ObjectMapper();
 
   /**
    * Stores the given object on the output stream as JSON.

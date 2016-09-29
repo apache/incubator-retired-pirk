@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.slf4j.Logger;
@@ -35,34 +38,48 @@ import org.slf4j.LoggerFactory;
  * Note that the hash key is specific to the query. If we have hash collisions over our selector set, we will append integers to the key starting with 0 until
  * we no longer have collisions
  */
+@JsonDeserialize(using = QueryInfoDeserializer.class)
 public class QueryInfo implements Serializable, Cloneable
 {
+  @JsonSerialize
   private static final long serialVersionUID = 1L;
 
+  @JsonIgnore
   private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);
 
+  @JsonSerialize
   private UUID identifier; // the identifier of the query
+  @JsonSerialize
   private int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
 
+  @JsonSerialize
   private String queryType = null; // QueryType string const
 
+  @JsonSerialize
   private int hashBitSize = 0; // Bit size of the keyed hash function
+  @JsonSerialize
   private String hashKey; // Key for the keyed hash function
 
+  @JsonSerialize
   private int numBitsPerDataElement = 0; // total num bits per returned data value - defined relative to query type
+  @JsonSerialize
   private int dataPartitionBitSize = 0; // num of bits for each partition of an incoming data element, must be < 32 right now
+  @JsonSerialize
   private int numPartitionsPerDataElement = 0; // num partitions of size dataPartitionBitSize per data element
 
+  @JsonSerialize
   private boolean useExpLookupTable = false; // whether or not to generate and use the expLookupTable for encryption, it is very expensive to compute
 
+  @JsonSerialize
   private boolean useHDFSExpLookupTable = false; // whether or not to use the expLookupTable stored in HDFS
   // if it doesn't yet exist, it will be created within the cluster and stored in HDFS
 
+  @JsonSerialize
   private boolean embedSelector = true; // whether or not to embed the selector in the results - results in a very low
 
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
-
+  @JsonSerialize
   private QuerySchema qSchema = null;
 
   public QueryInfo(int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
