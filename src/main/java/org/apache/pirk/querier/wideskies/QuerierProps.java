@@ -59,28 +59,35 @@ public class QuerierProps
   // Decryption properties
   static final String QUERIERFILE = "querier.querierFile";
 
-  static final List<String> PROPSLIST = Arrays
-      .asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY, DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET,
-          CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM, SR_PROVIDER);
+  static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
+      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM,
+      SR_PROVIDER);
 
   public static boolean validateQuerierProperties()
   {
     setGeneralDefaults(SystemConfiguration.getProperties());
-    if(validateGeneralQuerierProperties(SystemConfiguration.getProperties())) {
+    if (validateGeneralQuerierProperties(SystemConfiguration.getProperties()))
+    {
       String action = SystemConfiguration.getProperty(ACTION).toLowerCase();
       // Action is either "encrypt" or "decrypt", or else we can't get here.
-      if(action.equals("encrypt")) {
+      if (action.equals("encrypt"))
+      {
         setEncryptionDefaults(SystemConfiguration.getProperties());
         return validateQuerierEncryptionProperties(SystemConfiguration.getProperties());
-      } else {
+      }
+      else
+      {
         return validateQuerierDecryptionProperties(SystemConfiguration.getProperties());
       }
-    } else {
+    }
+    else
+    {
       return false;
     }
   }
 
-  static void setGeneralDefaults(Properties properties) {
+  static void setGeneralDefaults(Properties properties)
+  {
     if (!properties.containsKey(EMBEDQUERYSCHEMA))
     {
       properties.setProperty(EMBEDQUERYSCHEMA, "true");
@@ -130,7 +137,8 @@ public class QuerierProps
     return valid;
   }
 
-  static void setEncryptionDefaults(Properties properties) {
+  static void setEncryptionDefaults(Properties properties)
+  {
     if (!properties.containsKey(EMBEDSELECTOR))
     {
       properties.setProperty(EMBEDSELECTOR, "true");

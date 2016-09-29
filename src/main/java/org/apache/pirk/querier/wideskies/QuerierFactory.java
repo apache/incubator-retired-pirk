@@ -43,16 +43,22 @@ public class QuerierFactory
   /**
    * Generates a {@link Querier} containing the encrypted query.
    *
-   * @param queryIdentifier A unique identifier for this query.
-   * @param selectors A list of query selectors.
-   * @param properties A list of properties specifying PIRK configuration options. Use {@link EncryptionPropertiesBuilder} to construct this object.
+   * @param queryIdentifier
+   *          A unique identifier for this query.
+   * @param selectors
+   *          A list of query selectors.
+   * @param properties
+   *          A list of properties specifying PIRK configuration options. Use {@link EncryptionPropertiesBuilder} to construct this object.
    * @return The encrypted query.
-   * @throws PIRException If the provided parameters violate one of the constraints of the PIRK algorithm.
-   * @throws InterruptedException If the encryption process is interrupted.
+   * @throws PIRException
+   *           If the provided parameters violate one of the constraints of the PIRK algorithm.
+   * @throws InterruptedException
+   *           If the encryption process is interrupted.
    */
   public static Querier createQuerier(UUID queryIdentifier, List<String> selectors, Properties properties) throws PIRException, InterruptedException
   {
-    if(!QuerierProps.validateQuerierEncryptionProperties(properties)) {
+    if (!QuerierProps.validateQuerierEncryptionProperties(properties))
+    {
       throw new PIRException("Invalid encryption properties.");
     }
     int numSelectors = selectors.size();
@@ -84,10 +90,9 @@ public class QuerierFactory
       throw new PIRException(message);
     }
 
-
     // Set the necessary QueryInfo and Paillier objects
-    QueryInfo queryInfo = new QueryInfo(queryIdentifier, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, useMemLookupTable,
-        embedSelector, useHDFSLookupTable);
+    QueryInfo queryInfo = new QueryInfo(queryIdentifier, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, useMemLookupTable, embedSelector,
+        useHDFSLookupTable);
 
     if ("true".equals(properties.getProperty(QuerierProps.EMBEDQUERYSCHEMA, "false")))
     {
@@ -102,7 +107,8 @@ public class QuerierFactory
     BigInteger val = (BigInteger.valueOf(2)).pow(exp);
     if (val.compareTo(paillier.getN()) != -1)
     {
-      String message = "The number of selectors = " + numSelectors + " must be such that " + "2^{numSelector*dataPartitionBitSize} < N = " + paillier.getN().toString(2);
+      String message = "The number of selectors = " + numSelectors + " must be such that " + "2^{numSelector*dataPartitionBitSize} < N = "
+          + paillier.getN().toString(2);
       logger.error(message);
       throw new PIRException(message);
 

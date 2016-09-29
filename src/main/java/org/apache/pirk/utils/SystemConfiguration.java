@@ -83,7 +83,8 @@ public class SystemConfiguration
    *
    * @return The system properties.
    */
-  public static Properties getProperties() {
+  public static Properties getProperties()
+  {
     return props;
   }
 
