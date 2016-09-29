@@ -18,20 +18,12 @@
  */
 package org.apache.pirk.test.utils;
 
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.pirk.encryption.Paillier;
+import org.apache.pirk.querier.wideskies.EncryptionPropertiesBuilder;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierConst;
+import org.apache.pirk.querier.wideskies.QuerierFactory;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
-import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
 import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.query.wideskies.QueryUtils;
 import org.apache.pirk.responder.wideskies.standalone.Responder;
 import org.apache.pirk.response.wideskies.Response;
@@ -41,10 +33,17 @@ import org.apache.pirk.schema.response.QueryResponseJSON;
 import org.apache.pirk.serialization.LocalFileSystemStore;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.QueryResultsWriter;
-import org.apache.pirk.utils.SystemConfiguration;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import static org.junit.Assert.fail;
 
 public class StandaloneQuery
 {
@@ -77,25 +76,16 @@ public class StandaloneQuery
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    boolean embedSelector = SystemConfiguration.getBooleanProperty("pirTest.embedSelector", false);
-    boolean useExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useExpLookupTable", false);
-    boolean useHDFSExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false);
+    Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder()
+          .dataPartitionBitSize(BaseTests.dataPartitionBitSize)
+          .hashBitSize(BaseTests.hashBitSize)
+          .hashKey(BaseTests.hashKey)
+          .paillierBitSize(BaseTests.paillierBitSize)
+          .certainty(BaseTests.certainty)
+          .queryType(queryType)
+          .build();
 
-    // Set the necessary objects
-    QueryInfo queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
-        queryType, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
-
-    if (SystemConfiguration.getBooleanProperty("pir.embedQuerySchema", false))
-    {
-      queryInfo.addQuerySchema(qSchema);
-    }
-
-    Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);
-
-    // Perform the encryption
-    logger.info("Performing encryption of the selectors - forming encrypted query vectors:");
-    EncryptQuery encryptQuery = new EncryptQuery(queryInfo, selectors, paillier);
-    Querier querier = encryptQuery.encrypt(numThreads);
+    Querier querier =  QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Dork with the embedSelectorMap to generate a false positive for the last valid selector in selectors

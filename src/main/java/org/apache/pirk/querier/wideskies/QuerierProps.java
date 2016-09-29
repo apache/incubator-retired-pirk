@@ -18,14 +18,13 @@
  */
 package org.apache.pirk.querier.wideskies;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.pirk.schema.data.DataSchemaLoader;
-import org.apache.pirk.schema.query.QuerySchemaLoader;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Properties constants and validation for the Querier
@@ -60,154 +59,179 @@ public class QuerierProps
   // Decryption properties
   static final String QUERIERFILE = "querier.querierFile";
 
-  static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
-      DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM,
-      SR_PROVIDER);
+  static final List<String> PROPSLIST = Arrays
+      .asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY, DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET,
+          CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM, SR_PROVIDER);
 
-  /**
-   * Validates the querier properties
-   *
-   */
   public static boolean validateQuerierProperties()
+  {
+    setGeneralDefaults(SystemConfiguration.getProperties());
+    if(validateGeneralQuerierProperties(SystemConfiguration.getProperties())) {
+      String action = SystemConfiguration.getProperty(ACTION).toLowerCase();
+      // Action is either "encrypt" or "decrypt", or else we can't get here.
+      if(action.equals("encrypt")) {
+        setEncryptionDefaults(SystemConfiguration.getProperties());
+        return validateQuerierEncryptionProperties(SystemConfiguration.getProperties());
+      } else {
+        return validateQuerierDecryptionProperties(SystemConfiguration.getProperties());
+      }
+    } else {
+      return false;
+    }
+  }
+
+  static void setGeneralDefaults(Properties properties) {
+    if (!properties.containsKey(EMBEDQUERYSCHEMA))
+    {
+      properties.setProperty(EMBEDQUERYSCHEMA, "true");
+    }
+    if (!properties.containsKey(NUMTHREADS))
+    {
+      properties.setProperty(NUMTHREADS, String.valueOf(Runtime.getRuntime().availableProcessors()));
+    }
+  }
+
+  public static boolean validateGeneralQuerierProperties(Properties properties)
   {
     boolean valid = true;
 
     // Parse general required properties
 
-    if (!SystemConfiguration.hasProperty(ACTION))
+    if (!properties.containsKey(ACTION))
     {
       logger.info("Must have the option " + ACTION);
       valid = false;
     }
-    String action = SystemConfiguration.getProperty(ACTION).toLowerCase();
+    String action = properties.getProperty(ACTION).toLowerCase();
     if (!action.equals("encrypt") && !action.equals("decrypt"))
     {
       logger.info("Unsupported action: " + action);
       valid = false;
     }
 
-    if (!SystemConfiguration.hasProperty(INPUTFILE))
+    if (!properties.containsKey(INPUTFILE))
     {
       logger.info("Must have the option " + INPUTFILE);
       valid = false;
     }
 
-    if (!SystemConfiguration.hasProperty(OUTPUTFILE))
+    if (!properties.containsKey(OUTPUTFILE))
     {
       logger.info("Must have the option " + OUTPUTFILE);
       valid = false;
     }
 
-    if (!SystemConfiguration.hasProperty(NUMTHREADS))
+    if (!properties.containsKey(NUMTHREADS))
     {
       logger.info("Must have the option " + NUMTHREADS);
       valid = false;
     }
 
-    // Parse general optional properties
-    if (!SystemConfiguration.hasProperty(EMBEDQUERYSCHEMA))
+    return valid;
+  }
+
+  static void setEncryptionDefaults(Properties properties) {
+    if (!properties.containsKey(EMBEDSELECTOR))
     {
-      SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+      properties.setProperty(EMBEDSELECTOR, "true");
     }
+
+    if (!properties.containsKey(USEMEMLOOKUPTABLE))
+    {
+      properties.setProperty(USEMEMLOOKUPTABLE, "false");
+    }
+
+    if (!properties.containsKey(USEHDFSLOOKUPTABLE))
+    {
+      properties.setProperty(USEHDFSLOOKUPTABLE, "false");
+    }
+
+    if (!properties.containsKey(BITSET))
+    {
+      properties.setProperty(BITSET, "-1");
+    }
+  }
+
+  public static boolean validateQuerierEncryptionProperties(Properties properties)
+  {
+    boolean valid = true;
 
     // Parse encryption properties
-
-    if (action.equals("encrypt"))
+    if (!properties.containsKey(QUERYTYPE))
     {
-      if (!SystemConfiguration.hasProperty(QUERYTYPE))
-      {
-        logger.info("For action='encrypt': Must have the option " + QUERYTYPE);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(HASHBITSIZE))
-      {
-        logger.info("For action='encrypt': Must have the option " + HASHBITSIZE);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(HASHKEY))
-      {
-        logger.info("For action='encrypt': Must have the option " + HASHKEY);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(DATAPARTITIONSIZE))
-      {
-        logger.info("For action='encrypt': Must have the option " + DATAPARTITIONSIZE);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(PAILLIERBITSIZE))
-      {
-        logger.info("For action='encrypt': Must have the option " + PAILLIERBITSIZE);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(CERTAINTY))
-      {
-        logger.info("For action='encrypt': Must have the option " + CERTAINTY);
-        valid = false;
-      }
-
-      if (!SystemConfiguration.hasProperty(BITSET))
-      {
-        logger.info("For action='encrypt': Must have the option " + BITSET);
-        valid = false;
-      }
-
-      if (SystemConfiguration.hasProperty(QUERYSCHEMAS))
-      {
-        SystemConfiguration.appendProperty("query.schemas", SystemConfiguration.getProperty(QUERYSCHEMAS));
-      }
-
-      if (SystemConfiguration.hasProperty(DATASCHEMAS))
-      {
-        SystemConfiguration.appendProperty("data.schemas", SystemConfiguration.getProperty(DATASCHEMAS));
-      }
-
-      if (!SystemConfiguration.hasProperty(EMBEDSELECTOR))
-      {
-        SystemConfiguration.setProperty(EMBEDSELECTOR, "true");
-      }
-
-      if (!SystemConfiguration.hasProperty(USEMEMLOOKUPTABLE))
-      {
-        SystemConfiguration.setProperty(USEMEMLOOKUPTABLE, "false");
-      }
-
-      if (!SystemConfiguration.hasProperty(USEHDFSLOOKUPTABLE))
-      {
-        SystemConfiguration.setProperty(USEHDFSLOOKUPTABLE, "false");
-      }
+      logger.info("For action='encrypt': Must have the option " + QUERYTYPE);
+      valid = false;
     }
 
-    // Parse decryption args
-    if (action.equals("decrypt"))
+    if (!properties.containsKey(HASHBITSIZE))
     {
-      if (!SystemConfiguration.hasProperty(QUERIERFILE))
-      {
-        logger.info("For action='decrypt': Must have the option " + QUERIERFILE);
-        valid = false;
-      }
+      logger.info("For action='encrypt': Must have the option " + HASHBITSIZE);
+      valid = false;
     }
 
-    // Load the new local query and data schemas
-    if (valid)
+    if (!properties.containsKey(HASHKEY))
     {
-      logger.info("loading schemas: dataSchemas = " + SystemConfiguration.getProperty("data.schemas") + " querySchemas = "
-          + SystemConfiguration.getProperty("query.schemas"));
-      try
-      {
-        DataSchemaLoader.initialize();
-        QuerySchemaLoader.initialize();
+      logger.info("For action='encrypt': Must have the option " + HASHKEY);
+      valid = false;
+    }
 
-      } catch (Exception e)
-      {
-        e.printStackTrace();
-      }
+    if (!properties.containsKey(DATAPARTITIONSIZE))
+    {
+      logger.info("For action='encrypt': Must have the option " + DATAPARTITIONSIZE);
+      valid = false;
+    }
+
+    if (!properties.containsKey(PAILLIERBITSIZE))
+    {
+      logger.info("For action='encrypt': Must have the option " + PAILLIERBITSIZE);
+      valid = false;
+    }
+
+    if (!properties.containsKey(CERTAINTY))
+    {
+      logger.info("For action='encrypt': Must have the option " + CERTAINTY);
+      valid = false;
+    }
+
+    if (properties.containsKey(QUERYSCHEMAS))
+    {
+      appendProperty(properties, "query.schemas", properties.getProperty(QUERYSCHEMAS));
+    }
+
+    if (properties.containsKey(DATASCHEMAS))
+    {
+      appendProperty(properties, "data.schemas", properties.getProperty(DATASCHEMAS));
     }
 
     return valid;
+  }
+
+  public static boolean validateQuerierDecryptionProperties(Properties properties)
+  {
+    boolean valid = true;
+
+    // Parse decryption args
+    if (!properties.containsKey(QUERIERFILE))
+    {
+      logger.info("For action='decrypt': Must have the option " + QUERIERFILE);
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  private static void appendProperty(Properties properties, String propertyName, String value)
+  {
+    String oldValue = properties.getProperty(propertyName);
+
+    if (oldValue != null && !oldValue.equals("none"))
+    {
+      oldValue += "," + value;
+    }
+    else
+    {
+      oldValue = value;
+    }
+    properties.setProperty(propertyName, oldValue);
   }
 }
