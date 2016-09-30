@@ -34,7 +34,6 @@ import java.util.UUID;
 /**
  * Handles encrypting a query and constructing a {@link Querier} given a {@link EncryptionPropertiesBuilder}.
  *
- * Created by ryan on 9/28/16.
  */
 public class QuerierFactory
 {

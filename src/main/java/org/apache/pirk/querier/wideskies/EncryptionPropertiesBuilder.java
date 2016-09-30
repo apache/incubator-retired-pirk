@@ -27,7 +27,6 @@ import static org.apache.pirk.querier.wideskies.QuerierProps.*;
 /**
  * Holds the various parameters related to creating a {@link Querier}.
  *
- * Created by ryan on 9/28/16.
  */
 public class EncryptionPropertiesBuilder
 {
