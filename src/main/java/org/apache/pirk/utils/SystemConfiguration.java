@@ -79,6 +79,16 @@ public class SystemConfiguration
   }
 
   /**
+   * Return the Properties object maintained by this class.
+   *
+   * @return The system properties.
+   */
+  public static Properties getProperties()
+  {
+    return props;
+  }
+
+  /**
    * Gets the specified property; returns <code>null</code> if the property isn't found.
    * 
    * @param propertyName
