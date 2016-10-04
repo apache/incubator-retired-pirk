@@ -74,7 +74,7 @@ public class QueryDeserializer extends StdDeserializer<Query> {
     return query;
   }
 
-  private QueryInfo deserializeInfo(JsonNode infoNode) throws IOException {
+  public static QueryInfo deserializeInfo(JsonNode infoNode) throws IOException {
     // Deserialize The Query Schema First.
     long infoVersion = infoNode.get("queryInfoVersion").asLong();
     if (infoVersion != QueryInfo.queryInfoSerialVersionUID) {
@@ -97,7 +97,7 @@ public class QueryDeserializer extends StdDeserializer<Query> {
     return info;
   }
 
-  private QuerySchema deserializeSchema(JsonNode schemaNode) throws IOException {
+  public static QuerySchema deserializeSchema(JsonNode schemaNode) throws IOException {
     // Deserialize The Query Schema First.
     long schemaVersion = schemaNode.get("querySchemaVersion").asLong();
     if (schemaVersion!= QuerySchema.querySchemaSerialVersionUID) {

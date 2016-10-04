@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
 
@@ -31,9 +32,12 @@ import org.apache.pirk.serialization.Storable;
  * Serialized and returned to the querier for decryption
  * 
  */
+@JsonDeserialize(using = ResponseDeserializer.class)
 public class Response implements Serializable, Storable
 {
-  private static final long serialVersionUID = 1L;
+  public static final long responseSerialVersionUID = 1L;
+
+  public final long responseVersion = responseSerialVersionUID;
 
   private QueryInfo queryInfo = null; // holds all query info
 
