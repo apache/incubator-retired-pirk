@@ -41,8 +41,11 @@ import org.slf4j.LoggerFactory;
 @JsonDeserialize(using = QueryDeserializer.class)
 public class Query implements Serializable, Storable
 {
-  @JsonSerialize
   public static final long querySerialVersionUID = 1L;
+
+  // So that we can serialize the version number in jackson.
+  @JsonSerialize
+  public final long queryVersion = querySerialVersionUID;
 
   @JsonIgnore
   private static final Logger logger = LoggerFactory.getLogger(Query.class);

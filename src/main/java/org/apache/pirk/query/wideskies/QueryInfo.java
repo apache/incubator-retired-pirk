@@ -38,11 +38,14 @@ import org.slf4j.LoggerFactory;
  * Note that the hash key is specific to the query. If we have hash collisions over our selector set, we will append integers to the key starting with 0 until
  * we no longer have collisions
  */
-@JsonDeserialize(using = QueryInfoDeserializer.class)
+//@JsonDeserialize(using = QueryInfoDeserializer.class)
 public class QueryInfo implements Serializable, Cloneable
 {
-  @JsonSerialize
   public static final long queryInfoSerialVersionUID = 1L;
+
+  // So that we can serialize the version number in jackson.
+  @JsonSerialize
+  public final long queryInfoVersion = queryInfoSerialVersionUID;
 
   @JsonIgnore
   private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);

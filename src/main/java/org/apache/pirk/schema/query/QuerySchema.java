@@ -35,9 +35,11 @@ import org.apache.pirk.schema.query.filter.DataFilter;
  */
 public class QuerySchema implements Serializable
 {
-
-  @JsonSerialize
   public static final long querySchemaSerialVersionUID = 1L;
+
+  // So that we can serialize the version number in jackson.
+  @JsonSerialize
+  public final long querySchemaVersion = querySchemaSerialVersionUID;
 
   // This schema's name.
   @JsonSerialize
