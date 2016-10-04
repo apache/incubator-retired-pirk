@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class Query implements Serializable, Storable
 {
   @JsonSerialize
-  private static final long serialVersionUID = 1L;
+  public static final long querySerialVersionUID = 1L;
 
   @JsonIgnore
   private static final Logger logger = LoggerFactory.getLogger(Query.class);

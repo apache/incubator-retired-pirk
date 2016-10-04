@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.pirk.schema.query.filter.DataFilter;
 
 /**
@@ -33,37 +35,48 @@ import org.apache.pirk.schema.query.filter.DataFilter;
  */
 public class QuerySchema implements Serializable
 {
-  private static final long serialVersionUID = 1L;
+
+  @JsonSerialize
+  public static final long querySchemaSerialVersionUID = 1L;
 
   // This schema's name.
+  @JsonSerialize
   private final String schemaName;
 
   // Name of the data schema associated with this query schema.
+  @JsonSerialize
   private final String dataSchemaName;
 
   // Name of element in the dataSchema to be used as the selector.
+  @JsonSerialize
   private final String selectorName;
 
   // Element names from the data schema to include in the response.
   // Order matters for packing/unpacking.
+  @JsonSerialize
   private final List<String> elementNames = new ArrayList<>();
 
   // Name of class to use in data filtering.
+  @JsonSerialize
   private final String filterTypeName;
 
   // Instance of the filterTypeName.
+  @JsonIgnore
   private final DataFilter filter;
 
   // Set of data schema element names on which to apply filtering.
+  @JsonSerialize
   private final Set<String> filteredElementNames = new HashSet<>();
 
   // Total number of bits to be returned for each data element hit.
+  @JsonSerialize
   private final int dataElementSize;
 
   // Additional fields by key,value
+  @JsonSerialize
   private final HashMap<String,String> additionalFields = new HashMap<>();
 
-  QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
+  public QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {
     this.schemaName = schemaName;
     this.dataSchemaName = dataSchemaName;
