@@ -104,9 +104,10 @@ public class QueryDeserializer extends StdDeserializer<Query> {
         infoNode.get("queryType").asText(),
         infoNode.get("useExpLookupTable").asBoolean(),
         infoNode.get("embedSelector").asBoolean(),
-        infoNode.get("useHDFSExpLookupTable").asBoolean()
+        infoNode.get("useHDFSExpLookupTable").asBoolean(),
+        infoNode.get("numBitsPerDataElement").asInt(),
+        querySchema
     );
-    info.addQuerySchema(querySchema);
     return info;
   }
 

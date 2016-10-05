@@ -97,7 +97,6 @@ public class QueryInfo implements Serializable, Cloneable {
     useExpLookupTable = useExpLookupTableInput;
     useHDFSExpLookupTable = useHDFSExpLookupTableInput;
     embedSelector = embedSelectorInput;
-
     numBitsPerDataElement = QuerySchemaRegistry.get(queryType).getDataElementSize();
     dataPartitionBitSize = dataPartitionBitSizeInput;
     numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
@@ -105,6 +104,35 @@ public class QueryInfo implements Serializable, Cloneable {
     if (embedSelectorInput) {
       numPartitionsPerDataElement += 4; // using a 8-bit partition size and a 32-bit embedded selector
     }
+
+    printQueryInfo();
+  }
+
+  public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+                   boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput, int numBitsPerDataElementInput, QuerySchema querySchemaInput)
+  {
+    identifier = identifierInput;
+    queryType = queryTypeInput;
+
+    numSelectors = numSelectorsInput;
+
+    hashBitSize = hashBitSizeInput;
+    hashKey = hashKeyInput;
+
+    useExpLookupTable = useExpLookupTableInput;
+    useHDFSExpLookupTable = useHDFSExpLookupTableInput;
+    embedSelector = embedSelectorInput;
+
+    numBitsPerDataElement = numBitsPerDataElementInput;
+    dataPartitionBitSize = dataPartitionBitSizeInput;
+    numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
+
+    if (embedSelectorInput)
+    {
+      numPartitionsPerDataElement += 4; // using a 8-bit partition size and a 32-bit embedded selector
+    }
+
+    addQuerySchema(querySchemaInput);
 
     printQueryInfo();
   }
