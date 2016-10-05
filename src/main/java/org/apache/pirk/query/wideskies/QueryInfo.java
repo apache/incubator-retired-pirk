@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
@@ -38,36 +36,31 @@ import org.slf4j.LoggerFactory;
  * Note that the hash key is specific to the query. If we have hash collisions over our selector set, we will append integers to the key starting with 0 until
  * we no longer have collisions
  */
-//@JsonDeserialize(using = QueryInfoDeserializer.class)
-public class QueryInfo implements Serializable, Cloneable
-{
+public class QueryInfo implements Serializable, Cloneable {
   public static final long queryInfoSerialVersionUID = 1L;
 
   // So that we can serialize the version number in jackson.
-  @JsonSerialize
   public final long queryInfoVersion = queryInfoSerialVersionUID;
 
-  @JsonIgnore
   private static final Logger logger = LoggerFactory.getLogger(QueryInfo.class);
 
-  @JsonSerialize
   private UUID identifier; // the identifier of the query
-  @JsonSerialize
+
   private int numSelectors = 0; // the number of selectors in the query, given by \floor{paillerBitSize/dataPartitionBitSize}
 
-  @JsonSerialize
+
   private String queryType = null; // QueryType string const
 
-  @JsonSerialize
+
   private int hashBitSize = 0; // Bit size of the keyed hash function
-  @JsonSerialize
+
   private String hashKey; // Key for the keyed hash function
 
-  @JsonSerialize
+
   private int numBitsPerDataElement = 0; // total num bits per returned data value - defined relative to query type
-  @JsonSerialize
+
   private int dataPartitionBitSize = 0; // num of bits for each partition of an incoming data element, must be < 32 right now
-  @JsonSerialize
+
   private int numPartitionsPerDataElement = 0; // num partitions of size dataPartitionBitSize per data element
 
   @JsonSerialize
@@ -77,24 +70,22 @@ public class QueryInfo implements Serializable, Cloneable
   private boolean useHDFSExpLookupTable = false; // whether or not to use the expLookupTable stored in HDFS
   // if it doesn't yet exist, it will be created within the cluster and stored in HDFS
 
-  @JsonSerialize
+
   private boolean embedSelector = true; // whether or not to embed the selector in the results - results in a very low
 
   // false positive rate for variable length selectors and a zero false positive rate
   // for selectors of fixed size < 32 bits
-  @JsonSerialize
+
   private QuerySchema qSchema = null;
 
   public QueryInfo(int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
-      boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
-  {
+                   boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput) {
     this(UUID.randomUUID(), numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, useExpLookupTableInput,
         embedSelectorInput, useHDFSExpLookupTableInput);
   }
 
   public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
-      boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
-  {
+                   boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput) {
     identifier = identifierInput;
     queryType = queryTypeInput;
 
@@ -111,16 +102,14 @@ public class QueryInfo implements Serializable, Cloneable
     dataPartitionBitSize = dataPartitionBitSizeInput;
     numPartitionsPerDataElement = numBitsPerDataElement / dataPartitionBitSizeInput;
 
-    if (embedSelectorInput)
-    {
+    if (embedSelectorInput) {
       numPartitionsPerDataElement += 4; // using a 8-bit partition size and a 32-bit embedded selector
     }
 
     printQueryInfo();
   }
 
-  public QueryInfo(Map queryInfoMap)
-  {
+  public QueryInfo(Map queryInfoMap) {
     // The Storm Config serializes the map as a json and reads back in with numeric values as longs.
     // So numerics need to be cast as a long and call .intValue. However, in PirkHashScheme the map contains ints.
     identifier = UUID.fromString((String) queryInfoMap.get("uuid"));
@@ -129,15 +118,13 @@ public class QueryInfo implements Serializable, Cloneable
     useExpLookupTable = (boolean) queryInfoMap.get("useExpLookupTable");
     useHDFSExpLookupTable = (boolean) queryInfoMap.get("useHDFSExpLookupTable");
     embedSelector = (boolean) queryInfoMap.get("embedSelector");
-    try
-    {
+    try {
       numSelectors = ((Long) queryInfoMap.get("numSelectors")).intValue();
       hashBitSize = ((Long) queryInfoMap.get("hashBitSize")).intValue();
       numBitsPerDataElement = ((Long) queryInfoMap.get("numBitsPerDataElement")).intValue();
       numPartitionsPerDataElement = ((Long) queryInfoMap.get("numPartitionsPerDataElement")).intValue();
       dataPartitionBitSize = ((Long) queryInfoMap.get("dataPartitionsBitSize")).intValue();
-    } catch (ClassCastException e)
-    {
+    } catch (ClassCastException e) {
       numSelectors = (int) queryInfoMap.get("numSelectors");
       hashBitSize = (int) queryInfoMap.get("hashBitSize");
       numBitsPerDataElement = (int) queryInfoMap.get("numBitsPerDataElement");
@@ -146,64 +133,52 @@ public class QueryInfo implements Serializable, Cloneable
     }
   }
 
-  public UUID getIdentifier()
-  {
+  public UUID getIdentifier() {
     return identifier;
   }
 
-  public String getQueryType()
-  {
+  public String getQueryType() {
     return queryType;
   }
 
-  public int getNumSelectors()
-  {
+  public int getNumSelectors() {
     return numSelectors;
   }
 
-  public int getHashBitSize()
-  {
+  public int getHashBitSize() {
     return hashBitSize;
   }
 
-  public String getHashKey()
-  {
+  public String getHashKey() {
     return hashKey;
   }
 
-  public int getNumBitsPerDataElement()
-  {
+  public int getNumBitsPerDataElement() {
     return numBitsPerDataElement;
   }
 
-  public int getNumPartitionsPerDataElement()
-  {
+  public int getNumPartitionsPerDataElement() {
     return numPartitionsPerDataElement;
   }
 
-  public int getDataPartitionBitSize()
-  {
+  public int getDataPartitionBitSize() {
     return dataPartitionBitSize;
   }
 
-  public boolean useExpLookupTable()
-  {
+  public boolean useExpLookupTable() {
     return useExpLookupTable;
   }
 
-  public boolean useHDFSExpLookupTable()
-  {
+  public boolean useHDFSExpLookupTable() {
     return useHDFSExpLookupTable;
   }
 
-  public boolean getEmbedSelector()
-  {
+  public boolean getEmbedSelector() {
     return embedSelector;
   }
 
-  public Map toMap()
-  {
-    Map<String,Object> queryInfo = new HashMap<String,Object>();
+  public Map toMap() {
+    Map<String, Object> queryInfo = new HashMap<String, Object>();
     queryInfo.put("uuid", identifier.toString());
     queryInfo.put("queryType", queryType);
     queryInfo.put("numSelectors", numSelectors);
@@ -219,18 +194,15 @@ public class QueryInfo implements Serializable, Cloneable
     return queryInfo;
   }
 
-  public void addQuerySchema(QuerySchema qSchemaIn)
-  {
+  public void addQuerySchema(QuerySchema qSchemaIn) {
     qSchema = qSchemaIn;
   }
 
-  public QuerySchema getQuerySchema()
-  {
+  public QuerySchema getQuerySchema() {
     return qSchema;
   }
 
-  public void printQueryInfo()
-  {
+  public void printQueryInfo() {
     logger.info("identifier = " + identifier + " numSelectors = " + numSelectors + " hashBitSize = " + hashBitSize + " hashKey = " + hashKey
         + " dataPartitionBitSize = " + dataPartitionBitSize + " numBitsPerDataElement = " + numBitsPerDataElement + " numPartitionsPerDataElement = "
         + numPartitionsPerDataElement + " queryType = " + queryType + " useExpLookupTable = " + useExpLookupTable + " useHDFSExpLookupTable = "
@@ -238,13 +210,10 @@ public class QueryInfo implements Serializable, Cloneable
   }
 
   @Override
-  public QueryInfo clone()
-  {
-    try
-    {
+  public QueryInfo clone() {
+    try {
       return (QueryInfo) super.clone();
-    } catch (CloneNotSupportedException e)
-    {
+    } catch (CloneNotSupportedException e) {
       throw new RuntimeException(e);
     }
   }

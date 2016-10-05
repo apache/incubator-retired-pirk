@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.serialization.Storable;
@@ -29,9 +30,11 @@ import org.apache.pirk.serialization.Storable;
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
  */
-public class Querier implements Serializable, Storable
-{
-  private static final long serialVersionUID = 1L;
+@JsonDeserialize(using = QuerierDeserializer.class)
+public class Querier implements Serializable, Storable {
+  public static final long querierSerialVersionUID = 1L;
+
+  public final long querierVersion = querierSerialVersionUID;
 
   private Query query = null; // contains the query vectors and functionality
 
@@ -42,10 +45,9 @@ public class Querier implements Serializable, Storable
   // map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
-  private Map<Integer,String> embedSelectorMap = null;
+  private Map<Integer, String> embedSelectorMap = null;
 
-  public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer,String> embedSelectorMapInput)
-  {
+  public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer, String> embedSelectorMapInput) {
     selectors = selectorsInput;
 
     paillier = paillierInput;
@@ -55,23 +57,19 @@ public class Querier implements Serializable, Storable
     embedSelectorMap = embedSelectorMapInput;
   }
 
-  public Query getQuery()
-  {
+  public Query getQuery() {
     return query;
   }
 
-  public Paillier getPaillier()
-  {
+  public Paillier getPaillier() {
     return paillier;
   }
 
-  public List<String> getSelectors()
-  {
+  public List<String> getSelectors() {
     return selectors;
   }
 
-  public Map<Integer,String> getEmbedSelectorMap()
-  {
+  public Map<Integer, String> getEmbedSelectorMap() {
     return embedSelectorMap;
   }
 }

@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -65,31 +66,24 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Ref: Paillier, Pascal. "Public-Key Cryptosystems Based on Composite Degree Residuosity Classes." EUROCRYPT'99.
  */
-public final class Paillier implements Serializable
-{
+public final class Paillier implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private static final Logger logger = LoggerFactory.getLogger(Paillier.class);
 
   private static final SecureRandom secureRandom;
 
-  static
-  {
-    try
-    {
+  static {
+    try {
       String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
-      if (alg == null)
-      {
+      if (alg == null) {
         secureRandom = new SecureRandom();
-      }
-      else
-      {
+      } else {
         String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
         secureRandom = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
       }
       logger.info("Using secure random from " + secureRandom.getProvider().getName() + ":" + secureRandom.getAlgorithm());
-    } catch (GeneralSecurityException e)
-    {
+    } catch (GeneralSecurityException e) {
       logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
       throw new RuntimeException("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
     }
@@ -99,33 +93,30 @@ public final class Paillier implements Serializable
   private BigInteger q; // large prime
   private BigInteger N; // N=pq, RSA modulus
 
+  @JsonIgnore
   private BigInteger NSquared; // NSquared = N^2
+  @JsonIgnore
   private BigInteger lambdaN; // lambda(N) = lcm(p-1,q-1), Carmichael function of N
+  @JsonIgnore
   private BigInteger w; // lambda(N)^-1 mod N
 
   private final int bitLength; // bit length of the modulus N
 
   /**
    * Creates a Paillier algorithm with all parameters specified.
-   * 
-   * @param p
-   *          First large prime.
-   * @param q
-   *          Second large prime.
-   * @param bitLength
-   *          Bit length of the modulus {@code N}.
-   * @throws IllegalArgumentException
-   *           If {@code p} or {@code q} do not satisfy primality constraints.
+   *
+   * @param p         First large prime.
+   * @param q         Second large prime.
+   * @param bitLength Bit length of the modulus {@code N}.
+   * @throws IllegalArgumentException If {@code p} or {@code q} do not satisfy primality constraints.
    */
-  public Paillier(BigInteger p, BigInteger q, int bitLength)
-  {
+  public Paillier(BigInteger p, BigInteger q, int bitLength) {
     this.bitLength = bitLength;
 
     // Verify the prime conditions are satisfied
     int primeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
     BigInteger three = BigInteger.valueOf(3);
-    if ((p.compareTo(three) < 0) || (q.compareTo(three) < 0) || p.equals(q) || !p.isProbablePrime(primeCertainty) || !q.isProbablePrime(primeCertainty))
-    {
+    if ((p.compareTo(three) < 0) || (q.compareTo(three) < 0) || p.equals(q) || !p.isProbablePrime(primeCertainty) || !q.isProbablePrime(primeCertainty)) {
       throw new IllegalArgumentException("p = " + p + " q = " + q + " do not satisfy primality constraints");
     }
 
@@ -146,16 +137,12 @@ public final class Paillier implements Serializable
    * <p>
    * The probability that the generated keys represent primes will exceed (1 - (1/2)<sup>{@code certainty}</sup>). The execution time of this constructor is
    * proportional to the value of this parameter.
-   * 
-   * @param bitLength
-   *          The bit length of the resulting modulus {@code N}.
-   * @param certainty
-   *          The probability that the new {@code p} and {@code q} represent prime numbers.
-   * @throws IllegalArgumentException
-   *           If the {@code certainty} is less than the system allowed lower bound.
+   *
+   * @param bitLength The bit length of the resulting modulus {@code N}.
+   * @param certainty The probability that the new {@code p} and {@code q} represent prime numbers.
+   * @throws IllegalArgumentException If the {@code certainty} is less than the system allowed lower bound.
    */
-  public Paillier(int bitLength, int certainty)
-  {
+  public Paillier(int bitLength, int certainty) {
     this(bitLength, certainty, -1);
   }
 
@@ -168,25 +155,18 @@ public final class Paillier implements Serializable
    * proportional to the value of this parameter.
    * <p>
    * When ensureBitSet > -1 the value of bit "{@code ensureBitSet}" in modulus {@code N} will be set.
-   * 
-   * @param bitLength
-   *          The bit length of the resulting modulus {@code N}.
-   * @param certainty
-   *          The probability that the new {@code p} and {@code q} represent prime numbers.
-   * @param ensureBitSet
-   *          index of bit in {@code N} to ensure is set.
-   * @throws IllegalArgumentException
-   *           If the {@code certainty} is less than the system allowed lower bound, or the index of {@code ensureBitSet} is greater than the {@code bitLength}.
+   *
+   * @param bitLength    The bit length of the resulting modulus {@code N}.
+   * @param certainty    The probability that the new {@code p} and {@code q} represent prime numbers.
+   * @param ensureBitSet index of bit in {@code N} to ensure is set.
+   * @throws IllegalArgumentException If the {@code certainty} is less than the system allowed lower bound, or the index of {@code ensureBitSet} is greater than the {@code bitLength}.
    */
-  public Paillier(int bitLength, int certainty, int ensureBitSet)
-  {
+  public Paillier(int bitLength, int certainty, int ensureBitSet) {
     int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 128);
-    if (certainty < systemPrimeCertainty)
-    {
+    if (certainty < systemPrimeCertainty) {
       throw new IllegalArgumentException("Input certainty = " + certainty + " is less than allowed system lower bound = " + systemPrimeCertainty);
     }
-    if (ensureBitSet >= bitLength)
-    {
+    if (ensureBitSet >= bitLength) {
       throw new IllegalArgumentException("ensureBitSet = " + ensureBitSet + " must be less than bitLengthInput = " + bitLength);
     }
     this.bitLength = bitLength;
@@ -198,41 +178,37 @@ public final class Paillier implements Serializable
 
   /**
    * Returns the value of the large prime {@code p}.
-   * 
+   *
    * @return p.
    */
-  public BigInteger getP()
-  {
+  public BigInteger getP() {
     return p;
   }
 
   /**
    * Returns the value of the large prime {@code q}.
-   * 
+   *
    * @return q.
    */
-  public BigInteger getQ()
-  {
+  public BigInteger getQ() {
     return q;
   }
 
   /**
    * Returns the RSA modulus value {@code N}.
-   * 
+   *
    * @return N, the product of {@code p} and {@code q}.
    */
-  public BigInteger getN()
-  {
+  public BigInteger getN() {
     return N;
   }
 
   /**
    * Returns the value of {@code N}<sup>2</sup>.
-   * 
+   *
    * @return N squared.
    */
-  public BigInteger getNSquared()
-  {
+  public BigInteger getNSquared() {
     return NSquared;
   }
 
@@ -240,32 +216,27 @@ public final class Paillier implements Serializable
    * Returns the value of Carmichael's function at {@code N}.
    * <p>
    * The Carmichael function of {@code N} is the least common multiple of {@code p-1} and {@code q-1},
-   * 
+   *
    * @return Carmichael's function at {@code N}.
    */
-  public BigInteger getLambdaN()
-  {
+  public BigInteger getLambdaN() {
     return lambdaN;
   }
 
   /**
    * Returns the bit length of the modulus {@code N}.
-   * 
+   *
    * @return the bit length, as an integer.
    */
-  public int getBitLength()
-  {
+  public int getBitLength() {
     return bitLength;
   }
 
-  private void generateKeys(int bitLength, int certainty, final int ensureBitSet)
-  {
+  private void generateKeys(int bitLength, int certainty, final int ensureBitSet) {
     getKeys(bitLength, certainty);
 
-    if (ensureBitSet > -1)
-    {
-      while (!N.testBit(ensureBitSet))
-      {
+    if (ensureBitSet > -1) {
+      while (!N.testBit(ensureBitSet)) {
         logger.info("testBit false\n N = " + N.toString(2));
         getKeys(bitLength, certainty);
       }
@@ -273,8 +244,7 @@ public final class Paillier implements Serializable
     }
   }
 
-  private void getKeys(int bitLength, int certainty)
-  {
+  private void getKeys(int bitLength, int certainty) {
     // Generate the primes
     BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, secureRandom);
     p = pq[0];
@@ -283,8 +253,7 @@ public final class Paillier implements Serializable
     N = p.multiply(q);
   }
 
-  private void setDerivativeElements()
-  {
+  private void setDerivativeElements() {
     NSquared = N.multiply(N);
 
     // lambda(N) = lcm(p-1,q-1)
@@ -296,18 +265,14 @@ public final class Paillier implements Serializable
   /**
    * Returns the encrypted value of {@code m} using a generated random value.
    *
-   * @param m
-   *          the value to be encrypted.
+   * @param m the value to be encrypted.
    * @return the encrypted value
-   * @throws PIRException
-   *           If {@code m} is not less than @{code N}.
+   * @throws PIRException If {@code m} is not less than @{code N}.
    */
-  public BigInteger encrypt(BigInteger m) throws PIRException
-  {
+  public BigInteger encrypt(BigInteger m) throws PIRException {
     // Generate a random value r in (Z/NZ)*
     BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
-    while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO))
-    {
+    while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO)) {
       r = (new BigInteger(bitLength, secureRandom)).mod(N);
     }
 
@@ -316,19 +281,14 @@ public final class Paillier implements Serializable
 
   /**
    * Returns the ciphertext of a message using the given random value.
-   * 
-   * @param m
-   *          the value to be encrypted.
-   * @param r
-   *          the random value to use in the Pailler encryption.
+   *
+   * @param m the value to be encrypted.
+   * @param r the random value to use in the Pailler encryption.
    * @return the encrypted value.
-   * @throws PIRException
-   *           If {@code m} is not less than @{code N}.
+   * @throws PIRException If {@code m} is not less than @{code N}.
    */
-  public BigInteger encrypt(BigInteger m, BigInteger r) throws PIRException
-  {
-    if (m.compareTo(N) >= 0)
-    {
+  public BigInteger encrypt(BigInteger m, BigInteger r) throws PIRException {
+    if (m.compareTo(N) >= 0) {
       throw new PIRException("m  = " + m.toString(2) + " is greater than or equal to N = " + N.toString(2));
     }
 
@@ -341,13 +301,11 @@ public final class Paillier implements Serializable
 
   /**
    * Returns the plaintext message for a given ciphertext.
-   * 
-   * @param c
-   *          an encrypted value.
+   *
+   * @param c an encrypted value.
    * @return the corresponding plaintext value.
    */
-  public BigInteger decrypt(BigInteger c)
-  {
+  public BigInteger decrypt(BigInteger c) {
     // w = lambda(N)^-1 mod N; x = c^(lambda(N)) mod N^2; y = (x-1)/N; d = yw mod N
     BigInteger x = ModPowAbstraction.modPow(c, lambdaN, NSquared);
     BigInteger y = (x.subtract(BigInteger.ONE)).divide(N);
@@ -355,8 +313,7 @@ public final class Paillier implements Serializable
     return (y.multiply(w)).mod(N);
   }
 
-  private String parametersToString()
-  {
+  private String parametersToString() {
     return "p = " + p.intValue() + " q = " + q.intValue() + " N = " + N.intValue() + " NSquared = " + NSquared.intValue() + " lambdaN = " + lambdaN.intValue()
         + " bitLength = " + bitLength;
   }

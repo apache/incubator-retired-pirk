@@ -24,40 +24,31 @@ import java.io.OutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonSerializer extends SerializationService
-{
+public class JsonSerializer extends SerializationService {
   // We really only need the one objectMapper, I think.
   public static final ObjectMapper objectMapper = new ObjectMapper();
 
   /**
    * Stores the given object on the output stream as JSON.
    *
-   * @param outputStream
-   *          The stream on which to store the object.
-   * @param obj
-   *          The object to be stored.
-   * @throws IOException
-   *           If a problem occurs storing the object on the given stream.
+   * @param outputStream The stream on which to store the object.
+   * @param obj          The object to be stored.
+   * @throws IOException If a problem occurs storing the object on the given stream.
    */
   @Override
-  public void write(OutputStream outputStream, Storable obj) throws IOException
-  {
+  public void write(OutputStream outputStream, Storable obj) throws IOException {
     objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
   }
 
   /**
    * Read a JSON string from the given input stream and returns the Object representation.
    *
-   * @param inputStream
-   *          The stream from which to read the object.
-   * @param classType
-   *          The type of object being retrieved.
-   * @throws IOException
-   *           If a problem occurs reading the object from the stream.
+   * @param inputStream The stream from which to read the object.
+   * @param classType   The type of object being retrieved.
+   * @throws IOException If a problem occurs reading the object from the stream.
    */
   @Override
-  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
-  {
+  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException {
     return objectMapper.readValue(inputStream, classType);
   }
 

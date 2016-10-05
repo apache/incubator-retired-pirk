@@ -22,13 +22,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.apache.pirk.query.wideskies.QueryDeserializer;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.response.wideskies.Response;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -39,9 +37,13 @@ import java.util.TreeMap;
  */
 public class ResponseDeserializer extends StdDeserializer<Response> {
 
-  public ResponseDeserializer() { this(null); }
+  public ResponseDeserializer() {
+    this(null);
+  }
 
-  public ResponseDeserializer(Class<?> vc) { super(vc);}
+  public ResponseDeserializer(Class<?> vc) {
+    super(vc);
+  }
 
   private static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -60,7 +62,8 @@ public class ResponseDeserializer extends StdDeserializer<Response> {
     // Form the initial response object
     Response response = new Response(queryInfo);
     // Get the response elements
-    TreeMap<Integer,BigInteger> responseElements = objectMapper.readValue(node.get("queryElements").toString(), new TypeReference<TreeMap<Integer,BigInteger>>(){});
+    TreeMap<Integer, BigInteger> responseElements = objectMapper.readValue(node.get("responseElements").toString(), new TypeReference<TreeMap<Integer, BigInteger>>() {
+    });
     response.setResponseElements(responseElements);
 
     return response;

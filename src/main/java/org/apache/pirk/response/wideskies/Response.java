@@ -30,42 +30,35 @@ import org.apache.pirk.serialization.Storable;
  * Class to hold the encrypted response elements for the PIR query
  * <p>
  * Serialized and returned to the querier for decryption
- * 
  */
 @JsonDeserialize(using = ResponseDeserializer.class)
-public class Response implements Serializable, Storable
-{
+public class Response implements Serializable, Storable {
   public static final long responseSerialVersionUID = 1L;
 
   public final long responseVersion = responseSerialVersionUID;
 
   private QueryInfo queryInfo = null; // holds all query info
 
-  private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
+  private TreeMap<Integer, BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
-  public Response(QueryInfo queryInfoInput)
-  {
+  public Response(QueryInfo queryInfoInput) {
     queryInfo = queryInfoInput;
     responseElements = new TreeMap<>();
   }
 
-  public TreeMap<Integer,BigInteger> getResponseElements()
-  {
+  public TreeMap<Integer, BigInteger> getResponseElements() {
     return responseElements;
   }
 
-  public void setResponseElements(TreeMap<Integer,BigInteger> elements)
-  {
+  public void setResponseElements(TreeMap<Integer, BigInteger> elements) {
     responseElements = elements;
   }
 
-  public QueryInfo getQueryInfo()
-  {
+  public QueryInfo getQueryInfo() {
     return queryInfo;
   }
 
-  public void addElement(int position, BigInteger element)
-  {
+  public void addElement(int position, BigInteger element) {
     responseElements.put(position, element);
   }
 }

@@ -23,24 +23,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/*
+/**
  * Ability to read and write objects to/from a stream.
  */
-public abstract class SerializationService
-{
+public abstract class SerializationService {
   public abstract <T> T read(InputStream stream, Class<T> type) throws IOException;
 
   public abstract void write(OutputStream w, Storable obj) throws IOException;
 
-  public byte[] toBytes(Storable obj)
-  {
+  public byte[] toBytes(Storable obj) {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-    try
-    {
+    try {
       write(bos, obj);
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
 

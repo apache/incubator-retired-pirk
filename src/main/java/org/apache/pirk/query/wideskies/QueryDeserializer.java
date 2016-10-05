@@ -43,7 +43,7 @@ public class QueryDeserializer extends StdDeserializer<Query> {
 
   private static final Logger logger = LoggerFactory.getLogger(QueryDeserializer.class);
 
-  public QueryDeserializer(){
+  public QueryDeserializer() {
     this(null);
   }
 
@@ -60,13 +60,14 @@ public class QueryDeserializer extends StdDeserializer<Query> {
     long queryVersion = node.get("queryVersion").asLong();
     if (queryVersion != Query.querySerialVersionUID) {
       throw new IOException("Attempt to deserialize unsupported query version. Supported: "
-        + Query.querySerialVersionUID + "; Received: " + queryVersion);
+          + Query.querySerialVersionUID + "; Received: " + queryVersion);
     }
     // Then deserialize the Query Info
     QueryInfo queryInfo = deserializeInfo(node.get("queryInfo"));
-    SortedMap<Integer,BigInteger> queryElements = objectMapper.readValue(node.get("queryElements").toString(), new TypeReference<SortedMap<Integer,BigInteger>>(){});
-    BigInteger N = new BigInteger(node.get("N").asText());
-    BigInteger NSquared = new BigInteger(node.get("NSquared").asText());
+    SortedMap<Integer, BigInteger> queryElements = objectMapper.readValue(node.get("queryElements").toString(), new TypeReference<SortedMap<Integer, BigInteger>>() {
+    });
+    BigInteger N = new BigInteger(node.get("n").asText());
+    BigInteger NSquared = new BigInteger(node.get("nsquared").asText());
 
 
     Query query = new Query(queryInfo, N, NSquared, queryElements);
@@ -74,6 +75,13 @@ public class QueryDeserializer extends StdDeserializer<Query> {
     return query;
   }
 
+  /**
+   * Deserializes a QueryInfo JsonNode
+   *
+   * @param infoNode A JsonNode at the root of a serialied QueryInfo object.
+   * @return A QueryInfo object of the deserialized Json.
+   * @throws IOException
+   */
   public static QueryInfo deserializeInfo(JsonNode infoNode) throws IOException {
     // Deserialize The Query Schema First.
     long infoVersion = infoNode.get("queryInfoVersion").asLong();
@@ -81,7 +89,12 @@ public class QueryDeserializer extends StdDeserializer<Query> {
       throw new IOException("Attempt to deserialize unsupported query info version. Supported: "
           + QueryInfo.queryInfoSerialVersionUID + "; Received: " + infoVersion);
     }
-    QuerySchema querySchema = deserializeSchema(infoNode.get("qSchema"));
+    QuerySchema querySchema;
+    if (infoNode.get("querySchema").isNull()) {
+      querySchema = null;
+    } else {
+      querySchema = deserializeSchema(infoNode.get("querySchema"));
+    }
     QueryInfo info = new QueryInfo(
         UUID.fromString(infoNode.get("identifier").asText()),
         infoNode.get("numSelectors").asInt(),
@@ -97,10 +110,17 @@ public class QueryDeserializer extends StdDeserializer<Query> {
     return info;
   }
 
+  /**
+   * Deserializes a QuerySchema JsonNode
+   *
+   * @param schemaNode A JsonNode at the root of a serialized QuerySchema object.
+   * @return A QuerySchema object of the deserialized Json.
+   * @throws IOException
+   */
   public static QuerySchema deserializeSchema(JsonNode schemaNode) throws IOException {
     // Deserialize The Query Schema First.
     long schemaVersion = schemaNode.get("querySchemaVersion").asLong();
-    if (schemaVersion!= QuerySchema.querySchemaSerialVersionUID) {
+    if (schemaVersion != QuerySchema.querySchemaSerialVersionUID) {
       throw new IOException("Attempt to deserialize unsupported query info version. Supported: "
           + QueryInfo.queryInfoSerialVersionUID + "; Received: " + schemaVersion);
     }
@@ -130,9 +150,11 @@ public class QueryDeserializer extends StdDeserializer<Query> {
         dataFilter,
         schemaNode.get("dataElementSize").asInt()
     );
-    List<String> elementNames = objectMapper.readValue(schemaNode.get("elementNames").toString(), new TypeReference<List<String>>(){});
+    List<String> elementNames = objectMapper.readValue(schemaNode.get("elementNames").toString(), new TypeReference<List<String>>() {
+    });
     querySchema.getElementNames().addAll(elementNames);
-    HashMap<String,String> additionalFields = objectMapper.readValue(schemaNode.get("additionalFields").toString(), new TypeReference<HashMap<String,String>>(){});
+    HashMap<String, String> additionalFields = objectMapper.readValue(schemaNode.get("additionalFields").toString(), new TypeReference<HashMap<String, String>>() {
+    });
     querySchema.getAdditionalFields().putAll(additionalFields);
     return querySchema;
   }
