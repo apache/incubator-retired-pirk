@@ -406,6 +406,14 @@ public class ResponderCLI
     optionAllowEmbeddedQS.setArgName(ResponderProps.ALLOWEMBEDDEDQUERYSCHEMAS);
     optionAllowEmbeddedQS.setType(String.class);
     options.addOption(optionAllowEmbeddedQS);
+    
+    // embedQS
+    Option optionEmbedQS = new Option("embedQS", ResponderProps.EMBEDQUERYSCHEMA, true,
+        "optional -- 'true' or 'false'  (defaults to 'false') -- " + "If true, the embedded QuerySchema for the query.");
+    optionEmbedQS.setRequired(false);
+    optionEmbedQS.setArgName(ResponderProps.EMBEDQUERYSCHEMA);
+    optionEmbedQS.setType(String.class);
+    options.addOption(optionEmbedQS);
 
     // batchSeconds - spark streaming
     Option optionBatchSeconds = new Option("batchSeconds", ResponderProps.BATCHSECONDS, true,

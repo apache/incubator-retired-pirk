@@ -68,6 +68,7 @@ public class ResponderProps
   public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
   public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
   public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  public static final String EMBEDQUERYSCHEMA = "pir.embedQuerySchema";
 
   // For Spark Streaming - optional
   public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
@@ -261,6 +262,11 @@ public class ResponderProps
       SystemConfiguration.setProperty(ALLOWEMBEDDEDQUERYSCHEMAS, "false");
     }
 
+    if (!SystemConfiguration.hasProperty(EMBEDQUERYSCHEMA))
+    {
+      SystemConfiguration.setProperty(EMBEDQUERYSCHEMA, "false");
+    }
+    
     if (!SystemConfiguration.hasProperty(USELOCALCACHE))
     {
       SystemConfiguration.setProperty(USELOCALCACHE, "true");
