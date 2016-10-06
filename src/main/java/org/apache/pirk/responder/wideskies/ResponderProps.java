@@ -60,14 +60,14 @@ public class ResponderProps
   public static final String NUMCOLMULTPARTITIONS = "pir.numColMultPartitions";
   public static final String USEMODEXPJOIN = "pir.useModExpJoin";
   public static final String COLMULTREDUCEBYKEY = "pir.colMultReduceByKey";
-  static final String NUMREDUCETASKS = "pir.numReduceTasks";
-  static final String MAPMEMORY = "mapreduce.map.memory.mb";
-  static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
-  static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
-  static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
-  static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
+  public static final String NUMREDUCETASKS = "pir.numReduceTasks";
+  public static final String MAPMEMORY = "mapreduce.map.memory.mb";
+  public static final String REDUCEMEMORY = "mapreduce.reduce.memory.mb";
+  public static final String MAPJAVAOPTS = "mapreduce.map.java.opts";
+  public static final String REDUCEJAVAOPTS = "mapreduce.reduce.java.opts";
+  public static final String USEHDFSLOOKUPTABLE = "pir.useHDFSLookupTable";
   public static final String NUMDATAPARTITIONS = "pir.numDataPartitions";
-  static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
+  public static final String ALLOWEMBEDDEDQUERYSCHEMAS = "pir.allowEmbeddedQuerySchemas";
 
   // For Spark Streaming - optional
   public static final String BATCHSECONDS = "pir.sparkstreaming.batchSeconds";
@@ -78,40 +78,40 @@ public class ResponderProps
 
   // Storm parameters
   // hdfs
-  private static final String HDFSURI = "hdfs.uri";
-  private static final String USEHDFS = "hdfs.use";
+  public static final String HDFSURI = "hdfs.uri";
+  public static final String USEHDFS = "hdfs.use";
   // kafka
-  private static final String KAFKATOPIC = "kafka.topic";
-  private static final String KAFKACLIENTID = "kafka.clientId";
-  private static final String KAFKAZK = "kafka.zk";
-  private static final String KAFKAFORCEFROMSTART = "kafka.forceFromStart";
+  public static final String KAFKATOPIC = "kafka.topic";
+  public static final String KAFKACLIENTID = "kafka.clientId";
+  public static final String KAFKAZK = "kafka.zk";
+  public static final String KAFKAFORCEFROMSTART = "kafka.forceFromStart";
   // pirk topo
-  private static final String STORMTOPONAME = "storm.topoName";
-  private static final String STORMWORKERS = "storm.workers";
-  private static final String STORMNUMACKERS = "storm.numAckers";
-  private static final String STORMRECEIVEBUFFERS = "storm.executor.receiveBufferSize";
-  private static final String STORMSENDBUFFERS = "storm.executor.sendBufferSize";
-  private static final String STORMTRANSFERBUFFERS = "storm.executor.transferBufferSize";
-  private static final String STORMMAXSPOUTPENDING = "storm.maxSpoutPending";
-  private static final String STORMHEAPMEMORY = "storm.worker.heapMemory";
-  private static final String STORMCHILDOPTS = "storm.worker.childOpts";
-  private static final String STORMMAXWORKERHEAP = "storm.maxWorkerHeapMemory";
-  private static final String STORMCOMPONENTONHEAP = "storm.componentOnheapMem";
-  private static final String STORMSPOUTPAR = "storm.spout.parallelism";
-  private static final String STORMPARTITIONDATABOLTPAR = "storm.partitiondata.parallelism";
-  private static final String STORMENCROWCALCBOLTPAR = "storm.encrowcalcbolt.parallelism";
-  private static final String STORMENCCOLMULTBOLTPAR = "storm.enccolmultbolt.parallelism";
-  private static final String STORMFLUSHFREQUENCY = "storm.encrowcalcbolt.ticktuple";
-  private static final String STORMSPLITPARTITIONS = "storm.splitPartitions";
-  private static final String STORMSALTCOLUMNS = "storm.saltColumns";
-  private static final String STORMNUMROWDIVS = "storm.rowDivs";
+  public static final String STORMTOPONAME = "storm.topoName";
+  public static final String STORMWORKERS = "storm.workers";
+  public static final String STORMNUMACKERS = "storm.numAckers";
+  public static final String STORMRECEIVEBUFFERS = "storm.executor.receiveBufferSize";
+  public static final String STORMSENDBUFFERS = "storm.executor.sendBufferSize";
+  public static final String STORMTRANSFERBUFFERS = "storm.executor.transferBufferSize";
+  public static final String STORMMAXSPOUTPENDING = "storm.maxSpoutPending";
+  public static final String STORMHEAPMEMORY = "storm.worker.heapMemory";
+  public static final String STORMCHILDOPTS = "storm.worker.childOpts";
+  public static final String STORMMAXWORKERHEAP = "storm.maxWorkerHeapMemory";
+  public static final String STORMCOMPONENTONHEAP = "storm.componentOnheapMem";
+  public static final String STORMSPOUTPAR = "storm.spout.parallelism";
+  public static final String STORMPARTITIONDATABOLTPAR = "storm.partitiondata.parallelism";
+  public static final String STORMENCROWCALCBOLTPAR = "storm.encrowcalcbolt.parallelism";
+  public static final String STORMENCCOLMULTBOLTPAR = "storm.enccolmultbolt.parallelism";
+  public static final String STORMFLUSHFREQUENCY = "storm.encrowcalcbolt.ticktuple";
+  public static final String STORMSPLITPARTITIONS = "storm.splitPartitions";
+  public static final String STORMSALTCOLUMNS = "storm.saltColumns";
+  public static final String STORMNUMROWDIVS = "storm.rowDivs";
 
-  private static final String[] STORMPROPS = new String[] {HDFSURI, USEHDFS, KAFKATOPIC, KAFKACLIENTID, KAFKAZK, KAFKAFORCEFROMSTART, STORMTOPONAME,
+  public static final String[] STORMPROPS = new String[] {HDFSURI, USEHDFS, KAFKATOPIC, KAFKACLIENTID, KAFKAZK, KAFKAFORCEFROMSTART, STORMTOPONAME,
       STORMWORKERS, STORMNUMACKERS, STORMRECEIVEBUFFERS, STORMSENDBUFFERS, STORMTRANSFERBUFFERS, STORMMAXSPOUTPENDING, STORMHEAPMEMORY, STORMCHILDOPTS,
       STORMMAXWORKERHEAP, STORMCOMPONENTONHEAP, STORMSPOUTPAR, STORMPARTITIONDATABOLTPAR, STORMENCROWCALCBOLTPAR, STORMENCCOLMULTBOLTPAR, STORMFLUSHFREQUENCY,
       STORMSPLITPARTITIONS, STORMSALTCOLUMNS, STORMNUMROWDIVS};
 
-  static final List<String> PROPSLIST = Arrays
+  public static final List<String> PROPSLIST = Arrays
       .asList((String[]) ArrayUtils.addAll(new String[] {PLATFORM, QUERYINPUT, DATAINPUTFORMAT, INPUTDATA, BASEQUERY, ESRESOURCE, ESQUERY, ESNODES, OUTPUTFILE,
           BASEINPUTFORMAT, STOPLISTFILE, NUMREDUCETASKS, USELOCALCACHE, LIMITHITSPERSELECTOR, MAXHITSPERSELECTOR, MAPMEMORY, REDUCEMEMORY, MAPJAVAOPTS,
           REDUCEJAVAOPTS, QUERYSCHEMAS, DATASCHEMAS, NUMEXPLOOKUPPARTS, USEHDFSLOOKUPTABLE, NUMDATAPARTITIONS, NUMCOLMULTPARTITIONS, USEMODEXPJOIN,
