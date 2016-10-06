@@ -42,28 +42,30 @@ public class Query implements Serializable, Storable {
   public static final long querySerialVersionUID = 1L;
 
   // So that we can serialize the version number in jackson.
+  @Expose
   public final long queryVersion = querySerialVersionUID;
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-
+  @Expose
   private final QueryInfo queryInfo; // holds all query info
 
-
+  @Expose
   private final SortedMap<Integer, BigInteger> queryElements; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  @Expose(serialize = false)
   private Map<BigInteger, Map<Integer, BigInteger>> expTable = new ConcurrentHashMap<>();
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-
+  @Expose
   private Map<Integer, String> expFileBasedLookup = new HashMap<>();
 
+  @Expose
   private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
 
+  @Expose
   private final BigInteger NSquared;
 
   public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer, BigInteger> queryElements) {

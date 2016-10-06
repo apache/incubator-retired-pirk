@@ -19,6 +19,7 @@
 package org.apache.pirk.serialization;
 
 import java.io.*;
+import java.lang.reflect.Modifier;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -38,6 +39,9 @@ public class JsonSerializer extends SerializationService {
       .registerTypeAdapter(Response.class, new ResponseDeserializer())
       .registerTypeAdapter(Query.class, new QueryDeserializer())
       .registerTypeAdapter(Querier.class, new QuerierDeserializer())
+      .setPrettyPrinting()
+      .excludeFieldsWithoutExposeAnnotation()
+      .serializeNulls()
       .create();
 
   /**
@@ -50,7 +54,8 @@ public class JsonSerializer extends SerializationService {
   @Override
   public void write(OutputStream outputStream, Storable obj) throws IOException {
     Writer writer = new OutputStreamWriter(outputStream);
-    gson.toJson(obj);
+    gson.toJson(obj, obj.getClass(), writer);
+    writer.close();
     //objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
   }
 

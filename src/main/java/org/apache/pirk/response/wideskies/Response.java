@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
 
@@ -34,10 +35,13 @@ import org.apache.pirk.serialization.Storable;
 public class Response implements Serializable, Storable {
   public static final long responseSerialVersionUID = 1L;
 
+  @Expose
   public final long responseVersion = responseSerialVersionUID;
 
+  @Expose
   private QueryInfo queryInfo = null; // holds all query info
 
+  @Expose
   private TreeMap<Integer, BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
   public Response(QueryInfo queryInfoInput) {

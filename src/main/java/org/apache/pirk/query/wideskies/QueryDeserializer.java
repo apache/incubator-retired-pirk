@@ -196,10 +196,10 @@ public class QueryDeserializer implements JsonDeserializer<Query> {
     }
     // Deserialize the QuerySchema next, accounting for the possibility that it is null.
     QuerySchema querySchema;
-    if (queryInfoJson.get("querySchema").isJsonNull()) {
+    if (queryInfoJson.get("qSchema").isJsonNull()) {
       querySchema = null;
     } else {
-      querySchema = deserializeSchema(queryInfoJson.get("querySchema").getAsJsonObject());
+      querySchema = deserializeSchema(queryInfoJson.get("qSchema").getAsJsonObject());
     }
     // Now start making the QueryInfo object.
     QueryInfo info = new QueryInfo(

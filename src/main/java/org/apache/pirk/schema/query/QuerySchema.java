@@ -27,6 +27,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.schema.query.filter.DataFilter;
 
 /**
@@ -36,36 +37,43 @@ public class QuerySchema implements Serializable {
   public static final long querySchemaSerialVersionUID = 1L;
 
   // So that we can serialize the version number in jackson.
-  @JsonSerialize
+  @Expose
   public final long querySchemaVersion = querySchemaSerialVersionUID;
 
   // This schema's name.
+  @Expose
   private final String schemaName;
 
   // Name of the data schema associated with this query schema.
+  @Expose
   private final String dataSchemaName;
 
   // Name of element in the dataSchema to be used as the selector.
+  @Expose
   private final String selectorName;
 
   // Element names from the data schema to include in the response.
   // Order matters for packing/unpacking.
+  @Expose
   private final List<String> elementNames = new ArrayList<>();
 
   // Name of class to use in data filtering.
+  @Expose
   private final String filterTypeName;
 
   // Instance of the filterTypeName.
-  @JsonIgnore
   private final DataFilter filter;
 
   // Set of data schema element names on which to apply filtering.
+  @Expose
   private final Set<String> filteredElementNames = new HashSet<>();
 
   // Total number of bits to be returned for each data element hit.
+  @Expose
   private final int dataElementSize;
 
-  // Additional fields by key,value
+  // Addiional fields by key,value
+  @Expose
   private final HashMap<String, String> additionalFields = new HashMap<>();
 
   public QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize) {
