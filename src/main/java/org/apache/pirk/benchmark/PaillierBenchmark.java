@@ -60,14 +60,7 @@ public class PaillierBenchmark
     public void setUp()
     {
       int systemPrimeCertainty = SystemConfiguration.getIntProperty("pir.primeCertainty", 100);
-      try
-      {
-        pallier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);
-
-      } catch (PIRException e)
-      {
-        System.out.printf("Couldn't build pallier object!%n");
-      }
+      pallier = new Paillier(MODULUS_SIZE, systemPrimeCertainty);
 
       r1 = BigInteger.valueOf(3);
       m1 = BigInteger.valueOf(5);

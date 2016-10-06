@@ -719,8 +719,8 @@ public class QueryParserUtils
           }
           else
           {
-            if (!((Integer.parseInt(blocksLower[ipBlock]) <= Integer.parseInt(ipValue[ipBlock])) && (Integer.parseInt(ipValue[ipBlock]) <= Integer
-                .parseInt(blocksUpper[ipBlock]))))
+            if (!((Integer.parseInt(blocksLower[ipBlock]) <= Integer.parseInt(ipValue[ipBlock]))
+                && (Integer.parseInt(ipValue[ipBlock]) <= Integer.parseInt(blocksUpper[ipBlock]))))
             {
               logger.info("IP block not within given range");
               matches = false;

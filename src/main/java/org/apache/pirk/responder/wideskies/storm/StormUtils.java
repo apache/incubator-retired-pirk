@@ -43,9 +43,12 @@ public class StormUtils
   /**
    * Method to read in serialized Query object from the given queryFile
    * 
-   * @param useHdfs - true or false
-   * @param hdfsUri - HDFS path
-   * @param queryFile -
+   * @param useHdfs
+   *          - true or false
+   * @param hdfsUri
+   *          - HDFS path
+   * @param queryFile
+   *          -
    * @return {@link Query}
    */
   public static Query getQuery(boolean useHdfs, String hdfsUri, String queryFile)

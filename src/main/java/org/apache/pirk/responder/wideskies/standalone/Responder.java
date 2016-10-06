@@ -205,8 +205,8 @@ public class Responder
 
       columns.put(i + rowCounter, column);
 
-      logger.debug("exp = " + exp + " i = " + i + " partition = " + hitValPartitions.get(i) + " = " + hitValPartitions.get(i).toString(2) + " column = "
-          + column);
+      logger.debug(
+          "exp = " + exp + " i = " + i + " partition = " + hitValPartitions.get(i) + " = " + hitValPartitions.get(i).toString(2) + " column = " + column);
       logger.debug("After: columns.get(" + (i + rowCounter) + ") = " + columns.get(i + rowCounter));
     }
 

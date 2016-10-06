@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -131,7 +132,7 @@ public class TestUtils
   public static void createQuerySchema(String schemaFile, String querySchemaName, String dataSchemaNameInput, String selectorNameInput,
       List<String> elementNames, List<String> filterNames, String filter) throws IOException
   {
-    createQuerySchema(schemaFile, querySchemaName, dataSchemaNameInput, selectorNameInput, elementNames, filterNames, filter, true, null, false);
+    createQuerySchema(schemaFile, querySchemaName, dataSchemaNameInput, selectorNameInput, elementNames, filterNames, filter, true, null, false, null);
   }
 
   /**
@@ -139,6 +140,16 @@ public class TestUtils
    */
   public static void createQuerySchema(String schemaFile, String querySchemaName, String dataSchemaNameInput, String selectorNameInput,
       List<String> elementNames, List<String> filterNames, String filter, boolean append, FileSystem fs, boolean hdfs) throws IOException
+  {
+    createQuerySchema(schemaFile, querySchemaName, dataSchemaNameInput, selectorNameInput, elementNames, filterNames, filter, append, fs, hdfs, null);
+  }
+
+  /**
+   * Creates the test query schema file
+   */
+  public static void createQuerySchema(String schemaFile, String querySchemaName, String dataSchemaNameInput, String selectorNameInput,
+      List<String> elementNames, List<String> filterNames, String filter, boolean append, FileSystem fs, boolean hdfs, HashMap<String,String> additionalFields)
+      throws IOException
   {
     logger.info("createQuerySchema: querySchemaName = " + querySchemaName);
 
@@ -176,6 +187,7 @@ public class TestUtils
         SystemConfiguration.setProperty("query.schemas", SystemConfiguration.getProperty("query.schemas", "") + "," + fileName);
       }
     }
+
     logger.info("query.schemas = " + SystemConfiguration.getProperty("query.schemas"));
 
     // Write to the file
@@ -234,6 +246,30 @@ public class TestUtils
         }
       }
 
+      // Add the additionalFields
+      if (additionalFields != null)
+      {
+        Element additionalElement = doc.createElement("additional");
+        rootElement.appendChild(additionalElement);
+
+        // Add the key,value pairs
+        for (String key : additionalFields.keySet())
+        {
+          logger.info("Creating field element with key = " + key + " and value = " + additionalFields.get(key));
+
+          Element fieldElement = doc.createElement("field");
+          additionalElement.appendChild(fieldElement);
+
+          Element keyElement = doc.createElement("key");
+          keyElement.appendChild(doc.createTextNode(key));
+          fieldElement.appendChild(keyElement);
+
+          Element valueElement = doc.createElement("value");
+          valueElement.appendChild(doc.createTextNode(additionalFields.get(key)));
+          fieldElement.appendChild(valueElement);
+        }
+      }
+
       // Write to a xml file
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
@@ -268,7 +304,8 @@ public class TestUtils
   /**
    * Converts the result file into an ArrayList of QueryResponseJSON objects
    * 
-   * @throws IOException - {@link IOException}
+   * @throws IOException
+   *           - {@link IOException}
    */
   public static List<QueryResponseJSON> readResultsFile(File file) throws IOException
   {
@@ -288,7 +325,9 @@ public class TestUtils
 
   /**
    * Write the ArrayList<String to a tmp file in the local filesystem with the given fileName
-   * @throws IOException - {@link IOException}
+   * 
+   * @throws IOException
+   *           - {@link IOException}
    */
   public static String writeToTmpFile(List<String> list, String fileName, String suffix) throws IOException
   {

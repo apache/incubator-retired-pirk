@@ -21,10 +21,8 @@ package org.apache.pirk.querier.wideskies.encrypt;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
@@ -163,7 +161,6 @@ public class EncryptQuery
     String hashKey = queryInfo.getHashKey();
     int keyCounter = 0;
     int numSelectors = selectors.size();
-    Set<Integer> hashes = new HashSet<>(numSelectors);
     Map<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
     for (int index = 0; index < numSelectors; index++)
@@ -172,16 +169,14 @@ public class EncryptQuery
       int hash = KeyedHash.hash(hashKey, queryInfo.getHashBitSize(), selector);
 
       // All keyed hashes of the selectors must be unique
-      if (hashes.add(hash))
+      if (selectorQueryVecMapping.put(hash, index) == null)
       {
         // The hash is unique
-        selectorQueryVecMapping.put(hash, index);
         logger.debug("index = " + index + "selector = " + selector + " hash = " + hash);
       }
       else
       {
         // Hash collision
-        hashes.clear();
         selectorQueryVecMapping.clear();
         hashKey = queryInfo.getHashKey() + ++keyCounter;
         logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);

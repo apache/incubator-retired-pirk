@@ -21,6 +21,7 @@ package org.apache.pirk.schema.query;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -65,6 +66,12 @@ import org.xml.sax.SAXException;
  *    <filterNames> (optional)
  *       <name> element name of element in the data schema to apply pre-processing filters </name>
  *    </filterNames>
+ *    <additional> (optional) additional fields for the query schema, in <key,value> pairs
+ *       <field>
+ *            <key> key corresponding the the field </key>
+ *            <value> value corresponding to the field </value>
+ *       </field>  
+ *    </additional>
  *   </schema>
  * }
  * </pre>
@@ -118,6 +125,7 @@ public class QuerySchemaLoader
     String querySchemas = SystemConfiguration.getProperty("query.schemas", "none");
     if (querySchemas.equals("none"))
     {
+      logger.info("query.schemas = none");
       return;
     }
 
@@ -260,10 +268,29 @@ public class QuerySchemaLoader
     Set<String> filteredNamesSet = extractFilteredElementNames(doc);
     DataFilter filter = instantiateFilter(filterTypeName, filteredNamesSet);
 
+    // Extract the additional fields, if they exists
+    HashMap<String,String> additionalFields = new HashMap<String,String>();
+    if (doc.getElementsByTagName("additional").item(0) != null)
+    {
+      NodeList fieldList = doc.getElementsByTagName("field");
+      int numFields = fieldList.getLength();
+      if (numFields == 0)
+      {
+        throw new PIRException("numFields = " + numFields + " -- should be at least one");
+      }
+      for (int i = 0; i < numFields; ++i)
+      {
+        Element fields = (Element) fieldList.item(i);
+        NodeList kv = fields.getChildNodes();
+        additionalFields.put(getNodeValue("key", kv), getNodeValue("value", kv));
+      }
+    }
+
     // Create and return the query schema object.
     QuerySchema querySchema = new QuerySchema(schemaName, dataSchemaName, selectorName, filterTypeName, filter, dataElementSize);
     querySchema.getElementNames().addAll(elementNames);
     querySchema.getFilteredElementNames().addAll(filteredNamesSet);
+    querySchema.getAdditionalFields().putAll(additionalFields);
     return querySchema;
   }
 
@@ -355,6 +382,30 @@ public class QuerySchemaLoader
       throw new PIRException("itemList.getLength() = " + itemList.getLength() + " -- should be 1");
     }
     return itemList.item(0).getTextContent().trim();
+  }
+
+  /**
+   * Extracts the value corresponding to a given tag from the XML nodeList
+   * 
+   * @param tagName
+   *          The name of the tag for which to extract the value
+   * @param nodes
+   *          The NodeList
+   * @return The given value
+   */
+  private String getNodeValue(String tagName, NodeList nodes)
+  {
+    String value = "";
+
+    for (int x = 0; x < nodes.getLength(); x++)
+    {
+      Node node = nodes.item(x);
+      if (node.getNodeName().equals(tagName))
+      {
+        value = node.getChildNodes().item(0).getNodeValue().trim();
+      }
+    }
+    return value;
   }
 
   /**

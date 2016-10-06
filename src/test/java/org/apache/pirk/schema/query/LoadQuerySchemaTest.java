@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -159,6 +160,74 @@ public class LoadQuerySchemaTest
   }
 
   @Test
+  public void testGeneralSchemaLoadWithAdditionalFields() throws Exception
+  {
+    logger.info("Starting testGeneralSchemaLoadWithAdditionalFields: ");
+
+    // Pull off the properties and reset upon completion
+    String dataSchemasProp = SystemConfiguration.getProperty("data.schemas", "none");
+    String querySchemasProp = SystemConfiguration.getProperty("query.schemas", "none");
+
+    // Create the data schema used and force it to load
+    try
+    {
+      createDataSchema("dataSchemaFile");
+    } catch (Exception e)
+    {
+      e.printStackTrace();
+      fail(e.toString());
+    }
+    DataSchemaLoader.initialize();
+
+    // Create the additionalFields
+    HashMap<String,String> additionalFields = new HashMap<String,String>();
+    additionalFields.put("key1", "value1");
+    additionalFields.put("key2", "value2");
+
+    // Create the query schema used and force it to load
+    try
+    {
+      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null, true, null, false,
+          additionalFields);
+
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+      fail(e.toString());
+    }
+    QuerySchemaLoader.initialize();
+
+    // Check the entries
+    QuerySchema qSchema = QuerySchemaRegistry.get(querySchemaName);
+    if (qSchema == null)
+    {
+      logger.info("qSchema is null");
+    }
+
+    HashMap<String,String> schemaAdditionalFields = qSchema.getAdditionalFields();
+    assertEquals(schemaAdditionalFields.size(), 2);
+    assertEquals(schemaAdditionalFields.get("key1"), "value1");
+    assertEquals(schemaAdditionalFields.get("key2"), "value2");
+
+    // Reset original query and data schema properties
+    SystemConfiguration.setProperty("data.schemas", dataSchemasProp);
+    SystemConfiguration.setProperty("query.schemas", querySchemasProp);
+
+    // Force the query and data schemas to load their original values
+    if (!dataSchemasProp.equals("none"))
+    {
+      DataSchemaLoader.initialize();
+    }
+
+    if (!querySchemasProp.equals("none"))
+    {
+      QuerySchemaLoader.initialize();
+    }
+
+    logger.info("Finished testGeneralSchemaLoadWithAdditionalFields");
+  }
+
+  @Test
   public void testUnknownFilterClass() throws Exception
   {
     // Pull off the properties and reset upon completion
@@ -222,7 +291,7 @@ public class LoadQuerySchemaTest
     // Create the query schema used and force it to load
     try
     {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null);
+      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName + "bogus", element4, queryElements, filterElements, null);
 
     } catch (IOException e)
     {

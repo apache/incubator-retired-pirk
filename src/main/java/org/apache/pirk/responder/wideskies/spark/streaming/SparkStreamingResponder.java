@@ -36,7 +36,8 @@ public class SparkStreamingResponder implements ResponderPlugin
   private static final Logger logger = LoggerFactory.getLogger(SparkStreamingResponder.class);
 
   @Override
-  public String getPlatformName() {
+  public String getPlatformName()
+  {
     return "sparkstreaming";
   }
 
@@ -45,7 +46,7 @@ public class SparkStreamingResponder implements ResponderPlugin
   {
     // For handling System.exit calls from Spark Streaming
     System.setSecurityManager(new SystemExitManager());
-    
+
     FileSystem fileSys;
     try
     {
@@ -54,15 +55,14 @@ public class SparkStreamingResponder implements ResponderPlugin
     {
       throw new PIRException(e);
     }
-    
+
     logger.info("Launching Spark ComputeStreamingResponse:");
     ComputeStreamingResponse computeSR = null;
     try
     {
       computeSR = new ComputeStreamingResponse(fileSys);
       computeSR.performQuery();
-    }
-    catch (SystemExitException e)
+    } catch (SystemExitException e)
     {
       // If System.exit(0) is not caught from Spark Streaming,
       // the application will complete with a 'failed' status
@@ -70,8 +70,7 @@ public class SparkStreamingResponder implements ResponderPlugin
     } catch (IOException e)
     {
       throw new PIRException(e);
-    }
-    finally
+    } finally
     {
       // Teardown the context
       if (computeSR != null)

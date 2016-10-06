@@ -32,7 +32,8 @@ public class MapReduceResponder implements ResponderPlugin
   private static final Logger logger = LoggerFactory.getLogger(MapReduceResponder.class);
 
   @Override
-  public String getPlatformName() {
+  public String getPlatformName()
+  {
     return "mapreduce";
   }
 

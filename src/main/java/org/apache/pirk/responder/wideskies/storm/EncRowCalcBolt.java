@@ -157,8 +157,8 @@ public class EncRowCalcBolt extends BaseRichBolt
   @Override
   public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
   {
-    outputFieldsDeclarer.declareStream(StormConstants.ENCROWCALCBOLT_DATASTREAM_ID, new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD,
-        StormConstants.ENCRYPTED_VALUE_FIELD, StormConstants.SALT));
+    outputFieldsDeclarer.declareStream(StormConstants.ENCROWCALCBOLT_DATASTREAM_ID,
+        new Fields(StormConstants.COLUMN_INDEX_ERC_FIELD, StormConstants.ENCRYPTED_VALUE_FIELD, StormConstants.SALT));
     outputFieldsDeclarer.declareStream(StormConstants.ENCROWCALCBOLT_FLUSH_SIG, new Fields(StormConstants.FLUSH));
   }
 
@@ -166,7 +166,8 @@ public class EncRowCalcBolt extends BaseRichBolt
    * Extracts (hash, data partitions) from tuple. Encrypts the data partitions. Returns all of the pairs of (col index, col value). Also advances the
    * colIndexByRow and hitsByRow appropriately.
    *
-   * @param tuple {@code Tuple}
+   * @param tuple
+   *          {@code Tuple}
    * @return {@code List<Tuple2>}
    */
   private List<Tuple2<Long,BigInteger>> processTupleFromPartitionDataBolt(Tuple tuple)
