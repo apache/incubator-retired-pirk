@@ -18,15 +18,27 @@
  */
 package org.apache.pirk.serialization;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.pirk.querier.wideskies.Querier;
+import org.apache.pirk.querier.wideskies.QuerierDeserializer;
+import org.apache.pirk.query.wideskies.QueryDeserializer;
+import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.response.wideskies.ResponseDeserializer;
+
+import javax.management.Query;
 
 public class JsonSerializer extends SerializationService {
   // We really only need the one objectMapper, I think.
   public static final ObjectMapper objectMapper = new ObjectMapper();
+  public static final Gson gson = new GsonBuilder()
+      .registerTypeAdapter(Response.class, new ResponseDeserializer())
+      .registerTypeAdapter(Query.class, new QueryDeserializer())
+      .registerTypeAdapter(Querier.class, new QuerierDeserializer())
+      .create();
 
   /**
    * Stores the given object on the output stream as JSON.
@@ -37,7 +49,9 @@ public class JsonSerializer extends SerializationService {
    */
   @Override
   public void write(OutputStream outputStream, Storable obj) throws IOException {
-    objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
+    Writer writer = new OutputStreamWriter(outputStream);
+    gson.toJson(obj);
+    //objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
   }
 
   /**
@@ -49,7 +63,9 @@ public class JsonSerializer extends SerializationService {
    */
   @Override
   public <T> T read(InputStream inputStream, Class<T> classType) throws IOException {
-    return objectMapper.readValue(inputStream, classType);
+    Reader reader = new InputStreamReader(inputStream);
+    return gson.fromJson(reader, classType);
+
   }
 
 }

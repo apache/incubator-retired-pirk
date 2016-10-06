@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class to hold the PIR query vectors
  */
-@JsonDeserialize(using = QueryDeserializer.class)
+
 public class Query implements Serializable, Storable {
   public static final long querySerialVersionUID = 1L;
 
@@ -53,12 +54,12 @@ public class Query implements Serializable, Storable {
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  @JsonIgnore
+  @Expose(serialize = false)
   private Map<BigInteger, Map<Integer, BigInteger>> expTable = new ConcurrentHashMap<>();
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  @JsonIgnore
+
   private Map<Integer, String> expFileBasedLookup = new HashMap<>();
 
   private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements

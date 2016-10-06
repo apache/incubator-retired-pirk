@@ -25,10 +25,13 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.query.wideskies.Query;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -36,19 +39,11 @@ import java.util.Map;
 /**
  * Custom deserializer for Querier class for Jackson.
  */
-public class QuerierDeserializer extends StdDeserializer<Querier> {
+public class QuerierDeserializer implements JsonDeserializer<Querier> {
 
-  public QuerierDeserializer() {
-    this(null);
-  }
+  private static final Gson gson = new Gson();
 
-  public QuerierDeserializer(Class<?> vc) {
-    super(vc);
-  }
-
-  private static ObjectMapper objectMapper = new ObjectMapper();
-
-
+  /*
   @Override
   public Querier deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -71,7 +66,7 @@ public class QuerierDeserializer extends StdDeserializer<Querier> {
 
     return new Querier(selectors, paillier, query, embedSelectorMap);
   }
-
+  */
   /**
    * Deserializes a Paillier JsonNode.
    *
@@ -84,4 +79,39 @@ public class QuerierDeserializer extends StdDeserializer<Querier> {
     int bitLength = paillier.get("bitLength").asInt();
     return new Paillier(p, q, bitLength);
   }
+
+  @Override
+  public Querier deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    JsonObject jsonObject = jsonElement.getAsJsonObject();
+    // Check the version number.
+    long querierVersion = jsonObject.get("querierVersion").getAsLong();
+    if (querierVersion != Querier.querierSerialVersionUID) {
+      throw new JsonParseException("Attempt to deserialize unsupported query version. Supported: "
+          + Querier.querierSerialVersionUID + "; Received: " + querierVersion);
+    }
+    // Then deserialize the Query Info
+    Query query = gson.fromJson(jsonObject.get("query").toString(), Query.class);
+
+    // Now Paillier
+    Paillier paillier = deserializePaillier(jsonObject.get("paillier").getAsJsonObject());
+
+    List<String> selectors = gson.fromJson(jsonObject.get("selectors").toString(), new TypeToken<List<String>>() {}.getType());
+    Map<Integer, String> embedSelectorMap = gson.fromJson(jsonObject.get("embedSelectorMap").toString(), new TypeToken<Map<Integer, String>>() {}.getType());
+
+    return new Querier(selectors, paillier, query, embedSelectorMap);
+  }
+
+  /**
+   * Deserializes a Paillier JsonObject.
+   *
+   * @param paillier A JsonObject at the root of a serialied Paillier object.
+   * @return A Paillier object of the deserialized Json.
+   */
+  private Paillier deserializePaillier(JsonObject paillier) {
+    BigInteger p = new BigInteger(paillier.get("p").getAsString());
+    BigInteger q = new BigInteger(paillier.get("q").getAsString());
+    int bitLength = paillier.get("bitLength").getAsInt();
+    return new Paillier(p, q, bitLength);
+  }
+  
 }

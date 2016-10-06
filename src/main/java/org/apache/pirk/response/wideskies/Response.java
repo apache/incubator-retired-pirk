@@ -31,7 +31,6 @@ import org.apache.pirk.serialization.Storable;
  * <p>
  * Serialized and returned to the querier for decryption
  */
-@JsonDeserialize(using = ResponseDeserializer.class)
 public class Response implements Serializable, Storable {
   public static final long responseSerialVersionUID = 1L;
 

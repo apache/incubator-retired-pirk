@@ -30,7 +30,6 @@ import org.apache.pirk.serialization.Storable;
 /**
  * Class to hold the information necessary for the PIR querier to perform decryption
  */
-@JsonDeserialize(using = QuerierDeserializer.class)
 public class Querier implements Serializable, Storable {
   public static final long querierSerialVersionUID = 1L;
 

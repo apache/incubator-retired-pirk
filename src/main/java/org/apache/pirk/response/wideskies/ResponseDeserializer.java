@@ -18,24 +18,52 @@
  */
 package org.apache.pirk.response.wideskies;
 
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.google.gson.*;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import org.apache.pirk.query.wideskies.QueryDeserializer;
 import org.apache.pirk.query.wideskies.QueryInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.TreeMap;
 
 /**
  * Custom deserializer for Response class for Jackson.
  */
+public class ResponseDeserializer implements JsonDeserializer<Response> {
+
+  private static final Gson gson = new Gson();
+
+
+  @Override
+  public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    final JsonObject jsonObject = jsonElement.getAsJsonObject();
+    long responseVersion = jsonObject.get("responseVersion").getAsLong();
+    if (responseVersion != Response.responseSerialVersionUID) {
+      throw new JsonParseException("\"Attempt to deserialize unsupported query version. Supported: \"\n" +
+          "          + Response.responseSerialVersionUID + \"; Received: \" + responseVersion");
+    }
+    QueryInfo queryInfo = QueryDeserializer.deserializeInfo(jsonObject.get("queryInfo").getAsJsonObject());
+    Response response = new Response(queryInfo);
+    TreeMap<Integer, BigInteger> responseElements = gson.fromJson(jsonObject.get("responseElements"), new TypeToken<TreeMap<Integer, BigInteger>>(){}.getType());
+    response.setResponseElements(responseElements);
+    return response;
+  }
+}
+/*
 public class ResponseDeserializer extends StdDeserializer<Response> {
+  private static final Logger logger = LoggerFactory.getLogger(ResponseDeserializer.class);
 
   public ResponseDeserializer() {
     this(null);
@@ -50,6 +78,7 @@ public class ResponseDeserializer extends StdDeserializer<Response> {
 
   @Override
   public Response deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    logger.info("Got json parser: " + jsonParser.readValueAsTree().toString());
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     // Check the version number.
     long responseVersion = node.get("responseVersion").asLong();
@@ -69,3 +98,4 @@ public class ResponseDeserializer extends StdDeserializer<Response> {
     return response;
   }
 }
+*/
