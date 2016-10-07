@@ -18,14 +18,13 @@
  */
 package org.apache.pirk.query.wideskies;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.google.gson.*;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.filter.DataFilter;
@@ -37,7 +36,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.UUID;
+
 
 /**
  * Custom deserializer for Query class for Jackson.
@@ -71,116 +76,6 @@ public class QueryDeserializer implements JsonDeserializer<Query> {
     return query;
   }
 
-  /*
-  @Override
-  public Query deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    // Check the version number.
-    long queryVersion = node.get("queryVersion").asLong();
-    if (queryVersion != Query.querySerialVersionUID) {
-      throw new IOException("Attempt to deserialize unsupported query version. Supported: "
-          + Query.querySerialVersionUID + "; Received: " + queryVersion);
-    }
-    // Then deserialize the Query Info
-    QueryInfo queryInfo = deserializeInfo(node.get("queryInfo"));
-    SortedMap<Integer, BigInteger> queryElements = objectMapper.readValue(node.get("queryElements").toString(), new TypeReference<SortedMap<Integer, BigInteger>>() {});
-    BigInteger N = new BigInteger(node.get("n").asText());
-    BigInteger NSquared = new BigInteger(node.get("nsquared").asText());
-    Map<Integer, String> expFileBasedLookup = objectMapper.readValue(node.get("expFileBasedLookup").toString(), new TypeReference<Map<Integer, String>>() {});
-
-    Query query = new Query(queryInfo, N, NSquared, queryElements);
-    query.setExpFileBasedLookup(expFileBasedLookup);
-    return query;
-  }
-  */
-  /**
-   * Deserializes a QueryInfo JsonNode
-   *
-   * @param infoNode A JsonNode at the root of a serialied QueryInfo object.
-   * @return A QueryInfo object of the deserialized Json.
-   * @throws IOException
-   */
-  /*
-  public static QueryInfo deserializeInfo(JsonNode infoNode) throws IOException {
-    // Deserialize The Query Schema First.
-    long infoVersion = infoNode.get("queryInfoVersion").asLong();
-    if (infoVersion != QueryInfo.queryInfoSerialVersionUID) {
-      throw new IOException("Attempt to deserialize unsupported query info version. Supported: "
-          + QueryInfo.queryInfoSerialVersionUID + "; Received: " + infoVersion);
-    }
-    QuerySchema querySchema;
-    if (infoNode.get("querySchema").isNull()) {
-      querySchema = null;
-    } else {
-      querySchema = deserializeSchema(infoNode.get("querySchema"));
-    }
-    QueryInfo info = new QueryInfo(
-        UUID.fromString(infoNode.get("identifier").asText()),
-        infoNode.get("numSelectors").asInt(),
-        infoNode.get("hashBitSize").asInt(),
-        infoNode.get("hashKey").asText(),
-        infoNode.get("dataPartitionBitSize").asInt(),
-        infoNode.get("queryType").asText(),
-        infoNode.get("useExpLookupTable").asBoolean(),
-        infoNode.get("embedSelector").asBoolean(),
-        infoNode.get("useHDFSExpLookupTable").asBoolean(),
-        infoNode.get("numBitsPerDataElement").asInt(),
-        querySchema
-    );
-    return info;
-  }
-  */
-
-  /**
-   * Deserializes a QuerySchema JsonNode
-   *
-   * @param schemaNode A JsonNode at the root of a serialized QuerySchema object.
-   * @return A QuerySchema object of the deserialized Json.
-   * @throws IOException
-   */
-  /*
-  public static QuerySchema deserializeSchema(JsonNode schemaNode) throws IOException {
-    // Deserialize The Query Schema First.
-    long schemaVersion = schemaNode.get("querySchemaVersion").asLong();
-    if (schemaVersion != QuerySchema.querySchemaSerialVersionUID) {
-      throw new IOException("Attempt to deserialize unsupported query info version. Supported: "
-          + QueryInfo.queryInfoSerialVersionUID + "; Received: " + schemaVersion);
-    }
-    String dataFilterName = schemaNode.get("filterTypeName").asText();
-    Set<String> filteredElementNames;
-    try {
-      filteredElementNames = objectMapper.readValue(schemaNode.get("filteredElementNames").toString(), new TypeReference<Set<String>>() {
-      });
-    } catch (Exception e) {
-      logger.warn("No filtered element names for Query Schema deserialization.");
-      filteredElementNames = null;
-    }
-    // Set up the data filter
-    DataFilter dataFilter;
-    try {
-      dataFilter = FilterFactory.getFilter(dataFilterName, filteredElementNames);
-    } catch (PIRException e) {
-      logger.error("Error trying to create data filter from JSON.", e);
-      throw new IOException(e);
-    }
-
-    QuerySchema querySchema = new QuerySchema(
-        schemaNode.get("schemaName").asText(),
-        schemaNode.get("dataSchemaName").asText(),
-        schemaNode.get("selectorName").asText(),
-        dataFilterName,
-        dataFilter,
-        schemaNode.get("dataElementSize").asInt()
-    );
-    List<String> elementNames = objectMapper.readValue(schemaNode.get("elementNames").toString(), new TypeReference<List<String>>() {
-    });
-    querySchema.getElementNames().addAll(elementNames);
-    HashMap<String, String> additionalFields = objectMapper.readValue(schemaNode.get("additionalFields").toString(), new TypeReference<HashMap<String, String>>() {
-    });
-    querySchema.getAdditionalFields().putAll(additionalFields);
-    return querySchema;
-  }
-  */
   /**
    *  Deserializes a QueryInfo JsonObject
    * @param queryInfoJson A JsonObject at the root of a serialized QueryInfo object.

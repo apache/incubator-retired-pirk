@@ -18,22 +18,16 @@
  */
 package org.apache.pirk.response.wideskies;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.pirk.query.wideskies.QueryDeserializer;
 import org.apache.pirk.query.wideskies.QueryInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.TreeMap;
@@ -61,41 +55,4 @@ public class ResponseDeserializer implements JsonDeserializer<Response> {
     return response;
   }
 }
-/*
-public class ResponseDeserializer extends StdDeserializer<Response> {
-  private static final Logger logger = LoggerFactory.getLogger(ResponseDeserializer.class);
 
-  public ResponseDeserializer() {
-    this(null);
-  }
-
-  public ResponseDeserializer(Class<?> vc) {
-    super(vc);
-  }
-
-  private static ObjectMapper objectMapper = new ObjectMapper();
-
-
-  @Override
-  public Response deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-    logger.info("Got json parser: " + jsonParser.readValueAsTree().toString());
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    // Check the version number.
-    long responseVersion = node.get("responseVersion").asLong();
-    if (responseVersion != Response.responseSerialVersionUID) {
-      throw new IOException("Attempt to deserialize unsupported query version. Supported: "
-          + Response.responseSerialVersionUID + "; Received: " + responseVersion);
-    }
-    // Then deserialize the Query Info
-    QueryInfo queryInfo = QueryDeserializer.deserializeInfo(node.get("queryInfo"));
-    // Form the initial response object
-    Response response = new Response(queryInfo);
-    // Get the response elements
-    TreeMap<Integer, BigInteger> responseElements = objectMapper.readValue(node.get("responseElements").toString(), new TypeReference<TreeMap<Integer, BigInteger>>() {
-    });
-    response.setResponseElements(responseElements);
-
-    return response;
-  }
-}
-*/

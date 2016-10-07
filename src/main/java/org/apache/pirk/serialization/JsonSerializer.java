@@ -18,9 +18,6 @@
  */
 package org.apache.pirk.serialization;
 
-import java.io.*;
-import java.lang.reflect.Modifier;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,10 +28,15 @@ import org.apache.pirk.response.wideskies.Response;
 import org.apache.pirk.response.wideskies.ResponseDeserializer;
 
 import javax.management.Query;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
 public class JsonSerializer extends SerializationService {
-  // We really only need the one objectMapper, I think.
-  public static final ObjectMapper objectMapper = new ObjectMapper();
   public static final Gson gson = new GsonBuilder()
       .registerTypeAdapter(Response.class, new ResponseDeserializer())
       .registerTypeAdapter(Query.class, new QueryDeserializer())
@@ -56,7 +58,6 @@ public class JsonSerializer extends SerializationService {
     Writer writer = new OutputStreamWriter(outputStream);
     gson.toJson(obj, obj.getClass(), writer);
     writer.close();
-    //objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
   }
 
   /**
