@@ -102,7 +102,7 @@ Perform the following to generate and stage the artifacts:
 
 1. `mvn clean release:clean`
 2. `mvn release:prepare -Psigned_release -Darguments="-DskipTests"`
-* You will be promted to answer the following questions:
+* You will be prompted to answer the following questions:
 * What is the release version for "Apache Pirk (incubating) Project"? *Answer:* `<new release version>-incubating`
 * What is SCM release tag or label for "Apache Pirk (incubating) Project"? *Answer:* Accept the default
 * What is the new development version for "Apache Pirk (incubating) Project"? *Answer:* Accept the default
@@ -135,6 +135,7 @@ As per the Apache documentation, verify that the release candidate artifacts sat
 		* [Acceptable](http://www.apache.org/legal/resolved.html#category-a) and [Unacceptable](http://www.apache.org/legal/resolved.html#category-x) Dependency Licenses
 * The Cryptographic Export Control section in the README is up-to-date
 * All source files have license headers where appropriate, RAT checks pass
+* Javadocs have been generated correctly and are accurate
 * The provenance of all source files is clear (ASF or software grants)
 
 ### Close the Staging Repository ###
@@ -218,7 +219,7 @@ To vote on a candidate release, send an email to the [dev list](mailto:dev@pirk.
 	
 If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts).
 
-Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.
+Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success. Please use the subject: `[RESULT][VOTE]: Apache Pirk <release version> Release`.
 
 	The Apache Pirk <release version> vote is now closed and has passed as follows:
 
@@ -250,7 +251,7 @@ Once the candidate release vote passes on dev@pirk.apache.incubator.org, call a 
 
 If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, [roll back the release candidate](#how-to-roll-back-a-release-candidate), fix the issues, and start over with [creating the candidate artifacts](#create-the-candidate-release-artifacts) (including re-voting within the Apache Pirk community on dev@pirk.apache.incubator.org).
 
-Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.
+Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success. Please use the subject: `[RESULT][VOTE]: Apache Pirk <release version> Release`
 
 	The Apache Pirk <release version> vote is now closed and has passed as follows:
 
