@@ -267,7 +267,7 @@
   <li><code class="highlighter-rouge">mvn clean release:clean</code></li>
   <li><code class="highlighter-rouge">mvn release:prepare -Psigned_release -Darguments="-DskipTests"</code>
     <ul>
-      <li>You will be promted to answer the following questions:</li>
+      <li>You will be prompted to answer the following questions:</li>
       <li>What is the release version for “Apache Pirk (incubating) Project”? <em>Answer:</em> <code class="highlighter-rouge">&lt;new release version&gt;-incubating</code></li>
       <li>What is SCM release tag or label for “Apache Pirk (incubating) Project”? <em>Answer:</em> Accept the default</li>
       <li>What is the new development version for “Apache Pirk (incubating) Project”? <em>Answer:</em> Accept the default</li>
@@ -316,6 +316,7 @@
   </li>
   <li>The Cryptographic Export Control section in the README is up-to-date</li>
   <li>All source files have license headers where appropriate, RAT checks pass</li>
+  <li>Javadocs have been generated correctly and are accurate</li>
   <li>The provenance of all source files is clear (ASF or software grants)</li>
 </ul>
 
@@ -406,7 +407,7 @@ Please vote accordingly:
 
 <p>If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, <a href="#how-to-roll-back-a-release-candidate">roll back the release candidate</a>, fix the issues, and start over with <a href="#create-the-candidate-release-artifacts">creating the candidate artifacts</a>.</p>
 
-<p>Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.</p>
+<p>Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success. Please use the subject: <code class="highlighter-rouge">[RESULT][VOTE]: Apache Pirk &lt;release version&gt; Release</code>.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>The Apache Pirk &lt;release version&gt; vote is now closed and has passed as follows:
 
@@ -442,7 +443,7 @@ The vote will run for at least 72 hours.
 
 <p>If any -1 (binding) votes are entered, then address them such that the voter changes their vote to a +1 (binding) or cancel the vote, <a href="#how-to-roll-back-a-release-candidate">roll back the release candidate</a>, fix the issues, and start over with <a href="#create-the-candidate-release-artifacts">creating the candidate artifacts</a> (including re-voting within the Apache Pirk community on dev@pirk.apache.incubator.org).</p>
 
-<p>Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success.</p>
+<p>Once 72 hours has passed (which is generally preferred) and/or at least three +1 (binding) votes have been cast with no -1 (binding) votes, send an email closing the vote and pronouncing the release candidate a success. Please use the subject: <code class="highlighter-rouge">[RESULT][VOTE]: Apache Pirk &lt;release version&gt; Release</code></p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>The Apache Pirk &lt;release version&gt; vote is now closed and has passed as follows:
 
