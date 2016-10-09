@@ -26,8 +26,6 @@ import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
@@ -38,76 +36,81 @@ import org.slf4j.LoggerFactory;
  * Class to hold the PIR query vectors
  */
 
-public class Query implements Serializable, Storable {
+public class Query implements Serializable, Storable
+{
   public static final long querySerialVersionUID = 1L;
 
-  // So that we can serialize the version number in jackson.
-  @Expose
-  public final long queryVersion = querySerialVersionUID;
+  // So that we can serialize the version number in gson.
+  @Expose public final long queryVersion = querySerialVersionUID;
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  @Expose
-  private final QueryInfo queryInfo; // holds all query info
+  @Expose private final QueryInfo queryInfo; // holds all query info
 
-  @Expose
-  private final SortedMap<Integer, BigInteger> queryElements; // query elements - ordered on insertion
+  @Expose private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
-  private Map<BigInteger, Map<Integer, BigInteger>> expTable = new ConcurrentHashMap<>();
+  private Map<BigInteger,Map<Integer,BigInteger>> expTable = new ConcurrentHashMap<>();
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  @Expose
-  private Map<Integer, String> expFileBasedLookup = new HashMap<>();
+  @Expose private Map<Integer,String> expFileBasedLookup = new HashMap<>();
 
-  @Expose
-  private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
+  @Expose private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
 
-  @Expose
-  private final BigInteger NSquared;
+  @Expose private final BigInteger NSquared;
 
-  public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer, BigInteger> queryElements) {
+  public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer,BigInteger> queryElements)
+  {
     this(queryInfo, N, N.pow(2), queryElements);
   }
 
-  public Query(QueryInfo queryInfo, BigInteger N, BigInteger NSquared, SortedMap<Integer, BigInteger> queryElements) {
+  public Query(QueryInfo queryInfo, BigInteger N, BigInteger NSquared, SortedMap<Integer,BigInteger> queryElements)
+  {
     this.queryInfo = queryInfo;
     this.N = N;
     this.NSquared = NSquared;
     this.queryElements = queryElements;
   }
 
-  public QueryInfo getQueryInfo() {
+  public QueryInfo getQueryInfo()
+  {
     return queryInfo;
   }
 
-  public SortedMap<Integer, BigInteger> getQueryElements() {
+  public SortedMap<Integer,BigInteger> getQueryElements()
+  {
     return queryElements;
   }
 
-  public BigInteger getQueryElement(int index) {
+  public BigInteger getQueryElement(int index)
+  {
     return queryElements.get(index);
   }
 
-  public BigInteger getN() {
+  public BigInteger getN()
+  {
     return N;
   }
 
-  public BigInteger getNSquared() {
+  public BigInteger getNSquared()
+  {
     return NSquared;
   }
 
-  public Map<Integer, String> getExpFileBasedLookup() {
+  public Map<Integer,String> getExpFileBasedLookup()
+  {
     return expFileBasedLookup;
   }
 
-  public String getExpFile(int i) {
+  public String getExpFile(int i)
+  {
     return expFileBasedLookup.get(i);
   }
 
-  public void setExpFileBasedLookup(Map<Integer, String> expInput) {
+  public void setExpFileBasedLookup(Map<Integer,String> expInput)
+  {
     expFileBasedLookup = expInput;
   }
 
@@ -115,14 +118,17 @@ public class Query implements Serializable, Storable {
    * This should be called after all query elements have been added in order to generate the expTable. For int exponentiation with BigIntegers, assumes that
    * dataPartitionBitSize < 32.
    */
-  public void generateExpTable() {
+  public void generateExpTable()
+  {
     int maxValue = (1 << queryInfo.getDataPartitionBitSize()) - 1; // 2^partitionBitSize - 1
 
-    queryElements.values().parallelStream().forEach(new Consumer<BigInteger>() {
-      @Override
-      public void accept(BigInteger element) {
-        Map<Integer, BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
-        for (int i = 0; i <= maxValue; ++i) {
+    queryElements.values().parallelStream().forEach(new Consumer<BigInteger>()
+    {
+      @Override public void accept(BigInteger element)
+      {
+        Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
+        for (int i = 0; i <= maxValue; ++i)
+        {
           BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
           powMap.put(i, value);
         }
@@ -132,8 +138,9 @@ public class Query implements Serializable, Storable {
     logger.debug("expTable.size() = " + expTable.keySet().size() + " NSquared = " + NSquared.intValue() + " = " + NSquared.toString());
   }
 
-  public BigInteger getExp(BigInteger value, int power) {
-    Map<Integer, BigInteger> powerMap = expTable.get(value);
+  public BigInteger getExp(BigInteger value, int power)
+  {
+    Map<Integer,BigInteger> powerMap = expTable.get(value);
     return (powerMap == null) ? null : powerMap.get(power);
   }
 }

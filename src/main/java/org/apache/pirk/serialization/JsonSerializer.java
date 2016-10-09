@@ -18,7 +18,6 @@
  */
 package org.apache.pirk.serialization;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -36,15 +35,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-public class JsonSerializer extends SerializationService {
-  public static final Gson gson = new GsonBuilder()
-      .registerTypeAdapter(Response.class, new ResponseDeserializer())
-      .registerTypeAdapter(Query.class, new QueryDeserializer())
-      .registerTypeAdapter(Querier.class, new QuerierDeserializer())
-      .setPrettyPrinting()
-      .excludeFieldsWithoutExposeAnnotation()
-      .serializeNulls()
-      .create();
+public class JsonSerializer extends SerializationService
+{
+  public static final Gson gson = new GsonBuilder().registerTypeAdapter(Response.class, new ResponseDeserializer())
+      .registerTypeAdapter(Query.class, new QueryDeserializer()).registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
+      .excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
   /**
    * Stores the given object on the output stream as JSON.
@@ -53,8 +48,8 @@ public class JsonSerializer extends SerializationService {
    * @param obj          The object to be stored.
    * @throws IOException If a problem occurs storing the object on the given stream.
    */
-  @Override
-  public void write(OutputStream outputStream, Storable obj) throws IOException {
+  @Override public void write(OutputStream outputStream, Storable obj) throws IOException
+  {
     Writer writer = new OutputStreamWriter(outputStream);
     gson.toJson(obj, obj.getClass(), writer);
     writer.close();
@@ -67,8 +62,8 @@ public class JsonSerializer extends SerializationService {
    * @param classType   The type of object being retrieved.
    * @throws IOException If a problem occurs reading the object from the stream.
    */
-  @Override
-  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException {
+  @Override public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
+  {
     Reader reader = new InputStreamReader(inputStream);
     return gson.fromJson(reader, classType);
 

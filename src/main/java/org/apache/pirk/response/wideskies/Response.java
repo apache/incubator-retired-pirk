@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.TreeMap;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
@@ -32,36 +31,39 @@ import org.apache.pirk.serialization.Storable;
  * <p>
  * Serialized and returned to the querier for decryption
  */
-public class Response implements Serializable, Storable {
+public class Response implements Serializable, Storable
+{
   public static final long responseSerialVersionUID = 1L;
 
-  @Expose
-  public final long responseVersion = responseSerialVersionUID;
+  @Expose public final long responseVersion = responseSerialVersionUID;
 
-  @Expose
-  private QueryInfo queryInfo = null; // holds all query info
+  @Expose private QueryInfo queryInfo = null; // holds all query info
 
-  @Expose
-  private TreeMap<Integer, BigInteger> responseElements = null; // encrypted response columns, colNum -> column
+  @Expose private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
-  public Response(QueryInfo queryInfoInput) {
+  public Response(QueryInfo queryInfoInput)
+  {
     queryInfo = queryInfoInput;
     responseElements = new TreeMap<>();
   }
 
-  public TreeMap<Integer, BigInteger> getResponseElements() {
+  public TreeMap<Integer,BigInteger> getResponseElements()
+  {
     return responseElements;
   }
 
-  public void setResponseElements(TreeMap<Integer, BigInteger> elements) {
+  public void setResponseElements(TreeMap<Integer,BigInteger> elements)
+  {
     responseElements = elements;
   }
 
-  public QueryInfo getQueryInfo() {
+  public QueryInfo getQueryInfo()
+  {
     return queryInfo;
   }
 
-  public void addElement(int position, BigInteger element) {
+  public void addElement(int position, BigInteger element)
+  {
     responseElements.put(position, element);
   }
 }

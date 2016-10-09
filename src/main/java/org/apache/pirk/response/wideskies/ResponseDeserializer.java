@@ -33,24 +33,27 @@ import java.math.BigInteger;
 import java.util.TreeMap;
 
 /**
- * Custom deserializer for Response class for Jackson.
+ * Custom deserializer for Response class for Gson.
  */
-public class ResponseDeserializer implements JsonDeserializer<Response> {
+public class ResponseDeserializer implements JsonDeserializer<Response>
+{
 
   private static final Gson gson = new Gson();
 
-
-  @Override
-  public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+  @Override public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
+  {
     final JsonObject jsonObject = jsonElement.getAsJsonObject();
     long responseVersion = jsonObject.get("responseVersion").getAsLong();
-    if (responseVersion != Response.responseSerialVersionUID) {
-      throw new JsonParseException("\"Attempt to deserialize unsupported query version. Supported: \"\n" +
-          "          + Response.responseSerialVersionUID + \"; Received: \" + responseVersion");
+    if (responseVersion != Response.responseSerialVersionUID)
+    {
+      throw new JsonParseException("\"Attempt to deserialize unsupported query version. Supported: \"\n"
+          + "          + Response.responseSerialVersionUID + \"; Received: \" + responseVersion");
     }
     QueryInfo queryInfo = QueryDeserializer.deserializeInfo(jsonObject.get("queryInfo").getAsJsonObject());
     Response response = new Response(queryInfo);
-    TreeMap<Integer, BigInteger> responseElements = gson.fromJson(jsonObject.get("responseElements"), new TypeToken<TreeMap<Integer, BigInteger>>(){}.getType());
+    TreeMap<Integer,BigInteger> responseElements = gson.fromJson(jsonObject.get("responseElements"), new TypeToken<TreeMap<Integer,BigInteger>>()
+    {
+    }.getType());
     response.setResponseElements(responseElements);
     return response;
   }
