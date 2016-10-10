@@ -22,7 +22,22 @@ import org.apache.pirk.utils.PIRException;
 
 import java.util.Properties;
 
-import static org.apache.pirk.querier.wideskies.QuerierProps.*;
+import static org.apache.pirk.querier.wideskies.QuerierProps.BITSET;
+import static org.apache.pirk.querier.wideskies.QuerierProps.CERTAINTY;
+import static org.apache.pirk.querier.wideskies.QuerierProps.DATAPARTITIONSIZE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.EMBEDSELECTOR;
+import static org.apache.pirk.querier.wideskies.QuerierProps.HASHBITSIZE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.HASHKEY;
+import static org.apache.pirk.querier.wideskies.QuerierProps.NUMTHREADS;
+import static org.apache.pirk.querier.wideskies.QuerierProps.PAILLIERBITSIZE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.QUERYTYPE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.USEHDFSLOOKUPTABLE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.USEMEMLOOKUPTABLE;
+import static org.apache.pirk.querier.wideskies.QuerierProps.setEncryptionDefaults;
+import static org.apache.pirk.querier.wideskies.QuerierProps.setGeneralDefaults;
+import static org.apache.pirk.querier.wideskies.QuerierProps.validateQuerierEncryptionProperties;
+
+//import static org.apache.pirk.querier.wideskies.QuerierProps.;
 
 /**
  * Holds the various parameters related to creating a {@link Querier}.

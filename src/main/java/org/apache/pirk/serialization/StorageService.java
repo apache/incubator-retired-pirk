@@ -18,7 +18,7 @@
  *******************************************************************************/
 package org.apache.pirk.serialization;
 
-/* 
+/**
  * Common supertype for types that can store objects using serialization.
  */
 abstract class StorageService
@@ -27,7 +27,7 @@ abstract class StorageService
 
   StorageService()
   {
-    this.setSerializer(new JavaSerializer());
+    this.setSerializer(new JsonSerializer());
   }
 
   StorageService(SerializationService service)
