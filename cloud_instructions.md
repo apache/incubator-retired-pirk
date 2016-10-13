@@ -1,5 +1,5 @@
 ---
-title: Running Pirk in Cloud Environments (GCP, AWS, Azure)
+title: Running Pirk in Cloud Environments (GCP, AWS, Azure, Bluemix)
 nav: nav_commercial_cloud
 ---
 
@@ -142,25 +142,26 @@ If you want to SSH in and set up a SOCKS proxy to access the [web interfaces](ht
 12. When you are done working with your cluster, terminate it:  
 `aws emr terminate-clusters --cluster-ids `**`$cid`**
 
-
 ## IBM Bluemix
-1 .[Sign-up](https://console.ng.bluemix.net/registration/) for a free Bluemix account.
-2. From the Bluemix [catalog](https://console.ng.bluemix.net/catalog/) open the "Big Insights for Apache Hadoop" service, found in the Data and Analytics section, and click "Create".  The basic service plan is free during beta, but will need to be recreated every two weeks.
+1. [Sign-up](https://console.ng.bluemix.net/registration/) for a free Bluemix account.
+2. From the Bluemix [catalog](https://console.ng.bluemix.net/catalog/), open the "Big Insights for Apache Hadoop" service (found in the Data and Analytics section) and click "Create".
 3. Click "Open" to see the cluster list, and from there create a new cluster,
 e.g.
-  cluster name: test-cluster
-  user name: pirk
-  password: <password>.
-In Configuration:
-  Increase the number of data nodes to 5 (the maximum number available on the basic plan)
-  Scroll down and select "Spark" as an optional component.
-Click "Create".
-4. Select the test cluster from the Cluster List and take note of the SSH host name, e.g. bi-hadoop-prod-4174.bi.services.us-south.bluemix.net
-5. Now you can run the distributed tests by copying the Pirk jar file and executing it in Bluemix., i.e.
-`$ scp target/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net:
-pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: 
-apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar                                                       100%  145MB  10.3MB/s   00:14 
-$ ssh pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net
-pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: 
--bash-4.1$ hadoop jar apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar org.apache.pirk.test.distributed.DistributedTestDriver -j apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar`
+  * `cluster name =` *`test-cluster`*, `user name = pirk`, `password =` *`password`*.
+  * In the Configuration section increase the number of data nodes to 5 (the maximum number available on the basic plan).
+  * Scroll down and select "Spark" as an optional component.
+  * Click "Create".
+4. Select the test cluster from the Cluster List and take note of the SSH host name,
+e.g. `bi-hadoop-prod-4174.bi.services.us-south.bluemix.net`
+5. Now you can run the distributed tests by copying the Pirk jar file and executing it in Bluemix, e.g.
+
+        $ scp target/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net:
+        pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: **********
+        apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar                                                       100%  145MB  10.3MB/s   00:14 
+
+        $ ssh pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net
+        pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: **********
+
+        -bash-4.1$ hadoop jar apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar org.apache.pirk.test.distributed.DistributedTestDriver -j apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar
+6. There is no need to stop the cluster as the basic service plan is free during beta, but the cluster will need to be recreated every two weeks.
 
