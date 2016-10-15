@@ -410,7 +410,8 @@
                             <exclude>eclipse*.xml</exclude> <!-- Exclude eclipse* xml -->
                             <exclude>docs/*</exclude> <!-- Exclude docs -->
                             <exclude>logs/*</exclude> <!-- Exclude logs -->
-                            <exclude>**/m2.conf</exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
+                            <exclude>**/m2.conf
+                            </exclude> <!-- Exclude Maven conf which gets installed on travis and fails RAT check -->
                             <exclude>src/main/resources/META-INF/**</exclude>
                         </excludes>
                     </configuration>
@@ -549,9 +550,11 @@
                                 <shadedArtifactAttached>true</shadedArtifactAttached>
                                 <shadedClassifierName>exe</shadedClassifierName>
                                 <transformers>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
                                     </transformer>
                                 </transformers>
                                 <filters>

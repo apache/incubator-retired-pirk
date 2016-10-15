@@ -18,46 +18,55 @@
  */
 package org.apache.pirk.serialization;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.pirk.querier.wideskies.Querier;
+import org.apache.pirk.querier.wideskies.QuerierDeserializer;
+import org.apache.pirk.query.wideskies.QueryDeserializer;
+import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.response.wideskies.ResponseDeserializer;
+
+import javax.management.Query;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
 public class JsonSerializer extends SerializationService
 {
-  private ObjectMapper objectMapper = new ObjectMapper();
+  public static final Gson gson = new GsonBuilder().registerTypeAdapter(Response.class, new ResponseDeserializer())
+      .registerTypeAdapter(Query.class, new QueryDeserializer()).registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
+      .excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
   /**
    * Stores the given object on the output stream as JSON.
    *
-   * @param outputStream
-   *          The stream on which to store the object.
-   * @param obj
-   *          The object to be stored.
-   * @throws IOException
-   *           If a problem occurs storing the object on the given stream.
+   * @param outputStream The stream on which to store the object.
+   * @param obj          The object to be stored.
+   * @throws IOException If a problem occurs storing the object on the given stream.
    */
-  @Override
-  public void write(OutputStream outputStream, Storable obj) throws IOException
+  @Override public void write(OutputStream outputStream, Storable obj) throws IOException
   {
-    objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, obj);
+    Writer writer = new OutputStreamWriter(outputStream);
+    gson.toJson(obj, obj.getClass(), writer);
+    writer.close();
   }
 
   /**
    * Read a JSON string from the given input stream and returns the Object representation.
    *
-   * @param inputStream
-   *          The stream from which to read the object.
-   * @param classType
-   *          The type of object being retrieved.
-   * @throws IOException
-   *           If a problem occurs reading the object from the stream.
+   * @param inputStream The stream from which to read the object.
+   * @param classType   The type of object being retrieved.
+   * @throws IOException If a problem occurs reading the object from the stream.
    */
-  @Override
-  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
+  @Override public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
   {
-    return objectMapper.readValue(inputStream, classType);
+    Reader reader = new InputStreamReader(inputStream);
+    return gson.fromJson(reader, classType);
+
   }
 
 }

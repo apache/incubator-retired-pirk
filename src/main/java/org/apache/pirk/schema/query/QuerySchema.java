@@ -18,6 +18,9 @@
  */
 package org.apache.pirk.schema.query;
 
+import com.google.gson.annotations.Expose;
+import org.apache.pirk.schema.query.filter.DataFilter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,45 +28,45 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.pirk.schema.query.filter.DataFilter;
-
 /**
  * Class to hold a query schema
- *
  */
 public class QuerySchema implements Serializable
 {
-  private static final long serialVersionUID = 1L;
+  public static final long querySchemaSerialVersionUID = 1L;
+
+  // So that we can serialize the version number in gson.
+  @Expose public final long querySchemaVersion = querySchemaSerialVersionUID;
 
   // This schema's name.
-  private final String schemaName;
+  @Expose private final String schemaName;
 
   // Name of the data schema associated with this query schema.
-  private final String dataSchemaName;
+  @Expose private final String dataSchemaName;
 
   // Name of element in the dataSchema to be used as the selector.
-  private final String selectorName;
+  @Expose private final String selectorName;
 
   // Element names from the data schema to include in the response.
   // Order matters for packing/unpacking.
-  private final List<String> elementNames = new ArrayList<>();
+  @Expose private final List<String> elementNames = new ArrayList<>();
 
   // Name of class to use in data filtering.
-  private final String filterTypeName;
+  @Expose private final String filterTypeName;
 
   // Instance of the filterTypeName.
   private final DataFilter filter;
 
   // Set of data schema element names on which to apply filtering.
-  private final Set<String> filteredElementNames = new HashSet<>();
+  @Expose private final Set<String> filteredElementNames = new HashSet<>();
 
   // Total number of bits to be returned for each data element hit.
-  private final int dataElementSize;
+  @Expose private final int dataElementSize;
 
-  // Additional fields by key,value
-  private final HashMap<String,String> additionalFields = new HashMap<>();
+  // Addiional fields by key,value
+  @Expose private final HashMap<String,String> additionalFields = new HashMap<>();
 
-  QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
+  public QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {
     this.schemaName = schemaName;
     this.dataSchemaName = dataSchemaName;
@@ -75,7 +78,7 @@ public class QuerySchema implements Serializable
 
   /**
    * Returns the name of this schema.
-   * 
+   *
    * @return The schema name.
    */
   public String getSchemaName()
@@ -99,7 +102,7 @@ public class QuerySchema implements Serializable
    * Returns the element names to include in the response.
    * <p>
    * The element names are defined by the data schema associated with this query.
-   * 
+   *
    * @return The ordered list of query element names.
    */
   public List<String> getElementNames()
@@ -111,7 +114,7 @@ public class QuerySchema implements Serializable
    * Returns the element name used as the selector.
    * <p>
    * The element names are defined by the data schema associated with this query.
-   * 
+   *
    * @return The element names being selected.
    */
   public String getSelectorName()
@@ -126,9 +129,9 @@ public class QuerySchema implements Serializable
 
   /**
    * Returns the name of the filter class for this query.
-   * 
+   * <p>
    * The filter class name is the fully qualified name of a Java class that implements the {@link DataFilter} interface.
-   * 
+   *
    * @return The type name of the query filter, or <code>null</code> if there is no filter defined.
    */
   public String getFilterTypeName()
@@ -138,7 +141,7 @@ public class QuerySchema implements Serializable
 
   /**
    * Returns the set of element names on which to apply the filter.
-   * 
+   *
    * @return The possibly empty set of data schema element names.
    */
   public Set<String> getFilteredElementNames()
@@ -150,7 +153,7 @@ public class QuerySchema implements Serializable
    * Returns the data element filter for this query.
    * <p>
    * The data filter is applied to the {@link QuerySchema#getFilteredElementNames()} data elements.
-   * 
+   *
    * @return The data filter, or <code>null</code> if no filter has been specified for this query.
    */
   public DataFilter getFilter()
@@ -162,7 +165,7 @@ public class QuerySchema implements Serializable
    * Returns the map of additional field keys and values
    * <p>
    * Note that additional fields are optional, thus the map may be empty
-   * 
+   *
    * @return The additionalFields HashMap
    */
   public HashMap<String,String> getAdditionalFields()
@@ -172,7 +175,7 @@ public class QuerySchema implements Serializable
 
   /**
    * Returns the value from the additionalFields mapping corresponding to the given key
-   * 
+   *
    * @param key
    * @return value from the additionalFields mapping corresponding to the given key
    */

@@ -26,6 +26,7 @@ import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
@@ -33,17 +34,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to hold the PIR query vectors
- *
  */
+
 public class Query implements Serializable, Storable
 {
-  private static final long serialVersionUID = 1L;
+  public static final long querySerialVersionUID = 1L;
+
+  // So that we can serialize the version number in gson.
+  @Expose public final long queryVersion = querySerialVersionUID;
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  private final QueryInfo queryInfo; // holds all query info
+  @Expose private final QueryInfo queryInfo; // holds all query info
 
-  private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
+  @Expose private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
@@ -51,16 +55,22 @@ public class Query implements Serializable, Storable
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  private Map<Integer,String> expFileBasedLookup = new HashMap<>();
+  @Expose private Map<Integer,String> expFileBasedLookup = new HashMap<>();
 
-  private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
-  private final BigInteger NSquared;
+  @Expose private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
+
+  @Expose private final BigInteger NSquared;
 
   public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer,BigInteger> queryElements)
   {
+    this(queryInfo, N, N.pow(2), queryElements);
+  }
+
+  public Query(QueryInfo queryInfo, BigInteger N, BigInteger NSquared, SortedMap<Integer,BigInteger> queryElements)
+  {
     this.queryInfo = queryInfo;
     this.N = N;
-    NSquared = N.pow(2);
+    this.NSquared = NSquared;
     this.queryElements = queryElements;
   }
 
@@ -114,8 +124,7 @@ public class Query implements Serializable, Storable
 
     queryElements.values().parallelStream().forEach(new Consumer<BigInteger>()
     {
-      @Override
-      public void accept(BigInteger element)
+      @Override public void accept(BigInteger element)
       {
         Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
         for (int i = 0; i <= maxValue; ++i)
