@@ -32,20 +32,27 @@ import org.apache.pirk.serialization.Storable;
  */
 public class Querier implements Serializable, Storable
 {
+  private static final long serialVersionUID = 1L;
+
   public static final long querierSerialVersionUID = 1L;
 
-  @Expose public final long querierVersion = querierSerialVersionUID;
+  @Expose
+  public final long querierVersion = querierSerialVersionUID;
 
-  @Expose private Query query = null; // contains the query vectors and functionality
+  @Expose
+  private Query query = null; // contains the query vectors and functionality
 
-  @Expose private Paillier paillier = null; // Paillier encryption functionality
+  @Expose
+  private Paillier paillier = null; // Paillier encryption functionality
 
-  @Expose private List<String> selectors = null; // selectors
+  @Expose
+  private List<String> selectors = null; // selectors
 
   // map to check the embedded selectors in the results for false positives;
   // if the selector is a fixed size < 32 bits, it is included as is
   // if the selector is of variable lengths
-  @Expose private Map<Integer,String> embedSelectorMap = null;
+  @Expose
+  private Map<Integer,String> embedSelectorMap = null;
 
   public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer,String> embedSelectorMapInput)
   {

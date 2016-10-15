@@ -38,16 +38,21 @@ import org.slf4j.LoggerFactory;
 
 public class Query implements Serializable, Storable
 {
+  private static final long serialVersionUID = 1L;
+
   public static final long querySerialVersionUID = 1L;
 
   // So that we can serialize the version number in gson.
-  @Expose public final long queryVersion = querySerialVersionUID;
+  @Expose
+  public final long queryVersion = querySerialVersionUID;
 
   private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
-  @Expose private final QueryInfo queryInfo; // holds all query info
+  @Expose
+  private final QueryInfo queryInfo; // holds all query info
 
-  @Expose private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
+  @Expose
+  private final SortedMap<Integer,BigInteger> queryElements; // query elements - ordered on insertion
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
@@ -55,11 +60,14 @@ public class Query implements Serializable, Storable
 
   // File based lookup table for modular exponentiation
   // element hash -> filename containing it's <power, element^power mod N^2> modular exponentiations
-  @Expose private Map<Integer,String> expFileBasedLookup = new HashMap<>();
+  @Expose
+  private Map<Integer,String> expFileBasedLookup = new HashMap<>();
 
-  @Expose private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
+  @Expose
+  private final BigInteger N; // N=pq, RSA modulus for the Paillier encryption associated with the queryElements
 
-  @Expose private final BigInteger NSquared;
+  @Expose
+  private final BigInteger NSquared;
 
   public Query(QueryInfo queryInfo, BigInteger N, SortedMap<Integer,BigInteger> queryElements)
   {
@@ -124,7 +132,8 @@ public class Query implements Serializable, Storable
 
     queryElements.values().parallelStream().forEach(new Consumer<BigInteger>()
     {
-      @Override public void accept(BigInteger element)
+      @Override
+      public void accept(BigInteger element)
       {
         Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
         for (int i = 0; i <= maxValue; ++i)
