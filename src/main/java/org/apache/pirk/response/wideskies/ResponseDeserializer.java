@@ -40,7 +40,8 @@ public class ResponseDeserializer implements JsonDeserializer<Response>
 
   private static final Gson gson = new Gson();
 
-  @Override public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
+  @Override
+  public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
   {
     final JsonObject jsonObject = jsonElement.getAsJsonObject();
     long responseVersion = jsonObject.get("responseVersion").getAsLong();
@@ -52,10 +53,8 @@ public class ResponseDeserializer implements JsonDeserializer<Response>
     QueryInfo queryInfo = QueryDeserializer.deserializeInfo(jsonObject.get("queryInfo").getAsJsonObject());
     Response response = new Response(queryInfo);
     TreeMap<Integer,BigInteger> responseElements = gson.fromJson(jsonObject.get("responseElements"), new TypeToken<TreeMap<Integer,BigInteger>>()
-    {
-    }.getType());
+    {}.getType());
     response.setResponseElements(responseElements);
     return response;
   }
 }
-

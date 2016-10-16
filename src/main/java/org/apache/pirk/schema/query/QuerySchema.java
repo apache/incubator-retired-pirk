@@ -33,38 +33,49 @@ import java.util.Set;
  */
 public class QuerySchema implements Serializable
 {
+  private static final long serialVersionUID = 1L;
+
   public static final long querySchemaSerialVersionUID = 1L;
 
   // So that we can serialize the version number in gson.
-  @Expose public final long querySchemaVersion = querySchemaSerialVersionUID;
+  @Expose
+  public final long querySchemaVersion = querySchemaSerialVersionUID;
 
   // This schema's name.
-  @Expose private final String schemaName;
+  @Expose
+  private final String schemaName;
 
   // Name of the data schema associated with this query schema.
-  @Expose private final String dataSchemaName;
+  @Expose
+  private final String dataSchemaName;
 
   // Name of element in the dataSchema to be used as the selector.
-  @Expose private final String selectorName;
+  @Expose
+  private final String selectorName;
 
   // Element names from the data schema to include in the response.
   // Order matters for packing/unpacking.
-  @Expose private final List<String> elementNames = new ArrayList<>();
+  @Expose
+  private final List<String> elementNames = new ArrayList<>();
 
   // Name of class to use in data filtering.
-  @Expose private final String filterTypeName;
+  @Expose
+  private final String filterTypeName;
 
   // Instance of the filterTypeName.
   private final DataFilter filter;
 
   // Set of data schema element names on which to apply filtering.
-  @Expose private final Set<String> filteredElementNames = new HashSet<>();
+  @Expose
+  private final Set<String> filteredElementNames = new HashSet<>();
 
   // Total number of bits to be returned for each data element hit.
-  @Expose private final int dataElementSize;
+  @Expose
+  private final int dataElementSize;
 
   // Addiional fields by key,value
-  @Expose private final HashMap<String,String> additionalFields = new HashMap<>();
+  @Expose
+  private final HashMap<String,String> additionalFields = new HashMap<>();
 
   public QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {

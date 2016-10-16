@@ -44,11 +44,15 @@ public class JsonSerializer extends SerializationService
   /**
    * Stores the given object on the output stream as JSON.
    *
-   * @param outputStream The stream on which to store the object.
-   * @param obj          The object to be stored.
-   * @throws IOException If a problem occurs storing the object on the given stream.
+   * @param outputStream
+   *          The stream on which to store the object.
+   * @param obj
+   *          The object to be stored.
+   * @throws IOException
+   *           If a problem occurs storing the object on the given stream.
    */
-  @Override public void write(OutputStream outputStream, Storable obj) throws IOException
+  @Override
+  public void write(OutputStream outputStream, Storable obj) throws IOException
   {
     Writer writer = new OutputStreamWriter(outputStream);
     gson.toJson(obj, obj.getClass(), writer);
@@ -58,11 +62,15 @@ public class JsonSerializer extends SerializationService
   /**
    * Read a JSON string from the given input stream and returns the Object representation.
    *
-   * @param inputStream The stream from which to read the object.
-   * @param classType   The type of object being retrieved.
-   * @throws IOException If a problem occurs reading the object from the stream.
+   * @param inputStream
+   *          The stream from which to read the object.
+   * @param classType
+   *          The type of object being retrieved.
+   * @throws IOException
+   *           If a problem occurs reading the object from the stream.
    */
-  @Override public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
+  @Override
+  public <T> T read(InputStream inputStream, Class<T> classType) throws IOException
   {
     Reader reader = new InputStreamReader(inputStream);
     return gson.fromJson(reader, classType);

@@ -33,13 +33,18 @@ import org.apache.pirk.serialization.Storable;
  */
 public class Response implements Serializable, Storable
 {
+  private static final long serialVersionUID = 1L;
+
   public static final long responseSerialVersionUID = 1L;
 
-  @Expose public final long responseVersion = responseSerialVersionUID;
+  @Expose
+  public final long responseVersion = responseSerialVersionUID;
 
-  @Expose private QueryInfo queryInfo = null; // holds all query info
+  @Expose
+  private QueryInfo queryInfo = null; // holds all query info
 
-  @Expose private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
+  @Expose
+  private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
   public Response(QueryInfo queryInfoInput)
   {

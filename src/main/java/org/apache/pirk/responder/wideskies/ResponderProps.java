@@ -266,7 +266,7 @@ public class ResponderProps
     {
       SystemConfiguration.setProperty(EMBEDQUERYSCHEMA, "false");
     }
-    
+
     if (!SystemConfiguration.hasProperty(USELOCALCACHE))
     {
       SystemConfiguration.setProperty(USELOCALCACHE, "true");

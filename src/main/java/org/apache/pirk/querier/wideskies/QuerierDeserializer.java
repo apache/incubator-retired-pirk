@@ -41,7 +41,8 @@ public class QuerierDeserializer implements JsonDeserializer<Querier>
 
   private static final Gson gson = new Gson();
 
-  @Override public Querier deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
+  @Override
+  public Querier deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
   {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
     // Check the version number.
@@ -58,11 +59,9 @@ public class QuerierDeserializer implements JsonDeserializer<Querier>
     Paillier paillier = deserializePaillier(jsonObject.get("paillier").getAsJsonObject());
 
     List<String> selectors = gson.fromJson(jsonObject.get("selectors").toString(), new TypeToken<List<String>>()
-    {
-    }.getType());
+    {}.getType());
     Map<Integer,String> embedSelectorMap = gson.fromJson(jsonObject.get("embedSelectorMap").toString(), new TypeToken<Map<Integer,String>>()
-    {
-    }.getType());
+    {}.getType());
 
     return new Querier(selectors, paillier, query, embedSelectorMap);
   }
@@ -70,7 +69,8 @@ public class QuerierDeserializer implements JsonDeserializer<Querier>
   /**
    * Deserializes a Paillier JsonObject.
    *
-   * @param paillier A JsonObject at the root of a serialied Paillier object.
+   * @param paillier
+   *          A JsonObject at the root of a serialied Paillier object.
    * @return A Paillier object of the deserialized Json.
    */
   private Paillier deserializePaillier(JsonObject paillier)
