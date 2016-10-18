@@ -19,6 +19,8 @@
 package org.apache.pirk.querier.wideskies.encrypt;
 
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.query.wideskies.Query;
@@ -64,9 +67,33 @@ public class EncryptQuery
   // Paillier encryption functionality.
   private final Paillier paillier;
 
+  private static final SecureRandom secureRandom;
+
+  static
+  {
+    try
+    {
+      String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
+      if (alg == null)
+      {
+        secureRandom = new SecureRandom();
+      }
+      else
+      {
+        String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
+        secureRandom = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
+      }
+      logger.info("Using secure random from " + secureRandom.getProvider().getName() + ":" + secureRandom.getAlgorithm());
+    } catch (GeneralSecurityException e)
+    {
+      logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
+      throw new RuntimeException("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
+    }
+  }
+
   /**
    * Constructs a query encryptor using the given query information, selectors, and Paillier cryptosystem.
-   * 
+   *
    * @param queryInfo
    *          Fundamental information about the query.
    * @param selectors
@@ -87,7 +114,7 @@ public class EncryptQuery
    * The encryption builds a <code>Querier</code> object, calculating and setting the query vectors.
    * <p>
    * Uses the system configured number of threads to conduct the encryption, or a single thread if the configuration has not been set.
-   * 
+   *
    * @throws InterruptedException
    *           If the task was interrupted during encryption.
    * @throws PIRException
@@ -110,7 +137,7 @@ public class EncryptQuery
    * For encrypted query vector E = <E_0, ..., E_{(2^hashBitSize)-1}>:
    * <p>
    * E_i = 2^{j*dataPartitionBitSize} if i = H_k(selector_j) 0 otherwise
-   * 
+   *
    * @param numThreads
    *          the number of threads to use when performing the encryption.
    * @throws InterruptedException
@@ -156,10 +183,22 @@ public class EncryptQuery
     return new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
+  /**
+   * Use this method to get a securely generated, random string of 2*numBytes length
+   * @param numBytes How many bytes of random data to return.
+   * @return Random hex string of 2*numBytes length
+   */
+  private String getRandByteString(int numBytes)
+  {
+    byte[] randomData = new byte[numBytes];
+    secureRandom.nextBytes(randomData);
+    return Hex.encodeHexString(randomData);
+  }
+
   private Map<Integer,Integer> computeSelectorQueryVecMap()
   {
-    String hashKey = queryInfo.getHashKey();
-    int keyCounter = 0;
+    String hashKeyBase = queryInfo.getHashKey();
+    String hashKey = hashKeyBase + getRandByteString(10);
     int numSelectors = selectors.size();
     Map<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
@@ -178,11 +217,14 @@ public class EncryptQuery
       {
         // Hash collision
         selectorQueryVecMapping.clear();
-        hashKey = queryInfo.getHashKey() + ++keyCounter;
+        hashKey = hashKeyBase + getRandByteString(10);
         logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
         index = -1;
       }
     }
+    
+    // Save off the final hashKey that we ended up using
+    queryInfo.setHashKey(hashKey);
     return selectorQueryVecMapping;
   }
 

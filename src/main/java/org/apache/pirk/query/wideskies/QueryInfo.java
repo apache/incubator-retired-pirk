@@ -151,6 +151,11 @@ public class QueryInfo implements Serializable, Cloneable
     return hashKey;
   }
 
+  public void setHashKey(String hashKey)
+  {
+    this.hashKey = hashKey;
+  }
+
   public int getNumBitsPerDataElement()
   {
     return numBitsPerDataElement;
