@@ -26,7 +26,7 @@
 <link href="/css/pirk.css" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<title>Running Pirk in Cloud Environments (GCP, AWS, Azure)</title>
+<title>Running Pirk in Cloud Environments (GCP, AWS, Azure, Bluemix)</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -147,7 +147,7 @@
       <div class="col-md-12">
         <div id="content">
           
-          <h1 class="title">Running Pirk in Cloud Environments (GCP, AWS, Azure)</h1>
+          <h1 class="title">Running Pirk in Cloud Environments (GCP, AWS, Azure, Bluemix)</h1>
           
           <h2 id="google-cloud-platform-gcp">Google Cloud Platform (GCP)</h2>
 <p>This guide is a walkthrough with steps to get Pirk running on Google’s Cloud Platform.</p>
@@ -315,6 +315,39 @@ If you want to SSH in and set up a SOCKS proxy to access the <a href="https://do
   <li>When you are done working with your cluster, terminate it:<br />
 <code class="highlighter-rouge">aws emr terminate-clusters --cluster-ids </code><strong><code class="highlighter-rouge">$cid</code></strong></li>
 </ol>
+
+<h2 id="ibm-bluemix">IBM Bluemix</h2>
+<ol>
+  <li><a href="https://console.ng.bluemix.net/registration/">Sign-up</a> for a free Bluemix account.</li>
+  <li>From the Bluemix <a href="https://console.ng.bluemix.net/catalog/">catalog</a>, open the “Big Insights for Apache Hadoop” service (found in the Data and Analytics section) and click “Create”.</li>
+  <li>Click “Open” to see the cluster list, and from there create a new cluster,
+e.g.
+    <ul>
+      <li><code class="highlighter-rouge">cluster name =</code> <em><code class="highlighter-rouge">test-cluster</code></em>, <code class="highlighter-rouge">user name = pirk</code>, <code class="highlighter-rouge">password =</code> <em><code class="highlighter-rouge">password</code></em>.</li>
+      <li>In the Configuration section increase the number of data nodes to 5 (the maximum number available on the basic plan).</li>
+      <li>Scroll down and select “Spark” as an optional component.</li>
+      <li>Click “Create”.</li>
+    </ul>
+  </li>
+  <li>Select the test cluster from the Cluster List and take note of the SSH host name,
+e.g. <code class="highlighter-rouge">bi-hadoop-prod-4174.bi.services.us-south.bluemix.net</code></li>
+  <li>
+    <p>Now you can run the distributed tests by copying the Pirk jar file and executing it in Bluemix, e.g.</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> $ scp target/apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net:
+ pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: **********
+ apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar                                                       100%  145MB  10.3MB/s   00:14 
+
+ $ ssh pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net
+ pirk@bi-hadoop-prod-4174.bi.services.us-south.bluemix.net's password: **********
+
+ -bash-4.1$ hadoop jar apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar org.apache.pirk.test.distributed.DistributedTestDriver -j apache-pirk-0.2.0-incubating-SNAPSHOT-exe.jar
+</code></pre>
+    </div>
+  </li>
+  <li>There is no need to stop the cluster as the basic service plan is free during beta, but the cluster will need to be recreated every two weeks.</li>
+</ol>
+
 
         </div>
 
