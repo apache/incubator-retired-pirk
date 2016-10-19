@@ -20,6 +20,7 @@ package org.apache.pirk.encryption;
 
 import static org.apache.pirk.utils.RandomProvider.getSecureRandom;
 
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -72,13 +73,16 @@ public final class Paillier implements Serializable
   private static final Logger logger = LoggerFactory.getLogger(Paillier.class);
 
   private BigInteger p; // large prime
+  @Expose
   private BigInteger q; // large prime
   private BigInteger N; // N=pq, RSA modulus
 
   private BigInteger NSquared; // NSquared = N^2
-  private BigInteger lambdaN; // lambda(N) = lcm(p-1,q-1), Carmichael function of N
-  private BigInteger w; // lambda(N)^-1 mod N
 
+  private BigInteger lambdaN; // lambda(N) = lcm(p-1,q-1), Carmichael function of N
+
+  private BigInteger w; // lambda(N)^-1 mod N
+  @Expose
   private final int bitLength; // bit length of the modulus N
 
   /**

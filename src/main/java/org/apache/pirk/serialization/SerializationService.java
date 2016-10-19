@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/*
+/**
  * Ability to read and write objects to/from a stream.
  */
 public abstract class SerializationService

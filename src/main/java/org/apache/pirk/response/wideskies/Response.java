@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.TreeMap;
 
+import com.google.gson.annotations.Expose;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.serialization.Storable;
 
@@ -29,14 +30,20 @@ import org.apache.pirk.serialization.Storable;
  * Class to hold the encrypted response elements for the PIR query
  * <p>
  * Serialized and returned to the querier for decryption
- * 
  */
 public class Response implements Serializable, Storable
 {
   private static final long serialVersionUID = 1L;
 
+  public static final long responseSerialVersionUID = 1L;
+
+  @Expose
+  public final long responseVersion = responseSerialVersionUID;
+
+  @Expose
   private QueryInfo queryInfo = null; // holds all query info
 
+  @Expose
   private TreeMap<Integer,BigInteger> responseElements = null; // encrypted response columns, colNum -> column
 
   public Response(QueryInfo queryInfoInput)
