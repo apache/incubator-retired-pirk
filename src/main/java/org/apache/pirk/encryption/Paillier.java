@@ -18,7 +18,7 @@
  */
 package org.apache.pirk.encryption;
 
-import static org.apache.pirk.utils.RandomProvider.getSecureRandom;
+import org.apache.pirk.utils.RandomProvider;
 
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.utils.PIRException;
@@ -256,7 +256,7 @@ public final class Paillier implements Serializable
   private void getKeys(int bitLength, int certainty)
   {
     // Generate the primes
-    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, getSecureRandom());
+    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, RandomProvider.SECURE_RANDOM);
     p = pq[0];
     q = pq[1];
 
@@ -285,10 +285,10 @@ public final class Paillier implements Serializable
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
     // Generate a random value r in (Z/NZ)*
-    BigInteger r = (new BigInteger(bitLength, getSecureRandom())).mod(N);
+    BigInteger r = (new BigInteger(bitLength, RandomProvider.SECURE_RANDOM)).mod(N);
     while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO))
     {
-      r = (new BigInteger(bitLength, getSecureRandom())).mod(N);
+      r = (new BigInteger(bitLength, RandomProvider.SECURE_RANDOM)).mod(N);
     }
 
     return encrypt(m, r);

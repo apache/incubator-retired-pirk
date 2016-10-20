@@ -18,8 +18,6 @@
  */
 package org.apache.pirk.querier.wideskies.encrypt;
 
-import static org.apache.pirk.utils.RandomProvider.getSecureRandom;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.pirk.encryption.Paillier;
 import org.apache.pirk.querier.wideskies.Querier;
@@ -32,6 +30,7 @@ import org.apache.pirk.schema.query.QuerySchema;
 import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.utils.KeyedHash;
 import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.RandomProvider;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,7 +158,7 @@ public class EncryptQuery
   private String getRandByteString(int numBytes)
   {
     byte[] randomData = new byte[numBytes];
-    getSecureRandom().nextBytes(randomData);
+    RandomProvider.SECURE_RANDOM.nextBytes(randomData);
     return Hex.encodeHexString(randomData);
   }
 

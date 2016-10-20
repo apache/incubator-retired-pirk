@@ -26,12 +26,25 @@ import java.security.SecureRandom;
 
 /**
  * Class that provides access to an existing SecureRandom object.
+ * <p>
+ * SECURE_RANDOM is a globally available SecureRandom instantiated based on the "pallier.secureRandom.algorithm" and "pallier.secureRandom.provider"
+ * configuration variables.
+ * <p>
+ * This is safe because there is no way for a user to make the quality of the generated random worse nor to reveal critical state of the PRNG.
+ * <p>
+ * The two methods that would appear to cause problems <i>but don't</i> are:
+ * <ul>
+ * <li> {@code setSeed} - setSeed doesn't replace the seed in the SecureRandom object but instead "the given seed supplements, rather than replaces, the
+ * existing seed. Thus, repeated calls are guaranteed never to reduce randomness".
+ * <li> {@code getSeed} - getSeed doesn't return the seed of the SecureRandom object but returns new seed material generated with the same seed generation
+ * algorithm used to create the instance.
+ * <p>
+ * </ul>
  */
 public class RandomProvider
 {
+  public static final SecureRandom SECURE_RANDOM;
   private static final Logger logger = LoggerFactory.getLogger(RandomProvider.class);
-
-  private static final SecureRandom secureRandomInstance;
 
   static
   {
@@ -40,14 +53,14 @@ public class RandomProvider
       String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
       if (alg == null)
       {
-        secureRandomInstance = new SecureRandom();
+        SECURE_RANDOM = new SecureRandom();
       }
       else
       {
         String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
-        secureRandomInstance = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
+        SECURE_RANDOM = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
       }
-      logger.info("Using secure random from " + secureRandomInstance.getProvider().getName() + ":" + secureRandomInstance.getAlgorithm());
+      logger.info("Using secure random from " + SECURE_RANDOM.getProvider().getName() + ":" + SECURE_RANDOM.getAlgorithm());
     } catch (GeneralSecurityException e)
     {
       logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
@@ -75,6 +88,6 @@ public class RandomProvider
    */
   public static SecureRandom getSecureRandom()
   {
-    return secureRandomInstance;
+    return SECURE_RANDOM;
   }
 }
