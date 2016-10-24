@@ -236,7 +236,7 @@ public class QuerySchemaLoader
     schemaBuilder.setFilteredElementNames(extractFilteredElementNames(doc));
 
     // Extract the additional fields, if they exists
-    Map<String,String> additionalFields = new HashMap<String,String>();
+    Map<String,String> additionalFields = new HashMap<>();
     if (doc.getElementsByTagName("additional").item(0) != null)
     {
       NodeList fieldList = doc.getElementsByTagName("field");
