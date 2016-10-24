@@ -55,7 +55,7 @@ public class QuerySchemaBuilder
   private Set<String> queryElementNames = Collections.emptySet();
   private String filterTypeName = NO_FILTER;
   private Set<String> filteredElementNames = Collections.emptySet();
-  private Map<String,String> additionalFields;
+  private Map<String,String> additionalFields = Collections.emptyMap();
 
   /**
    * Created a new query schema builder.
