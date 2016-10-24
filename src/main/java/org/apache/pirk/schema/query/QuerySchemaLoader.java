@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,11 +33,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.data.partitioner.DataPartitioner;
-import org.apache.pirk.schema.query.filter.DataFilter;
-import org.apache.pirk.schema.query.filter.FilterFactory;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
@@ -81,8 +77,6 @@ import org.xml.sax.SAXException;
 public class QuerySchemaLoader
 {
   private static final Logger logger = LoggerFactory.getLogger(QuerySchemaLoader.class);
-
-  private static final String NO_FILTER = "noFilter";
 
   static
   {
@@ -194,28 +188,23 @@ public class QuerySchemaLoader
     // Read in and parse the XML file.
     Document doc = parseXMLDocument(stream);
 
+    // Used to build the final schema.
+    QuerySchemaBuilder schemaBuilder = new QuerySchemaBuilder();
+
     // Extract the schemaName.
     String schemaName = extractValue(doc, "schemaName");
+    schemaBuilder.setName(schemaName);
     logger.info("schemaName = " + schemaName);
 
     // Extract the dataSchemaName.
     String dataSchemaName = extractValue(doc, "dataSchemaName");
+    schemaBuilder.setDataSchemaName(dataSchemaName);
     logger.info("dataSchemaName = " + dataSchemaName);
 
-    // We must have a matching data schema for this query.
-    DataSchema dataSchema = DataSchemaRegistry.get(dataSchemaName);
-    if (dataSchema == null)
-    {
-      throw new PIRException("Loaded DataSchema does not exist for dataSchemaName = " + dataSchemaName);
-    }
-
-    // Extract the selectorName, and ensure it matches an element in the data schema.
+    // Extract the selectorName.
     String selectorName = extractValue(doc, "selectorName");
+    schemaBuilder.setSelectorName(selectorName);
     logger.info("selectorName = " + selectorName);
-    if (!dataSchema.containsElement(selectorName))
-    {
-      throw new PIRException("dataSchema = " + dataSchemaName + " does not contain selectorName = " + selectorName);
-    }
 
     // Extract the query elements.
     NodeList elementsList = doc.getElementsByTagName("elements");
@@ -226,50 +215,28 @@ public class QuerySchemaLoader
     Element elements = (Element) elementsList.item(0);
 
     LinkedHashSet<String> elementNames = new LinkedHashSet<>();
-    int dataElementSize = 0;
     NodeList nList = elements.getElementsByTagName("name");
     for (int i = 0; i < nList.getLength(); i++)
     {
       Node nNode = nList.item(i);
       if (nNode.getNodeType() == Node.ELEMENT_NODE)
       {
-        // Pull the name
-        String queryElementName = nNode.getFirstChild().getNodeValue().trim();
-        if (!dataSchema.containsElement(queryElementName))
-        {
-          throw new PIRException("dataSchema = " + dataSchemaName + " does not contain requested element name = " + queryElementName);
-        }
-        elementNames.add(queryElementName);
-        logger.info("name = " + queryElementName + " partitionerName = " + dataSchema.getPartitionerTypeName(queryElementName));
-
-        // Compute the number of bits for this element.
-        DataPartitioner partitioner = dataSchema.getPartitionerForElement(queryElementName);
-        int bits = partitioner.getBits(dataSchema.getElementType(queryElementName));
-
-        // Multiply by the number of array elements allowed, if applicable.
-        if (dataSchema.isArrayElement(queryElementName))
-        {
-          bits *= Integer.parseInt(SystemConfiguration.getProperty("pir.numReturnArrayElements"));
-        }
-        dataElementSize += bits;
-
-        logger.info("name = " + queryElementName + " bits = " + bits + " dataElementSize = " + dataElementSize);
+        elementNames.add(nNode.getFirstChild().getNodeValue().trim());
       }
     }
+    schemaBuilder.setQueryElementNames(elementNames);
 
     // Extract the filter, if it exists
-    String filterTypeName = NO_FILTER;
     if (doc.getElementsByTagName("filter").item(0) != null)
     {
-      filterTypeName = doc.getElementsByTagName("filter").item(0).getTextContent().trim();
+      schemaBuilder.setFilterTypeName(doc.getElementsByTagName("filter").item(0).getTextContent().trim());
     }
 
     // Create a filter over the query elements.
-    Set<String> filteredNamesSet = extractFilteredElementNames(doc);
-    DataFilter filter = instantiateFilter(filterTypeName, filteredNamesSet);
+    schemaBuilder.setFilteredElementNames(extractFilteredElementNames(doc));
 
     // Extract the additional fields, if they exists
-    HashMap<String,String> additionalFields = new HashMap<String,String>();
+    Map<String,String> additionalFields = new HashMap<String,String>();
     if (doc.getElementsByTagName("additional").item(0) != null)
     {
       NodeList fieldList = doc.getElementsByTagName("field");
@@ -285,13 +252,10 @@ public class QuerySchemaLoader
         additionalFields.put(getNodeValue("key", kv), getNodeValue("value", kv));
       }
     }
+    schemaBuilder.setAdditionalFields(additionalFields);
 
     // Create and return the query schema object.
-    QuerySchema querySchema = new QuerySchema(schemaName, dataSchemaName, selectorName, filterTypeName, filter, dataElementSize);
-    querySchema.getElementNames().addAll(elementNames);
-    querySchema.getFilteredElementNames().addAll(filteredNamesSet);
-    querySchema.getAdditionalFields().putAll(additionalFields);
-    return querySchema;
+    return schemaBuilder.build();
   }
 
   /**
@@ -406,25 +370,5 @@ public class QuerySchemaLoader
       }
     }
     return value;
-  }
-
-  /**
-   * Instantiate the specified filter.
-   *
-   * Exceptions derive from call to the {@code getFilter} method of {@link FilterFactory}
-   * 
-   * @param filterTypeName
-   *          The name of the filter class we are instantiating
-   * @param filteredElementNames
-   *          The set of names of elements of the data schema up which the filter will act.
-   * @return An instantiation of the filter, set up to filter upon the specified names.
-   * @throws IOException
-   *           - failed to read input
-   * @throws PIRException
-   *           - File could not be instantiated
-   */
-  private DataFilter instantiateFilter(String filterTypeName, Set<String> filteredElementNames) throws IOException, PIRException
-  {
-    return filterTypeName.equals(NO_FILTER) ? null : FilterFactory.getFilter(filterTypeName, filteredElementNames);
   }
 }

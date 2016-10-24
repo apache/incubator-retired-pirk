@@ -19,6 +19,8 @@
 package org.apache.pirk.schema.query;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -56,17 +58,17 @@ public class LoadQuerySchemaTest
 {
   private static final Logger logger = LoggerFactory.getLogger(LoadQuerySchemaTest.class);
 
-  private String querySchemaFile = "querySchemaFile";
-  private String dataSchemaName = "fakeDataSchema";
-  private String querySchemaName = "fakeQuerySchema";
+  private final String querySchemaFile = "querySchemaFile";
+  private final String dataSchemaName = "fakeDataSchema";
+  private final String querySchemaName = "fakeQuerySchema";
 
-  private String element1 = "elementName1";
-  private String element2 = "elementName2";
-  private String element3 = "elementName3";
-  private String element4 = "elementName4";
+  private final String element1 = "elementName1";
+  private final String element2 = "elementName2";
+  private final String element3 = "elementName3";
+  private final String element4 = "elementName4";
 
-  private List<String> queryElements = Arrays.asList(element1, element2, element3);
-  private List<String> filterElements = Collections.singletonList(element2);
+  private final List<String> queryElements = Arrays.asList(element1, element2, element3);
+  private final List<String> filterElements = Collections.singletonList(element2);
 
   @Test
   public void testGeneralSchemaLoad() throws Exception
@@ -82,26 +84,11 @@ public class LoadQuerySchemaTest
     createStopListFile();
 
     // Create the data schema used and force it to load
-    try
-    {
-      createDataSchema("dataSchemaFile");
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    createDataSchema("dataSchemaFile");
     DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
-    try
-    {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, StopListFilter.class.getName());
-
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, StopListFilter.class.getName());
     QuerySchemaLoader.initialize();
 
     // Check the entries
@@ -112,26 +99,18 @@ public class LoadQuerySchemaTest
     assertEquals(element4, qSchema.getSelectorName());
 
     assertEquals(StopListFilter.class.getName(), qSchema.getFilterTypeName());
-    if (!(qSchema.getFilter() instanceof StopListFilter))
-    {
-      fail("Filter class instance must be StopListFilter");
-    }
+    assertTrue("Filter class instance must be StopListFilter", qSchema.getFilter() instanceof StopListFilter);
 
     assertEquals(3, qSchema.getElementNames().size());
     for (String item : qSchema.getElementNames())
     {
-      if (!(item.equals(element1) || item.equals(element2) || item.equals(element3)))
-      {
-        fail("elementNames: item = " + item + " must equal one of: " + element1 + ", " + element2 + ", or " + element3);
-      }
+      assertTrue("elementNames: item = " + item + " must equal one of: " + element1 + ", " + element2 + ", or " + element3,
+          item.equals(element1) || item.equals(element2) || item.equals(element3));
     }
     assertEquals(1, qSchema.getFilteredElementNames().size());
     for (String item : qSchema.getFilteredElementNames())
     {
-      if (!item.equals(element2))
-      {
-        fail("filterElementNames: item = " + item + " must equal " + element2);
-      }
+      assertEquals("filterElementNames: item = " + item + " must equal " + element2, item, element2);
     }
 
     // one string, array IPs, array integers
@@ -169,40 +148,22 @@ public class LoadQuerySchemaTest
     String querySchemasProp = SystemConfiguration.getProperty("query.schemas", "none");
 
     // Create the data schema used and force it to load
-    try
-    {
-      createDataSchema("dataSchemaFile");
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    createDataSchema("dataSchemaFile");
     DataSchemaLoader.initialize();
 
     // Create the additionalFields
-    HashMap<String,String> additionalFields = new HashMap<String,String>();
+    HashMap<String,String> additionalFields = new HashMap<>();
     additionalFields.put("key1", "value1");
     additionalFields.put("key2", "value2");
 
     // Create the query schema used and force it to load
-    try
-    {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null, true, null, false,
-          additionalFields);
-
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, element4, queryElements, filterElements, null, true, null, false,
+        additionalFields);
     QuerySchemaLoader.initialize();
 
     // Check the entries
     QuerySchema qSchema = QuerySchemaRegistry.get(querySchemaName);
-    if (qSchema == null)
-    {
-      logger.info("qSchema is null");
-    }
+    assertNotNull("qSchema is null", qSchema);
 
     HashMap<String,String> schemaAdditionalFields = qSchema.getAdditionalFields();
     assertEquals(schemaAdditionalFields.size(), 2);
@@ -235,32 +196,20 @@ public class LoadQuerySchemaTest
     String querySchemasProp = SystemConfiguration.getProperty("query.schemas", "none");
 
     // Create the data schema used and force it to load
-    try
-    {
-      createDataSchema("dataSchemaFile");
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    createDataSchema("dataSchemaFile");
     DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
-    try
-    {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, "nonExistentElement", queryElements, filterElements, "bogusFilterClass");
+    TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, "nonExistentElement", queryElements, filterElements, "bogusFilterClass");
 
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
     try
     {
       QuerySchemaLoader.initialize();
       fail("QuerySchemaLoader did not throw exception for bogus filter class");
-    } catch (Exception ignore)
-    {}
+    } catch (PIRException ignore)
+    {
+      // Expected
+    }
 
     // Reset original query and data schema properties
     SystemConfiguration.setProperty("data.schemas", dataSchemasProp);
@@ -289,21 +238,15 @@ public class LoadQuerySchemaTest
     String querySchemasProp = SystemConfiguration.getProperty("query.schemas", "none");
 
     // Create the query schema used and force it to load
-    try
-    {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName + "bogus", element4, queryElements, filterElements, null);
-
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName + "bogus", element4, queryElements, filterElements, null);
     try
     {
       QuerySchemaLoader.initialize();
       fail("QuerySchemaLoader did not throw exception for non-existent DataSchema");
-    } catch (Exception ignore)
-    {}
+    } catch (PIRException ignore)
+    {
+      // Expected
+    }
 
     // Reset original query properties and force to load
     SystemConfiguration.setProperty("query.schemas", querySchemasProp);
@@ -325,33 +268,21 @@ public class LoadQuerySchemaTest
     String querySchemasProp = SystemConfiguration.getProperty("query.schemas", "none");
 
     // Create the data schema used and force it to load
-    try
-    {
-      createDataSchema("dataSchemaFile");
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
+    createDataSchema("dataSchemaFile");
     DataSchemaLoader.initialize();
 
     // Create the query schema used and force it to load
-    try
-    {
-      TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, "nonExistentElement", queryElements, filterElements,
-          StopListFilter.class.getName());
+    TestUtils.createQuerySchema(querySchemaFile, querySchemaName, dataSchemaName, "nonExistentElement", queryElements, filterElements,
+        StopListFilter.class.getName());
 
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-      fail(e.toString());
-    }
     try
     {
       QuerySchemaLoader.initialize();
       fail("QuerySchemaLoader did not throw exception for non-existent selectorName");
     } catch (Exception ignore)
-    {}
+    {
+      // Expected
+    }
 
     // Reset original query and data schema properties
     SystemConfiguration.setProperty("data.schemas", dataSchemasProp);
@@ -380,7 +311,7 @@ public class LoadQuerySchemaTest
   }
 
   // Create the test data schema file
-  private void createDataSchema(String schemaFile) throws IOException
+  private void createDataSchema(String schemaFile) throws Exception
   {
     // Create a temporary file for the test schema, set in the properties
     File file = File.createTempFile(schemaFile, ".xml");
@@ -389,49 +320,42 @@ public class LoadQuerySchemaTest
     SystemConfiguration.setProperty("data.schemas", file.toString());
 
     // Write to the file
-    try
-    {
-      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      Document doc = dBuilder.newDocument();
+    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    Document doc = dBuilder.newDocument();
 
-      // root element
-      Element rootElement = doc.createElement("schema");
-      doc.appendChild(rootElement);
+    // root element
+    Element rootElement = doc.createElement("schema");
+    doc.appendChild(rootElement);
 
-      // Add the schemaName
-      Element schemaNameElement = doc.createElement("schemaName");
-      schemaNameElement.appendChild(doc.createTextNode(dataSchemaName));
-      rootElement.appendChild(schemaNameElement);
+    // Add the schemaName
+    Element schemaNameElement = doc.createElement("schemaName");
+    schemaNameElement.appendChild(doc.createTextNode(dataSchemaName));
+    rootElement.appendChild(schemaNameElement);
 
-      // Add the elements
-      // element1 -- single String
-      TestUtils.addElement(doc, rootElement, element1, PrimitiveTypePartitioner.STRING, "false", PrimitiveTypePartitioner.class.getName());
+    // Add the elements
+    // element1 -- single String
+    TestUtils.addElement(doc, rootElement, element1, PrimitiveTypePartitioner.STRING, "false", PrimitiveTypePartitioner.class.getName());
 
-      // element2 - -- array of Integers
-      TestUtils.addElement(doc, rootElement, element2, PrimitiveTypePartitioner.INT, "true", PrimitiveTypePartitioner.class.getName());
+    // element2 - -- array of Integers
+    TestUtils.addElement(doc, rootElement, element2, PrimitiveTypePartitioner.INT, "true", PrimitiveTypePartitioner.class.getName());
 
-      // element3 -- array of IP addresses
-      TestUtils.addElement(doc, rootElement, element3, PrimitiveTypePartitioner.STRING, "true", IPDataPartitioner.class.getName());
+    // element3 -- array of IP addresses
+    TestUtils.addElement(doc, rootElement, element3, PrimitiveTypePartitioner.STRING, "true", IPDataPartitioner.class.getName());
 
-      // element4 -- single byte type
-      TestUtils.addElement(doc, rootElement, element4, PrimitiveTypePartitioner.BYTE, "false", PrimitiveTypePartitioner.class.getName());
+    // element4 -- single byte type
+    TestUtils.addElement(doc, rootElement, element4, PrimitiveTypePartitioner.BYTE, "false", PrimitiveTypePartitioner.class.getName());
 
-      // Write to a xml file
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-      DOMSource source = new DOMSource(doc);
-      StreamResult result = new StreamResult(file);
-      transformer.transform(source, result);
+    // Write to a xml file
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    DOMSource source = new DOMSource(doc);
+    StreamResult result = new StreamResult(file);
+    transformer.transform(source, result);
 
-      // Output for testing
-      StreamResult consoleResult = new StreamResult(System.out);
-      transformer.transform(source, consoleResult);
-      System.out.println();
-
-    } catch (Exception e)
-    {
-      e.printStackTrace();
-    }
+    // Output for testing
+    StreamResult consoleResult = new StreamResult(System.out);
+    transformer.transform(source, consoleResult);
+    System.out.println();
   }
 }
