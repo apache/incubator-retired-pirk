@@ -57,7 +57,6 @@ public class BaseTests
 
   // Encryption variables -- Paillier mechanisms are tested in the Paillier test code, so these are fixed...
   public static final int hashBitSize = 12;
-  public static final String hashKey = "someKey";
   public static final int paillierBitSize = 384;
   public static final int certainty = 128;
 
