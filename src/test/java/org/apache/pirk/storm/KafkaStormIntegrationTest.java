@@ -301,7 +301,7 @@ public class KafkaStormIntegrationTest
 
     nSquared = paillier.getNSquared();
 
-    queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize, queryType,
+    queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.dataPartitionBitSize, queryType,
         false, true, false);
 
     // Perform the encryption

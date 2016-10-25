@@ -77,7 +77,7 @@ public class StandaloneQuery
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
     Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
-        .hashBitSize(BaseTests.hashBitSize).hashKey(BaseTests.hashKey).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
+        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
         .queryType(queryType).build();
 
     Querier querier = QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);

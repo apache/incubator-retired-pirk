@@ -42,7 +42,6 @@ public class QuerierProps
 
   // Encryption properties
   static final String HASHBITSIZE = "querier.hashBitSize";
-  static final String HASHKEY = "querier.hashKey";
   static final String DATAPARTITIONSIZE = "querier.dataPartitionBitSize";
   static final String PAILLIERBITSIZE = "querier.paillierBitSize";
   static final String BITSET = "querier.bitSet";
@@ -59,7 +58,7 @@ public class QuerierProps
   // Decryption properties
   static final String QUERIERFILE = "querier.querierFile";
 
-  static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE, HASHKEY,
+  static final List<String> PROPSLIST = Arrays.asList(ACTION, INPUTFILE, OUTPUTFILE, QUERYTYPE, NUMTHREADS, EMBEDQUERYSCHEMA, HASHBITSIZE,
       DATAPARTITIONSIZE, PAILLIERBITSIZE, BITSET, CERTAINTY, QUERYSCHEMAS, DATASCHEMAS, EMBEDSELECTOR, USEMEMLOOKUPTABLE, USEHDFSLOOKUPTABLE, SR_ALGORITHM,
       SR_PROVIDER);
 
@@ -174,12 +173,6 @@ public class QuerierProps
     if (!properties.containsKey(HASHBITSIZE))
     {
       logger.info("For action='encrypt': Must have the option " + HASHBITSIZE);
-      valid = false;
-    }
-
-    if (!properties.containsKey(HASHKEY))
-    {
-      logger.info("For action='encrypt': Must have the option " + HASHKEY);
       valid = false;
     }
 

@@ -84,7 +84,6 @@ public class QuerierDriver implements Serializable
 
     // Encryption variables
     int hashBitSize;
-    String hashKey;
     int dataPartitionBitSize;
     int paillierBitSize;
     int certainty;
@@ -103,13 +102,12 @@ public class QuerierDriver implements Serializable
     if (action.equals("encrypt"))
     {
       hashBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.HASHBITSIZE));
-      hashKey = SystemConfiguration.getProperty(QuerierProps.HASHKEY);
       dataPartitionBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.DATAPARTITIONSIZE));
       paillierBitSize = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.PAILLIERBITSIZE));
       certainty = Integer.parseInt(SystemConfiguration.getProperty(QuerierProps.CERTAINTY));
 
       logger.info("Performing encryption: \n inputFile = " + inputFile + "\n outputFile = " + outputFile + "\n numThreads = " + numThreads + "\n hashBitSize = "
-          + hashBitSize + "\n hashKey = " + hashKey + "\n dataPartitionBitSize = " + dataPartitionBitSize + "\n paillierBitSize = " + paillierBitSize
+          + hashBitSize + "\n dataPartitionBitSize = " + dataPartitionBitSize + "\n paillierBitSize = " + paillierBitSize
           + "\n certainty = " + certainty);
 
       // Read in the selectors and extract the queryIdentifier - first line in the file

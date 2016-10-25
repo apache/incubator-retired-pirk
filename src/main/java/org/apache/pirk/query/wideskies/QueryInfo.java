@@ -87,14 +87,13 @@ public class QueryInfo implements Serializable, Cloneable
   @Expose
   private QuerySchema qSchema = null;
 
-  public QueryInfo(int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
-      boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
+  public QueryInfo(int numSelectorsInput, int hashBitSizeInput, int dataPartitionBitSizeInput, String queryTypeInput, boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
   {
-    this(UUID.randomUUID(), numSelectorsInput, hashBitSizeInput, hashKeyInput, dataPartitionBitSizeInput, queryTypeInput, useExpLookupTableInput,
+    this(UUID.randomUUID(), numSelectorsInput, hashBitSizeInput, dataPartitionBitSizeInput, queryTypeInput, useExpLookupTableInput,
         embedSelectorInput, useHDFSExpLookupTableInput);
   }
 
-  public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
+  public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, int dataPartitionBitSizeInput, String queryTypeInput,
       boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput)
   {
     identifier = identifierInput;
@@ -103,7 +102,6 @@ public class QueryInfo implements Serializable, Cloneable
     numSelectors = numSelectorsInput;
 
     hashBitSize = hashBitSizeInput;
-    hashKey = hashKeyInput;
 
     useExpLookupTable = useExpLookupTableInput;
     useHDFSExpLookupTable = useHDFSExpLookupTableInput;
@@ -120,6 +118,10 @@ public class QueryInfo implements Serializable, Cloneable
     printQueryInfo();
   }
 
+  /**
+   * This constructor is used for deserialization only. The Hash Key should not be set manually in most cases because EncryptQuery
+   * will overwrite it with a new random one.
+   */
   public QueryInfo(UUID identifierInput, int numSelectorsInput, int hashBitSizeInput, String hashKeyInput, int dataPartitionBitSizeInput, String queryTypeInput,
       boolean useExpLookupTableInput, boolean embedSelectorInput, boolean useHDFSExpLookupTableInput, int numBitsPerDataElementInput,
       QuerySchema querySchemaInput)
