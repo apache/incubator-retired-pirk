@@ -52,7 +52,7 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
   }
 
   @Override
-  public Iterable<Tuple2<Integer,String>> call(Iterator<Tuple2<Integer,Iterable<Tuple2<Integer,BigInteger>>>> iter) throws Exception
+  public Iterator<Tuple2<Integer, String>> call(Iterator<Tuple2<Integer,Iterable<Tuple2<Integer,BigInteger>>>> iter) throws Exception
   {
     List<Tuple2<Integer,String>> keyFileList = new ArrayList<>();
 
@@ -87,6 +87,6 @@ public class ExpKeyFilenameMap implements PairFlatMapFunction<Iterator<Tuple2<In
     }
     bw.close();
 
-    return keyFileList;
+    return keyFileList.iterator();
   }
 }

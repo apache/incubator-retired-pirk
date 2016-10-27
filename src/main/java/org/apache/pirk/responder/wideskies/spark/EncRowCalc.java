@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
@@ -71,7 +72,7 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
   }
 
   @Override
-  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Iterable<List<BigInteger>>> hashDocTuple) throws Exception
+  public Iterator<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Iterable<List<BigInteger>>> hashDocTuple) throws Exception
   {
     List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
 
@@ -98,6 +99,6 @@ public class EncRowCalc implements PairFlatMapFunction<Tuple2<Integer,Iterable<L
 
     returnPairs.addAll(encRowValues);
 
-    return returnPairs;
+    return returnPairs.iterator();
   }
 }
