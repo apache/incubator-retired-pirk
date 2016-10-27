@@ -18,18 +18,22 @@
  */
 package org.apache.pirk.schema.query;
 
-import com.google.gson.annotations.Expose;
-import org.apache.pirk.schema.query.filter.DataFilter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.pirk.schema.query.filter.DataFilter;
+
+import com.google.gson.annotations.Expose;
+
 /**
- * Class to hold a query schema
+ * Class to hold information about a query schema.
+ * <p>
+ * The query schema is designed to be instantiated via the {@link QuerySchemaBuilder} or a loader.
  */
 public class QuerySchema implements Serializable
 {
@@ -73,11 +77,11 @@ public class QuerySchema implements Serializable
   @Expose
   private final int dataElementSize;
 
-  // Addiional fields by key,value
+  // Additional fields by key,value
   @Expose
-  private final HashMap<String,String> additionalFields = new HashMap<>();
+  private final Map<String,String> additionalFields = new HashMap<>();
 
-  public QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
+  QuerySchema(String schemaName, String dataSchemaName, String selectorName, String filterTypeName, DataFilter filter, int dataElementSize)
   {
     this.schemaName = schemaName;
     this.dataSchemaName = dataSchemaName;
@@ -179,7 +183,7 @@ public class QuerySchema implements Serializable
    *
    * @return The additionalFields HashMap
    */
-  public HashMap<String,String> getAdditionalFields()
+  public Map<String,String> getAdditionalFields()
   {
     return additionalFields;
   }

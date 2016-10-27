@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -165,7 +166,7 @@ public class LoadQuerySchemaTest
     QuerySchema qSchema = QuerySchemaRegistry.get(querySchemaName);
     assertNotNull("qSchema is null", qSchema);
 
-    HashMap<String,String> schemaAdditionalFields = qSchema.getAdditionalFields();
+    Map<String,String> schemaAdditionalFields = qSchema.getAdditionalFields();
     assertEquals(schemaAdditionalFields.size(), 2);
     assertEquals(schemaAdditionalFields.get("key1"), "value1");
     assertEquals(schemaAdditionalFields.get("key2"), "value2");

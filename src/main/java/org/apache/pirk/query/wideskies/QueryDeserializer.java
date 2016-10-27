@@ -18,6 +18,22 @@
  */
 package org.apache.pirk.query.wideskies;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.UUID;
+
+import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaBuilder;
+import org.apache.pirk.utils.PIRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -25,22 +41,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.schema.query.filter.DataFilter;
-import org.apache.pirk.schema.query.filter.FilterFactory;
-import org.apache.pirk.utils.PIRException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.UUID;
 
 /**
  * Custom deserializer for Query class for Gson.
@@ -103,7 +103,13 @@ public class QueryDeserializer implements JsonDeserializer<Query>
     }
     else
     {
-      querySchema = deserializeSchema(queryInfoJson.get("qSchema").getAsJsonObject());
+      try
+      {
+        querySchema = deserializeSchema(queryInfoJson.get("qSchema").getAsJsonObject());
+      } catch (IOException | PIRException e)
+      {
+        throw new JsonParseException(e);
+      }
     }
     // Now start making the QueryInfo object.
     QueryInfo info = new QueryInfo(UUID.fromString(queryInfoJson.get("identifier").getAsString()), queryInfoJson.get("numSelectors").getAsInt(),
@@ -119,9 +125,10 @@ public class QueryDeserializer implements JsonDeserializer<Query>
    * @param querySchemaJson
    *          A JsonObject at the root of a serialized QuerySchema object.
    * @return A QuerySchema object of the deserialized Json.
-   * @throws JsonParseException
+   * @throws PIRException If the JsonObject does not represent a valid query schema.
+   * @throws IOException  If a problem occurred instantiating the query filter.
    */
-  private static QuerySchema deserializeSchema(JsonObject querySchemaJson) throws JsonParseException
+  private static QuerySchema deserializeSchema(JsonObject querySchemaJson) throws IOException, PIRException
   {
     // Deserialize The Query Schema First.
     long schemaVersion = querySchemaJson.get("querySchemaVersion").getAsLong();
@@ -139,27 +146,22 @@ public class QueryDeserializer implements JsonDeserializer<Query>
     } catch (Exception e)
     {
       logger.warn("No filtered element names for Query Schema deserialization.");
-      filteredElementNames = null;
-    }
-    // Set up the data filter
-    DataFilter dataFilter;
-    try
-    {
-      dataFilter = FilterFactory.getFilter(dataFilterName, filteredElementNames);
-    } catch (IOException | PIRException e)
-    {
-      logger.error("Error trying to create data filter from JSON.", e);
-      throw new JsonParseException(e);
+      filteredElementNames = Collections.emptySet();
     }
 
-    QuerySchema querySchema = new QuerySchema(querySchemaJson.get("schemaName").getAsString(), querySchemaJson.get("dataSchemaName").getAsString(),
-        querySchemaJson.get("selectorName").getAsString(), dataFilterName, dataFilter, querySchemaJson.get("dataElementSize").getAsInt());
-    List<String> elementNames = gson.fromJson(querySchemaJson.get("elementNames"), new TypeToken<List<String>>()
-    {}.getType());
-    querySchema.getElementNames().addAll(elementNames);
-    HashMap<String,String> additionalFields = gson.fromJson(querySchemaJson.get("additionalFields"), new TypeToken<HashMap<String,String>>()
-    {}.getType());
-    querySchema.getAdditionalFields().putAll(additionalFields);
-    return querySchema;
+    QuerySchemaBuilder schemaBuilder = new QuerySchemaBuilder();
+    schemaBuilder.setName(querySchemaJson.get("schemaName").getAsString());
+    schemaBuilder.setDataSchemaName(querySchemaJson.get("dataSchemaName").getAsString());
+    schemaBuilder.setSelectorName(querySchemaJson.get("selectorName").getAsString());
+    schemaBuilder.setFilterTypeName(dataFilterName);
+    schemaBuilder.setFilteredElementNames(filteredElementNames);
+
+    schemaBuilder.setQueryElementNames(gson.fromJson(querySchemaJson.get("elementNames"), new TypeToken<Set<String>>()
+    {}.getType()));
+
+    schemaBuilder.setAdditionalFields(gson.fromJson(querySchemaJson.get("additionalFields"), new TypeToken<HashMap<String,String>>()
+    {}.getType()));
+
+    return schemaBuilder.build();
   }
 }
