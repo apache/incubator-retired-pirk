@@ -164,8 +164,7 @@ public class EncryptQuery
 
   private Map<Integer,Integer> computeSelectorQueryVecMap()
   {
-    String hashKeyBase = queryInfo.getHashKey();
-    String hashKey = hashKeyBase + getRandByteString(10);
+    String hashKey = getRandByteString(10);
     int numSelectors = selectors.size();
     Map<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
@@ -184,7 +183,7 @@ public class EncryptQuery
       {
         // Hash collision
         selectorQueryVecMapping.clear();
-        hashKey = hashKeyBase + getRandByteString(10);
+        hashKey = getRandByteString(10);
         logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
         index = -1;
       }
