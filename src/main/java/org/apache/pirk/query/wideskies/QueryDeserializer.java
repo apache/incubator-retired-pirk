@@ -52,7 +52,8 @@ public class QueryDeserializer implements JsonDeserializer<Query>
 
   private static final Gson gson = new Gson();
 
-  @Override public Query deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
+  @Override
+  public Query deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
   {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
     logger.info("Got query json:" + jsonObject.toString());
@@ -66,13 +67,11 @@ public class QueryDeserializer implements JsonDeserializer<Query>
     // Then deserialize the Query Info
     QueryInfo queryInfo = deserializeInfo(jsonObject.get("queryInfo").getAsJsonObject());
     SortedMap<Integer,BigInteger> queryElements = gson.fromJson(jsonObject.get("queryElements"), new TypeToken<SortedMap<Integer,BigInteger>>()
-    {
-    }.getType());
+    {}.getType());
     BigInteger N = new BigInteger(jsonObject.get("n").getAsString());
     BigInteger NSquared = new BigInteger(jsonObject.get("nsquared").getAsString());
     Map<Integer,String> expFileBasedLookup = gson.fromJson(jsonObject.get("expFileBasedLookup"), new TypeToken<Map<Integer,String>>()
-    {
-    }.getType());
+    {}.getType());
 
     Query query = new Query(queryInfo, N, NSquared, queryElements);
     query.setExpFileBasedLookup(expFileBasedLookup);
@@ -82,7 +81,8 @@ public class QueryDeserializer implements JsonDeserializer<Query>
   /**
    * Deserializes a QueryInfo JsonObject
    *
-   * @param queryInfoJson A JsonObject at the root of a serialized QueryInfo object.
+   * @param queryInfoJson
+   *          A JsonObject at the root of a serialized QueryInfo object.
    * @return A QueryInfo object of the deserialized Json.
    * @throws JsonParseException
    */
@@ -116,7 +116,8 @@ public class QueryDeserializer implements JsonDeserializer<Query>
   /**
    * Deserializes a QuerySchema JsonObject
    *
-   * @param querySchemaJson A JsonObject at the root of a serialized QuerySchema object.
+   * @param querySchemaJson
+   *          A JsonObject at the root of a serialized QuerySchema object.
    * @return A QuerySchema object of the deserialized Json.
    * @throws JsonParseException
    */
@@ -134,8 +135,7 @@ public class QueryDeserializer implements JsonDeserializer<Query>
     try
     {
       filteredElementNames = gson.fromJson(querySchemaJson.get("filteredElementNames"), new TypeToken<Set<String>>()
-      {
-      }.getType());
+      {}.getType());
     } catch (Exception e)
     {
       logger.warn("No filtered element names for Query Schema deserialization.");
@@ -155,12 +155,10 @@ public class QueryDeserializer implements JsonDeserializer<Query>
     QuerySchema querySchema = new QuerySchema(querySchemaJson.get("schemaName").getAsString(), querySchemaJson.get("dataSchemaName").getAsString(),
         querySchemaJson.get("selectorName").getAsString(), dataFilterName, dataFilter, querySchemaJson.get("dataElementSize").getAsInt());
     List<String> elementNames = gson.fromJson(querySchemaJson.get("elementNames"), new TypeToken<List<String>>()
-    {
-    }.getType());
+    {}.getType());
     querySchema.getElementNames().addAll(elementNames);
     HashMap<String,String> additionalFields = gson.fromJson(querySchemaJson.get("additionalFields"), new TypeToken<HashMap<String,String>>()
-    {
-    }.getType());
+    {}.getType());
     querySchema.getAdditionalFields().putAll(additionalFields);
     return querySchema;
   }
