@@ -20,6 +20,7 @@ package org.apache.pirk.responder.wideskies.spark;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pirk.encryption.ModPowAbstraction;
@@ -51,7 +52,7 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
   }
 
   @Override
-  public Iterable<Tuple2<Integer,Tuple2<Integer,BigInteger>>> call(Integer queryHashKey) throws Exception
+  public Iterator<Tuple2<Integer, Tuple2<Integer, BigInteger>>> call(Integer queryHashKey) throws Exception
   {
     // queryHashKey -> <<power>,<element^power mod N^2>>
     List<Tuple2<Integer,Tuple2<Integer,BigInteger>>> modExp = new ArrayList<>();
@@ -64,6 +65,6 @@ public class ExpTableGenerator implements PairFlatMapFunction<Integer,Integer,Tu
       modExp.add(new Tuple2<>(queryHashKey, modPowTuple));
     }
 
-    return modExp;
+    return modExp.iterator();
   }
 }
