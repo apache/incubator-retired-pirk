@@ -65,7 +65,6 @@ public class QuerierFactory
     String queryType = properties.getProperty(QuerierProps.QUERYTYPE);
     int hashBitSize = Integer.parseInt(properties.getProperty(QuerierProps.HASHBITSIZE));
     int bitSet = Integer.parseInt(properties.getProperty(QuerierProps.BITSET));
-    String hashKey = properties.getProperty(QuerierProps.HASHKEY);
     int dataPartitionBitSize = Integer.parseInt(properties.getProperty(QuerierProps.DATAPARTITIONSIZE));
     int paillierBitSize = Integer.parseInt(properties.getProperty(QuerierProps.PAILLIERBITSIZE));
     int certainty = Integer.parseInt(properties.getProperty(QuerierProps.CERTAINTY));
@@ -90,7 +89,7 @@ public class QuerierFactory
     }
 
     // Set the necessary QueryInfo and Paillier objects
-    QueryInfo queryInfo = new QueryInfo(queryIdentifier, numSelectors, hashBitSize, hashKey, dataPartitionBitSize, queryType, useMemLookupTable, embedSelector,
+    QueryInfo queryInfo = new QueryInfo(queryIdentifier, numSelectors, hashBitSize, dataPartitionBitSize, queryType, useMemLookupTable, embedSelector,
         useHDFSLookupTable);
 
     if ("true".equals(properties.getProperty(QuerierProps.EMBEDQUERYSCHEMA, "false")))
