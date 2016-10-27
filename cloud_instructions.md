@@ -107,7 +107,7 @@ A note on HDInsight pricing:
           {
             "Classification": "yarn-site",
             "Properties": {
-              "yarn.nodemanager.aux-services": "mapreduce_shuffle",
+              "yarn.nodemanager.aux-services": "mapreduce_shuffle,spark_shuffle",
               "yarn.nodemanager.aux-services.mapreduce_shuffle.class": "org.apache.hadoop.mapred.ShuffleHandler"
             }
           }
