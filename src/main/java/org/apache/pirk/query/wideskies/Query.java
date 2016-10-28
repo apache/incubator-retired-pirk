@@ -136,10 +136,13 @@ public class Query implements Serializable, Storable
       public void accept(BigInteger element)
       {
         Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
-        for (int i = 0; i <= maxValue; ++i)
+        BigInteger previous = BigInteger.ONE;
+        powMap.put(0, BigInteger.ONE);
+        for (int i = 1; i <= maxValue; ++i)
         {
-          BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+          BigInteger value = previous.multiply(element).mod(NSquared);
           powMap.put(i, value);
+          previous = value;
         }
         expTable.put(element, powMap);
       }
