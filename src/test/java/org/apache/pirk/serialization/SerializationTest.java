@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
+import org.apache.pirk.wideskies.standalone.StandaloneTest;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -43,8 +45,14 @@ public class SerializationTest
   @BeforeClass
   public static void setUp() throws Exception
   {
+    StandaloneTest.setup();
     jsonSerializer = new JsonSerializer();
     javaSerializer = new JavaSerializer();
+  }
+
+  @AfterClass
+  public static void teardown() {
+    StandaloneTest.teardown();
   }
 
   @Test
@@ -73,6 +81,12 @@ public class SerializationTest
     FileInputStream fis = new FileInputStream(tempFile);
     Object deserializedDummyObject = javaSerializer.read(fis, DummyRecord.class);
     Assert.assertTrue(deserializedDummyObject.equals(dummyRecord));
+  }
+
+  @Test
+  public void testQuerySerializationDeserialization()
+  {
+
   }
 
   private static class DummyRecord implements Serializable, Storable
@@ -130,5 +144,7 @@ public class SerializationTest
       return Objects.hash(id, message);
     }
   }
+
+
 
 }

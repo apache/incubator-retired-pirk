@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
 import org.apache.pirk.schema.query.filter.DataFilter;
 import org.apache.pirk.schema.query.filter.FilterFactory;
 import org.apache.pirk.utils.PIRException;
@@ -96,10 +97,13 @@ public class QueryDeserializer implements JsonDeserializer<Query>
           "Attempt to deserialize unsupported query info version. Supported: " + QueryInfo.queryInfoSerialVersionUID + "; Received: " + infoVersion);
     }
     // Deserialize the QuerySchema next, accounting for the possibility that it is null.
-    QuerySchema querySchema;
+    QuerySchema querySchema =  null;
     if (queryInfoJson.get("qSchema").isJsonNull())
     {
-      querySchema = null;
+      querySchema = QuerySchemaRegistry.get(queryInfoJson.get("queryType").getAsString());
+      if( querySchema == null) {
+        throw new JsonParseException("No embedded query schema, and queryType " + queryInfoJson.get("queryType").getAsString() + " is not a known query schema type.");
+      }
     }
     else
     {
