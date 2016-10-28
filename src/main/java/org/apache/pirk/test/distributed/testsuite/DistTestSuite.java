@@ -31,7 +31,6 @@ import org.apache.pirk.inputformat.hadoop.json.JSONInputFormatBase;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.decrypt.DecryptResponse;
 import org.apache.pirk.querier.wideskies.encrypt.EncryptQuery;
-import org.apache.pirk.query.wideskies.Query;
 import org.apache.pirk.query.wideskies.QueryInfo;
 import org.apache.pirk.responder.wideskies.ResponderProps;
 import org.apache.pirk.responder.wideskies.mapreduce.ComputeResponseTool;
@@ -51,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Distributed test class for PIR
- * 
+ *
  */
 public class DistTestSuite
 {
@@ -427,7 +426,7 @@ public class DistTestSuite
     boolean useHDFSExpLookupTable = SystemConfiguration.getBooleanProperty("pirTest.useHDFSExpLookupTable", false);
 
     // Set the necessary objects
-    QueryInfo queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.hashKey, BaseTests.dataPartitionBitSize,
+    QueryInfo queryInfo = new QueryInfo(BaseTests.queryIdentifier, selectors.size(), BaseTests.hashBitSize, BaseTests.dataPartitionBitSize,
         queryType, useExpLookupTable, embedSelector, useHDFSExpLookupTable);
 
     Paillier paillier = new Paillier(BaseTests.paillierBitSize, BaseTests.certainty);

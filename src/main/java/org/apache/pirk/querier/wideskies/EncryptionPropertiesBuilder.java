@@ -27,7 +27,6 @@ import static org.apache.pirk.querier.wideskies.QuerierProps.CERTAINTY;
 import static org.apache.pirk.querier.wideskies.QuerierProps.DATAPARTITIONSIZE;
 import static org.apache.pirk.querier.wideskies.QuerierProps.EMBEDSELECTOR;
 import static org.apache.pirk.querier.wideskies.QuerierProps.HASHBITSIZE;
-import static org.apache.pirk.querier.wideskies.QuerierProps.HASHKEY;
 import static org.apache.pirk.querier.wideskies.QuerierProps.NUMTHREADS;
 import static org.apache.pirk.querier.wideskies.QuerierProps.PAILLIERBITSIZE;
 import static org.apache.pirk.querier.wideskies.QuerierProps.QUERYTYPE;
@@ -81,12 +80,6 @@ public class EncryptionPropertiesBuilder
   public EncryptionPropertiesBuilder hashBitSize(int hashBitSize)
   {
     properties.setProperty(HASHBITSIZE, String.valueOf(hashBitSize));
-    return this;
-  }
-
-  public EncryptionPropertiesBuilder hashKey(String hashKey)
-  {
-    properties.setProperty(HASHKEY, hashKey);
     return this;
   }
 

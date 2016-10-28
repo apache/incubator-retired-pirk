@@ -18,16 +18,16 @@
  */
 package org.apache.pirk.encryption;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
+import org.apache.pirk.utils.RandomProvider;
 
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.utils.PIRException;
 import org.apache.pirk.utils.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * Implementation of the Paillier cryptosystem.
@@ -72,31 +72,6 @@ public final class Paillier implements Serializable
 
   private static final Logger logger = LoggerFactory.getLogger(Paillier.class);
 
-  private static final SecureRandom secureRandom;
-
-  static
-  {
-    try
-    {
-      String alg = SystemConfiguration.getProperty("pallier.secureRandom.algorithm");
-      if (alg == null)
-      {
-        secureRandom = new SecureRandom();
-      }
-      else
-      {
-        String provider = SystemConfiguration.getProperty("pallier.secureRandom.provider");
-        secureRandom = (provider == null) ? SecureRandom.getInstance(alg) : SecureRandom.getInstance(alg, provider);
-      }
-      logger.info("Using secure random from " + secureRandom.getProvider().getName() + ":" + secureRandom.getAlgorithm());
-    } catch (GeneralSecurityException e)
-    {
-      logger.error("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
-      throw new RuntimeException("Unable to instantiate a SecureRandom object with the requested algorithm.", e);
-    }
-  }
-
-  @Expose
   private BigInteger p; // large prime
   @Expose
   private BigInteger q; // large prime
@@ -281,7 +256,7 @@ public final class Paillier implements Serializable
   private void getKeys(int bitLength, int certainty)
   {
     // Generate the primes
-    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, secureRandom);
+    BigInteger[] pq = PrimeGenerator.getPrimePair(bitLength, certainty, RandomProvider.SECURE_RANDOM);
     p = pq[0];
     q = pq[1];
 
@@ -310,10 +285,10 @@ public final class Paillier implements Serializable
   public BigInteger encrypt(BigInteger m) throws PIRException
   {
     // Generate a random value r in (Z/NZ)*
-    BigInteger r = (new BigInteger(bitLength, secureRandom)).mod(N);
+    BigInteger r = (new BigInteger(bitLength, RandomProvider.SECURE_RANDOM)).mod(N);
     while (r.equals(BigInteger.ZERO) || r.equals(BigInteger.ONE) || r.mod(p).equals(BigInteger.ZERO) || r.mod(q).equals(BigInteger.ZERO))
     {
-      r = (new BigInteger(bitLength, secureRandom)).mod(N);
+      r = (new BigInteger(bitLength, RandomProvider.SECURE_RANDOM)).mod(N);
     }
 
     return encrypt(m, r);

@@ -18,6 +18,23 @@
  */
 package org.apache.pirk.querier.wideskies.encrypt;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.pirk.encryption.Paillier;
+import org.apache.pirk.querier.wideskies.Querier;
+import org.apache.pirk.query.wideskies.Query;
+import org.apache.pirk.query.wideskies.QueryInfo;
+import org.apache.pirk.query.wideskies.QueryUtils;
+import org.apache.pirk.schema.data.DataSchema;
+import org.apache.pirk.schema.data.DataSchemaRegistry;
+import org.apache.pirk.schema.query.QuerySchema;
+import org.apache.pirk.schema.query.QuerySchemaRegistry;
+import org.apache.pirk.utils.KeyedHash;
+import org.apache.pirk.utils.PIRException;
+import org.apache.pirk.utils.RandomProvider;
+import org.apache.pirk.utils.SystemConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,24 +49,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.pirk.encryption.Paillier;
-import org.apache.pirk.querier.wideskies.Querier;
-import org.apache.pirk.query.wideskies.Query;
-import org.apache.pirk.query.wideskies.QueryInfo;
-import org.apache.pirk.query.wideskies.QueryUtils;
-import org.apache.pirk.schema.data.DataSchema;
-import org.apache.pirk.schema.data.DataSchemaRegistry;
-import org.apache.pirk.schema.query.QuerySchema;
-import org.apache.pirk.schema.query.QuerySchemaRegistry;
-import org.apache.pirk.utils.KeyedHash;
-import org.apache.pirk.utils.PIRException;
-import org.apache.pirk.utils.SystemConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Class to perform PIR encryption
- *
  */
 public class EncryptQuery
 {
@@ -66,13 +67,10 @@ public class EncryptQuery
 
   /**
    * Constructs a query encryptor using the given query information, selectors, and Paillier cryptosystem.
-   * 
-   * @param queryInfo
-   *          Fundamental information about the query.
-   * @param selectors
-   *          the list of selectors for this query.
-   * @param paillier
-   *          the Paillier cryptosystem to use.
+   *
+   * @param queryInfo Fundamental information about the query.
+   * @param selectors the list of selectors for this query.
+   * @param paillier  the Paillier cryptosystem to use.
    */
   public EncryptQuery(QueryInfo queryInfo, List<String> selectors, Paillier paillier)
   {
@@ -87,12 +85,10 @@ public class EncryptQuery
    * The encryption builds a <code>Querier</code> object, calculating and setting the query vectors.
    * <p>
    * Uses the system configured number of threads to conduct the encryption, or a single thread if the configuration has not been set.
-   * 
-   * @throws InterruptedException
-   *           If the task was interrupted during encryption.
-   * @throws PIRException
-   *           If a problem occurs performing the encryption.
+   *
    * @return The querier containing the query, and all information required to perform decryption.
+   * @throws InterruptedException If the task was interrupted during encryption.
+   * @throws PIRException         If a problem occurs performing the encryption.
    */
   public Querier encrypt() throws InterruptedException, PIRException
   {
@@ -110,14 +106,11 @@ public class EncryptQuery
    * For encrypted query vector E = <E_0, ..., E_{(2^hashBitSize)-1}>:
    * <p>
    * E_i = 2^{j*dataPartitionBitSize} if i = H_k(selector_j) 0 otherwise
-   * 
-   * @param numThreads
-   *          the number of threads to use when performing the encryption.
-   * @throws InterruptedException
-   *           If the task was interrupted during encryption.
-   * @throws PIRException
-   *           If a problem occurs performing the encryption.
+   *
+   * @param numThreads the number of threads to use when performing the encryption.
    * @return The querier containing the query, and all information required to perform decryption.
+   * @throws InterruptedException If the task was interrupted during encryption.
+   * @throws PIRException         If a problem occurs performing the encryption.
    */
   public Querier encrypt(int numThreads) throws InterruptedException, PIRException
   {
@@ -156,10 +149,22 @@ public class EncryptQuery
     return new Querier(selectors, paillier, query, embedSelectorMap);
   }
 
+  /**
+   * Use this method to get a securely generated, random string of 2*numBytes length
+   *
+   * @param numBytes How many bytes of random data to return.
+   * @return Random hex string of 2*numBytes length
+   */
+  private String getRandByteString(int numBytes)
+  {
+    byte[] randomData = new byte[numBytes];
+    RandomProvider.SECURE_RANDOM.nextBytes(randomData);
+    return Hex.encodeHexString(randomData);
+  }
+
   private Map<Integer,Integer> computeSelectorQueryVecMap()
   {
-    String hashKey = queryInfo.getHashKey();
-    int keyCounter = 0;
+    String hashKey = getRandByteString(10);
     int numSelectors = selectors.size();
     Map<Integer,Integer> selectorQueryVecMapping = new HashMap<>(numSelectors);
 
@@ -178,11 +183,14 @@ public class EncryptQuery
       {
         // Hash collision
         selectorQueryVecMapping.clear();
-        hashKey = queryInfo.getHashKey() + ++keyCounter;
+        hashKey = getRandByteString(10);
         logger.debug("index = " + index + "selector = " + selector + " hash collision = " + hash + " new key = " + hashKey);
         index = -1;
       }
     }
+
+    // Save off the final hashKey that we ended up using
+    queryInfo.setHashKey(hashKey);
     return selectorQueryVecMapping;
   }
 
