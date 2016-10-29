@@ -37,8 +37,10 @@ import java.io.Writer;
 
 public class JsonSerializer extends SerializationService
 {
-  public static final Gson gson = new GsonBuilder().registerTypeAdapter(Response.class, new ResponseDeserializer())
-      .registerTypeAdapter(Query.class, new QueryDeserializer()).registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
+  public static final Gson gson = new GsonBuilder()
+      //.registerTypeAdapter(Response.class, new ResponseDeserializer())
+      //.registerTypeAdapter(Query.class, new QueryDeserializer())
+      .registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
       .excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
   /**
