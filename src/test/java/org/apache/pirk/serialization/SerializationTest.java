@@ -49,7 +49,7 @@ public class SerializationTest
   
   @Rule
   public TemporaryFolder folder = new TemporaryFolder();
-
+  
   private static JsonSerializer jsonSerializer;
   private static JavaSerializer javaSerializer;
 
@@ -97,6 +97,12 @@ public class SerializationTest
   @Test
   public void testQuerierResponseSerializationDeserialization()
   {
+    testQuerierResponseSerializationDeserialization(jsonSerializer);
+    testQuerierResponseSerializationDeserialization(javaSerializer);
+  }
+  
+  private void testQuerierResponseSerializationDeserialization(SerializationService service) 
+  {
     String initialAdHocSchema = SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false");
     String initialEmbedSchema = SystemConfiguration.getProperty("pir.embedQuerySchema", "false");
     try
@@ -105,31 +111,31 @@ public class SerializationTest
       SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
       SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
       Querier querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
       querier = StandaloneQuery.createQuerier(Inputs.DNS_SRCIP_QUERY, BaseTests.selectorsIP);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
       querier = StandaloneQuery.createQuerier(Inputs.DNS_IP_QUERY, BaseTests.selectorsIP);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
       querier = StandaloneQuery.createQuerier(Inputs.DNS_NXDOMAIN_QUERY, BaseTests.selectorsDomain);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
 
       // Test with ad-hoc query schema but no embedded QuerySchema
       SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
       SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
       querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
 
       // Test with ad-hoc query schema and embedded query schema.
       SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
       SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
       querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
 
       // Test with embedded query schema but without ad-hoc query schemas.
       SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
       SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
       querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
-      checkSerializeDeserialize(querier);
+      checkSerializeDeserialize(querier, service);
 
       // Create Response.
       Response response = new Response(querier.getQuery().getQueryInfo());
@@ -138,7 +144,7 @@ public class SerializationTest
         response.addElement(i.intValue(), new BigInteger(i.toString()));
       }
       // Test response.
-      checkSerializeDeserialize(response);
+      checkSerializeDeserialize(response, service);
     } catch (Exception e)
     {
       logger.error("Threw an exception while creating queries.", e);
@@ -150,16 +156,16 @@ public class SerializationTest
     }
   }
 
-  private void checkSerializeDeserialize(Querier querier) throws IOException
+  private void checkSerializeDeserialize(Querier querier, SerializationService service) throws IOException
   {
     try
     {
       File fileQuerier = folder.newFile();
       fileQuerier.deleteOnExit();
       // Serialize Querier
-      jsonSerializer.write(new FileOutputStream(fileQuerier), querier);
+      service.write(new FileOutputStream(fileQuerier), querier);
       // Deserialize Querier
-      Querier deserializedQuerier = jsonSerializer.read(new FileInputStream(fileQuerier), Querier.class);
+      Querier deserializedQuerier = service.read(new FileInputStream(fileQuerier), Querier.class);
       // Check
       Assert.assertTrue(querier.equals(deserializedQuerier));
     } catch (IOException e)
@@ -169,16 +175,16 @@ public class SerializationTest
     }
   }
 
-  private void checkSerializeDeserialize(Response response) throws IOException
+  private void checkSerializeDeserialize(Response response, SerializationService service) throws IOException
   {
     try
     {
       File fileResponse = folder.newFile();
       fileResponse.deleteOnExit();
       // Serialize Response
-      jsonSerializer.write(new FileOutputStream(fileResponse), response);
+      service.write(new FileOutputStream(fileResponse), response);
       // Deserialize Response
-      Response deserializedResponse = jsonSerializer.read(new FileInputStream(fileResponse), Response.class);
+      Response deserializedResponse = service.read(new FileInputStream(fileResponse), Response.class);
       // Check
       Assert.assertTrue(response.equals(deserializedResponse));
     } catch (IOException e)
