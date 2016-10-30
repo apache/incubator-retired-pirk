@@ -365,4 +365,41 @@ public final class Paillier implements Serializable
     return "p = " + p.intValue() + " q = " + q.intValue() + " N = " + N.intValue() + " NSquared = " + NSquared.intValue() + " lambdaN = " + lambdaN.intValue()
         + " bitLength = " + bitLength;
   }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Paillier paillier = (Paillier) o;
+
+    if (bitLength != paillier.bitLength)
+      return false;
+    if (!p.equals(paillier.p))
+      return false;
+    if (!q.equals(paillier.q))
+      return false;
+    if (!N.equals(paillier.N))
+      return false;
+    if (!NSquared.equals(paillier.NSquared))
+      return false;
+    if (!lambdaN.equals(paillier.lambdaN))
+      return false;
+    return w.equals(paillier.w);
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = p.hashCode();
+    result = 31 * result + q.hashCode();
+    result = 31 * result + N.hashCode();
+    result = 31 * result + NSquared.hashCode();
+    result = 31 * result + lambdaN.hashCode();
+    result = 31 * result + w.hashCode();
+    result = 31 * result + bitLength;
+    return result;
+  }
 }

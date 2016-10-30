@@ -194,4 +194,47 @@ public class QuerySchema implements Serializable
   {
     return additionalFields.get(key);
   }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    QuerySchema that = (QuerySchema) o;
+
+    if (querySchemaVersion != that.querySchemaVersion)
+      return false;
+    if (dataElementSize != that.dataElementSize)
+      return false;
+    if (!schemaName.equals(that.schemaName))
+      return false;
+    if (!dataSchemaName.equals(that.dataSchemaName))
+      return false;
+    if (!selectorName.equals(that.selectorName))
+      return false;
+    if (!elementNames.equals(that.elementNames))
+      return false;
+    if (filterTypeName != null ? !filterTypeName.equals(that.filterTypeName) : that.filterTypeName != null)
+      return false;
+    if (filteredElementNames != null ? !filteredElementNames.equals(that.filteredElementNames) : that.filteredElementNames != null)
+      return false;
+    return additionalFields != null ? additionalFields.equals(that.additionalFields) : that.additionalFields == null;
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = (int) (querySchemaVersion ^ (querySchemaVersion >>> 32));
+    result = 31 * result + schemaName.hashCode();
+    result = 31 * result + dataSchemaName.hashCode();
+    result = 31 * result + selectorName.hashCode();
+    result = 31 * result + elementNames.hashCode();
+    result = 31 * result + (filterTypeName != null ? filterTypeName.hashCode() : 0);
+    result = 31 * result + (filteredElementNames != null ? filteredElementNames.hashCode() : 0);
+    result = 31 * result + dataElementSize;
+    result = 31 * result + (additionalFields != null ? additionalFields.hashCode() : 0);
+    return result;
+  }
 }

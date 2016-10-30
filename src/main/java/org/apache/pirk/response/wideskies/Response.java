@@ -71,4 +71,29 @@ public class Response implements Serializable, Storable
   {
     responseElements.put(position, element);
   }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Response response = (Response) o;
+
+    if (responseVersion != response.responseVersion)
+      return false;
+    if (!queryInfo.equals(response.queryInfo))
+      return false;
+    return responseElements.equals(response.responseElements);
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = (int) (responseVersion ^ (responseVersion >>> 32));
+    result = 31 * result + queryInfo.hashCode();
+    result = 31 * result + responseElements.hashCode();
+    return result;
+  }
 }

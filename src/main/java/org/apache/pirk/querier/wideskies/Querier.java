@@ -54,6 +54,37 @@ public class Querier implements Serializable, Storable
   @Expose
   private Map<Integer,String> embedSelectorMap = null;
 
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Querier querier = (Querier) o;
+
+    if (querierVersion != querier.querierVersion)
+      return false;
+    if (!query.equals(querier.query))
+      return false;
+    if (!paillier.equals(querier.paillier))
+      return false;
+    if (!selectors.equals(querier.selectors))
+      return false;
+    return embedSelectorMap != null ? embedSelectorMap.equals(querier.embedSelectorMap) : querier.embedSelectorMap == null;
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = (int) (querierVersion ^ (querierVersion >>> 32));
+    result = 31 * result + query.hashCode();
+    result = 31 * result + paillier.hashCode();
+    result = 31 * result + selectors.hashCode();
+    result = 31 * result + (embedSelectorMap != null ? embedSelectorMap.hashCode() : 0);
+    return result;
+  }
+
   public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer,String> embedSelectorMapInput)
   {
     selectors = selectorsInput;

@@ -56,6 +56,7 @@ public class Query implements Serializable, Storable
 
   // lookup table for exponentiation of query vectors - based on dataPartitionBitSize
   // element -> <power, element^power mod N^2>
+  @Expose
   private Map<BigInteger,Map<Integer,BigInteger>> expTable = new ConcurrentHashMap<>();
 
   // File based lookup table for modular exponentiation
@@ -151,5 +152,42 @@ public class Query implements Serializable, Storable
   {
     Map<Integer,BigInteger> powerMap = expTable.get(value);
     return (powerMap == null) ? null : powerMap.get(power);
+  }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Query query = (Query) o;
+
+    if (queryVersion != query.queryVersion)
+      return false;
+    if (!queryInfo.equals(query.queryInfo))
+      return false;
+    if (!queryElements.equals(query.queryElements))
+      return false;
+    if (expTable != null ? !expTable.equals(query.expTable) : query.expTable != null)
+      return false;
+    if (expFileBasedLookup != null ? !expFileBasedLookup.equals(query.expFileBasedLookup) : query.expFileBasedLookup != null)
+      return false;
+    if (!N.equals(query.N))
+      return false;
+    return NSquared.equals(query.NSquared);
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = (int) (queryVersion ^ (queryVersion >>> 32));
+    result = 31 * result + queryInfo.hashCode();
+    result = 31 * result + queryElements.hashCode();
+    result = 31 * result + (expTable != null ? expTable.hashCode() : 0);
+    result = 31 * result + (expFileBasedLookup != null ? expFileBasedLookup.hashCode() : 0);
+    result = 31 * result + N.hashCode();
+    result = 31 * result + NSquared.hashCode();
+    return result;
   }
 }

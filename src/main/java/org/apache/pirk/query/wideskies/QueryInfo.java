@@ -279,4 +279,59 @@ public class QueryInfo implements Serializable, Cloneable
       throw new RuntimeException(e);
     }
   }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    QueryInfo queryInfo = (QueryInfo) o;
+
+    if (queryInfoVersion != queryInfo.queryInfoVersion)
+      return false;
+    if (numSelectors != queryInfo.numSelectors)
+      return false;
+    if (hashBitSize != queryInfo.hashBitSize)
+      return false;
+    if (numBitsPerDataElement != queryInfo.numBitsPerDataElement)
+      return false;
+    if (dataPartitionBitSize != queryInfo.dataPartitionBitSize)
+      return false;
+    if (numPartitionsPerDataElement != queryInfo.numPartitionsPerDataElement)
+      return false;
+    if (useExpLookupTable != queryInfo.useExpLookupTable)
+      return false;
+    if (useHDFSExpLookupTable != queryInfo.useHDFSExpLookupTable)
+      return false;
+    if (embedSelector != queryInfo.embedSelector)
+      return false;
+    if (!identifier.equals(queryInfo.identifier))
+      return false;
+    if (!queryType.equals(queryInfo.queryType))
+      return false;
+    if (!hashKey.equals(queryInfo.hashKey))
+      return false;
+    return qSchema != null ? qSchema.equals(queryInfo.qSchema) : queryInfo.qSchema == null;
+
+  }
+
+  @Override public int hashCode()
+  {
+    int result = (int) (queryInfoVersion ^ (queryInfoVersion >>> 32));
+    result = 31 * result + identifier.hashCode();
+    result = 31 * result + numSelectors;
+    result = 31 * result + queryType.hashCode();
+    result = 31 * result + hashBitSize;
+    result = 31 * result + hashKey.hashCode();
+    result = 31 * result + numBitsPerDataElement;
+    result = 31 * result + dataPartitionBitSize;
+    result = 31 * result + numPartitionsPerDataElement;
+    result = 31 * result + (useExpLookupTable ? 1 : 0);
+    result = 31 * result + (useHDFSExpLookupTable ? 1 : 0);
+    result = 31 * result + (embedSelector ? 1 : 0);
+    result = 31 * result + (qSchema != null ? qSchema.hashCode() : 0);
+    return result;
+  }
 }
