@@ -72,9 +72,11 @@ public final class Paillier implements Serializable
 
   private static final Logger logger = LoggerFactory.getLogger(Paillier.class);
 
+  @Expose
   private BigInteger p; // large prime
   @Expose
   private BigInteger q; // large prime
+  
   private BigInteger N; // N=pq, RSA modulus
 
   private BigInteger NSquared; // NSquared = N^2

@@ -50,10 +50,18 @@ public class StandaloneQuery
   private static final Logger logger = LoggerFactory.getLogger(StandaloneQuery.class);
   public static final String QUERY_SIDE_OUPUT_FILE_PREFIX = "querySideOut";
 
+  /**
+   * A helper method to create a querier from a query type string and a list of selectors. Used in tests.
+   * @param queryType A string describing the query schema for this querier.
+   * @param selectors A list of selectors for the querier.
+   * @return
+   * @throws PIRException
+   * @throws InterruptedException
+   */
   public static Querier createQuerier(String queryType, List<String> selectors) throws PIRException, InterruptedException
   {
     Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
-        .hashBitSize(BaseTests.hashBitSize).hashKey(BaseTests.hashKey).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
+        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
         .queryType(queryType).build();
     return QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
   }
@@ -79,11 +87,7 @@ public class StandaloneQuery
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
-        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
-        .queryType(queryType).build();
-
-    Querier querier = QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
+    Querier querier = createQuerier(queryType, selectors);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Dork with the embedSelectorMap to generate a false positive for the last valid selector in selectors
