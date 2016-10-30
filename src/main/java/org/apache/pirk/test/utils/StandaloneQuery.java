@@ -79,7 +79,11 @@ public class StandaloneQuery
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    Querier querier = createQuerier(queryType, selectors);
+    Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
+        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
+        .queryType(queryType).build();
+
+    Querier querier = QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Dork with the embedSelectorMap to generate a false positive for the last valid selector in selectors

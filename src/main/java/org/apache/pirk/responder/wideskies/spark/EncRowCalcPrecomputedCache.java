@@ -21,6 +21,7 @@ package org.apache.pirk.responder.wideskies.spark;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pirk.query.wideskies.Query;
@@ -65,7 +66,7 @@ public class EncRowCalcPrecomputedCache
   }
 
   @Override
-  public Iterable<Tuple2<Long,BigInteger>> call(Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>> hashDocTuple)
+  public Iterator<Tuple2<Long, BigInteger>> call(Tuple2<Integer,Tuple2<Iterable<Tuple2<Integer,BigInteger>>,Iterable<List<BigInteger>>>> hashDocTuple)
       throws Exception
   {
     List<Tuple2<Long,BigInteger>> returnPairs = new ArrayList<>();
@@ -95,6 +96,6 @@ public class EncRowCalcPrecomputedCache
 
     returnPairs.addAll(encRowValues);
 
-    return returnPairs;
+    return returnPairs.iterator();
   }
 }

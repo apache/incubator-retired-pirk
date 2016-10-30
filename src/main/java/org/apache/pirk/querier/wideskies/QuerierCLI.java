@@ -237,13 +237,6 @@ public class QuerierCLI
     optionHASHBITSIZE.setType(String.class);
     options.addOption(optionHASHBITSIZE);
 
-    // HASHKEY
-    Option optionHASHKEY = new Option("hk", QuerierProps.HASHKEY, true, "required for encryption -- String key for the keyed hash functionality");
-    optionHASHKEY.setRequired(false);
-    optionHASHKEY.setArgName(QuerierProps.HASHKEY);
-    optionHASHKEY.setType(String.class);
-    options.addOption(optionHASHKEY);
-
     // DATAPARTITIONSIZE
     Option optionDATAPARTITIONSIZE = new Option("dps", QuerierProps.DATAPARTITIONSIZE, true,
         "required for encryption -- Partition bit size in data partitioning");
