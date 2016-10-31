@@ -21,6 +21,7 @@ package org.apache.pirk.querier.wideskies;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.encryption.Paillier;
@@ -63,8 +64,6 @@ public class Querier implements Serializable, Storable
 
     Querier querier = (Querier) o;
 
-    if (querierVersion != querier.querierVersion)
-      return false;
     if (!query.equals(querier.query))
       return false;
     if (!paillier.equals(querier.paillier))
@@ -77,12 +76,7 @@ public class Querier implements Serializable, Storable
 
   @Override public int hashCode()
   {
-    int result = (int) (querierVersion ^ (querierVersion >>> 32));
-    result = 31 * result + query.hashCode();
-    result = 31 * result + paillier.hashCode();
-    result = 31 * result + selectors.hashCode();
-    result = 31 * result + (embedSelectorMap != null ? embedSelectorMap.hashCode() : 0);
-    return result;
+    return Objects.hash(query, paillier, selectors, embedSelectorMap);
   }
 
   public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer,String> embedSelectorMapInput)

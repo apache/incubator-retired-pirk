@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Implementation of the Paillier cryptosystem.
@@ -370,13 +371,6 @@ public final class Paillier implements Serializable
 
   @Override public int hashCode()
   {
-    int result = p.hashCode();
-    result = 31 * result + q.hashCode();
-    result = 31 * result + N.hashCode();
-    result = 31 * result + NSquared.hashCode();
-    result = 31 * result + lambdaN.hashCode();
-    result = 31 * result + w.hashCode();
-    result = 31 * result + bitLength;
-    return result;
+    return Objects.hash(p, q, N, NSquared, lambdaN, w, bitLength);
   }
 }

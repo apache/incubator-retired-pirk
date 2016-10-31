@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -296,8 +297,6 @@ public class QueryInfo implements Serializable, Cloneable
 
     QueryInfo queryInfo = (QueryInfo) o;
 
-    if (queryInfoVersion != queryInfo.queryInfoVersion)
-      return false;
     if (numSelectors != queryInfo.numSelectors)
       return false;
     if (hashBitSize != queryInfo.hashBitSize)
@@ -326,19 +325,7 @@ public class QueryInfo implements Serializable, Cloneable
 
   @Override public int hashCode()
   {
-    int result = (int) (queryInfoVersion ^ (queryInfoVersion >>> 32));
-    result = 31 * result + identifier.hashCode();
-    result = 31 * result + numSelectors;
-    result = 31 * result + queryType.hashCode();
-    result = 31 * result + hashBitSize;
-    result = 31 * result + hashKey.hashCode();
-    result = 31 * result + numBitsPerDataElement;
-    result = 31 * result + dataPartitionBitSize;
-    result = 31 * result + numPartitionsPerDataElement;
-    result = 31 * result + (useExpLookupTable ? 1 : 0);
-    result = 31 * result + (useHDFSExpLookupTable ? 1 : 0);
-    result = 31 * result + (embedSelector ? 1 : 0);
-    result = 31 * result + (qSchema != null ? qSchema.hashCode() : 0);
-    return result;
+    return Objects.hash(identifier, numSelectors, queryType, hashBitSize, hashKey, numBitsPerDataElement, useExpLookupTable, useHDFSExpLookupTable,
+        embedSelector, qSchema);
   }
 }

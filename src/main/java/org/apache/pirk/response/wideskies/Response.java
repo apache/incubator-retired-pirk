@@ -20,6 +20,7 @@ package org.apache.pirk.response.wideskies;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import com.google.gson.annotations.Expose;
@@ -81,8 +82,6 @@ public class Response implements Serializable, Storable
 
     Response response = (Response) o;
 
-    if (responseVersion != response.responseVersion)
-      return false;
     if (!queryInfo.equals(response.queryInfo))
       return false;
     return responseElements.equals(response.responseElements);
@@ -91,9 +90,6 @@ public class Response implements Serializable, Storable
 
   @Override public int hashCode()
   {
-    int result = (int) (responseVersion ^ (responseVersion >>> 32));
-    result = 31 * result + queryInfo.hashCode();
-    result = 31 * result + responseElements.hashCode();
-    return result;
+    return Objects.hash(queryInfo, responseElements);
   }
 }

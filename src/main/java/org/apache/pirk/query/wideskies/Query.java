@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -163,8 +164,6 @@ public class Query implements Serializable, Storable
 
     Query query = (Query) o;
 
-    if (queryVersion != query.queryVersion)
-      return false;
     if (!queryInfo.equals(query.queryInfo))
       return false;
     if (!queryElements.equals(query.queryElements))
@@ -181,13 +180,6 @@ public class Query implements Serializable, Storable
 
   @Override public int hashCode()
   {
-    int result = (int) (queryVersion ^ (queryVersion >>> 32));
-    result = 31 * result + queryInfo.hashCode();
-    result = 31 * result + queryElements.hashCode();
-    result = 31 * result + (expTable != null ? expTable.hashCode() : 0);
-    result = 31 * result + (expFileBasedLookup != null ? expFileBasedLookup.hashCode() : 0);
-    result = 31 * result + N.hashCode();
-    result = 31 * result + NSquared.hashCode();
-    return result;
+    return Objects.hash(queryInfo, queryElements, expTable, expFileBasedLookup, N, NSquared);
   }
 }
