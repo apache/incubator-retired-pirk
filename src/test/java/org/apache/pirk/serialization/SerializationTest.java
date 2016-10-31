@@ -249,7 +249,4 @@ public class SerializationTest
       return Objects.hash(id, message);
     }
   }
-
-
-
 }

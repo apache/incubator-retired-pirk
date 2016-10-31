@@ -54,7 +54,7 @@ public class StandaloneQuery
    * A helper method to create a querier from a query type string and a list of selectors. Used in tests.
    * @param queryType A string describing the query schema for this querier.
    * @param selectors A list of selectors for the querier.
-   * @return
+   * @return A {@link Querier} representing the submitted information.
    * @throws PIRException
    * @throws InterruptedException
    */
