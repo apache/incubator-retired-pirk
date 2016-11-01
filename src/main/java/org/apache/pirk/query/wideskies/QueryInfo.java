@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -285,5 +286,46 @@ public class QueryInfo implements Serializable, Cloneable
     {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    QueryInfo queryInfo = (QueryInfo) o;
+
+    if (numSelectors != queryInfo.numSelectors)
+      return false;
+    if (hashBitSize != queryInfo.hashBitSize)
+      return false;
+    if (numBitsPerDataElement != queryInfo.numBitsPerDataElement)
+      return false;
+    if (dataPartitionBitSize != queryInfo.dataPartitionBitSize)
+      return false;
+    if (numPartitionsPerDataElement != queryInfo.numPartitionsPerDataElement)
+      return false;
+    if (useExpLookupTable != queryInfo.useExpLookupTable)
+      return false;
+    if (useHDFSExpLookupTable != queryInfo.useHDFSExpLookupTable)
+      return false;
+    if (embedSelector != queryInfo.embedSelector)
+      return false;
+    if (!identifier.equals(queryInfo.identifier))
+      return false;
+    if (!queryType.equals(queryInfo.queryType))
+      return false;
+    if (!hashKey.equals(queryInfo.hashKey))
+      return false;
+    return qSchema != null ? qSchema.equals(queryInfo.qSchema) : queryInfo.qSchema == null;
+
+  }
+
+  @Override public int hashCode()
+  {
+    return Objects.hash(identifier, numSelectors, queryType, hashBitSize, hashKey, numBitsPerDataElement, useExpLookupTable, useHDFSExpLookupTable,
+        embedSelector, qSchema);
   }
 }

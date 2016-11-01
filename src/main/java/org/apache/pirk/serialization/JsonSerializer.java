@@ -22,11 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.pirk.querier.wideskies.Querier;
 import org.apache.pirk.querier.wideskies.QuerierDeserializer;
-import org.apache.pirk.query.wideskies.QueryDeserializer;
-import org.apache.pirk.response.wideskies.Response;
-import org.apache.pirk.response.wideskies.ResponseDeserializer;
 
-import javax.management.Query;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,8 +33,8 @@ import java.io.Writer;
 
 public class JsonSerializer extends SerializationService
 {
-  public static final Gson gson = new GsonBuilder().registerTypeAdapter(Response.class, new ResponseDeserializer())
-      .registerTypeAdapter(Query.class, new QueryDeserializer()).registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
+  public static final Gson gson = new GsonBuilder()
+      .registerTypeAdapter(Querier.class, new QuerierDeserializer()).setPrettyPrinting()
       .excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
 
   /**

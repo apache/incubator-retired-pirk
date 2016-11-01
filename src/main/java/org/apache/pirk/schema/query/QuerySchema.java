@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -193,5 +194,37 @@ public class QuerySchema implements Serializable
   public String getAdditionalFieldValue(String key)
   {
     return additionalFields.get(key);
+  }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    QuerySchema that = (QuerySchema) o;
+
+    if (dataElementSize != that.dataElementSize)
+      return false;
+    if (!schemaName.equals(that.schemaName))
+      return false;
+    if (!dataSchemaName.equals(that.dataSchemaName))
+      return false;
+    if (!selectorName.equals(that.selectorName))
+      return false;
+    if (!elementNames.equals(that.elementNames))
+      return false;
+    if (filterTypeName != null ? !filterTypeName.equals(that.filterTypeName) : that.filterTypeName != null)
+      return false;
+    if (!filteredElementNames.equals(that.filteredElementNames))
+      return false;
+    return additionalFields.equals(that.additionalFields);
+
+  }
+
+  @Override public int hashCode()
+  {
+    return Objects.hash(schemaName, dataSchemaName, selectorName, elementNames, filterTypeName, filteredElementNames, dataElementSize, additionalFields);
   }
 }

@@ -18,33 +18,52 @@
  */
 package org.apache.pirk.serialization;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.Random;
-
+import org.apache.pirk.querier.wideskies.Querier;
+import org.apache.pirk.response.wideskies.Response;
+import org.apache.pirk.test.utils.BaseTests;
+import org.apache.pirk.test.utils.Inputs;
+import org.apache.pirk.test.utils.StandaloneQuery;
+import org.apache.pirk.utils.SystemConfiguration;
+import org.apache.pirk.wideskies.standalone.StandaloneTest;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Objects;
+import java.util.Random;
 
 public class SerializationTest
 {
-
+  private static final Logger logger = LoggerFactory.getLogger(SerializationTest.class);
+  
   @Rule
   public TemporaryFolder folder = new TemporaryFolder();
-
+  
   private static JsonSerializer jsonSerializer;
   private static JavaSerializer javaSerializer;
 
   @BeforeClass
   public static void setUp() throws Exception
   {
+    StandaloneTest.setup();
     jsonSerializer = new JsonSerializer();
     javaSerializer = new JavaSerializer();
+  }
+
+  @AfterClass
+  public static void teardown() {
+    StandaloneTest.teardown();
   }
 
   @Test
@@ -73,6 +92,106 @@ public class SerializationTest
     FileInputStream fis = new FileInputStream(tempFile);
     Object deserializedDummyObject = javaSerializer.read(fis, DummyRecord.class);
     Assert.assertTrue(deserializedDummyObject.equals(dummyRecord));
+  }
+
+  @Test
+  public void testQuerierResponseSerializationDeserialization()
+  {
+    testQuerierResponseSerializationDeserialization(jsonSerializer);
+    testQuerierResponseSerializationDeserialization(javaSerializer);
+  }
+  
+  private void testQuerierResponseSerializationDeserialization(SerializationService service) 
+  {
+    String initialAdHocSchema = SystemConfiguration.getProperty("pir.allowAdHocQuerySchemas", "false");
+    String initialEmbedSchema = SystemConfiguration.getProperty("pir.embedQuerySchema", "false");
+    try
+    {
+      // Run tests without ad-hoc query schemas or embeded query schemas
+      SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+      SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+      Querier querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
+      checkSerializeDeserialize(querier, service);
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_SRCIP_QUERY, BaseTests.selectorsIP);
+      checkSerializeDeserialize(querier, service);
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_IP_QUERY, BaseTests.selectorsIP);
+      checkSerializeDeserialize(querier, service);
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_NXDOMAIN_QUERY, BaseTests.selectorsDomain);
+      checkSerializeDeserialize(querier, service);
+
+      // Test with ad-hoc query schema but no embedded QuerySchema
+      SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+      SystemConfiguration.setProperty("pir.embedQuerySchema", "false");
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
+      checkSerializeDeserialize(querier, service);
+
+      // Test with ad-hoc query schema and embedded query schema.
+      SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "true");
+      SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
+      checkSerializeDeserialize(querier, service);
+
+      // Test with embedded query schema but without ad-hoc query schemas.
+      SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", "false");
+      SystemConfiguration.setProperty("pir.embedQuerySchema", "true");
+      querier = StandaloneQuery.createQuerier(Inputs.DNS_HOSTNAME_QUERY, BaseTests.selectorsDomain);
+      checkSerializeDeserialize(querier, service);
+
+      // Create Response.
+      Response response = new Response(querier.getQuery().getQueryInfo());
+      for (Integer i = 0; i < 10; i++ )
+      {
+        response.addElement(i.intValue(), new BigInteger(i.toString()));
+      }
+      // Test response.
+      checkSerializeDeserialize(response, service);
+    } catch (Exception e)
+    {
+      logger.error("Threw an exception while creating queries.", e);
+      Assert.fail(e.toString());
+    } finally
+    {
+      SystemConfiguration.setProperty("pir.allowAdHocQuerySchemas", initialAdHocSchema);
+      SystemConfiguration.setProperty("pir.embedQuerySchema", initialEmbedSchema);
+    }
+  }
+
+  private void checkSerializeDeserialize(Querier querier, SerializationService service) throws IOException
+  {
+    try
+    {
+      File fileQuerier = folder.newFile();
+      fileQuerier.deleteOnExit();
+      // Serialize Querier
+      service.write(new FileOutputStream(fileQuerier), querier);
+      // Deserialize Querier
+      Querier deserializedQuerier = service.read(new FileInputStream(fileQuerier), Querier.class);
+      // Check
+      Assert.assertTrue(querier.equals(deserializedQuerier));
+    } catch (IOException e)
+    {
+      logger.error("File operation error: ", e);
+      throw e;
+    }
+  }
+
+  private void checkSerializeDeserialize(Response response, SerializationService service) throws IOException
+  {
+    try
+    {
+      File fileResponse = folder.newFile();
+      fileResponse.deleteOnExit();
+      // Serialize Response
+      service.write(new FileOutputStream(fileResponse), response);
+      // Deserialize Response
+      Response deserializedResponse = service.read(new FileInputStream(fileResponse), Response.class);
+      // Check
+      Assert.assertTrue(response.equals(deserializedResponse));
+    } catch (IOException e)
+    {
+      logger.error("File operation error: ", e);
+      throw e;
+    }
   }
 
   private static class DummyRecord implements Serializable, Storable
@@ -130,5 +249,4 @@ public class SerializationTest
       return Objects.hash(id, message);
     }
   }
-
 }
