@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Implementation of the Paillier cryptosystem.
@@ -72,9 +73,11 @@ public final class Paillier implements Serializable
 
   private static final Logger logger = LoggerFactory.getLogger(Paillier.class);
 
+  @Expose
   private BigInteger p; // large prime
   @Expose
   private BigInteger q; // large prime
+  
   private BigInteger N; // N=pq, RSA modulus
 
   private BigInteger NSquared; // NSquared = N^2
@@ -339,5 +342,35 @@ public final class Paillier implements Serializable
   {
     return "p = " + p.intValue() + " q = " + q.intValue() + " N = " + N.intValue() + " NSquared = " + NSquared.intValue() + " lambdaN = " + lambdaN.intValue()
         + " bitLength = " + bitLength;
+  }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Paillier paillier = (Paillier) o;
+
+    if (bitLength != paillier.bitLength)
+      return false;
+    if (!p.equals(paillier.p))
+      return false;
+    if (!q.equals(paillier.q))
+      return false;
+    if (!N.equals(paillier.N))
+      return false;
+    if (!NSquared.equals(paillier.NSquared))
+      return false;
+    if (!lambdaN.equals(paillier.lambdaN))
+      return false;
+    return w.equals(paillier.w);
+
+  }
+
+  @Override public int hashCode()
+  {
+    return Objects.hash(p, q, N, NSquared, lambdaN, w, bitLength);
   }
 }

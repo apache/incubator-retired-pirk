@@ -21,6 +21,7 @@ package org.apache.pirk.querier.wideskies;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gson.annotations.Expose;
 import org.apache.pirk.encryption.Paillier;
@@ -53,6 +54,39 @@ public class Querier implements Serializable, Storable
   // if the selector is of variable lengths
   @Expose
   private Map<Integer,String> embedSelectorMap = null;
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass())
+    {
+      return false;
+    }
+
+    Querier querier = (Querier) o;
+
+    if (!query.equals(querier.query))
+    {
+      return false;
+    }
+    if (!paillier.equals(querier.paillier))
+    {
+      return false;
+    }
+    if (!selectors.equals(querier.selectors))
+    {
+      return false;
+    }
+    return embedSelectorMap != null ? embedSelectorMap.equals(querier.embedSelectorMap) : querier.embedSelectorMap == null;
+  }
+
+  @Override public int hashCode()
+  {
+    return Objects.hash(query, paillier, selectors, embedSelectorMap);
+  }
 
   public Querier(List<String> selectorsInput, Paillier paillierInput, Query queryInput, Map<Integer,String> embedSelectorMapInput)
   {

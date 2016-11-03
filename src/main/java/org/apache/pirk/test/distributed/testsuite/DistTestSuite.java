@@ -402,7 +402,7 @@ public class DistTestSuite
   // Base method to perform query
   // TODO: This could be changed to pass in the platform instead of isSpark and isStreaming...
   @SuppressWarnings("unused")
-  public static List<QueryResponseJSON> performQuery(String queryType, ArrayList<String> selectors, FileSystem fs, boolean isSpark, int numThreads,
+  public static List<QueryResponseJSON> performQuery(String queryType, List<String> selectors, FileSystem fs, boolean isSpark, int numThreads,
       boolean isStreaming) throws Exception
   {
     logger.info("performQuery: ");

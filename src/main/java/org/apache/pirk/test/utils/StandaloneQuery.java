@@ -48,26 +48,37 @@ import static org.junit.Assert.fail;
 public class StandaloneQuery
 {
   private static final Logger logger = LoggerFactory.getLogger(StandaloneQuery.class);
+  public static final String QUERY_SIDE_OUPUT_FILE_PREFIX = "querySideOut";
 
-  static String queryFileDomain = "qfDomain";
-  static String queryFileIP = "qfIP";
-
-  String testDataSchemaName = "testDataSchema";
-  String testQuerySchemaName = "testQuerySchema";
+  /**
+   * A helper method to create a querier from a query type string and a list of selectors. Used in tests.
+   * @param queryType A string describing the query schema for this querier.
+   * @param selectors A list of selectors for the querier.
+   * @return A {@link Querier} representing the submitted information.
+   * @throws PIRException
+   * @throws InterruptedException
+   */
+  public static Querier createQuerier(String queryType, List<String> selectors) throws PIRException, InterruptedException
+  {
+    Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
+        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
+        .queryType(queryType).build();
+    return QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
+  }
 
   // Base method to perform the query
   public static List<QueryResponseJSON> performStandaloneQuery(List<JSONObject> dataElements, String queryType, List<String> selectors, int numThreads,
       boolean testFalsePositive) throws IOException, InterruptedException, PIRException
   {
+
     logger.info("Performing watchlisting: ");
 
     QuerySchema qSchema = QuerySchemaRegistry.get(queryType);
 
     // Create the necessary files
     LocalFileSystemStore storage = new LocalFileSystemStore();
-    String querySideOuputFilePrefix = "querySideOut";
-    File fileQuerier = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERIER_FILETAG, ".txt");
-    File fileQuery = File.createTempFile(querySideOuputFilePrefix + "-" + QuerierConst.QUERY_FILETAG, ".txt");
+    File fileQuerier = File.createTempFile(QUERY_SIDE_OUPUT_FILE_PREFIX + "-" + QuerierConst.QUERIER_FILETAG, ".txt");
+    File fileQuery = File.createTempFile(QUERY_SIDE_OUPUT_FILE_PREFIX + "-" + QuerierConst.QUERY_FILETAG, ".txt");
     String responseFile = "encryptedResponse";
     File fileResponse = File.createTempFile(responseFile, ".txt");
     String finalResultsFile = "finalResultFile";
@@ -76,11 +87,7 @@ public class StandaloneQuery
     logger.info("fileQuerier = " + fileQuerier.getAbsolutePath() + " fileQuery  = " + fileQuery.getAbsolutePath() + " responseFile = "
         + fileResponse.getAbsolutePath() + " fileFinalResults = " + fileFinalResults.getAbsolutePath());
 
-    Properties baseTestEncryptionProperties = EncryptionPropertiesBuilder.newBuilder().dataPartitionBitSize(BaseTests.dataPartitionBitSize)
-        .hashBitSize(BaseTests.hashBitSize).paillierBitSize(BaseTests.paillierBitSize).certainty(BaseTests.certainty)
-        .queryType(queryType).build();
-
-    Querier querier = QuerierFactory.createQuerier(BaseTests.queryIdentifier, selectors, baseTestEncryptionProperties);
+    Querier querier = createQuerier(queryType, selectors);
     logger.info("Completed encryption of the selectors - completed formation of the encrypted query vectors:");
 
     // Dork with the embedSelectorMap to generate a false positive for the last valid selector in selectors

@@ -20,6 +20,7 @@ package org.apache.pirk.response.wideskies;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import com.google.gson.annotations.Expose;
@@ -70,5 +71,25 @@ public class Response implements Serializable, Storable
   public void addElement(int position, BigInteger element)
   {
     responseElements.put(position, element);
+  }
+
+  @Override public boolean equals(Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    Response response = (Response) o;
+
+    if (!queryInfo.equals(response.queryInfo))
+      return false;
+    return responseElements.equals(response.responseElements);
+
+  }
+
+  @Override public int hashCode()
+  {
+    return Objects.hash(queryInfo, responseElements);
   }
 }

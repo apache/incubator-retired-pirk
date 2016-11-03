@@ -75,6 +75,8 @@ public class StandaloneTest
   @AfterClass
   public static void teardown()
   {
+    // Reset the stoplist file property
+    SystemConfiguration.setProperty("pir.stopListFile", stopListFileProp);
     // Reset the schema properties and registries
     DataSchemaRegistry.clearRegistry();
     QuerySchemaRegistry.clearRegistry();
@@ -122,8 +124,5 @@ public class StandaloneTest
     // Run using a false positive
     SystemConfiguration.setProperty("pirTest.embedSelector", "true");
     BaseTests.testDNSHostnameQuery(dataElements, 1, true);
-
-    // Reset the stoplist file property
-    SystemConfiguration.setProperty("pir.stopListFile", stopListFileProp);
   }
 }
