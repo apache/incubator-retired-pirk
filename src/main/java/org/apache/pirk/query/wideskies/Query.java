@@ -158,24 +158,37 @@ public class Query implements Serializable, Storable
   @Override public boolean equals(Object o)
   {
     if (this == o)
+    {
       return true;
+    }
     if (o == null || getClass() != o.getClass())
+    {
       return false;
+    }
 
     Query query = (Query) o;
 
     if (!queryInfo.equals(query.queryInfo))
+    {
       return false;
+    }
     if (!queryElements.equals(query.queryElements))
+    {
       return false;
+    }
     if (expTable != null ? !expTable.equals(query.expTable) : query.expTable != null)
+    {
       return false;
+    }
     if (expFileBasedLookup != null ? !expFileBasedLookup.equals(query.expFileBasedLookup) : query.expFileBasedLookup != null)
+    {
       return false;
+    }
     if (!N.equals(query.N))
+    {
       return false;
+    }
     return NSquared.equals(query.NSquared);
-
   }
 
   @Override public int hashCode()

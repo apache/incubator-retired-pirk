@@ -58,20 +58,29 @@ public class Querier implements Serializable, Storable
   @Override public boolean equals(Object o)
   {
     if (this == o)
+    {
       return true;
+    }
     if (o == null || getClass() != o.getClass())
+    {
       return false;
+    }
 
     Querier querier = (Querier) o;
 
     if (!query.equals(querier.query))
+    {
       return false;
+    }
     if (!paillier.equals(querier.paillier))
+    {
       return false;
+    }
     if (!selectors.equals(querier.selectors))
+    {
       return false;
+    }
     return embedSelectorMap != null ? embedSelectorMap.equals(querier.embedSelectorMap) : querier.embedSelectorMap == null;
-
   }
 
   @Override public int hashCode()

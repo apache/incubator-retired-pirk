@@ -167,7 +167,7 @@ public class SerializationTest
       // Deserialize Querier
       Querier deserializedQuerier = service.read(new FileInputStream(fileQuerier), Querier.class);
       // Check
-      Assert.assertTrue(querier.equals(deserializedQuerier));
+      Assert.assertEquals(querier, deserializedQuerier);
     } catch (IOException e)
     {
       logger.error("File operation error: ", e);
