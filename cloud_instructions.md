@@ -148,8 +148,9 @@ If you want to SSH in and set up a SOCKS proxy to access the [web interfaces](ht
 3. Click "Open" to see the cluster list, and from there create a new cluster,
 e.g.
   * `cluster name =` *`test-cluster`*, `user name = pirk`, `password =` *`password`*.
-  * In the Configuration section increase the number of data nodes to 5 (the maximum number available on the basic plan).
-  * Scroll down and select "Spark" as an optional component.
+  * Increase the number of data nodes to 5 (the maximum number available on the basic plan).
+  * Change the "IBM Open Platform Version" to "IOP 4.3 Technical Preview" (required for Spark 2.0).
+  * Select "Spark2" as an optional component.
   * Click "Create".
 4. Select the test cluster from the Cluster List and take note of the SSH host name,
 e.g. `bi-hadoop-prod-4174.bi.services.us-south.bluemix.net`
