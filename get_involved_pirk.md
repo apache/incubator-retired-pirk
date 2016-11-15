@@ -19,4 +19,4 @@ To start to get plugged into the project, please check out our [mailing lists]({
 
 ## Meetups
 
-Check back for meetup listings.
+November 30, 2016. Data Science MD Meetup. [Secure Queries with Apache Pirk](https://www.meetup.com/Data-Science-MD/events/234983130/).
