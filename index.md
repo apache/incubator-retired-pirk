@@ -83,7 +83,7 @@ If you are a Developer, please check out the [For Developers]({{ site.baseurl }}
 
 ## Community
 
-Please check out our [community]({{ site.baseurl }}/get_involved) section.
+Please check out our [community]({{ site.baseurl }}/get_involved_pirk) section.
 
 ## Roadmap
 
