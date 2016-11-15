@@ -94,7 +94,7 @@ To run all of the distributed functional tests on a cluster, the following ‘ha
 
 Specific distributed test suites may be run via providing corresponding command line options. The available options are given by the following command:
 
-	hadoop jar <pirkJar> org.apache.pirk.test.distributed.DistributedTestDriver —help
+	hadoop jar <pirkJar> org.apache.pirk.test.distributed.DistributedTestDriver --help
 
 The Pirk functional tests using Spark run via utilizing the [SparkLauncher](https://spark.apache.org/docs/1.6.0/api/java/org/apache/spark/launcher/package-summary.html) via the ‘hadoop jar’ command (not by directly running with ’spark-submit’). 
 To run successfully, the ‘spark.home’ property must be set correctly in the ‘pirk.properties’ file; ’spark-home’ is the directory containing ’bin/spark-submit’.
