@@ -19,4 +19,4 @@ cache:
   directories:
     - $HOME/.m2
 
-install: mvn clean install
+script: mvn clean install
