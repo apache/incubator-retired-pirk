@@ -9,3 +9,6 @@ cache:
     - $HOME/.m2
 
 script: mvn clean install
+
+after_success:
+  - mvn clean test -Pjacoco jacoco:report coveralls:report
