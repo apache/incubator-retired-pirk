@@ -93,6 +93,9 @@
         <spark-streaming.version>2.0.0</spark-streaming.version>
         <pirk.forkCount>1C</pirk.forkCount>
         <pirk.reuseForks>true</pirk.reuseForks>
+        <coveralls.maven.plugin>4.3.0</coveralls.maven.plugin>
+        <jacoco.maven.plugin>0.7.8</jacoco.maven.plugin>
+        <argLine>-Xmx1G -Djava.net.preferIPv4Stack=true</argLine>
     </properties>
 
     <dependencies>
@@ -450,7 +453,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.7.201606060606</version>
+                    <version>${jacoco.maven.plugin}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -475,7 +478,7 @@
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.2.0</version>
+                    <version>${coveralls.maven.plugin}</version>
                 </plugin>
 
 
@@ -485,9 +488,7 @@
                     <version>2.18</version>
                     <configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <argLine combine.children="append">-Xmx1G
-                            -Djava.net.preferIPv4Stack=true
-                        </argLine>
+                        <argLine combine.children="append">@{argLine}</argLine>
                         <systemPropertyVariables>
                             <log4j.configuration>${log4j.configuration}</log4j.configuration>
                         </systemPropertyVariables>
@@ -759,6 +760,18 @@
                         </plugin>
                     </plugins>
                 </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>
