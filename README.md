@@ -18,6 +18,7 @@ limitations under the License.
 <img alt="Apache Pirk" class="img-responsive" src="contrib/ApachePirk.png" width="350"/>
 --
 
+[![Build Status](https://api.travis-ci.org/apache/incubator-pirk.svg?branch=master)](https://travis-ci.org/apache/incubator-pirk?branch=master)
 --
 
 [![Build Status](https://api.travis-ci.org/apache/incubator-pirk.svg?branch=master)](https://travis-ci.org/apache/incubator-pirk?branch=master)
