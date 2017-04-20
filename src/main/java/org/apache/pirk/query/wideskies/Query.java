@@ -27,11 +27,11 @@ import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import com.google.gson.annotations.Expose;
-import org.apache.pirk.encryption.ModPowAbstraction;
 import org.apache.pirk.serialization.Storable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.annotations.Expose;
 
 /**
  * Class to hold the PIR query vectors
@@ -138,15 +138,17 @@ public class Query implements Serializable, Storable
       public void accept(BigInteger element)
       {
         Map<Integer,BigInteger> powMap = new HashMap<>(maxValue); // <power, element^power mod N^2>
-        for (int i = 0; i <= maxValue; ++i)
+        BigInteger value = BigInteger.ONE;
+        powMap.put(0, value);
+        for (int i = 1; i <= maxValue; ++i)
         {
-          BigInteger value = ModPowAbstraction.modPow(element, BigInteger.valueOf(i), NSquared);
+          value = value.multiply(element).mod(NSquared);
           powMap.put(i, value);
         }
         expTable.put(element, powMap);
       }
     });
-    logger.debug("expTable.size() = " + expTable.keySet().size() + " NSquared = " + NSquared.intValue() + " = " + NSquared.toString());
+    logger.debug("expTable.size() = {} NSquared = {} = {}", expTable.size(), NSquared.intValue(), NSquared);
   }
 
   public BigInteger getExp(BigInteger value, int power)
