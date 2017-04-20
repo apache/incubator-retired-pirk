@@ -1,5 +1,0 @@
-org.apache.pirk.responder.wideskies.mapreduce.MapReduceResponder
-org.apache.pirk.responder.wideskies.spark.SparkResponder
-org.apache.pirk.responder.wideskies.spark.streaming.SparkStreamingResponder
-org.apache.pirk.responder.wideskies.standalone.StandaloneResponder
-org.apache.pirk.responder.wideskies.storm.StormResponder
