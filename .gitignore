@@ -15,7 +15,7 @@
 
 # Maven ignores
 /target/
-
+/*/target
 # IDE ignores
 /.settings/
 /.project
